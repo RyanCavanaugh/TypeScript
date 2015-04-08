@@ -1648,6 +1648,7 @@ module ts {
                 case SyntaxKind.ElementAccessExpression:
                 case SyntaxKind.NewExpression:
                 case SyntaxKind.CallExpression:
+                case SyntaxKind.JSXElement:
                 case SyntaxKind.TaggedTemplateExpression:
                 case SyntaxKind.ArrayLiteralExpression:
                 case SyntaxKind.ParenthesizedExpression:
