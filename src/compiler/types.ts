@@ -23,6 +23,7 @@ module ts {
         NumericLiteral,
         StringLiteral,
         RegularExpressionLiteral,
+        JSXText,
         NoSubstitutionTemplateLiteral,
         // Pseudo-literals
         TemplateHead,
@@ -40,6 +41,7 @@ module ts {
         SemicolonToken,
         CommaToken,
         LessThanToken,
+        LessThanSlashToken,
         GreaterThanToken,
         LessThanEqualsToken,
         GreaterThanEqualsToken,
@@ -250,6 +252,15 @@ module ts {
         NamedExports,
         ExportSpecifier,
         MissingDeclaration,
+
+        //JSX
+        JSXElement,
+        JSXOpeningElement,
+        JSXTag,
+        JSXClosingElement,
+        JSXAttribute,
+        JSXSpreadAttribute,
+        JSXExpression,
 
         // Module references
         ExternalModuleReference,
@@ -739,6 +750,43 @@ module ts {
         arguments: NodeArray<Expression>;
     }
 
+    export interface JSXElement extends PrimaryExpression, Declaration {
+        openingElement: JSXOpeningElement;
+        children?: NodeArray<JSXElement | JSXExpression | JSXText>;
+        closingElement?: JSXClosingElement;
+    }
+
+    export interface JSXTag extends LeftHandSideExpression {
+        name: EntityName;
+    }
+
+    export interface JSXOpeningElement extends PrimaryExpression, Declaration {
+        tag: JSXTag;
+        attributes: NodeArray<JSXAttribute | JSXSpreadAttribute>;
+        isSelfClosing: boolean;
+    }
+
+    export interface JSXAttribute extends Declaration, PrimaryExpression {
+        name: Identifier;
+        initializer?: Expression;
+    }
+
+    export interface JSXSpreadAttribute extends PrimaryExpression {
+        expression: Expression;
+    }
+
+    export interface JSXClosingElement extends Node {
+        tagName: EntityName;
+    }
+
+    export interface JSXExpression extends PrimaryExpression {
+        expression?: Expression;
+    }
+
+    export interface JSXText extends LiteralExpression {
+        _jsxTextExpressionBrand: any;
+    }
+
     export interface HeritageClauseElement extends TypeNode {
         expression: LeftHandSideExpression;
         typeArguments?: NodeArray<TypeNode>;
@@ -751,7 +799,7 @@ module ts {
         template: LiteralExpression | TemplateExpression;
     }
 
-    export type CallLikeExpression = CallExpression | NewExpression | TaggedTemplateExpression;
+    export type CallLikeExpression = CallExpression | NewExpression | TaggedTemplateExpression | JSXElement;
 
     export interface TypeAssertion extends UnaryExpression {
         type: TypeNode;
@@ -1001,6 +1049,7 @@ module ts {
         amdDependencies: {path: string; name: string}[];
         amdModuleName: string;
         referencedFiles: FileReference[];
+        jsxFactory: string[];
 
         hasNoDefaultLib: boolean;
 
