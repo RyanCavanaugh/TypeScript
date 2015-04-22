@@ -1,0 +1,25 @@
+=== tests/cases/compiler/contextualAssert.ts ===
+class Animal { a: string; }
+>Animal : Symbol(Animal, Decl(contextualAssert.ts, 0, 0))
+>a : Symbol(a, Decl(contextualAssert.ts, 0, 14))
+
+class Dog extends Animal { woof: number; }
+>Dog : Symbol(Dog, Decl(contextualAssert.ts, 0, 27))
+>Animal : Symbol(Animal, Decl(contextualAssert.ts, 0, 0))
+>woof : Symbol(woof, Decl(contextualAssert.ts, 1, 26))
+
+class Cat extends Animal { meow: boolean; }
+>Cat : Symbol(Cat, Decl(contextualAssert.ts, 1, 42))
+>Animal : Symbol(Animal, Decl(contextualAssert.ts, 0, 0))
+>meow : Symbol(meow, Decl(contextualAssert.ts, 2, 26))
+
+declare function getAnimalByName(n: string): Animal;
+>getAnimalByName : Symbol(getAnimalByName, Decl(contextualAssert.ts, 2, 43))
+>n : Symbol(n, Decl(contextualAssert.ts, 4, 33))
+>Animal : Symbol(Animal, Decl(contextualAssert.ts, 0, 0))
+
+var c: Cat = <?>getAnimalByName('kitty');
+>c : Symbol(c, Decl(contextualAssert.ts, 6, 3))
+>Cat : Symbol(Cat, Decl(contextualAssert.ts, 1, 42))
+>getAnimalByName : Symbol(getAnimalByName, Decl(contextualAssert.ts, 2, 43))
+

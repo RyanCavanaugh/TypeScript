@@ -5913,7 +5913,13 @@ module ts {
                 case SyntaxKind.NewExpression:
                     return getContextualTypeForArgument(<CallExpression>parent, node);
                 case SyntaxKind.TypeAssertionExpression:
-                    return getTypeFromTypeNode((<TypeAssertion>parent).type);
+                    var assertedType = (<TypeAssertion>parent).type;
+                    if (assertedType === undefined) {
+                        // Contextual type assertion
+                        return getContextualType(<TypeAssertion>parent);
+                    } else {
+                        return getTypeFromTypeNode(assertedType);
+                    }
                 case SyntaxKind.BinaryExpression:
                     return getContextualTypeForBinaryOperand(node);
                 case SyntaxKind.PropertyAssignment:
@@ -7218,7 +7224,13 @@ module ts {
 
         function checkTypeAssertion(node: TypeAssertion): Type {
             let exprType = checkExpression(node.expression);
-            let targetType = getTypeFromTypeNode(node.type);
+            var targetType: Type;
+            if (node.type === undefined) {
+                // Contextual type assertion
+                targetType = getContextualType(node);
+            } else {
+                targetType = getTypeFromTypeNode(node.type);
+            }
             if (produceDiagnostics && targetType !== unknownType) {
                 let widenedType = getWidenedType(exprType);
                 if (!(isTypeAssignableTo(targetType, widenedType))) {

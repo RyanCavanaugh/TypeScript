@@ -3063,7 +3063,11 @@ module ts {
         function parseTypeAssertion(): TypeAssertion {
             let node = <TypeAssertion>createNode(SyntaxKind.TypeAssertionExpression);
             parseExpected(SyntaxKind.LessThanToken);
-            node.type = parseType();
+            if (parseOptional(SyntaxKind.QuestionToken)) {
+                node.type = undefined;
+            } else {
+                node.type = parseType();
+            }
             parseExpected(SyntaxKind.GreaterThanToken);
             node.expression = parseUnaryExpressionOrHigher();
             return finishNode(node);
