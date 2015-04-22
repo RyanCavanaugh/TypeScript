@@ -7,6 +7,8 @@ declare function getAnimalByName(n: string): Animal;
 
 var c: Cat = <?>getAnimalByName('kitty');
 
+<?>c;
+
 
 //// [contextualAssert.js]
 var __extends = this.__extends || function (d, b) {
@@ -35,3 +37,4 @@ var Cat = (function (_super) {
     return Cat;
 })(Animal);
 var c = getAnimalByName('kitty');
+c;

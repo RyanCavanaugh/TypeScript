@@ -1,0 +1,16 @@
+tests/cases/compiler/contextualAssert.ts(9,1): error TS2502: Contextual assertions may only be used where a contextual type exists
+
+
+==== tests/cases/compiler/contextualAssert.ts (1 errors) ====
+    class Animal { a: string; }
+    class Dog extends Animal { woof: number; }
+    class Cat extends Animal { meow: boolean; }
+    
+    declare function getAnimalByName(n: string): Animal;
+    
+    var c: Cat = <?>getAnimalByName('kitty');
+    
+    <?>c;
+    ~~~~
+!!! error TS2502: Contextual assertions may only be used where a contextual type exists
+    

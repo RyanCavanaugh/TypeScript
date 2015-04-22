@@ -7228,6 +7228,10 @@ module ts {
             if (node.type === undefined) {
                 // Contextual type assertion
                 targetType = getContextualType(node);
+                if (targetType === undefined) {
+                    error(node, Diagnostics.Contextual_assertions_may_only_be_used_where_a_contextual_type_exists);
+                    return exprType;
+                }
             } else {
                 targetType = getTypeFromTypeNode(node.type);
             }
