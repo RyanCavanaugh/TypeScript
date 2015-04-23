@@ -545,8 +545,9 @@ module ts {
         class_declarations_are_only_supported_directly_inside_a_module_or_as_a_top_level_declaration: { code: 9004, category: DiagnosticCategory.Error, key: "'class' declarations are only supported directly inside a module or as a top level declaration." },
         JSX_attributes_must_only_be_assigned_a_non_empty_expression: { code: 17000, category: DiagnosticCategory.Error, key: "JSX attributes must only be assigned a non-empty 'expression'." },
         JSX_elements_cannot_have_multiple_attributes_with_the_same_name: { code: 17001, category: DiagnosticCategory.Error, key: "JSX elements cannot have multiple attributes with the same name." },
-        Expected_corresponding_JXS_closing_tag_for_0: { code: 17002, category: DiagnosticCategory.Error, key: "Expected corresponding JXS closing tag for '{0}'." },
+        Expected_corresponding_JSX_closing_tag_for_0: { code: 17002, category: DiagnosticCategory.Error, key: "Expected corresponding JSX closing tag for '{0}'." },
         JSX_attribute_expected: { code: 17003, category: DiagnosticCategory.Error, key: "JSX attribute expected." },
         JSX_factory_cannot_have_multiple_assignments: { code: 17004, category: DiagnosticCategory.Error, key: "JSX factory cannot have multiple assignments." },
+        JSX_elements_are_not_currently_supported: { code: 17005, category: DiagnosticCategory.Error, key: "JSX elements are not currently supported." },
     };
 }

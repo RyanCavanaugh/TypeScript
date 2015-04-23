@@ -3203,13 +3203,13 @@ module ts {
                     node.closingElement = parseJSXClosingElement(savedInJSXChild, savedInJSXTag);
                     if (!node.closingElement.tagName || tagName !== entityNameToString(node.closingElement.tagName)) {
                         var length = scanner.getTokenPos() - start;
-                        parseErrorAtPosition(start, length, Diagnostics.Expected_corresponding_JXS_closing_tag_for_0, tagName);
+                        parseErrorAtPosition(start, length, Diagnostics.Expected_corresponding_JSX_closing_tag_for_0, tagName);
                     }
                     speculative = false;
                 } 
                 else {
                     node.closingElement = <JSXClosingElement>createMissingNode(SyntaxKind.JSXClosingElement, /*reportAtCurrentPosition:*/ true, 
-                        Diagnostics.Expected_corresponding_JXS_closing_tag_for_0, tagName);
+                        Diagnostics.Expected_corresponding_JSX_closing_tag_for_0, tagName);
                     node.children.end = getNodeEnd();
                     // TODO idealy we would need to rewind the scanner before the token, 
                     // but normally here we are at 'end of file' so it's not really important
