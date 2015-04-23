@@ -316,7 +316,9 @@ module ts {
             case SyntaxKind.MissingDeclaration:
                 return visitNodes(cbNodes, node.decorators);
             case SyntaxKind.JSXElement:
-                return visitNode(cbNode, (<JSXElement>node).openingElement) || visitNodes(cbNodes, (<JSXElement>node).children) || visitNode(cbNode, (<JSXElement>node).closingElement);
+                return visitNode(cbNode, (<JSXElement>node).openingElement) ||
+                visitNodes(cbNodes, (<JSXElement>node).children) ||
+                visitNode(cbNode, (<JSXElement>node).closingElement);
             case SyntaxKind.JSXOpeningElement:
                 return visitNode(cbNode, (<JSXOpeningElement>node).tag) || visitNodes(cbNodes, (<JSXOpeningElement>node).attributes);
             case SyntaxKind.JSXTag:
@@ -1184,7 +1186,7 @@ module ts {
                 case ParsingContext.HeritageClauses:
                     return token === SyntaxKind.OpenBraceToken || token === SyntaxKind.CloseBraceToken;
                 case ParsingContext.JSXAttributes:
-                    return token === SyntaxKind.GreaterThanToken || token === SyntaxKind.SlashToken;
+                    return token === SyntaxKind.GreaterThanToken || token === SyntaxKind.SlashToken || token === SyntaxKind.CloseBraceToken;
             }
         }
 
