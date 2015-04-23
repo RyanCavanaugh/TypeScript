@@ -454,6 +454,7 @@ module ts {
 
         let inJSXTag: boolean = false;
         let inJSXChild: boolean = false;
+        let closingTagsMap: Map<number[]>;
 
         function setInJSXChild(val: boolean): void {
             scanner.setInJSXChild(val);
@@ -476,6 +477,7 @@ module ts {
 
             contextFlags = 0;
             parseErrorBeforeNextFinishedNode = false;
+            closingTagsMap = null;
 
             createSourceFile(fileName, languageVersion);
 
@@ -3111,6 +3113,35 @@ module ts {
             return "";
         }
 
+        function retrieveClosingTagsMap(): Map<number[]> {
+            const closingTagsMap: Map<number[]> = {};
+            // Unfortunately this regex won't catch linebreak inside the tagName 
+            // ie: </MyModule.\nmyProperty>
+            // We could use [\s\S], but it could cause matching gigantic tagname 
+            // of multiple lines of valid typescript code.
+            const jsxClosingTagRegEx = /<\/\s*(.+?)\s*>/g;
+            while (true) {
+                const match = jsxClosingTagRegEx.exec(sourceText)
+                if (match) {
+                    const tag = match[1].replace(/\s/g, "");
+                    if (!hasProperty(closingTagsMap, tag)) {
+                        closingTagsMap[tag] = [];
+                    }
+                    closingTagsMap[tag].push(match.index);
+                } else {
+                    break;
+                }
+            }
+            return closingTagsMap;
+        }
+
+        function hasClosingTagAfterPos(tagName: string, currentPos: number): boolean {
+            if (!closingTagsMap) {
+                closingTagsMap = retrieveClosingTagsMap();
+            }
+            return hasProperty(closingTagsMap, tagName) && closingTagsMap[tagName].some(pos => pos >= currentPos);
+        }
+
         function parseJSXElement(speculative = false): JSXElement {
             let node = <JSXElement>createNode(SyntaxKind.JSXElement);
             let savedInJSXChild = inJSXChild;
@@ -3135,6 +3166,11 @@ module ts {
                 // if it's a self closing tag it's a JSXElement and not a type assertion
                 speculative = false;
             } 
+            else if (speculative && !hasClosingTagAfterPos(tagName, scanner.getStartPos())) {
+                // we are in speculative parsing and we were not able to find a corresponding closing tag
+                // farther in the source text
+                return null;
+            }
             else {
                 //we can't use parseList we need to intercept '}‘ token in speculative mode
                 let savedStrictModeContext = inStrictModeContext();
