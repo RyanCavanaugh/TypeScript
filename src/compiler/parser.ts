@@ -559,6 +559,7 @@ module ts {
             sourceFile.languageVersion = languageVersion;
             sourceFile.fileName = normalizePath(fileName);
             sourceFile.flags = fileExtensionIs(sourceFile.fileName, ".d.ts") ? NodeFlags.DeclarationFile : 0;
+            sourceFile.isTSXFile = fileExtensionIs(sourceFile.fileName, ".tsx");
         }
 
         function setContextFlag(val: Boolean, flag: ParserContextFlags) {
@@ -2974,7 +2975,7 @@ module ts {
                 case SyntaxKind.VoidKeyword:
                     return parseVoidExpression();
                 case SyntaxKind.LessThanToken:
-                    return (sourceFile.jsxFactory && tryParse(() => parseJSXElement(true))) || parseTypeAssertion();
+                    return (sourceFile.isTSXFile && tryParse(() => parseJSXElement(true))) || parseTypeAssertion();
                 default:
                     return parsePostfixExpressionOrHigher();
             }
@@ -5021,7 +5022,6 @@ module ts {
             let referencedFiles: FileReference[] = [];
             let amdDependencies: { path: string; name: string }[] = [];
             let amdModuleName: string;
-            let jsxFactory: string[];
 
             // Keep scanning all the leading trivia in the file until we get to something that
             // isn't trivia.  Any single line comment will be analyzed to see if it is a
@@ -5073,25 +5073,11 @@ module ts {
                         }
                     }
                 }
-
-                let jsxFactoryRegex = /^\/\/\/\s*<jsx\s+factory\s*=\s*('|")(.+?)\1/gim;
-                let jsxFactoryMatchResult = jsxFactoryRegex.exec(comment);
-                if (jsxFactoryMatchResult) {
-                    if (jsxFactory) {
-                        sourceFile.parseDiagnostics.push(createFileDiagnostic(sourceFile, range.pos, range.end - range.pos, Diagnostics.JSX_factory_cannot_have_multiple_assignments));
-                    }
-                    jsxFactory = jsxFactoryMatchResult[2].trim().split('.');
-
-                    for (var i = 0, n = jsxFactory.length; i < n; i++) {
-                        jsxFactory[i] = jsxFactory[i].trim();
-                    }
-                }
             }
 
             sourceFile.referencedFiles = referencedFiles;
             sourceFile.amdDependencies = amdDependencies;
             sourceFile.amdModuleName = amdModuleName;
-            sourceFile.jsxFactory = jsxFactory;
         }
 
         function setExternalModuleIndicator(sourceFile: SourceFile) {

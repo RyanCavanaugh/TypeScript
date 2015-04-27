@@ -1049,7 +1049,7 @@ module ts {
         amdDependencies: {path: string; name: string}[];
         amdModuleName: string;
         referencedFiles: FileReference[];
-        jsxFactory: string[];
+        isTSXFile: boolean;
 
         hasNoDefaultLib: boolean;
 
