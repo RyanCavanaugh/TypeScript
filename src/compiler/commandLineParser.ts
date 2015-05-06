@@ -387,7 +387,7 @@ module ts {
                 for (var i = 0; i < sysFiles.length; i++) {
                     var name = sysFiles[i];
                     if (fileExtensionIs(name, ".d.ts")) {
-                        let baseName = name.substr(0, name.length - 5);
+                        let baseName = name.substr(0, name.length - ".d.ts".length);
                         if (!contains(sysFiles, baseName + ".tsx") && !contains(sysFiles, baseName + ".ts")) {
                             files.push(name);
                         }

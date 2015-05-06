@@ -317,14 +317,14 @@ module ts {
                 return visitNodes(cbNodes, node.decorators);
             case SyntaxKind.JSXElement:
                 return visitNode(cbNode, (<JSXElement>node).openingElement) ||
-                visitNodes(cbNodes, (<JSXElement>node).children) ||
-                visitNode(cbNode, (<JSXElement>node).closingElement);
+                    visitNodes(cbNodes, (<JSXElement>node).children) ||
+                    visitNode(cbNode, (<JSXElement>node).closingElement);
             case SyntaxKind.JSXOpeningElement:
-                return visitNode(cbNode, (<JSXOpeningElement>node).tag) || visitNodes(cbNodes, (<JSXOpeningElement>node).attributes);
-            case SyntaxKind.JSXTag:
-                return visitNode(cbNode, (<JSXTag>node).name);
+                return visitNode(cbNode, (<JSXOpeningElement>node).tagName) ||
+                    visitNodes(cbNodes, (<JSXOpeningElement>node).attributes);
             case SyntaxKind.JSXAttribute:
-                return visitNode(cbNode, (<JSXAttribute>node).name) || visitNode(cbNode, (<JSXAttribute>node).initializer);
+                return visitNode(cbNode, (<JSXAttribute>node).name) ||
+                    visitNode(cbNode, (<JSXAttribute>node).initializer);
             case SyntaxKind.JSXSpreadAttribute:
                 return visitNode(cbNode, (<JSXSpreadAttribute>node).expression);
             case SyntaxKind.JSXExpression:
@@ -3130,7 +3130,7 @@ module ts {
             if (!closingTagsMap) {
                 closingTagsMap = retrieveClosingTagsMap();
             }
-            return hasProperty(closingTagsMap, tagName) && closingTagsMap[tagName].some(pos => pos >= currentPos);
+            return hasProperty(closingTagsMap, tagName) && forEach(closingTagsMap[tagName], p => p >= currentPos);
         }
 
         function parseJSXElement(speculative = false): JSXElement {
@@ -3138,7 +3138,7 @@ module ts {
 
             node.openingElement = parseJSXOpeningElement();
 
-            let tagName = entityNameToString(node.openingElement.tag.name);
+            let tagName = entityNameToString(node.openingElement.tagName);
 
             if (node.openingElement.attributes.length && tagName) {
                 // if there is tagName and attribute it's sure that we are in a JSXElement and not a type assertion
@@ -3228,9 +3228,7 @@ module ts {
             let node = <JSXOpeningElement>createNode(SyntaxKind.JSXOpeningElement);
 
             parseExpected(SyntaxKind.LessThanToken);
-            node.tag = <JSXTag>createNode(SyntaxKind.JSXTag);
-            node.tag.name = parseJSXElementName();
-            finishNode(node.tag);
+            node.tagName = parseJSXElementName();
             node.attributes = parseList(ParsingContext.JSXAttributes, /*checkForStrictMode*/ false, parseJSXAttribute);
             if (token === SyntaxKind.SlashToken) {
                 node.isSelfClosing = true;

@@ -737,19 +737,16 @@ module ts {
             case SyntaxKind.NoSubstitutionTemplateLiteral:
             case SyntaxKind.OmittedExpression:
             case SyntaxKind.JSXElement:
-            case SyntaxKind.JSXOpeningElement:
-            case SyntaxKind.JSXTag:
             case SyntaxKind.JSXExpression:
-            case SyntaxKind.JSXSpreadAttribute:
                 return true;
             case SyntaxKind.QualifiedName:
                 while (node.parent.kind === SyntaxKind.QualifiedName) {
                     node = node.parent;
                 }
 
-                return node.parent.kind === SyntaxKind.TypeQuery || node.parent.kind === SyntaxKind.JSXTag;
+                return node.parent.kind === SyntaxKind.TypeQuery;
             case SyntaxKind.Identifier:
-                if (node.parent.kind === SyntaxKind.TypeQuery || node.parent.kind === SyntaxKind.JSXTag) {
+                if (node.parent.kind === SyntaxKind.TypeQuery) {
                     return true;
                 }
             // fall through
@@ -764,7 +761,6 @@ module ts {
                     case SyntaxKind.EnumMember:
                     case SyntaxKind.PropertyAssignment:
                     case SyntaxKind.BindingElement:
-                    case SyntaxKind.JSXAttribute:
                         return (<VariableLikeDeclaration>parent).initializer === node;
                     case SyntaxKind.ExpressionStatement:
                     case SyntaxKind.IfStatement:
@@ -918,7 +914,6 @@ module ts {
             case SyntaxKind.PropertySignature:
             case SyntaxKind.SetAccessor:
             case SyntaxKind.ShorthandPropertyAssignment:
-            case SyntaxKind.JSXAttribute:
             case SyntaxKind.TypeAliasDeclaration:
             case SyntaxKind.TypeParameter:
             case SyntaxKind.VariableDeclaration:

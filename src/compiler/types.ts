@@ -23,7 +23,6 @@ module ts {
         NumericLiteral,
         StringLiteral,
         RegularExpressionLiteral,
-        JSXText,
         NoSubstitutionTemplateLiteral,
         // Pseudo-literals
         TemplateHead,
@@ -256,7 +255,7 @@ module ts {
         //JSX
         JSXElement,
         JSXOpeningElement,
-        JSXTag,
+        JSXText,
         JSXClosingElement,
         JSXAttribute,
         JSXSpreadAttribute,
@@ -750,28 +749,24 @@ module ts {
         arguments: NodeArray<Expression>;
     }
 
-    export interface JSXElement extends PrimaryExpression, Declaration {
+    export interface JSXElement extends PrimaryExpression {
         openingElement: JSXOpeningElement;
         children?: NodeArray<JSXElement | JSXExpression | JSXText>;
         closingElement?: JSXClosingElement;
     }
 
-    export interface JSXTag extends LeftHandSideExpression {
-        name: EntityName;
-    }
-
-    export interface JSXOpeningElement extends PrimaryExpression, Declaration {
-        tag: JSXTag;
+    export interface JSXOpeningElement extends Node {
+        tagName: EntityName;
         attributes: NodeArray<JSXAttribute | JSXSpreadAttribute>;
         isSelfClosing: boolean;
     }
 
-    export interface JSXAttribute extends Declaration, PrimaryExpression {
+    export interface JSXAttribute extends Node {
         name: Identifier;
         initializer?: Expression;
     }
 
-    export interface JSXSpreadAttribute extends PrimaryExpression {
+    export interface JSXSpreadAttribute extends Node {
         expression: Expression;
     }
 
@@ -779,11 +774,11 @@ module ts {
         tagName: EntityName;
     }
 
-    export interface JSXExpression extends PrimaryExpression {
+    export interface JSXExpression extends Expression {
         expression?: Expression;
     }
 
-    export interface JSXText extends LiteralExpression {
+    export interface JSXText extends Node {
         _jsxTextExpressionBrand: any;
     }
 
