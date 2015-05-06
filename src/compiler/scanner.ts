@@ -23,9 +23,9 @@ module ts {
         reScanGreaterToken(): SyntaxKind;
         reScanSlashToken(): SyntaxKind;
         reScanTemplateToken(): SyntaxKind;
+        reScanJSXIdentifier(): SyntaxKind;
+        reScanLessThanToken(): SyntaxKind;
         scan(): SyntaxKind;
-        setInJSXChild(inJSXChild: boolean): void;
-        setInJSXTag(inJSXTag: boolean): void;
         // Sets the text for the scanner to scan.  An optional subrange starting point and length
         // can be provided to have the scanner only scan a portion of the text.
         setText(text: string, start?: number, length?: number): void;
@@ -614,8 +614,6 @@ module ts {
         let precedingLineBreak: boolean;
         let hasExtendedUnicodeEscape: boolean;
         let tokenIsUnterminated: boolean;
-        let inJSXChild: boolean;
-        let inJSXTag: boolean;
 
         setText(text, start, length);
 
@@ -634,6 +632,8 @@ module ts {
             reScanGreaterToken,
             reScanSlashToken,
             reScanTemplateToken,
+            reScanJSXIdentifier,
+            reScanLessThanToken,
             scan,
             setText,
             setScriptTarget,
@@ -641,8 +641,6 @@ module ts {
             setTextPos,
             tryScan,
             lookAhead,
-            setInJSXChild: (val) => inJSXChild = val,
-            setInJSXTag: (val) => inJSXTag = val,
         };
 
         function error(message: DiagnosticMessage, length?: number): void {
@@ -652,23 +650,12 @@ module ts {
         }
 
         function isIdentifierStart(ch: number): boolean {
-            if (inJSXTag && ch === CharacterCodes.backslash) {
-                return false;
-            }
             return ch >= CharacterCodes.A && ch <= CharacterCodes.Z || ch >= CharacterCodes.a && ch <= CharacterCodes.z ||
                 ch === CharacterCodes.$ || ch === CharacterCodes._ ||
                 ch > CharacterCodes.maxAsciiCharacter && isUnicodeIdentifierStart(ch, languageVersion);
         }
 
         function isIdentifierPart(ch: number): boolean {
-            if (inJSXTag) {
-                if (ch === CharacterCodes.backslash) {
-                    return false;
-                } 
-                else if (ch === CharacterCodes.minus) {
-                    return true;
-                }
-            }
             return ch >= CharacterCodes.A && ch <= CharacterCodes.Z || ch >= CharacterCodes.a && ch <= CharacterCodes.z ||
                 ch >= CharacterCodes._0 && ch <= CharacterCodes._9 || ch === CharacterCodes.$ || ch === CharacterCodes._ ||
                 ch > CharacterCodes.maxAsciiCharacter && isUnicodeIdentifierPart(ch, languageVersion);
@@ -1009,7 +996,7 @@ module ts {
                 if (isIdentifierPart(ch)) {
                     pos++;
                 }
-                else if (!inJSXTag && ch === CharacterCodes.backslash) {
+                else if (ch === CharacterCodes.backslash) {
                     ch = peekUnicodeEscape();
                     if (!(ch >= 0 && isIdentifierPart(ch))) {
                         break;
@@ -1075,25 +1062,6 @@ module ts {
                     return token = SyntaxKind.EndOfFileToken;
                 }
                 let ch = text.charCodeAt(pos);
-
-                if (inJSXChild) {
-                    switch (ch) {
-                        case CharacterCodes.closeBrace:
-                            return pos++, token = SyntaxKind.CloseBraceToken;
-                        case CharacterCodes.openBrace:
-                            return pos++, token = SyntaxKind.OpenBraceToken;
-                        case CharacterCodes.lessThan:
-                            if (text.charCodeAt(pos + 1) === CharacterCodes.slash) {
-                                return pos += 2, token = SyntaxKind.LessThanSlashToken;
-                            }
-                            return pos++, token = SyntaxKind.LessThanToken;
-                        default:
-                            tokenValue = scanJSXText();
-                            return token = SyntaxKind.JSXText;
-                    }
-                }
-
-
                 switch (ch) {
                     case CharacterCodes.lineFeed:
                     case CharacterCodes.carriageReturn:
@@ -1385,7 +1353,7 @@ module ts {
                         return pos++, token = SyntaxKind.AtToken;
                     case CharacterCodes.backslash:
                         let cookedChar = peekUnicodeEscape();
-                        if (!inJSXTag && cookedChar >= 0 && isIdentifierStart(cookedChar)) {
+                        if (cookedChar >= 0 && isIdentifierStart(cookedChar)) {
                             pos += 6;
                             tokenValue = String.fromCharCode(cookedChar) + scanIdentifierParts();
                             return token = getIdentifierToken();
@@ -1397,7 +1365,7 @@ module ts {
                             pos++;
                             while (pos < end && isIdentifierPart(ch = text.charCodeAt(pos))) pos++;
                             tokenValue = text.substring(tokenPos, pos);
-                            if (!inJSXTag && ch === CharacterCodes.backslash) {
+                            if (ch === CharacterCodes.backslash) {
                                 tokenValue += scanIdentifierParts();
                             }
                             return token = getIdentifierToken();
@@ -1499,6 +1467,33 @@ module ts {
             Debug.assert(token === SyntaxKind.CloseBraceToken, "'reScanTemplateToken' should only be called on a '}'");
             pos = tokenPos;
             return token = scanTemplateAndSetTokenValue();
+        }
+        
+        function reScanJSXIdentifier(): SyntaxKind {
+            if (token === SyntaxKind.Identifier) {
+                while (pos < end) {
+                    let ch = text.charCodeAt(pos);
+                    if (ch === CharacterCodes.minus || isIdentifierPart(ch)) {
+                        tokenValue += String.fromCharCode(ch);
+                        pos++;
+                    } 
+                    else  if (ch === CharacterCodes.backslash) {
+                        tokenValue += scanIdentifierParts();
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            return token;
+        }
+        
+        function reScanLessThanToken(): SyntaxKind {
+            Debug.assert(token === SyntaxKind.LessThanToken, "'reScanLessThanToken' should only be called on a '<'");
+            if (text.charCodeAt(pos) === CharacterCodes.slash) {
+                return pos++, token = SyntaxKind.LessThanSlashToken;
+            }
+            return token;
         }
 
         function speculationHelper<T>(callback: () => T, isLookahead: boolean): T {
