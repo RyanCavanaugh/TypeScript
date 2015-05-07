@@ -3172,7 +3172,7 @@ module ts {
                         }
                         node.children.push(parseJSXElement());
                     }
-                    else if (token === SyntaxKind.CloseBraceToken || token === SyntaxKind.GreaterThanToken || token === SyntaxKind.EndOfFileToken) {
+                    else if (token === SyntaxKind.CloseBraceToken || token === SyntaxKind.EndOfFileToken) {
                         if (speculative) {
                             // that means that we are generaly in case like 
                             // <div> {<div> {}}</div> to desambiguate those cases
@@ -3216,8 +3216,9 @@ module ts {
         
         function parseJSXText(): JSXText {
             let node = <JSXText>createNode(SyntaxKind.JSXText);
-            while (token !== SyntaxKind.OpenBraceToken && token !== SyntaxKind.CloseBraceToken &&
-                token !== SyntaxKind.LessThanToken && token !== SyntaxKind.GreaterThanToken &&
+            while (token !== SyntaxKind.OpenBraceToken &&
+                token !== SyntaxKind.CloseBraceToken &&
+                token !== SyntaxKind.LessThanToken && 
                 token !== SyntaxKind.EndOfFileToken) {
                 nextToken();
             }
