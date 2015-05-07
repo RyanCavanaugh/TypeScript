@@ -616,7 +616,9 @@ module ts {
                     if (!isIdentifierPart(ch, languageVersion) &&
                         ch !== CharacterCodes.minus &&
                         ch !== CharacterCodes.dot &&
-                        ch !== CharacterCodes.backslash) {
+                        ch !== CharacterCodes.backslash &&
+                        !isWhiteSpace(ch) &&
+                        !isLineBreak(ch)) {
                         break;
                     }
                     p++;
