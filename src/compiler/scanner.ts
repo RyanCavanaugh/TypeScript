@@ -601,7 +601,40 @@ module ts {
             ch >= CharacterCodes._0 && ch <= CharacterCodes._9 || ch === CharacterCodes.$ || ch === CharacterCodes._ ||
             ch > CharacterCodes.maxAsciiCharacter && isUnicodeIdentifierPart(ch, languageVersion);
     }
-
+    
+    /* @internal */ 
+    export function retrieveClosingTagsMap(text: string, languageVersion: ScriptTarget): Map<number[]> {
+        let pos = 0;
+        let end = text.length;
+        const closingTags: Map<number[]> = {};
+        while (pos < end) {
+            if (text.charCodeAt(pos) === CharacterCodes.lessThan && text.charCodeAt(pos + 1) === CharacterCodes.slash) {
+                let p = pos + 2;
+                let ch: number;
+                while (p < end) {
+                    ch = text.charCodeAt(p);
+                    if (!isIdentifierPart(ch, languageVersion) &&
+                        ch !== CharacterCodes.minus &&
+                        ch !== CharacterCodes.dot &&
+                        ch !== CharacterCodes.backslash) {
+                        break;
+                    }
+                    p++;
+                }
+                if (ch === CharacterCodes.greaterThan) {
+                    let tagName = text.substring(pos + 2, p).replace(/\s/g, '');
+                    if (!hasProperty(closingTags, tagName)) {
+                        closingTags[tagName] = [];
+                    }
+                    closingTags[tagName].push(pos);
+                    pos = p + 1;
+                } 
+            }
+            pos++;
+        }
+        return closingTags;
+    }
+ 
     // Creates a scanner over a (possibly unspecified) range of a piece of text.
     /* @internal */ 
     export function createScanner(languageVersion: ScriptTarget, skipTrivia: boolean, text?: string, onError?: ErrorCallback, start?: number, length?: number): Scanner {

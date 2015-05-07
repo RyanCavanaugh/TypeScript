@@ -3104,31 +3104,9 @@ module ts {
             return "";
         }
 
-        function retrieveClosingTagsMap(): Map<number[]> {
-            const closingTagsMap: Map<number[]> = {};
-            // Unfortunately this regex won't catch linebreak inside the tagName 
-            // ie: </MyModule.\nmyProperty>
-            // We could use [\s\S], but it could cause matching gigantic tagname 
-            // of multiple lines of valid typescript code.
-            const jsxClosingTagRegEx = /<\/\s*(.+?)\s*>/g;
-            while (true) {
-                const match = jsxClosingTagRegEx.exec(sourceText)
-                if (match) {
-                    const tag = match[1].replace(/\s/g, "");
-                    if (!hasProperty(closingTagsMap, tag)) {
-                        closingTagsMap[tag] = [];
-                    }
-                    closingTagsMap[tag].push(match.index);
-                } else {
-                    break;
-                }
-            }
-            return closingTagsMap;
-        }
-
         function hasClosingTagAfterPos(tagName: string, currentPos: number): boolean {
             if (!closingTagsMap) {
-                closingTagsMap = retrieveClosingTagsMap();
+                closingTagsMap = retrieveClosingTagsMap(sourceText, sourceFile.languageVersion);
             }
             return hasProperty(closingTagsMap, tagName) && forEach(closingTagsMap[tagName], p => p >= currentPos);
         }
