@@ -3131,12 +3131,22 @@ module ts {
                 // if it's a self closing tag it's a JSXElement and not a type assertion
                 speculative = false;
             } 
-            else if (speculative && !hasClosingTagAfterPos(tagName, scanner.getStartPos())) {
-                // we are in speculative parsing and we were not able to find a corresponding closing tag
-                // farther in the source text
-                return null;
-            }
             else {
+                if (speculative && !hasClosingTagAfterPos(tagName, scanner.getStartPos())) {
+                    // we are in speculative parsing and we were not able to find a corresponding closing tag
+                    // farther in the source text, we try to determine if the following tokens look like normal
+                    // part of jsx children to decide if we continue parsing the JSXElement children
+                    let shouldContinueJSXParsing = lookAhead(() => {
+                        const t = token;
+                        const next = nextToken();
+                        return t === SyntaxKind.LessThanToken ||// <foo><...
+                            (t >= SyntaxKind.Identifier && next === SyntaxKind.OpenBraceToken) || // '<foo> bar {...
+                            (t >= SyntaxKind.Identifier && next >= SyntaxKind.Identifier) // '<foo> foo bar ...
+                    });
+                    if (!shouldContinueJSXParsing) {
+                        return null;
+                    }
+                }
                 //we can't use parseList we need to intercept '}‘ token in speculative mode
                 let savedStrictModeContext = inStrictModeContext();
 
