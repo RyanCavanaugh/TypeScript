@@ -40,6 +40,7 @@ module ts {
         SemicolonToken,
         CommaToken,
         LessThanToken,
+        LessThanSlashToken,
         GreaterThanToken,
         LessThanEqualsToken,
         GreaterThanEqualsToken,
@@ -251,6 +252,15 @@ module ts {
         NamedExports,
         ExportSpecifier,
         MissingDeclaration,
+
+        //JSX
+        JSXElement,
+        JSXOpeningElement,
+        JSXText,
+        JSXClosingElement,
+        JSXAttribute,
+        JSXSpreadAttribute,
+        JSXExpression,
 
         // Module references
         ExternalModuleReference,
@@ -746,6 +756,44 @@ module ts {
         typeArguments?: NodeArray<TypeNode>;
     }
 
+    export interface JSXElement extends PrimaryExpression {
+        openingElement: JSXOpeningElement;
+        children?: NodeArray<JSXElement | JSXExpression | JSXText>;
+        closingElement?: JSXClosingElement;
+    }
+
+    export interface JSXOpeningElement extends Node {
+        tagName: EntityName;
+        attributes: NodeArray<JSXAttribute | JSXSpreadAttribute>;
+        isSelfClosing: boolean;
+    }
+
+    export interface JSXAttribute extends Node {
+        name: Identifier;
+        initializer?: Expression;
+    }
+
+    export interface JSXSpreadAttribute extends Node {
+        expression: Expression;
+    }
+
+    export interface JSXClosingElement extends Node {
+        tagName: EntityName;
+    }
+
+    export interface JSXExpression extends Expression {
+        expression?: Expression;
+    }
+
+    export interface JSXText extends Node {
+        _jsxTextExpressionBrand: any;
+    }
+
+    export interface HeritageClauseElement extends TypeNode {
+        expression: LeftHandSideExpression;
+        typeArguments?: NodeArray<TypeNode>;
+    }
+
     export interface NewExpression extends CallExpression, PrimaryExpression { }
 
     export interface TaggedTemplateExpression extends MemberExpression {
@@ -753,7 +801,7 @@ module ts {
         template: LiteralExpression | TemplateExpression;
     }
 
-    export type CallLikeExpression = CallExpression | NewExpression | TaggedTemplateExpression;
+    export type CallLikeExpression = CallExpression | NewExpression | TaggedTemplateExpression | JSXElement;
 
     export interface TypeAssertion extends UnaryExpression {
         type: TypeNode;
@@ -1003,6 +1051,7 @@ module ts {
         amdDependencies: {path: string; name: string}[];
         amdModuleName: string;
         referencedFiles: FileReference[];
+        isTSXFile: boolean;
 
         hasNoDefaultLib: boolean;
 

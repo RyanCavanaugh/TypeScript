@@ -863,6 +863,7 @@ module ts {
             while (true) {
                 fileName = normalizePath(combinePaths(searchPath, moduleName));
                 sourceFile = forEach(supportedExtensions, extension => host.getSourceFile(fileName + extension));
+
                 if (sourceFile || isRelative) {
                     break;
                 }
@@ -6266,6 +6267,54 @@ module ts {
             }
         }
 
+        function checkJSXElement(node: JSXElement) {
+            checkGrammarJSXElement(node);
+            checkSourceElement(node.openingElement);
+
+            for (var i = 0, n = node.children.length; i < n; i++) {
+                if (node.children[i].kind === SyntaxKind.JSXExpression) {
+                    checkExpression(<JSXExpression>node.children[i]);
+                } else {
+                    checkSourceElement(node.children[i]);
+                }
+            }
+
+            if (node.closingElement) {
+                checkSourceElement(node.closingElement);
+            }
+
+            return unknownType;
+        }
+
+        function checkJSXAttribute(node: JSXAttribute) {
+            if (node.initializer) {
+                checkExpression(node.initializer);
+            }
+        }
+
+        function checkJSXClosingElement(node: JSXClosingElement) {
+            // Nothing to do yet
+        }
+
+        function checkJSXOpeningElement(node: JSXOpeningElement) {
+            for (var i = 0, n = node.attributes.length; i < n; i++) {
+                checkSourceElement(node.attributes[i]);
+            }
+        }
+
+        function checkJSXSpreadAttribute(node: JSXSpreadAttribute) {
+            checkExpression(node.expression);
+        }
+
+        function checkJSXText(node: JSXText) {
+            // Nothing to do yet
+        }
+
+        function checkJSXExpression(node: JSXExpression) {
+            console.log('check expression ' + getTextOfNode(node));
+            return checkExpression(node.expression);
+        }
+
         // If a symbol is a synthesized symbol with no value declaration, we assume it is a property. Example of this are the synthesized
         // '.prototype' property as well as synthesized tuple index properties.
         function getDeclarationKindFromSymbol(s: Symbol) {
@@ -8163,6 +8212,11 @@ module ts {
                     return undefinedType;
                 case SyntaxKind.YieldExpression:
                     checkYieldExpression(<YieldExpression>node);
+                    return unknownType;
+                case SyntaxKind.JSXExpression:
+                    return checkJSXExpression(<JSXExpression>node);
+                case SyntaxKind.JSXElement:
+                    checkJSXElement(<JSXElement>node);
                     return unknownType;
             }
             return unknownType;
@@ -10865,6 +10919,16 @@ module ts {
                     return checkTryStatement(<TryStatement>node);
                 case SyntaxKind.VariableDeclaration:
                     return checkVariableDeclaration(<VariableDeclaration>node);
+                case SyntaxKind.JSXAttribute:
+                    return checkJSXAttribute(<JSXAttribute>node);
+                case SyntaxKind.JSXClosingElement:
+                    return checkJSXClosingElement(<JSXClosingElement>node);
+                case SyntaxKind.JSXOpeningElement:
+                    return checkJSXOpeningElement(<JSXOpeningElement>node);
+                case SyntaxKind.JSXSpreadAttribute:
+                    return checkJSXSpreadAttribute(<JSXSpreadAttribute>node);
+                case SyntaxKind.JSXText:
+                    return checkJSXText(<JSXText>node);
                 case SyntaxKind.BindingElement:
                     return checkBindingElement(<BindingElement>node);
                 case SyntaxKind.ClassDeclaration:
@@ -12695,6 +12759,29 @@ module ts {
                     else {
                         return grammarErrorOnNode(name, Diagnostics.An_object_literal_cannot_have_property_and_accessor_with_the_same_name);
                     }
+                }
+            }
+        }
+
+        function checkGrammarJSXElement(node: JSXElement) {
+            const seen: Map<boolean> = {};
+            for (let attr of node.openingElement.attributes) {
+                if (attr.kind === SyntaxKind.JSXSpreadAttribute) {
+                    continue;
+                }
+
+                let jsxAttr = (<JSXAttribute>attr);
+                let name = jsxAttr.name;
+                if (!hasProperty(seen, name.text)) {
+                    seen[name.text] = true;
+                }
+                else {
+                    return grammarErrorOnNode(name, Diagnostics.JSX_elements_cannot_have_multiple_attributes_with_the_same_name);
+                }
+
+                let initializer = jsxAttr.initializer;
+                if (initializer && initializer.kind === SyntaxKind.JSXExpression && !(<JSXExpression>initializer).expression) {
+                    return grammarErrorOnNode(jsxAttr.initializer, Diagnostics.JSX_attributes_must_only_be_assigned_a_non_empty_expression);
                 }
             }
         }

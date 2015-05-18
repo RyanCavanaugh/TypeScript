@@ -1145,6 +1145,60 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
                 emit(span.literal);
             }
 
+            function emitJsxElement(node: JSXElement) {
+                emit(node.openingElement);
+                for (var i = 0, n = node.children.length; i < n; i++) {
+                    emit(node.children[i]);
+                }
+                emit(node.closingElement);
+            }
+
+            function emitJsxAttribute(node: JSXAttribute) {
+                emit(node.name);
+                write('=');
+                emit(node.initializer);
+            }
+
+            function emitJsxSpreadAttribute(node: JSXSpreadAttribute) {
+                write('{...');
+                emit(node.expression);
+                write('}');
+            }
+
+            function emitJsxText(node: JSXText) {
+                write(getTextOfNode(node));
+            }
+
+            function emitJsxOpeningElement(node: JSXOpeningElement) {
+                write('<');
+                emit(node.tagName);
+                if (node.attributes.length > 0 || node.isSelfClosing) {
+                    write(' ');
+                }
+
+                for (var i = 0, n = node.attributes.length; i < n; i++) {
+                    if (i > 0) write(' ');
+                    emit(node.attributes[i]);
+                }
+                if (node.isSelfClosing) {
+                    write('/>');
+                } else {
+                    write('>');
+                }
+            }
+
+            function emitJsxClosingElement(node: JSXClosingElement) {
+                write('</');
+                emit(node.tagName);
+                write('>');
+            }
+
+            function emitJsxExpression(node: JSXExpression) {
+                write('{');
+                emit(node.expression);
+                write('}');
+            }
+
             // This function specifically handles numeric/string literals for enum and accessor 'identifiers'.
             // In a sense, it does not actually emit identifiers as much as it declares a name for a specific property.
             // For example, this is utilized when feeding in a result to Object.defineProperty.
@@ -5810,6 +5864,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
                         return emitTemplateExpression(<TemplateExpression>node);
                     case SyntaxKind.TemplateSpan:
                         return emitTemplateSpan(<TemplateSpan>node);
+                    case SyntaxKind.JSXAttribute:
+                        return emitJsxAttribute(<JSXAttribute>node);
+                    case SyntaxKind.JSXSpreadAttribute:
+                        return emitJsxSpreadAttribute(<JSXSpreadAttribute>node);
+                    case SyntaxKind.JSXText:
+                        return emitJsxText(<JSXText>node);
+                    case SyntaxKind.JSXOpeningElement:
+                        return emitJsxOpeningElement(<JSXOpeningElement>node);
+                    case SyntaxKind.JSXClosingElement:
+                        return emitJsxClosingElement(<JSXClosingElement>node);
+                    case SyntaxKind.JSXElement:
+                        return emitJsxElement(<JSXElement>node);
+                    case SyntaxKind.JSXExpression:
+                        return emitJsxExpression(<JSXExpression>node);
                     case SyntaxKind.QualifiedName:
                         return emitQualifiedName(<QualifiedName>node);
                     case SyntaxKind.ObjectBindingPattern:
