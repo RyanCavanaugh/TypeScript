@@ -1,7 +1,5 @@
 declare module XmlElement {
-    type booleanish = string|boolean;
-    type numberish = string|number;
-    type primitive = string|number|boolean;
+    type primitive = string|boolean|number;
 
     interface JsxElement {
         ref?: primitive;
@@ -488,3 +486,8 @@ declare module XmlElement {
         interface tspan extends JsxSvgElement { }
     }
 }
+
+// Stub these out in case we don't have the full lib.d.ts available (e.g. tests)
+interface EventTarget { }
+interface DataTransfer { }
+interface Event { }
