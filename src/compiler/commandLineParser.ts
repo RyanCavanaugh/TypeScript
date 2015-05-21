@@ -39,6 +39,10 @@ module ts {
             type: "boolean",
         },
         {
+            name: "jsx",
+            type: "boolean",
+        },
+        {
             name: "listFiles",
             type: "boolean",
         },

@@ -93,7 +93,7 @@ module ts {
 
         return {
             getSourceFile,
-            getDefaultLibFileName: options => combinePaths(getDirectoryPath(normalizePath(sys.getExecutingFilePath())), getDefaultLibFileName(options)),
+            getDefaultLibFileNames: options => getDefaultLibFileNames(options).map(fn => combinePaths(getDirectoryPath(normalizePath(sys.getExecutingFilePath())), fn)),
             writeFile,
             getCurrentDirectory: () => currentDirectory || (currentDirectory = sys.getCurrentDirectory()),
             useCaseSensitiveFileNames: () => sys.useCaseSensitiveFileNames,
@@ -153,7 +153,7 @@ module ts {
         host = host || createCompilerHost(options);
         forEach(rootNames, name => processRootFile(name, false));
         if (!seenNoDefaultLib) {
-            processRootFile(host.getDefaultLibFileName(options), true);
+            host.getDefaultLibFileNames(options).forEach(libFile => processRootFile(libFile, true));
         }
         verifyCompilerOptions();
 

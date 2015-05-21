@@ -1695,6 +1695,7 @@ module ts {
         inlineSourceMap?: boolean;
         inlineSources?: boolean;
         listFiles?: boolean;
+        jsx?: boolean;
         locale?: string;
         mapRoot?: string;
         module?: ModuleKind;
@@ -1906,7 +1907,7 @@ module ts {
 
     export interface CompilerHost {
         getSourceFile(fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void): SourceFile;
-        getDefaultLibFileName(options: CompilerOptions): string;
+        getDefaultLibFileNames(options: CompilerOptions): string[];
         getCancellationToken? (): CancellationToken;
         writeFile: WriteFileCallback;
         getCurrentDirectory(): string;

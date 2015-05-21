@@ -53,7 +53,7 @@ module ts {
         getLocalizedDiagnosticMessages(): string;
         getCancellationToken(): CancellationToken;
         getCurrentDirectory(): string;
-        getDefaultLibFileName(options: string): string;
+        getDefaultLibFileNames(options: string): string[];
         getNewLine?(): string;
     }
 
@@ -298,14 +298,14 @@ module ts {
             return this.shimHost.getCurrentDirectory();
         }
 
-        public getDefaultLibFileName(options: CompilerOptions): string {
+        public getDefaultLibFileNames(options: CompilerOptions): string[] {
             // Wrap the API changes for 1.5 release. This try/catch
             // should be removed once TypeScript 1.5 has shipped.
             try {
-                return this.shimHost.getDefaultLibFileName(JSON.stringify(options));
+                return this.shimHost.getDefaultLibFileNames(JSON.stringify(options));
             }
             catch (e) {
-                return "";
+                return [];
             }
         }
     }

@@ -953,7 +953,7 @@ module ts {
         getLocalizedDiagnosticMessages?(): any;
         getCancellationToken?(): CancellationToken;
         getCurrentDirectory(): string;
-        getDefaultLibFileName(options: CompilerOptions): string;
+        getDefaultLibFileNames(options: CompilerOptions): string[];
         log? (s: string): void;
         trace? (s: string): void;
         error? (s: string): void;
@@ -1741,7 +1741,7 @@ module ts {
                 Debug.assert(outputText === undefined, "Unexpected multiple outputs for the file: " + name);
                 outputText = text;
             },
-            getDefaultLibFileName: () => "lib.d.ts",
+            getDefaultLibFileNames: () => ["lib.d.ts"],
             useCaseSensitiveFileNames: () => false,
             getCanonicalFileName: fileName => fileName,
             getCurrentDirectory: () => "",
@@ -2368,7 +2368,7 @@ module ts {
                 getCanonicalFileName: (fileName) => useCaseSensitivefileNames ? fileName : fileName.toLowerCase(),
                 useCaseSensitiveFileNames: () => useCaseSensitivefileNames,
                 getNewLine: () => host.getNewLine ? host.getNewLine() : "\r\n",
-                getDefaultLibFileName: (options) => host.getDefaultLibFileName(options),
+                getDefaultLibFileNames: (options) => host.getDefaultLibFileNames(options),
                 writeFile: (fileName, data, writeByteOrderMark) => { },
                 getCurrentDirectory: () => host.getCurrentDirectory()
             });
@@ -6354,11 +6354,12 @@ module ts {
                     let declarations = symbol.getDeclarations();
                     if (declarations && declarations.length > 0) {
                         // Disallow rename for elements that are defined in the standard TypeScript library.
-                        let defaultLibFileName = host.getDefaultLibFileName(host.getCompilationSettings());
-                        if (defaultLibFileName) {
+                        let defaultLibFileNames = host.getDefaultLibFileNames(host.getCompilationSettings());
+                        if (defaultLibFileNames && defaultLibFileNames.length) {
                             for (let current of declarations) {
                                 let sourceFile = current.getSourceFile();
-                                if (sourceFile && getCanonicalFileName(ts.normalizePath(sourceFile.fileName)) === getCanonicalFileName(ts.normalizePath(defaultLibFileName))) {
+                                var canonicalName = getCanonicalFileName(ts.normalizePath(sourceFile.fileName));
+                                if (sourceFile && defaultLibFileNames.some(libFn => getCanonicalFileName(ts.normalizePath(libFn)) === canonicalName)) {
                                     return getRenameInfoError(getLocaleSpecificMessage(Diagnostics.You_cannot_rename_elements_that_are_defined_in_the_standard_TypeScript_library.key));
                                 }
                             }
@@ -6868,14 +6869,14 @@ module ts {
     declare let __dirname: string;
     
     /**
-      * Get the path of the default library file (lib.d.ts) as distributed with the typescript
+      * Get the path of the default library files (lib.d.ts) as distributed with the typescript
       * node package.
       * The functionality is not supported if the ts module is consumed outside of a node module. 
       */
-    export function getDefaultLibFilePath(options: CompilerOptions): string {
+    export function getDefaultLibFilePaths(options: CompilerOptions): string[] {
         // Check __dirname is defined and that we are on a node.js system.
         if (typeof __dirname !== "undefined") {
-            return __dirname + directorySeparator + getDefaultLibFileName(options);
+            return getDefaultLibFileNames(options).map(fn => __dirname + directorySeparator + fn);
         }
 
         throw new Error("getDefaultLibFilePath is only supported when consumed as a node module. ");

@@ -1778,8 +1778,12 @@ module ts {
 }
 
 module ts {
-    export function getDefaultLibFileName(options: CompilerOptions): string {
-        return options.target === ScriptTarget.ES6 ? "lib.es6.d.ts" : "lib.d.ts";
+    export function getDefaultLibFileNames(options: CompilerOptions): string[]{
+        var names: string[] = [options.target === ScriptTarget.ES6 ? "lib.es6.d.ts" : "lib.d.ts"];
+        if (options.jsx) {
+            names.push('lib.jsx.d.ts');
+        }
+        return names;
     }
 
     export function textSpanEnd(span: TextSpan) {
