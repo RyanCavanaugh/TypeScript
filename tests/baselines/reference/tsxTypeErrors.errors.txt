@@ -7,12 +7,13 @@ lib.d.ts(84,24): error TS2304: Cannot find name 'EventTarget'.
 tests/cases/conformance/tsx/tsxTypeErrors.tsx(6,15): error TS2339: Property 'srce' does not exist on type 'img'.
 tests/cases/conformance/tsx/tsxTypeErrors.tsx(10,18): error TS2322: Type '{ oops: number; }' is not assignable to type 'string'.
 tests/cases/conformance/tsx/tsxTypeErrors.tsx(13,11): error TS2304: Cannot find name 'imag'.
-tests/cases/conformance/tsx/tsxTypeErrors.tsx(32,22): error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(19,15): error TS2339: Property 'magical-attribs' does not exist on type 'div'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(38,22): error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
   Types of property 'y' are incompatible.
     Type 'string' is not assignable to type 'number'.
 
 
-==== tests/cases/conformance/tsx/tsxTypeErrors.tsx (4 errors) ====
+==== tests/cases/conformance/tsx/tsxTypeErrors.tsx (5 errors) ====
     
     // A built-in element (OK)
     var a1 = <div id="foo" />;
@@ -32,6 +33,14 @@ tests/cases/conformance/tsx/tsxTypeErrors.tsx(32,22): error TS2322: Type '{ x: n
     var e1 = <imag src="bar.jpg" />
               ~~~~
 !!! error TS2304: Cannot find name 'imag'.
+    
+    // Special prefixed property names are OK
+    var s1 = <div data-quackquack="moo" />
+    var s2 = <div aria-moo="quackquack" />
+    // Invalid prefix names are still an error
+    var s3 = <div magical-attribs="no" />
+                  ~~~~~~~~~~~~~~~~~~~~
+!!! error TS2339: Property 'magical-attribs' does not exist on type 'div'.
     
     // A custom type
     class MyClass {
@@ -56,4 +65,7 @@ tests/cases/conformance/tsx/tsxTypeErrors.tsx(32,22): error TS2322: Type '{ x: n
 !!! error TS2322:   Types of property 'y' are incompatible.
 !!! error TS2322:     Type 'string' is not assignable to type 'number'.
     
+    // Variables of type 'any' are good for anything
+    declare var AnyThing: any;
+    var any1 = <AnyThing foo="32" bar={'xyz'} />;
     

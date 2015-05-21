@@ -13,6 +13,12 @@ var a3 = <div id={thing} />
 // Mistyped html name (error)
 var e1 = <imag src="bar.jpg" />
 
+// Special prefixed property names are OK
+var s1 = <div data-quackquack="moo" />
+var s2 = <div aria-moo="quackquack" />
+// Invalid prefix names are still an error
+var s3 = <div magical-attribs="no" />
+
 // A custom type
 class MyClass {
   props: {
@@ -32,6 +38,9 @@ var b1 = <MyClass reqd={true} />;
 //    Type 'string' is not assignable to type 'number'.
 var b2 = <MyClass pt={{x: 4, y: 'oops'}} />;
 
+// Variables of type 'any' are good for anything
+declare var AnyThing: any;
+var any1 = <AnyThing foo="32" bar={'xyz'} />;
 
 
 //// [tsxTypeErrors.tsx.js]
@@ -44,6 +53,11 @@ var thing = { oops: 100 };
 var a3 = <div id={thing}/>;
 // Mistyped html name (error)
 var e1 = <imag src="bar.jpg"/>;
+// Special prefixed property names are OK
+var s1 = <div data-quackquack="moo"/>;
+var s2 = <div aria-moo="quackquack"/>;
+// Invalid prefix names are still an error
+var s3 = <div magical-attribs="no"/>;
 // A custom type
 var MyClass = (function () {
     function MyClass() {
@@ -58,3 +72,4 @@ var b1 = <MyClass reqd={true}/>;
 //  Types of property 'y' are incompatible.
 //    Type 'string' is not assignable to type 'number'.
 var b2 = <MyClass pt={{ x: 4, y: 'oops' }}/>;
+var any1 = <AnyThing foo="32" bar={'xyz'}/>;

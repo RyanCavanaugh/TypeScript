@@ -6295,28 +6295,32 @@ module ts {
         function checkJSXAttribute(node: JSXAttribute, elementType: Type, prefixType: Type) {
             // TODO: We want to contextually type expressions
 
-            var correspondingPropSymbol = getPropertyOfType(elementType, node.name.text);
-            var correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
-            if (correspondingPropType === undefined) {
-                // Maybe it's a prefixed property (e.g. data-* or aria-*)
-                if (prefixType) {
-                    for (let prop of getPropertiesOfType(prefixType)) {
-                        if (node.name.text.indexOf(prop.name) === 0) {
-                            correspondingPropType = getTypeOfSymbol(prop);
-                            break;
+            if (elementType !== anyType) {
+                var correspondingPropSymbol = getPropertyOfType(elementType, node.name.text);
+                var correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
+                if (correspondingPropType === undefined) {
+                    // Maybe it's a prefixed property (e.g. data-* or aria-*)
+                    if (prefixType) {
+                        for (let prop of getPropertiesOfType(prefixType)) {
+                            if (node.name.text.indexOf(prop.name) === 0) {
+                                correspondingPropType = getTypeOfSymbol(prop);
+                                break;
+                            }
                         }
                     }
-                }
 
-                if (correspondingPropType === undefined) {
-                    error(node, Diagnostics.Property_0_does_not_exist_on_type_1, node.name.text, typeToString(elementType));
-                    return unknownType;
+                    if (correspondingPropType === undefined) {
+                        error(node, Diagnostics.Property_0_does_not_exist_on_type_1, node.name.text, typeToString(elementType));
+                        return unknownType;
+                    }
                 }
             }
 
             if (node.initializer) {
                 var exprType = checkExpression(node.initializer);
-                checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
+                if (elementType !== anyType) {
+                    checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
+                }
             }
         }
 
@@ -6346,11 +6350,16 @@ module ts {
             }
 
             // Non-intrinsic case
-            var valueType = resolveEntityName(node.tagName, SymbolFlags.Value);
-            if (valueType) {
-                var signatures = getSignaturesOfType(getTypeOfSymbol(valueType), SignatureKind.Construct);
+            var valueTypeSymbol = resolveEntityName(node.tagName, SymbolFlags.Value);
+            if (valueTypeSymbol) {
+                let valueType = getTypeOfSymbol(valueTypeSymbol);
+
+                // Short-circuit any/unknown
+                if (valueType === anyType || valueType === unknownType) return anyType;
+
+                var signatures = getSignaturesOfType(valueType, SignatureKind.Construct);
                 if (signatures === undefined || signatures.length === 0) {
-                    signatures = getSignaturesOfType(getTypeOfSymbol(valueType), SignatureKind.Call);
+                    signatures = getSignaturesOfType(valueType, SignatureKind.Call);
                 }
                 if (signatures === undefined || signatures.length === 0) {
                     error(node.tagName, Diagnostics.Cannot_use_new_with_an_expression_whose_type_lacks_a_call_or_construct_signature);

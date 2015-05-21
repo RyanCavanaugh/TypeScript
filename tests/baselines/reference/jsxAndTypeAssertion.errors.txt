@@ -1,10 +1,8 @@
 tests/cases/conformance/jsx/jsxAndTypeAssertion.tsx(8,20): error TS2304: Cannot find name 'any'.
 tests/cases/conformance/jsx/jsxAndTypeAssertion.tsx(10,11): error TS2304: Cannot find name 'any'.
-tests/cases/conformance/jsx/jsxAndTypeAssertion.tsx(14,10): error TS2339: Property 'test' does not exist on type 'any'.
-tests/cases/conformance/jsx/jsxAndTypeAssertion.tsx(16,10): error TS2339: Property 'test' does not exist on type 'any'.
 
 
-==== tests/cases/conformance/jsx/jsxAndTypeAssertion.tsx (4 errors) ====
+==== tests/cases/conformance/jsx/jsxAndTypeAssertion.tsx (2 errors) ====
     /// <JSX factory="createElement" />
     
     declare var createElement: any;
@@ -23,12 +21,8 @@ tests/cases/conformance/jsx/jsxAndTypeAssertion.tsx(16,10): error TS2339: Proper
     x = <foo>hello {<foo>{}} </foo>;
     
     x = <foo test={<foo>{}}>hello</foo>;
-             ~~~~~~~~~~~~~~
-!!! error TS2339: Property 'test' does not exist on type 'any'.
     
     x = <foo test={<foo>{}}>hello{<foo>{}}</foo>;
-             ~~~~~~~~~~~~~~
-!!! error TS2339: Property 'test' does not exist on type 'any'.
     
     x = <foo>x</foo>, x = <foo/>;
     
