@@ -1,0 +1,297 @@
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(15,2): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(17,2): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(21,2): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(22,4): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(22,9): error TS2304: Cannot find name 'br'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(23,4): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(23,4): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(23,20): error TS2304: Cannot find name 'br'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(24,4): error TS2304: Cannot find name 'br'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(28,2): error TS2304: Cannot find name 'Composite'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(28,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(32,2): error TS2304: Cannot find name 'Composite'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(32,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(33,6): error TS2304: Cannot find name 'Composite2'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(33,6): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(37,4): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(55,4): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(56,5): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(57,5): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(58,6): error TS2304: Cannot find name 'span'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(59,7): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(61,5): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(62,6): error TS2304: Cannot find name 'br'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(63,5): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(64,5): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(69,4): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(73,6): error TS2304: Cannot find name 'span'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(79,2): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(81,2): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(83,2): error TS2304: Cannot find name 'hasOwnProperty'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(83,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(85,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(85,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(87,2): error TS2503: Cannot find namespace 'Namespace'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(87,2): error TS2304: Cannot find name 'Namespace.Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(89,2): error TS2503: Cannot find namespace 'Namespace'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(89,2): error TS2304: Cannot find name 'Namespace.DeepNamespace.Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(91,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(91,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(94,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(94,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(97,2): error TS2304: Cannot find name 'font-face'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(99,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(99,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(101,2): error TS2304: Cannot find name 'x-component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(103,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(103,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(105,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(105,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(107,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(107,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(109,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(109,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(112,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(112,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(112,39): error TS2304: Cannot find name 'Child'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(112,39): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(114,2): error TS2304: Cannot find name 'Component'.
+tests/cases/conformance/jsx/jsxReactTestSuite.tsx(114,2): error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+
+
+==== tests/cases/conformance/jsx/jsxReactTestSuite.tsx (59 errors) ====
+    /// <JSX factory="React.createElement" />
+    declare var React: any;
+    declare var Component:any;
+    declare var Composite:any;
+    declare var Composite2:any;
+    declare var Child:any;
+    declare var Namespace:any;
+    declare var foo: any;
+    declare var bar: any;
+    declare var y:any;
+    declare var x:any;
+    declare var z:any;
+    declare var hasOwnProperty:any;
+    
+    <div>text</div>;
+     ~~~
+!!! error TS2304: Cannot find name 'div'.
+    
+    <div>
+     ~~~
+!!! error TS2304: Cannot find name 'div'.
+      {this.props.children}
+    </div>;
+    
+    <div>
+     ~~~
+!!! error TS2304: Cannot find name 'div'.
+      <div><br /></div>
+       ~~~
+!!! error TS2304: Cannot find name 'div'.
+            ~~
+!!! error TS2304: Cannot find name 'br'.
+      <Component>{foo}<br />{bar}</Component>
+       ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+       ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+                       ~~
+!!! error TS2304: Cannot find name 'br'.
+      <br />
+       ~~
+!!! error TS2304: Cannot find name 'br'.
+    </div>;
+    
+    
+    <Composite>
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Composite'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+        {this.props.children}
+    </Composite>;
+    
+    <Composite>
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Composite'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+        <Composite2 />
+         ~~~~~~~~~~
+!!! error TS2304: Cannot find name 'Composite2'.
+         ~~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    </Composite>;
+    
+    var x =
+      <div
+       ~~~
+!!! error TS2304: Cannot find name 'div'.
+        attr1={
+          "foo" + "bar"
+        }
+        attr2={
+          "foo" + "bar" +
+          
+          "baz" + "bug"
+        }
+        attr3={
+          "foo" + "bar" +
+          "baz" + "bug"
+          // Extra line here.
+        }
+        attr4="baz">
+      </div>;
+    
+    (
+      <div>
+       ~~~
+!!! error TS2304: Cannot find name 'div'.
+        {/* A comment at the beginning */}
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS1109: Expression expected.
+        {/* A second comment at the beginning */}
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS1109: Expression expected.
+        <span>
+         ~~~~
+!!! error TS2304: Cannot find name 'span'.
+          {/* A nested comment */}
+          ~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS1109: Expression expected.
+        </span>
+        {/* A sandwiched comment */}
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS1109: Expression expected.
+        <br />
+         ~~
+!!! error TS2304: Cannot find name 'br'.
+        {/* A comment at the end */}
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS1109: Expression expected.
+        {/* A second comment at the end */}
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS1109: Expression expected.
+      </div>
+    );
+    
+    (
+      <div
+       ~~~
+!!! error TS2304: Cannot find name 'div'.
+        /* a multi-line
+           comment */
+        attr1="foo">
+        <span // a double-slash comment
+         ~~~~
+!!! error TS2304: Cannot find name 'span'.
+          attr2="bar"
+        />
+      </div>
+    );
+    
+    <div>&nbsp;</div>;
+     ~~~
+!!! error TS2304: Cannot find name 'div'.
+    
+    <div>&nbsp; </div>;
+     ~~~
+!!! error TS2304: Cannot find name 'div'.
+    
+    <hasOwnProperty>testing</hasOwnProperty>;
+     ~~~~~~~~~~~~~~
+!!! error TS2304: Cannot find name 'hasOwnProperty'.
+     ~~~~~~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    <Component constructor="foo" />;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    <Namespace.Component />;
+     ~~~~~~~~~
+!!! error TS2503: Cannot find namespace 'Namespace'.
+     ~~~~~~~~~~~~~~~~~~~
+!!! error TS2304: Cannot find name 'Namespace.Component'.
+    
+    <Namespace.DeepNamespace.Component />;
+     ~~~~~~~~~
+!!! error TS2503: Cannot find namespace 'Namespace'.
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2304: Cannot find name 'Namespace.DeepNamespace.Component'.
+    
+    <Component { ... x } y
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    ={2 } z />;
+    
+    <Component
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+        {...this.props} sound="moo" />;
+    
+    <font-face />;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'font-face'.
+    
+    <Component x={y} />;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    <x-component />;
+     ~~~~~~~~~~~
+!!! error TS2304: Cannot find name 'x-component'.
+    
+    <Component {...x} />;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    <Component { ...x } y={2} />;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    <Component { ... x } y={2} z />;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    <Component x={1} {...y} />;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    
+    <Component x={1} y="2" {...z} {...z}><Child /></Component>;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+                                          ~~~~~
+!!! error TS2304: Cannot find name 'Child'.
+                                          ~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    <Component x="1" {...(z = { y: 2 }, z)} z={3}>Text</Component>;
+     ~~~~~~~~~
+!!! error TS2304: Cannot find name 'Component'.
+     ~~~~~~~~~
+!!! error TS2351: Cannot use 'new' with an expression whose type lacks a call or construct signature.
+    
+    
+    

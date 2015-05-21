@@ -762,7 +762,7 @@ module ts {
         closingElement?: JSXClosingElement;
     }
 
-    export interface JSXOpeningElement extends Node {
+    export interface JSXOpeningElement extends Expression {
         tagName: EntityName;
         attributes: NodeArray<JSXAttribute | JSXSpreadAttribute>;
         isSelfClosing: boolean;

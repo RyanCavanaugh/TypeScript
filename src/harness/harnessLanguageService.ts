@@ -176,7 +176,7 @@ module Harness.LanguageService {
         getCompilationSettings(): ts.CompilerOptions { return this.settings; }
         getCancellationToken(): ts.CancellationToken { return this.cancellationToken; }
         getCurrentDirectory(): string { return ""; }
-        getDefaultLibFileName(): string { return ""; }
+        getDefaultLibFileNames(): string[] { return []; }
         getScriptFileNames(): string[] { return this.getFilenames(); }
         getScriptSnapshot(fileName: string): ts.IScriptSnapshot {
             var script = this.getScriptInfo(fileName);
@@ -220,7 +220,7 @@ module Harness.LanguageService {
         getCompilationSettings(): string { return JSON.stringify(this.nativeHost.getCompilationSettings()); }
         getCancellationToken(): ts.CancellationToken { return this.nativeHost.getCancellationToken(); }
         getCurrentDirectory(): string { return this.nativeHost.getCurrentDirectory(); }
-        getDefaultLibFileName(): string { return this.nativeHost.getDefaultLibFileName(); }
+        getDefaultLibFileNames(): string[] { return this.nativeHost.getDefaultLibFileNames(); }
         getScriptFileNames(): string { return JSON.stringify(this.nativeHost.getScriptFileNames()); }
         getScriptSnapshot(fileName: string): ts.ScriptSnapshotShim {
             var nativeScriptSnapshot = this.nativeHost.getScriptSnapshot(fileName);
@@ -495,8 +495,8 @@ module Harness.LanguageService {
 
 
         readFile(fileName: string): string {
-            if (fileName.indexOf(Harness.Compiler.defaultLibFileName) >= 0) { 
-                fileName = Harness.Compiler.defaultLibFileName;
+            if (fileName.indexOf(Harness.Compiler.defaultLibFileNames[0]) >= 0) { 
+                fileName = Harness.Compiler.defaultLibFileNames[0];
             }
              
             var snapshot = this.host.getScriptSnapshot(fileName);

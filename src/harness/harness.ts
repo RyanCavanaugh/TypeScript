@@ -810,9 +810,13 @@ module Harness {
         const carriageReturnLineFeed = "\r\n";
         const lineFeed = "\n";
 
-        export var defaultLibFileName = 'lib.d.ts';
-        export var defaultLibSourceFile = createSourceFileAndAssertInvariants(defaultLibFileName, IO.readFile(libFolder + 'lib.core.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
-        export var defaultES6LibSourceFile = createSourceFileAndAssertInvariants(defaultLibFileName, IO.readFile(libFolder + 'lib.core.es6.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
+        var lib_d_ts = 'lib.d.ts';
+        var jsx_d_ts = 'lib.jsx.d.ts';
+        // Note: entry 0 must be lib.d.ts
+        export var defaultLibFileNames = [lib_d_ts];
+        export var defaultLibSourceFile = createSourceFileAndAssertInvariants(lib_d_ts, IO.readFile(libFolder + 'lib.core.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
+        export var defaultES6LibSourceFile = createSourceFileAndAssertInvariants(lib_d_ts, IO.readFile(libFolder + 'lib.core.es6.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
+        export var defaultJsxLibSourceFile = createSourceFileAndAssertInvariants(lib_d_ts, IO.readFile(libFolder + 'lib.jsx.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
 
         // Cache these between executions so we don't have to re-parse them for every test
         export var fourslashFileName = 'fourslash.ts';
@@ -869,14 +873,16 @@ module Harness {
                         return fourslashSourceFile;
                     }
                     else {
-                        if (fn === defaultLibFileName) {
+                        if (fn === lib_d_ts) {
                             return languageVersion === ts.ScriptTarget.ES6 ? defaultES6LibSourceFile : defaultLibSourceFile;
+                        } else if (fn === jsx_d_ts) {
+                            return defaultJsxLibSourceFile;
                         }
                         // Don't throw here -- the compiler might be looking for a test that actually doesn't exist as part of the TC
                         return undefined;
                     }
                 },
-                getDefaultLibFileName: options => defaultLibFileName,
+                getDefaultLibFileNames: options => options.jsx ? defaultLibFileNames.concat(jsx_d_ts) : defaultLibFileNames,
                 writeFile,
                 getCanonicalFileName,
                 useCaseSensitiveFileNames: () => useCaseSensitiveFileNames,
@@ -1114,6 +1120,10 @@ module Harness {
                         
                         case 'inlinesources':
                             options.inlineSources = setting.value === 'true';
+                            break;
+
+                        case 'jsx':
+                            options.jsx = setting.value === 'true';
                             break;
 
                         default:
@@ -1513,7 +1523,7 @@ module Harness {
             "errortruncation", "usecasesensitivefilenames", "preserveconstenums",
             "includebuiltfile", "suppressimplicitanyindexerrors", "stripinternal",
             "separatecompilation", "inlinesourcemap", "maproot", "sourceroot",
-            "inlinesources", "emitdecoratormetadata"];
+            "inlinesources", "emitdecoratormetadata", "jsx"];
 
         function extractCompilerSettings(content: string): CompilerSetting[] {
 
@@ -1755,7 +1765,7 @@ module Harness {
         }
     }
 
-    if (Error) (<any>Error).stackTraceLimit = 1;
+    if (Error) (<any>Error).stackTraceLimit = 10;
 }
 
 // TODO: not sure why Utils.evalFile isn't working with this, eventually will concat it like old compiler instead of eval

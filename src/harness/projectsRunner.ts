@@ -168,7 +168,7 @@ class ProjectRunner extends RunnerBase {
 
             function getSourceFile(fileName: string, languageVersion: ts.ScriptTarget): ts.SourceFile {
                 var sourceFile: ts.SourceFile = undefined;
-                if (fileName === Harness.Compiler.defaultLibFileName) {
+                if (fileName === Harness.Compiler.defaultLibFileNames[0]) {
                     sourceFile = languageVersion === ts.ScriptTarget.ES6 ? Harness.Compiler.defaultES6LibSourceFile : Harness.Compiler.defaultLibSourceFile;
                 }
                 else {
@@ -184,7 +184,7 @@ class ProjectRunner extends RunnerBase {
             function createCompilerHost(): ts.CompilerHost {
                 return {
                     getSourceFile,
-                    getDefaultLibFileName: options => Harness.Compiler.defaultLibFileName,
+                    getDefaultLibFileNames: options => Harness.Compiler.defaultLibFileNames,
                     writeFile,
                     getCurrentDirectory,
                     getCanonicalFileName: Harness.Compiler.getCanonicalFileName,

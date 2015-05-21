@@ -1,0 +1,59 @@
+lib.d.ts(35,24): error TS2304: Cannot find name 'EventTarget'.
+lib.d.ts(39,22): error TS2304: Cannot find name 'Event'.
+lib.d.ts(42,17): error TS2304: Cannot find name 'EventTarget'.
+lib.d.ts(48,24): error TS2304: Cannot find name 'DataTransfer'.
+lib.d.ts(69,24): error TS2304: Cannot find name 'EventTarget'.
+lib.d.ts(84,24): error TS2304: Cannot find name 'EventTarget'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(6,15): error TS2339: Property 'srce' does not exist on type 'img'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(10,18): error TS2322: Type '{ oops: number; }' is not assignable to type 'string'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(13,11): error TS2304: Cannot find name 'imag'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(32,22): error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
+  Types of property 'y' are incompatible.
+    Type 'string' is not assignable to type 'number'.
+
+
+==== tests/cases/conformance/tsx/tsxTypeErrors.tsx (4 errors) ====
+    
+    // A built-in element (OK)
+    var a1 = <div id="foo" />;
+    
+    // A built-in element with a mistyped property (error)
+    var a2 = <img srce="foo.jpg" />
+                  ~~~~~~~~~~~~~~
+!!! error TS2339: Property 'srce' does not exist on type 'img'.
+    
+    // A built-in element with a badly-typed attribute value (error)
+    var thing = { oops: 100 };
+    var a3 = <div id={thing} />
+                     ~~~~~~~
+!!! error TS2322: Type '{ oops: number; }' is not assignable to type 'string'.
+    
+    // Mistyped html name (error)
+    var e1 = <imag src="bar.jpg" />
+              ~~~~
+!!! error TS2304: Cannot find name 'imag'.
+    
+    // A custom type
+    class MyClass {
+      props: {
+        pt?: { x: number; y: number; };
+    	name?: string;
+    	reqd: boolean;
+      }
+    }
+    
+    // Let's use it
+    // TODO: Error on missing 'reqd'
+    var b1 = <MyClass reqd={true} />; 
+    
+    // Mistyped attribute member
+    // sample.tsx(23,22): error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
+    //  Types of property 'y' are incompatible.
+    //    Type 'string' is not assignable to type 'number'.
+    var b2 = <MyClass pt={{x: 4, y: 'oops'}} />;
+                         ~~~~~~~~~~~~~~~~~~~
+!!! error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
+!!! error TS2322:   Types of property 'y' are incompatible.
+!!! error TS2322:     Type 'string' is not assignable to type 'number'.
+    
+    
