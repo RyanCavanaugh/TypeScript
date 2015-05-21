@@ -308,9 +308,9 @@ module ts {
                 return visitNode(cbNode, (<ComputedPropertyName>node).expression);
             case SyntaxKind.HeritageClause:
                 return visitNodes(cbNodes, (<HeritageClause>node).types);
-            case SyntaxKind.HeritageClauseElement:
-                return visitNode(cbNode, (<HeritageClauseElement>node).expression) ||
-                    visitNodes(cbNodes, (<HeritageClauseElement>node).typeArguments);
+            case SyntaxKind.ExpressionWithTypeArguments:
+                return visitNode(cbNode, (<ExpressionWithTypeArguments>node).expression) ||
+                    visitNodes(cbNodes, (<ExpressionWithTypeArguments>node).typeArguments);
             case SyntaxKind.ExternalModuleReference:
                 return visitNode(cbNode, (<ExternalModuleReference>node).expression);
             case SyntaxKind.MissingDeclaration:
@@ -985,15 +985,6 @@ module ts {
         }
 
         function nextTokenCanFollowModifier() {
-            nextToken();
-            return canFollowModifier();
-        }
-
-        function parseAnyContextualModifier(): boolean {
-            return isModifier(token) && tryParse(nextTokenCanFollowContextualModifier);
-        }
-
-        function nextTokenCanFollowContextualModifier() {
             if (token === SyntaxKind.ConstKeyword) {
                 // 'const' is only a modifier if followed by 'enum'.
                 return nextToken() === SyntaxKind.EnumKeyword;
@@ -1010,6 +1001,10 @@ module ts {
             }
             nextToken();
             return canFollowModifier();
+        }
+
+        function parseAnyContextualModifier(): boolean {
+            return isModifier(token) && tryParse(nextTokenCanFollowModifier);
         }
 
         function canFollowModifier(): boolean {
@@ -1724,7 +1719,7 @@ module ts {
             do {
                 templateSpans.push(parseTemplateSpan());
             }
-            while (templateSpans[templateSpans.length - 1].literal.kind === SyntaxKind.TemplateMiddle)
+            while (lastOrUndefined(templateSpans).literal.kind === SyntaxKind.TemplateMiddle)
 
             templateSpans.end = getNodeEnd();
             template.templateSpans = templateSpans;
@@ -3946,6 +3941,7 @@ module ts {
                     return !isConstEnum;
                 case SyntaxKind.InterfaceKeyword:
                 case SyntaxKind.ModuleKeyword:
+                case SyntaxKind.NamespaceKeyword:
                 case SyntaxKind.EnumKeyword:
                 case SyntaxKind.TypeKeyword:
                     // When followed by an identifier, these do not start a statement but might
@@ -4525,15 +4521,15 @@ module ts {
                 let node = <HeritageClause>createNode(SyntaxKind.HeritageClause);
                 node.token = token;
                 nextToken();
-                node.types = parseDelimitedList(ParsingContext.HeritageClauseElement, parseHeritageClauseElement);
+                node.types = parseDelimitedList(ParsingContext.HeritageClauseElement, parseExpressionWithTypeArguments);
                 return finishNode(node);
             }
 
             return undefined;
         }
 
-        function parseHeritageClauseElement(): HeritageClauseElement {
-            let node = <HeritageClauseElement>createNode(SyntaxKind.HeritageClauseElement);
+        function parseExpressionWithTypeArguments(): ExpressionWithTypeArguments {
+            let node = <ExpressionWithTypeArguments>createNode(SyntaxKind.ExpressionWithTypeArguments);
             node.expression = parseLeftHandSideExpressionOrHigher();
             if (token === SyntaxKind.LessThanToken) {
                 node.typeArguments = parseBracketedList(ParsingContext.TypeArguments, parseType, SyntaxKind.LessThanToken, SyntaxKind.GreaterThanToken);
@@ -4613,14 +4609,14 @@ module ts {
             return finishNode(node);
         }
 
-        function parseInternalModuleTail(fullStart: number, decorators: NodeArray<Decorator>, modifiers: ModifiersArray, flags: NodeFlags): ModuleDeclaration {
+        function parseModuleOrNamespaceDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: ModifiersArray, flags: NodeFlags): ModuleDeclaration {
             let node = <ModuleDeclaration>createNode(SyntaxKind.ModuleDeclaration, fullStart);
             node.decorators = decorators;
             setModifiers(node, modifiers);
             node.flags |= flags;
             node.name = parseIdentifier();
             node.body = parseOptional(SyntaxKind.DotToken)
-                ? parseInternalModuleTail(getNodePos(), /*decorators*/ undefined, /*modifiers:*/undefined, NodeFlags.Export)
+                ? parseModuleOrNamespaceDeclaration(getNodePos(), /*decorators*/ undefined, /*modifiers:*/undefined, NodeFlags.Export)
                 : parseModuleBlock();
             return finishNode(node);
         }
@@ -4635,10 +4631,17 @@ module ts {
         }
 
         function parseModuleDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: ModifiersArray): ModuleDeclaration {
-            parseExpected(SyntaxKind.ModuleKeyword);
-            return token === SyntaxKind.StringLiteral
-                ? parseAmbientExternalModuleDeclaration(fullStart, decorators, modifiers)
-                : parseInternalModuleTail(fullStart, decorators, modifiers, modifiers ? modifiers.flags : 0);
+            let flags = modifiers ? modifiers.flags : 0;
+            if (parseOptional(SyntaxKind.NamespaceKeyword)) {
+                flags |= NodeFlags.Namespace;
+            }
+            else {
+                parseExpected(SyntaxKind.ModuleKeyword);
+                if (token === SyntaxKind.StringLiteral) {
+                    return parseAmbientExternalModuleDeclaration(fullStart, decorators, modifiers);
+                }
+            }
+            return parseModuleOrNamespaceDeclaration(fullStart, decorators, modifiers, flags);
         }
 
         function isExternalModuleReference() {
@@ -4873,6 +4876,7 @@ module ts {
                     // Not true keywords so ensure an identifier follows or is string literal or asterisk or open brace
                     return lookAhead(nextTokenCanFollowImportKeyword);
                 case SyntaxKind.ModuleKeyword:
+                case SyntaxKind.NamespaceKeyword:
                     // Not a true keyword so ensure an identifier or string literal follows
                     return lookAhead(nextTokenIsIdentifierOrKeywordOrStringLiteral);
                 case SyntaxKind.ExportKeyword:
@@ -4957,6 +4961,7 @@ module ts {
                 case SyntaxKind.EnumKeyword:
                     return parseEnumDeclaration(fullStart, decorators, modifiers);
                 case SyntaxKind.ModuleKeyword:
+                case SyntaxKind.NamespaceKeyword:
                     return parseModuleDeclaration(fullStart, decorators, modifiers);
                 case SyntaxKind.ImportKeyword:
                     return parseImportDeclarationOrImportEqualsDeclaration(fullStart, decorators, modifiers);

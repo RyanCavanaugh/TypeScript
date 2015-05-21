@@ -139,6 +139,7 @@ module ts {
         DeclareKeyword,
         GetKeyword,
         ModuleKeyword,
+        NamespaceKeyword,
         RequireKeyword,
         NumberKeyword,
         SetKeyword,
@@ -206,9 +207,9 @@ module ts {
         SpreadElementExpression,
         ClassExpression,
         OmittedExpression,
+        ExpressionWithTypeArguments,
         // Misc
         TemplateSpan,
-        HeritageClauseElement,
         SemicolonClassElement,
         // Element
         Block,
@@ -322,8 +323,9 @@ module ts {
         DeclarationFile =   0x00000800,  // Node is a .d.ts file
         Let =               0x00001000,  // Variable declaration
         Const =             0x00002000,  // Variable declaration
-        OctalLiteral =      0x00004000,
-        ExportContext =     0x00008000,  // Export context (initialized by binding)
+        OctalLiteral =      0x00004000,  // Octal numeric literal
+        Namespace =         0x00008000,  // Namespace declaration
+        ExportContext =     0x00010000,  // Export context (initialized by binding)
 
         Modifier = Export | Ambient | Public | Private | Protected | Static | Default,
         AccessibilityModifier = Public | Private | Protected,
@@ -749,6 +751,11 @@ module ts {
         arguments: NodeArray<Expression>;
     }
 
+    export interface ExpressionWithTypeArguments extends TypeNode {
+        expression: LeftHandSideExpression;
+        typeArguments?: NodeArray<TypeNode>;
+    }
+
     export interface JSXElement extends PrimaryExpression {
         openingElement: JSXOpeningElement;
         children?: NodeArray<JSXElement | JSXExpression | JSXText>;
@@ -934,7 +941,7 @@ module ts {
 
     export interface HeritageClause extends Node {
         token: SyntaxKind;
-        types?: NodeArray<HeritageClauseElement>;
+        types?: NodeArray<ExpressionWithTypeArguments>;
     }
 
     export interface TypeAliasDeclaration extends Declaration, ModuleElement {
@@ -1699,7 +1706,9 @@ module ts {
         locale?: string;
         mapRoot?: string;
         module?: ModuleKind;
+        newLine?: NewLineKind;
         noEmit?: boolean;
+        noEmitHelpers?: boolean;
         noEmitOnError?: boolean;
         noErrorTruncation?: boolean;
         noImplicitAny?: boolean;
@@ -1731,6 +1740,11 @@ module ts {
         System = 4,
     }
 
+    export const enum NewLineKind {
+        CarriageReturnLineFeed = 0,
+        LineFeed = 1,
+    }
+	
     export interface LineAndCharacter {
         line: number;
         /*

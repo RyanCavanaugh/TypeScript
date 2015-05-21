@@ -459,8 +459,18 @@ module ts {
             if (path.charCodeAt(2) === CharacterCodes.slash) return 3;
             return 2;
         }
+        // Per RFC 1738 'file' URI schema has the shape file://<host>/<path>
+        // if <host> is omitted then it is assumed that host value is 'localhost',
+        // however slash after the omitted <host> is not removed.
+        // file:///folder1/file1 - this is a correct URI
+        // file://folder2/file2 - this is an incorrect URI
+        if (path.lastIndexOf("file:///", 0) === 0) {
+            return "file:///".length;
+        }
         let idx = path.indexOf('://');
-        if (idx !== -1) return idx + 3
+        if (idx !== -1) {
+            return idx + "://".length;
+        }
         return 0;
     }
 
@@ -470,7 +480,7 @@ module ts {
         let normalized: string[] = [];
         for (let part of parts) {
             if (part !== ".") {
-                if (part === ".." && normalized.length > 0 && normalized[normalized.length - 1] !== "..") {
+                if (part === ".." && normalized.length > 0 && lastOrUndefined(normalized) !== "..") {
                     normalized.pop();
                 }
                 else {
@@ -586,7 +596,7 @@ module ts {
     export function getRelativePathToDirectoryOrUrl(directoryPathOrUrl: string, relativeOrAbsolutePath: string, currentDirectory: string, getCanonicalFileName: (fileName: string) => string, isAbsolutePathAnUrl: boolean) {
         let pathComponents = getNormalizedPathOrUrlComponents(relativeOrAbsolutePath, currentDirectory);
         let directoryComponents = getNormalizedPathOrUrlComponents(directoryPathOrUrl, currentDirectory);
-        if (directoryComponents.length > 1 && directoryComponents[directoryComponents.length - 1] === "") {
+        if (directoryComponents.length > 1 && lastOrUndefined(directoryComponents) === "") {
             // If the directory path given was of type test/cases/ then we really need components of directory to be only till its name
             // that is  ["test", "cases", ""] needs to be actually ["test", "cases"]
             directoryComponents.length--;
@@ -640,16 +650,18 @@ module ts {
         return pathLen > extLen && path.substr(pathLen - extLen, extLen) === extension;
     }
 
-    let supportedExtensions = [".tsx", ".d.ts", ".ts", ".js"];
+    /**
+     *  List of supported extensions in order of file resolution precedence.
+     */
+    export const supportedExtensions = [".tsx", ".ts", ".d.ts", ".js"];
 
+    const extensionsToRemove = [".d.ts", ".ts", ".js"];
     export function removeFileExtension(path: string): string {
-        for (let ext of supportedExtensions) {
-
+        for (let ext of extensionsToRemove) {
             if (fileExtensionIs(path, ext)) {
                 return path.substr(0, path.length - ext.length);
             }
         }
-
         return path;
     }
 

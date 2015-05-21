@@ -484,9 +484,6 @@ module ts {
                 case SyntaxKind.IndexSignature:
                 case SyntaxKind.FunctionType:
                 case SyntaxKind.ConstructorType:
-                case SyntaxKind.FunctionExpression:
-                case SyntaxKind.ArrowFunction:
-                case SyntaxKind.FunctionDeclaration:
                     return true;
             }
         }
@@ -858,7 +855,7 @@ module ts {
     }
 
     export function hasRestParameters(s: SignatureDeclaration): boolean {
-        return s.parameters.length > 0 && s.parameters[s.parameters.length - 1].dotDotDotToken !== undefined;
+        return s.parameters.length > 0 && lastOrUndefined(s.parameters).dotDotDotToken !== undefined;
     }
 
     export function isLiteralKind(kind: SyntaxKind): boolean {
@@ -1151,6 +1148,18 @@ module ts {
         }
         return false;
     }
+
+    export function isParameterDeclaration(node: VariableLikeDeclaration) {
+        let root = getRootDeclaration(node);
+        return root.kind === SyntaxKind.Parameter;
+    }
+
+    export function getRootDeclaration(node: Node): Node {
+        while (node.kind === SyntaxKind.BindingElement) {
+            node = node.parent.parent;
+        }
+        return node;
+    }
         
     export function nodeStartsNewLexicalEnvironment(n: Node): boolean {
         return isFunctionLike(n) || n.kind === SyntaxKind.ModuleDeclaration || n.kind === SyntaxKind.SourceFile;
@@ -1364,7 +1373,7 @@ module ts {
                 let lineStartsOfS = computeLineStarts(s);
                 if (lineStartsOfS.length > 1) {
                     lineCount = lineCount + lineStartsOfS.length - 1;
-                    linePos = output.length - s.length + lineStartsOfS[lineStartsOfS.length - 1];
+                    linePos = output.length - s.length + lastOrUndefined(lineStartsOfS);
                 }
             }
         }
@@ -1437,8 +1446,10 @@ module ts {
 
     export function shouldEmitToOwnFile(sourceFile: SourceFile, compilerOptions: CompilerOptions): boolean {
         if (!isDeclarationFile(sourceFile)) {
-            if ((isExternalModule(sourceFile) || !compilerOptions.out) && !fileExtensionIs(sourceFile.fileName, ".js")) {
-                return true;
+            if ((isExternalModule(sourceFile) || !compilerOptions.out)) {
+                // 1. in-browser single file compilation scenario
+                // 2. non .js file
+                return compilerOptions.separateCompilation || !fileExtensionIs(sourceFile.fileName, ".js");
             }
             return false;
         }
@@ -1674,16 +1685,16 @@ module ts {
 
     // Returns false if this heritage clause element's expression contains something unsupported
     // (i.e. not a name or dotted name).
-    export function isSupportedHeritageClauseElement(node: HeritageClauseElement): boolean {
-        return isSupportedHeritageClauseElementExpression(node.expression);
+    export function isSupportedExpressionWithTypeArguments(node: ExpressionWithTypeArguments): boolean {
+        return isSupportedExpressionWithTypeArgumentsRest(node.expression);
     }
 
-    function isSupportedHeritageClauseElementExpression(node: Expression): boolean {
+    function isSupportedExpressionWithTypeArgumentsRest(node: Expression): boolean {
         if (node.kind === SyntaxKind.Identifier) {
             return true;
         }
         else if (node.kind === SyntaxKind.PropertyAccessExpression) {
-            return isSupportedHeritageClauseElementExpression((<PropertyAccessExpression>node).expression);
+            return isSupportedExpressionWithTypeArgumentsRest((<PropertyAccessExpression>node).expression);
         }
         else {
             return false;
@@ -1696,7 +1707,7 @@ module ts {
     }
 
     export function getLocalSymbolForExportDefault(symbol: Symbol) {
-            return symbol && symbol.valueDeclaration && (symbol.valueDeclaration.flags & NodeFlags.Default) ? symbol.valueDeclaration.localSymbol : undefined;
+        return symbol && symbol.valueDeclaration && (symbol.valueDeclaration.flags & NodeFlags.Default) ? symbol.valueDeclaration.localSymbol : undefined;
     }
 
     /**
