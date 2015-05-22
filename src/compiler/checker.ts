@@ -6295,9 +6295,12 @@ module ts {
         function checkJSXAttribute(node: JSXAttribute, elementType: Type, prefixType: Type) {
             // TODO: We want to contextually type expressions
 
+            var correspondingPropType: Type = unknownType;
+
+            // Look up the corresponding property for this attribute
             if (elementType !== anyType) {
                 var correspondingPropSymbol = getPropertyOfType(elementType, node.name.text);
-                var correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
+                correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
                 if (correspondingPropType === undefined) {
                     // Maybe it's a prefixed property (e.g. data-* or aria-*)
                     if (prefixType) {
@@ -6309,6 +6312,7 @@ module ts {
                         }
                     }
 
+                    // If there's no corresponding property with this name, error
                     if (correspondingPropType === undefined) {
                         error(node, Diagnostics.Property_0_does_not_exist_on_type_1, node.name.text, typeToString(elementType));
                         return unknownType;
@@ -6321,6 +6325,9 @@ module ts {
                 if (elementType !== anyType) {
                     checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
                 }
+                return exprType;
+            } else {
+                return unknownType;
             }
         }
 
@@ -6380,10 +6387,10 @@ module ts {
             return undefined;
         }
 
-        function getJSXPrefixType() {
+        function getJSXAttributePrefixexType() {
             var xmlNs = getGlobalSymbol('XmlElement', SymbolFlags.Namespace, undefined);
             if (xmlNs) {
-                var prefixType = getDeclaredTypeOfSymbol(getSymbol(xmlNs.exports, 'JsxElementPrefix', SymbolFlags.Type));
+                var prefixType = getDeclaredTypeOfSymbol(getSymbol(xmlNs.exports, 'JsxAttributePrefixes', SymbolFlags.Type));
                 return prefixType;
             } else {
                 return undefined;
@@ -6392,7 +6399,7 @@ module ts {
 
         function checkJSXOpeningElement(node: JSXOpeningElement) {
             // The prefix names for attributes like data-foo and aria-bar
-            var prefixType = getJSXPrefixType();
+            var prefixType = getJSXAttributePrefixexType();
 
             let elementType = resolveJSXElementType(node);
             if (elementType === undefined) {

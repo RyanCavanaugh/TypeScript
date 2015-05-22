@@ -6,7 +6,7 @@ declare module XmlElement {
         key?: primitive;
     }
 
-    interface JsxElementPrefix {
+    interface JsxAttributePrefixes {
         'data-': primitive;
         'aria-': primitive;
     }

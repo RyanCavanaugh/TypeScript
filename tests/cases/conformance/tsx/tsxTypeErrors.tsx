@@ -30,13 +30,13 @@ class MyClass {
 
 // Let's use it
 // TODO: Error on missing 'reqd'
-var b1 = <MyClass reqd={true} />; 
+var b1 = <MyClass />; 
 
 // Mistyped attribute member
 // sample.tsx(23,22): error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
 //  Types of property 'y' are incompatible.
 //    Type 'string' is not assignable to type 'number'.
-var b2 = <MyClass pt={{x: 4, y: 'oops'}} />;
+var b2 = <MyClass reqd={true} pt={{x: 4, y: 'oops'}} />;
 
 // Variables of type 'any' are good for anything
 declare var AnyThing: any;
