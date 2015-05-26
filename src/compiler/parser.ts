@@ -318,22 +318,22 @@ module ts {
                 return visitNode(cbNode, (<ExternalModuleReference>node).expression);
             case SyntaxKind.MissingDeclaration:
                 return visitNodes(cbNodes, node.decorators);
-            case SyntaxKind.JSXElement:
-                return visitNode(cbNode, (<JSXElement>node).openingElement) ||
-                    visitNodes(cbNodes, (<JSXElement>node).children) ||
-                    visitNode(cbNode, (<JSXElement>node).closingElement);
-            case SyntaxKind.JSXOpeningElement:
-                return visitNode(cbNode, (<JSXOpeningElement>node).tagName) ||
-                    visitNodes(cbNodes, (<JSXOpeningElement>node).attributes);
-            case SyntaxKind.JSXAttribute:
-                return visitNode(cbNode, (<JSXAttribute>node).name) ||
-                    visitNode(cbNode, (<JSXAttribute>node).initializer);
-            case SyntaxKind.JSXSpreadAttribute:
-                return visitNode(cbNode, (<JSXSpreadAttribute>node).expression);
-            case SyntaxKind.JSXExpression:
-                return visitNode(cbNode, (<JSXExpression>node).expression);
-            case SyntaxKind.JSXClosingElement:
-                return visitNode(cbNode, (<JSXClosingElement>node).tagName);
+            case SyntaxKind.JsxElement:
+                return visitNode(cbNode, (<JsxElement>node).openingElement) ||
+                    visitNodes(cbNodes, (<JsxElement>node).children) ||
+                    visitNode(cbNode, (<JsxElement>node).closingElement);
+            case SyntaxKind.JsxOpeningElement:
+                return visitNode(cbNode, (<JsxOpeningElement>node).tagName) ||
+                    visitNodes(cbNodes, (<JsxOpeningElement>node).attributes);
+            case SyntaxKind.JsxAttribute:
+                return visitNode(cbNode, (<JsxAttribute>node).name) ||
+                    visitNode(cbNode, (<JsxAttribute>node).initializer);
+            case SyntaxKind.JsxSpreadAttribute:
+                return visitNode(cbNode, (<JsxSpreadAttribute>node).expression);
+            case SyntaxKind.JsxExpression:
+                return visitNode(cbNode, (<JsxExpression>node).expression);
+            case SyntaxKind.JsxClosingElement:
+                return visitNode(cbNode, (<JsxClosingElement>node).tagName);
         }
     }
 
@@ -725,8 +725,8 @@ module ts {
             return token = scanner.reScanTemplateToken();
         }
 
-        function reScanJSXIdentifier(): SyntaxKind {
-            return token = scanner.reScanJSXIdentifier();
+        function reScanJsxIdentifier(): SyntaxKind {
+            return token = scanner.reScanJsxIdentifier();
         }
         
         function reScanLessThanToken(): SyntaxKind {
@@ -1088,7 +1088,7 @@ module ts {
                     return isHeritageClause();
                 case ParsingContext.ImportOrExportSpecifiers:
                     return isIdentifierOrKeyword();
-                case ParsingContext.JSXAttributes:
+                case ParsingContext.JsxAttributes:
                     return isIdentifier() || token === SyntaxKind.OpenBraceToken;
             }
 
@@ -1175,7 +1175,7 @@ module ts {
                     return token === SyntaxKind.GreaterThanToken || token === SyntaxKind.OpenParenToken;
                 case ParsingContext.HeritageClauses:
                     return token === SyntaxKind.OpenBraceToken || token === SyntaxKind.CloseBraceToken;
-                case ParsingContext.JSXAttributes:
+                case ParsingContext.JsxAttributes:
                     return token === SyntaxKind.GreaterThanToken || token === SyntaxKind.SlashToken || token === SyntaxKind.CloseBraceToken;
             }
         }
@@ -1582,7 +1582,7 @@ module ts {
                 case ParsingContext.TupleElementTypes: return Diagnostics.Type_expected;
                 case ParsingContext.HeritageClauses: return Diagnostics.Unexpected_token_expected;
                 case ParsingContext.ImportOrExportSpecifiers: return Diagnostics.Identifier_expected;
-                case ParsingContext.JSXAttributes: return Diagnostics.Identifier_expected;
+                case ParsingContext.JsxAttributes: return Diagnostics.Identifier_expected;
             }
         };
 
@@ -2987,7 +2987,7 @@ module ts {
                 case SyntaxKind.VoidKeyword:
                     return parseVoidExpression();
                 case SyntaxKind.LessThanToken:
-                    return (sourceFile.isTSXFile && tryParse(() => parseJSXElement(true))) || parseTypeAssertion();
+                    return (tryParse(() => parseJsxElement(true))) || parseTypeAssertion();
                 default:
                     return parsePostfixExpressionOrHigher();
             }
@@ -3133,39 +3133,39 @@ module ts {
             return hasProperty(closingTagsMap, tagName) && forEach(closingTagsMap[tagName], p => p >= currentPos);
         }
 
-        function parseJSXElement(speculative = false): JSXElement {
-            let node = <JSXElement>createNode(SyntaxKind.JSXElement);
+        function parseJsxElement(speculative = false): JsxElement {
+            let node = <JsxElement>createNode(SyntaxKind.JsxElement);
 
-            node.openingElement = parseJSXOpeningElement();
+            node.openingElement = parseJsxOpeningElement();
 
             let tagName = entityNameToString(node.openingElement.tagName);
 
             if (node.openingElement.attributes.length && tagName) {
-                // if there is tagName and attribute it's sure that we are in a JSXElement and not a type assertion
+                // if there is tagName and attribute it's sure that we are in a JsxElement and not a type assertion
                 speculative = false;
             }
 
-            node.children = <NodeArray<JSXText | JSXExpression | JSXElement>>[];
+            node.children = <NodeArray<JsxText | JsxExpression | JsxElement>>[];
             node.children.pos = getNodePos();
 
             if (node.openingElement.isSelfClosing) {
                 node.children.end = getNodeEnd();
-                // if it's a self closing tag it's a JSXElement and not a type assertion
+                // if it's a self closing tag it's a JsxElement and not a type assertion
                 speculative = false;
             } 
             else {
                 if (speculative && !hasClosingTagAfterPos(tagName, scanner.getStartPos())) {
                     // we are in speculative parsing and we were not able to find a corresponding closing tag
                     // farther in the source text, we try to determine if the following tokens look like normal
-                    // part of jsx children to decide if we continue parsing the JSXElement children
-                    let shouldContinueJSXParsing = lookAhead(() => {
+                    // part of jsx children to decide if we continue parsing the JsxElement children
+                    let shouldContinueJsxParsing = lookAhead(() => {
                         const t = token;
                         const next = nextToken();
                         return t === SyntaxKind.LessThanToken ||// <foo><...
                             (t >= SyntaxKind.Identifier && next === SyntaxKind.OpenBraceToken) || // '<foo> bar {...
                             (t >= SyntaxKind.Identifier && next >= SyntaxKind.Identifier) // '<foo> foo bar ...
                     });
-                    if (!shouldContinueJSXParsing) {
+                    if (!shouldContinueJsxParsing) {
                         return null;
                     }
                 }
@@ -3174,13 +3174,13 @@ module ts {
 
                 while (true) {
                     if (token === SyntaxKind.OpenBraceToken) {
-                        node.children.push(parseJSXExpression());
+                        node.children.push(parseJsxExpression());
                     }
                     else if (token === SyntaxKind.LessThanToken) {
                         if (reScanLessThanToken() === SyntaxKind.LessThanSlashToken) {
                             break;
                         }
-                        node.children.push(parseJSXElement());
+                        node.children.push(parseJsxElement());
                     }
                     else if (token === SyntaxKind.CloseBraceToken || token === SyntaxKind.EndOfFileToken) {
                         if (speculative) {
@@ -3193,7 +3193,7 @@ module ts {
                         break;
                     }
                     else {
-                        node.children.push(parseJSXText())
+                        node.children.push(parseJsxText())
                     }
                 }
 
@@ -3203,7 +3203,7 @@ module ts {
                 if (token === SyntaxKind.LessThanSlashToken) {
 
                     let start = scanner.getStartPos();
-                    node.closingElement = parseJSXClosingElement();
+                    node.closingElement = parseJsxClosingElement();
                     if (!node.closingElement.tagName || tagName !== entityNameToString(node.closingElement.tagName)) {
                         var length = scanner.getTokenPos() - start;
                         parseErrorAtPosition(start, length, Diagnostics.Expected_corresponding_JSX_closing_tag_for_0, tagName);
@@ -3211,7 +3211,7 @@ module ts {
                     speculative = false;
                 } 
                 else {
-                    node.closingElement = <JSXClosingElement>createMissingNode(SyntaxKind.JSXClosingElement, /*reportAtCurrentPosition:*/ true, 
+                    node.closingElement = <JsxClosingElement>createMissingNode(SyntaxKind.JsxClosingElement, /*reportAtCurrentPosition:*/ true, 
                         Diagnostics.Expected_corresponding_JSX_closing_tag_for_0, tagName);
                     node.children.end = getNodeEnd();
                 }
@@ -3224,8 +3224,8 @@ module ts {
             return finishNode(node);
         }
         
-        function parseJSXText(): JSXText {
-            let node = <JSXText>createNode(SyntaxKind.JSXText);
+        function parseJsxText(): JsxText {
+            let node = <JsxText>createNode(SyntaxKind.JsxText);
             while (token !== SyntaxKind.OpenBraceToken &&
                 token !== SyntaxKind.CloseBraceToken &&
                 token !== SyntaxKind.LessThanToken && 
@@ -3235,12 +3235,12 @@ module ts {
             return finishNode(node);
         }
 
-        function parseJSXOpeningElement(): JSXOpeningElement {
-            let node = <JSXOpeningElement>createNode(SyntaxKind.JSXOpeningElement);
+        function parseJsxOpeningElement(): JsxOpeningElement {
+            let node = <JsxOpeningElement>createNode(SyntaxKind.JsxOpeningElement);
 
             parseExpected(SyntaxKind.LessThanToken);
-            node.tagName = parseJSXElementName();
-            node.attributes = parseList(ParsingContext.JSXAttributes, /*checkForStrictMode*/ false, parseJSXAttribute);
+            node.tagName = parseJsxElementName();
+            node.attributes = parseList(ParsingContext.JsxAttributes, /*checkForStrictMode*/ false, parseJsxAttribute);
             if (token === SyntaxKind.SlashToken) {
                 node.isSelfClosing = true;
                 nextToken();
@@ -3249,11 +3249,11 @@ module ts {
             return finishNode(node);
         }
         
-        function parseJSXElementName(): EntityName {
-            reScanJSXIdentifier();
+        function parseJsxElementName(): EntityName {
+            reScanJsxIdentifier();
             let elementName: EntityName = parseIdentifier();
             while (parseOptional(SyntaxKind.DotToken)) {
-                reScanJSXIdentifier();
+                reScanJsxIdentifier();
                 let node = <QualifiedName>createNode(SyntaxKind.QualifiedName, elementName.pos);
                 node.left = elementName;
                 node.right = parseIdentifierName();
@@ -3262,8 +3262,8 @@ module ts {
             return elementName;
         }
 
-        function parseJSXExpression(): JSXExpression {
-            let node = <JSXExpression>createNode(SyntaxKind.JSXExpression)
+        function parseJsxExpression(): JsxExpression {
+            let node = <JsxExpression>createNode(SyntaxKind.JsxExpression)
             let isExpressionEmpty = lookAhead(() => {
                 do {
                     nextToken();
@@ -3284,31 +3284,31 @@ module ts {
             return finishNode(node);
         }
 
-        function parseJSXAttribute(): JSXAttribute | JSXSpreadAttribute {
+        function parseJsxAttribute(): JsxAttribute | JsxSpreadAttribute {
             if (token === SyntaxKind.OpenBraceToken) {
-                return parseJSXSPreadAttribute();
+                return parseJsxSPreadAttribute();
             }
-            reScanJSXIdentifier();
-            let node = <JSXAttribute>createNode(SyntaxKind.JSXAttribute);
+            reScanJsxIdentifier();
+            let node = <JsxAttribute>createNode(SyntaxKind.JsxAttribute);
             node.name = parseIdentifierName();
             if (parseOptional(SyntaxKind.EqualsToken)) {
                 switch (token) {
                     case SyntaxKind.LessThanToken:
-                        node.initializer = parseJSXElement();
+                        node.initializer = parseJsxElement();
                         break;
                     case SyntaxKind.StringLiteral:
                         node.initializer = parseLiteralNode();
                         break;
                     default:
-                        node.initializer = parseJSXExpression();
+                        node.initializer = parseJsxExpression();
                         break;
                 }
             }
             return finishNode(node);
         }
 
-        function parseJSXSPreadAttribute(): JSXSpreadAttribute {
-            let node = <JSXSpreadAttribute>createNode(SyntaxKind.JSXSpreadAttribute);
+        function parseJsxSPreadAttribute(): JsxSpreadAttribute {
+            let node = <JsxSpreadAttribute>createNode(SyntaxKind.JsxSpreadAttribute);
             parseExpected(SyntaxKind.OpenBraceToken);
             parseExpected(SyntaxKind.DotDotDotToken);
             node.expression = parseExpression();
@@ -3316,10 +3316,10 @@ module ts {
             return finishNode(node);
         }
 
-        function parseJSXClosingElement(): JSXClosingElement {
-            let node = <JSXClosingElement>createNode(SyntaxKind.JSXClosingElement);
+        function parseJsxClosingElement(): JsxClosingElement {
+            let node = <JsxClosingElement>createNode(SyntaxKind.JsxClosingElement);
             parseExpected(SyntaxKind.LessThanSlashToken);
-            node.tagName = parseJSXElementName();
+            node.tagName = parseJsxElementName();
             parseExpected(SyntaxKind.GreaterThanToken);
             return finishNode(node);
         }
@@ -5113,7 +5113,7 @@ module ts {
             ArrayBindingElements,      // Binding elements in array binding list
             ArgumentExpressions,       // Expressions in argument list
             ObjectLiteralMembers,      // Members in object literal
-            JSXAttributes,             // Attributes in jsx element
+            JsxAttributes,             // Attributes in jsx element
             ArrayLiteralMembers,       // Members in array literal
             Parameters,                // Parameters in parameter list
             TypeParameters,            // Type parameters in type parameter list

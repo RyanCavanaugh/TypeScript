@@ -2856,6 +2856,7 @@ module ts {
                 node = (<QualifiedName>contextToken.parent).left;
                 isRightOfDot = true;
             }
+            
 
             let location = getTouchingPropertyName(sourceFile, position);
             var target = program.getCompilerOptions().target;
@@ -2953,6 +2954,16 @@ module ts {
 
                         //let exports = typeInfoResolver.getExportsOfImportDeclaration(importDeclaration);
                         symbols = exports ? filterModuleExports(exports, importDeclaration) : emptyArray;
+                    }
+                }
+                else if (getAncestor(contextToken, SyntaxKind.JsxElement)) {
+                    // Defer to global completion if we're inside an {expression}
+                    var expr = getAncestor(contextToken, SyntaxKind.JsxExpression);
+                    if (!expr) {
+                        // Cursor is inside a JSX element
+                        var t = typeChecker.getTypeAtLocation(getAncestor(contextToken, SyntaxKind.JsxElement));
+                        symbols = typeChecker.getPropertiesOfType(typeChecker.getJsxElementAttributesType(t));
+                        isMemberCompletion = true;
                     }
                 }
                 else {

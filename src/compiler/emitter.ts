@@ -1145,7 +1145,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
                 emit(span.literal);
             }
 
-            function emitJsxElement(node: JSXElement) {
+            function emitJsxElement(node: JsxElement) {
                 emit(node.openingElement);
                 for (var i = 0, n = node.children.length; i < n; i++) {
                     emit(node.children[i]);
@@ -1153,23 +1153,23 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
                 emit(node.closingElement);
             }
 
-            function emitJsxAttribute(node: JSXAttribute) {
+            function emitJsxAttribute(node: JsxAttribute) {
                 emit(node.name);
                 write('=');
                 emit(node.initializer);
             }
 
-            function emitJsxSpreadAttribute(node: JSXSpreadAttribute) {
+            function emitJsxSpreadAttribute(node: JsxSpreadAttribute) {
                 write('{...');
                 emit(node.expression);
                 write('}');
             }
 
-            function emitJsxText(node: JSXText) {
+            function emitJsxText(node: JsxText) {
                 write(getTextOfNode(node));
             }
 
-            function emitJsxOpeningElement(node: JSXOpeningElement) {
+            function emitJsxOpeningElement(node: JsxOpeningElement) {
                 write('<');
                 emit(node.tagName);
                 if (node.attributes.length > 0 || node.isSelfClosing) {
@@ -1187,13 +1187,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
                 }
             }
 
-            function emitJsxClosingElement(node: JSXClosingElement) {
+            function emitJsxClosingElement(node: JsxClosingElement) {
                 write('</');
                 emit(node.tagName);
                 write('>');
             }
 
-            function emitJsxExpression(node: JSXExpression) {
+            function emitJsxExpression(node: JsxExpression) {
                 write('{');
                 emit(node.expression);
                 write('}');
@@ -5864,20 +5864,20 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
                         return emitTemplateExpression(<TemplateExpression>node);
                     case SyntaxKind.TemplateSpan:
                         return emitTemplateSpan(<TemplateSpan>node);
-                    case SyntaxKind.JSXAttribute:
-                        return emitJsxAttribute(<JSXAttribute>node);
-                    case SyntaxKind.JSXSpreadAttribute:
-                        return emitJsxSpreadAttribute(<JSXSpreadAttribute>node);
-                    case SyntaxKind.JSXText:
-                        return emitJsxText(<JSXText>node);
-                    case SyntaxKind.JSXOpeningElement:
-                        return emitJsxOpeningElement(<JSXOpeningElement>node);
-                    case SyntaxKind.JSXClosingElement:
-                        return emitJsxClosingElement(<JSXClosingElement>node);
-                    case SyntaxKind.JSXElement:
-                        return emitJsxElement(<JSXElement>node);
-                    case SyntaxKind.JSXExpression:
-                        return emitJsxExpression(<JSXExpression>node);
+                    case SyntaxKind.JsxAttribute:
+                        return emitJsxAttribute(<JsxAttribute>node);
+                    case SyntaxKind.JsxSpreadAttribute:
+                        return emitJsxSpreadAttribute(<JsxSpreadAttribute>node);
+                    case SyntaxKind.JsxText:
+                        return emitJsxText(<JsxText>node);
+                    case SyntaxKind.JsxOpeningElement:
+                        return emitJsxOpeningElement(<JsxOpeningElement>node);
+                    case SyntaxKind.JsxClosingElement:
+                        return emitJsxClosingElement(<JsxClosingElement>node);
+                    case SyntaxKind.JsxElement:
+                        return emitJsxElement(<JsxElement>node);
+                    case SyntaxKind.JsxExpression:
+                        return emitJsxExpression(<JsxExpression>node);
                     case SyntaxKind.QualifiedName:
                         return emitQualifiedName(<QualifiedName>node);
                     case SyntaxKind.ObjectBindingPattern:

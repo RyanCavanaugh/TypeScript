@@ -255,13 +255,13 @@ module ts {
         MissingDeclaration,
 
         //JSX
-        JSXElement,
-        JSXOpeningElement,
-        JSXText,
-        JSXClosingElement,
-        JSXAttribute,
-        JSXSpreadAttribute,
-        JSXExpression,
+        JsxElement,
+        JsxOpeningElement,
+        JsxText,
+        JsxClosingElement,
+        JsxAttribute,
+        JsxSpreadAttribute,
+        JsxExpression,
 
         // Module references
         ExternalModuleReference,
@@ -764,36 +764,36 @@ module ts {
         typeArguments?: NodeArray<TypeNode>;
     }
 
-    export interface JSXElement extends PrimaryExpression {
-        openingElement: JSXOpeningElement;
-        children?: NodeArray<JSXElement | JSXExpression | JSXText>;
-        closingElement?: JSXClosingElement;
+    export interface JsxElement extends PrimaryExpression {
+        openingElement: JsxOpeningElement;
+        children?: NodeArray<JsxElement | JsxExpression | JsxText>;
+        closingElement?: JsxClosingElement;
     }
 
-    export interface JSXOpeningElement extends Expression {
+    export interface JsxOpeningElement extends Expression {
         tagName: EntityName;
-        attributes: NodeArray<JSXAttribute | JSXSpreadAttribute>;
+        attributes: NodeArray<JsxAttribute | JsxSpreadAttribute>;
         isSelfClosing: boolean;
     }
 
-    export interface JSXAttribute extends Node {
+    export interface JsxAttribute extends Node {
         name: Identifier;
         initializer?: Expression;
     }
 
-    export interface JSXSpreadAttribute extends Node {
+    export interface JsxSpreadAttribute extends Node {
         expression: Expression;
     }
 
-    export interface JSXClosingElement extends Node {
+    export interface JsxClosingElement extends Node {
         tagName: EntityName;
     }
 
-    export interface JSXExpression extends Expression {
+    export interface JsxExpression extends Expression {
         expression?: Expression;
     }
 
-    export interface JSXText extends Node {
+    export interface JsxText extends Node {
         _jsxTextExpressionBrand: any;
     }
 
@@ -809,7 +809,7 @@ module ts {
         template: LiteralExpression | TemplateExpression;
     }
 
-    export type CallLikeExpression = CallExpression | NewExpression | TaggedTemplateExpression | JSXElement;
+    export type CallLikeExpression = CallExpression | NewExpression | TaggedTemplateExpression | JsxElement;
 
     export interface TypeAssertion extends UnaryExpression {
         type: TypeNode;
@@ -1224,6 +1224,8 @@ module ts {
         isValidPropertyAccess(node: PropertyAccessExpression | QualifiedName, propertyName: string): boolean;
         getAliasedSymbol(symbol: Symbol): Symbol;
         getExportsOfModule(moduleSymbol: Symbol): Symbol[];
+
+        getJsxElementAttributesType(elementType: Type): Type;
 
         // Should not be called directly.  Should only be accessed through the Program instance.
         /* @internal */ getDiagnostics(sourceFile?: SourceFile): Diagnostic[];

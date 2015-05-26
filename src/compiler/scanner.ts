@@ -21,7 +21,7 @@ module ts {
         reScanGreaterToken(): SyntaxKind;
         reScanSlashToken(): SyntaxKind;
         reScanTemplateToken(): SyntaxKind;
-        reScanJSXIdentifier(): SyntaxKind;
+        reScanJsxIdentifier(): SyntaxKind;
         reScanLessThanToken(): SyntaxKind;
         scan(): SyntaxKind;
         // Sets the text for the scanner to scan.  An optional subrange starting point and length
@@ -666,7 +666,7 @@ module ts {
             reScanGreaterToken,
             reScanSlashToken,
             reScanTemplateToken,
-            reScanJSXIdentifier,
+            reScanJsxIdentifier,
             reScanLessThanToken,
             scan,
             setText,
@@ -802,7 +802,7 @@ module ts {
             return result;
         }
 
-        function scanJSXText() {
+        function scanJsxText() {
             let result = "";
             let start = pos;
             while (true) {
@@ -1503,7 +1503,7 @@ module ts {
             return token = scanTemplateAndSetTokenValue();
         }
         
-        function reScanJSXIdentifier(): SyntaxKind {
+        function reScanJsxIdentifier(): SyntaxKind {
             if (token === SyntaxKind.Identifier) {
                 while (pos < end) {
                     let ch = text.charCodeAt(pos);
