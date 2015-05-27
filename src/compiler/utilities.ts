@@ -169,13 +169,13 @@ module ts {
         return skipTrivia((sourceFile || getSourceFileOfNode(node)).text, node.decorators.end);        
     }
 
-    export function getSourceTextOfNodeFromSourceFile(sourceFile: SourceFile, node: Node): string {
+    export function getSourceTextOfNodeFromSourceFile(sourceFile: SourceFile, node: Node, includeTrivia = false): string {
         if (nodeIsMissing(node)) {
             return "";
         }
 
         let text = sourceFile.text;
-        return text.substring(skipTrivia(text, node.pos), node.end);
+        return text.substring(includeTrivia ? node.pos : skipTrivia(text, node.pos), node.end);
     }
 
     export function getTextOfNodeFromSourceText(sourceText: string, node: Node): string {
@@ -186,8 +186,8 @@ module ts {
         return sourceText.substring(skipTrivia(sourceText, node.pos), node.end);
     }
 
-    export function getTextOfNode(node: Node): string {
-        return getSourceTextOfNodeFromSourceFile(getSourceFileOfNode(node), node);
+    export function getTextOfNode(node: Node, includeTrivia = false): string {
+        return getSourceTextOfNodeFromSourceFile(getSourceFileOfNode(node), node, includeTrivia);
     }
 
     // Add an extra underscore to identifiers that start with two underscores to avoid issues with magic names like '__proto__'

@@ -1817,7 +1817,7 @@
         "category": "Error",
         "code": 5050
     },
-     "Option 'inlineSources' can only be used when either option '--inlineSourceMap' or option '--sourceMap' is provided.": {
+    "Option 'inlineSources' can only be used when either option '--inlineSourceMap' or option '--sourceMap' is provided.": {
         "category": "Error",
         "code": 5051
     },
@@ -2010,15 +2010,22 @@
         "category": "Message",
         "code": 6060
     },
-    "NEWLINE": { 
-        "category": "Message", 
+    "NEWLINE": {
+        "category": "Message",
         "code": 6061
     },
     "Argument for '--newLine' option must be 'CRLF' or 'LF'.": {
-        "category": "Error", 
+        "category": "Error",
         "code": 6062
     },
-
+    "Specifies how to transform JSX syntax during compilation.":  {
+        "category": "Message",
+        "code":  6080
+    },
+    "Argument for --jsx must be 'preserve' or 'react'.":  {
+        "category": "Message",
+        "code":  6081
+    },
 
     "Variable '{0}' implicitly has an '{1}' type.": {
         "category": "Error",
@@ -2193,8 +2200,13 @@
         "category": "Error",
         "code": 17004
     },
-     "JSX elements are not currently supported.": {
+    "JSX elements are not currently supported.": {
+        "category": "Error",
+        "code": 17005
+    },
+    "JSX elements are not currently supported.": {
         "category": "Error",
         "code" : 17005
     }
+
 }

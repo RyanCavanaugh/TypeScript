@@ -1712,7 +1712,7 @@ module ts {
         inlineSourceMap?: boolean;
         inlineSources?: boolean;
         listFiles?: boolean;
-        jsx?: boolean;
+        jsx?: JsxEmit;
         locale?: string;
         mapRoot?: string;
         module?: ModuleKind;
@@ -1748,6 +1748,12 @@ module ts {
         AMD = 2,
         UMD = 3,
         System = 4,
+    }
+
+    export const enum JsxEmit {
+        None = 0,
+        Preserve = 1,
+        React = 2
     }
 
     export const enum NewLineKind {

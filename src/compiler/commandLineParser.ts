@@ -40,7 +40,13 @@ module ts {
         },
         {
             name: "jsx",
-            type: "boolean",
+            type: {
+                "preserve": JsxEmit.Preserve,
+                "react": JsxEmit.React
+            },
+            paramType: Diagnostics.KIND,
+            description: Diagnostics.Specifies_how_to_transform_JSX_syntax_during_compilation,
+            error: Diagnostics.Argument_for_jsx_must_be_preserve_or_react
         },
         {
             name: "listFiles",
