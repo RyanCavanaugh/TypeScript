@@ -159,8 +159,7 @@ module ts {
 
         let JsxNames = {
             JSX: 'JSX',
-            Intrinsics: 'Intrinsics',
-            SpecialAttributePrefixes: 'SpecialAttributePrefixes',
+            Intrinsics: 'IntrinsicElements',
             ElementClass: 'ElementClass',
             ElementAttributesProperty: 'ElementAttributesProperty'
         };
@@ -6303,9 +6302,13 @@ module ts {
             return elemType;
         }
 
-        function checkJsxAttribute(node: JsxAttribute, elementType: Type, prefixType: Type) {
-            // TODO: We want to contextually type expressions
+        function isIdentifierLike(name: string) {
+            // TODO: Use the scanner for this?
+            return /^[A-Za-z_$]\w*$/.test(name);
+        }
 
+        function checkJsxAttribute(node: JsxAttribute, elementType: Type) {
+            // TODO: We want to contextually type expressions
             var correspondingPropType: Type = unknownType;
 
             // Look up the corresponding property for this attribute
@@ -6313,18 +6316,8 @@ module ts {
                 var correspondingPropSymbol = getPropertyOfType(elementType, node.name.text);
                 correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
                 if (correspondingPropType === undefined) {
-                    // Maybe it's a prefixed property (e.g. data-* or aria-*)
-                    if (prefixType) {
-                        for (let prop of getPropertiesOfType(prefixType)) {
-                            if (node.name.text.indexOf(prop.name) === 0) {
-                                correspondingPropType = getTypeOfSymbol(prop);
-                                break;
-                            }
-                        }
-                    }
-
                     // If there's no corresponding property with this name, error
-                    if (correspondingPropType === undefined) {
+                    if (isIdentifierLike(node.name.text) && correspondingPropType === undefined) {
                         error(node.name, Diagnostics.Property_0_does_not_exist_on_type_1, node.name.text, typeToString(elementType));
                         return unknownType;
                     }
@@ -6342,7 +6335,8 @@ module ts {
             }
         }
 
-        function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementType: Type, prefixType: Type) {
+        function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementType: Type) {
+            // TODO: Check the properties of the type of this expression as if they are JsxAttributes
             checkExpression(node.expression);
         }
 
@@ -6362,6 +6356,14 @@ module ts {
                 constructorOrFactoryType = getTypeOfPropertyOfType(intrinsicsType, getTextOfNode(node.tagName));
             }
 
+            // Intrinsic string indexer case
+            if (constructorOrFactoryType === undefined && intrinsicsType) {
+                var indexSignatureType = getIndexTypeOfSymbol(intrinsicsSymbol, IndexKind.String);
+                if (indexSignatureType) {
+                    constructorOrFactoryType = indexSignatureType;
+                }
+            }
+
             // Value (class) case
             if (constructorOrFactoryType === undefined) {
                 // Non-intrinsic case
@@ -6370,14 +6372,6 @@ module ts {
                     let valueType = getTypeOfSymbol(valueTypeSymbol);
 
                     constructorOrFactoryType = valueType;
-                }
-            }
-
-            // Intrinsic string indexer case
-            if (constructorOrFactoryType === undefined && intrinsicsType) {
-                var indexSignature = getIndexDeclarationOfSymbol(intrinsicsSymbol, IndexKind.String);
-                if (indexSignature) {
-                    constructorOrFactoryType = getTypeOfNode(indexSignature.type);
                 }
             }
 
@@ -6420,16 +6414,6 @@ module ts {
             return anyType;
         }
 
-        function getJsxAttributePrefixesType() {
-            var jsxNS = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/ undefined);
-            if (jsxNS) {
-                var prefixType = getDeclaredTypeOfSymbol(getSymbol(jsxNS.exports, JsxNames.SpecialAttributePrefixes, SymbolFlags.Type));
-                return prefixType;
-            }
-            else {
-                return undefined;
-            }
-        }
 
         function getJsxElementClassType() {
             var jsxNS = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/ undefined);
@@ -6444,9 +6428,6 @@ module ts {
         }
 
         function checkJsxOpeningElement(node: JsxOpeningElement) {
-            // The prefix names for attributes like data-foo and aria-bar
-            var prefixType = getJsxAttributePrefixesType();
-
             // Look up the constructor type of this element
             let elementType = getJsxElementType(node);
             if (elementType === undefined) {
@@ -6469,9 +6450,9 @@ module ts {
             // Check attributes
             for (var i = 0, n = node.attributes.length; i < n; i++) {
                 if (node.attributes[i].kind === SyntaxKind.JsxAttribute) {
-                    checkJsxAttribute(<JsxAttribute>(node.attributes[i]), attributesType, prefixType);
+                    checkJsxAttribute(<JsxAttribute>(node.attributes[i]), attributesType);
                 } else if (node.attributes[i].kind === SyntaxKind.JsxSpreadAttribute) {
-                    checkJsxSpreadAttribute(<JsxSpreadAttribute>(node.attributes[i]), attributesType, prefixType);
+                    checkJsxSpreadAttribute(<JsxSpreadAttribute>(node.attributes[i]), attributesType);
                 } else {
                     throw new Error('Unknown JSX attribute kind');
                 }

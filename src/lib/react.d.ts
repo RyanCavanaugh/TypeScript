@@ -85,6 +85,12 @@ declare module React {
     }
     type WheelEvent = (data: WheelEventData) => any;
 
+    type primitive = string|boolean|number;
+    interface ReactInstance {
+        ref?: primitive;
+        key?: primitive;
+    }
+
     interface ReactDomEvents {
         // Clipboard events
         onCopy?: ClipboardEvent;
@@ -358,18 +364,6 @@ declare module React {
 }
 
 declare module JSX {
-    type primitive = string|boolean|number;
-
-    interface Element {
-        ref?: primitive;
-        key?: primitive;
-    }
-
-    interface SpecialAttributePrefixes {
-        'data-': primitive;
-        'aria-': primitive;
-    }
-
     interface ElementClass {
         render(): any;
     }
@@ -378,7 +372,7 @@ declare module JSX {
         props: any;
     }
 
-    interface Intrinsics {
+    interface IntrinsicElements {
         a: React.HtmlElementConstructor;
         abbr: React.HtmlElementConstructor;
         address: React.HtmlElementConstructor;

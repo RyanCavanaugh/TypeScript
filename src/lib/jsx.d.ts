@@ -1,9 +1,4 @@
 declare module JSX {
-    /// Attributes in elements that begin with names in this interface
-    /// are checked according to the types in this interface rather than
-    /// by the corresponding property of the element class type.
-    interface SpecialAttributePrefixes { }
-
     /// An expression of the form <SomeValue /> is valid
     /// if a member called SomeValue is found in the Intrinsics interface (including when
     /// Intrinsics has a string indexer),
@@ -18,5 +13,5 @@ declare module JSX {
 
     /// Element names are resolved using the properties in this
     /// interface before being resolved as a value.
-    interface Intrinsics { }
+    interface IntrinsicElements { }
 }
