@@ -6353,7 +6353,7 @@ module ts {
 
             if (node.initializer) {
                 var exprType = checkExpression(node.initializer);
-                if (elementType !== anyType && nameTable[node.name.text] === undefined) {
+                if (elementType !== anyType) {
                     checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
                 }
                 nameTable[node.name.text] = true;
