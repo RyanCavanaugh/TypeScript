@@ -114,6 +114,7 @@ module ts {
         let globalTemplateStringsArrayType: ObjectType;
         let globalESSymbolType: ObjectType;
         let globalIterableType: ObjectType;
+        let jsxElementType: ObjectType;
 
         let anyArrayType: Type;
         let getGlobalClassDecoratorType: () => ObjectType;
@@ -3513,6 +3514,12 @@ module ts {
             return getTypeOfGlobalSymbol(getGlobalTypeSymbol(name), arity);
         }
 
+        function getNamespacedType(namespace: string, name: string): Type {
+            var namespaceSymbol = getGlobalSymbol(namespace, SymbolFlags.Namespace, /*diagnosticMessage*/ undefined);
+            var typeSymbol = namespaceSymbol && getSymbol(namespaceSymbol.exports, name, SymbolFlags.Type);
+            return typeSymbol && getDeclaredTypeOfSymbol(typeSymbol);
+        }
+
         function getGlobalESSymbolConstructorSymbol() {
             return globalESSymbolConstructorSymbol || (globalESSymbolConstructorSymbol = getGlobalValueSymbol("Symbol"));
         }
@@ -5944,6 +5951,20 @@ module ts {
             return node === conditional.whenTrue || node === conditional.whenFalse ? getContextualType(conditional) : undefined;
         }
 
+        function getContextualTypeForJsxExpression(expr: JsxExpression): Type {
+            // Contextual type only applies to JSX expressions that are in attribute assignments (not in 'Children' positions)
+            if (expr.parent.kind === SyntaxKind.JsxAttribute) {
+                let attrib = <JsxAttribute>expr.parent;
+                let elem = <JsxOpeningElement>attrib.parent;
+                let elemType = getJsxElementType(elem);
+                let attrsType = getJsxElementAttributesType(elemType);
+                return getTypeOfPropertyOfType(attrsType, attrib.name.text);
+            }
+            else {
+                return undefined;
+            }
+        }
+
         // Return the contextual type for a given expression node. During overload resolution, a contextual type may temporarily
         // be "pushed" onto a node using the contextualType property.
         function getContextualType(node: Expression): Type {
@@ -5984,6 +6005,8 @@ module ts {
                     return getContextualTypeForSubstitutionExpression(<TemplateExpression>parent.parent, node);
                 case SyntaxKind.ParenthesizedExpression:
                     return getContextualType(<ParenthesizedExpression>parent);
+                case SyntaxKind.JsxExpression:
+                    return getContextualTypeForJsxExpression(<JsxExpression>parent);
             }
             return undefined;
         }
@@ -6299,7 +6322,12 @@ module ts {
                 checkSourceElement(node.closingElement);
             }
 
-            return elemType;
+            if (jsxElementType === undefined) {
+                error(node, Diagnostics.Cannot_find_global_type_0, 'JSX.Element');
+                return unknownType;
+            }
+
+            return jsxElementType;
         }
 
         function isIdentifierLike(name: string) {
@@ -6308,7 +6336,6 @@ module ts {
         }
 
         function checkJsxAttribute(node: JsxAttribute, elementType: Type) {
-            // TODO: We want to contextually type expressions
             var correspondingPropType: Type = unknownType;
 
             // Look up the corresponding property for this attribute
@@ -6337,7 +6364,8 @@ module ts {
 
         function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementType: Type) {
             // TODO: Check the properties of the type of this expression as if they are JsxAttributes
-            checkExpression(node.expression);
+            let type = checkExpression(node.expression);
+
         }
 
         function checkJsxClosingElement(node: JsxClosingElement) {
@@ -12268,6 +12296,7 @@ module ts {
             globalNumberType = getGlobalType("Number");
             globalBooleanType = getGlobalType("Boolean");
             globalRegExpType = getGlobalType("RegExp");
+            jsxElementType = getNamespacedType("JSX", "Element");
             getGlobalClassDecoratorType = memoize(() => getGlobalType("ClassDecorator"));
             getGlobalPropertyDecoratorType = memoize(() => getGlobalType("PropertyDecorator"));
             getGlobalMethodDecoratorType = memoize(() => getGlobalType("MethodDecorator"));

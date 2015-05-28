@@ -3286,7 +3286,7 @@ module ts {
 
         function parseJsxAttribute(): JsxAttribute | JsxSpreadAttribute {
             if (token === SyntaxKind.OpenBraceToken) {
-                return parseJsxSPreadAttribute();
+                return parseJsxSpreadAttribute();
             }
             reScanJsxIdentifier();
             let node = <JsxAttribute>createNode(SyntaxKind.JsxAttribute);
@@ -3307,7 +3307,7 @@ module ts {
             return finishNode(node);
         }
 
-        function parseJsxSPreadAttribute(): JsxSpreadAttribute {
+        function parseJsxSpreadAttribute(): JsxSpreadAttribute {
             let node = <JsxSpreadAttribute>createNode(SyntaxKind.JsxSpreadAttribute);
             parseExpected(SyntaxKind.OpenBraceToken);
             parseExpected(SyntaxKind.DotDotDotToken);

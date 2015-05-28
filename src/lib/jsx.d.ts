@@ -14,4 +14,7 @@ declare module JSX {
     /// Element names are resolved using the properties in this
     /// interface before being resolved as a value.
     interface IntrinsicElements { }
+
+    /// The type of a <JsxElement />
+    interface Element { }
 }
