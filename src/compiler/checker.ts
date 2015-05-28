@@ -6335,7 +6335,7 @@ module ts {
             return /^[A-Za-z_$]\w*$/.test(name);
         }
 
-        function checkJsxAttribute(node: JsxAttribute, elementType: Type) {
+        function checkJsxAttribute(node: JsxAttribute, elementType: Type, nameTable: Map<boolean>) {
             var correspondingPropType: Type = unknownType;
 
             // Look up the corresponding property for this attribute
@@ -6353,19 +6353,31 @@ module ts {
 
             if (node.initializer) {
                 var exprType = checkExpression(node.initializer);
-                if (elementType !== anyType) {
+                if (elementType !== anyType && nameTable[node.name.text] === undefined) {
                     checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
                 }
+                nameTable[node.name.text] = true;
                 return exprType;
             } else {
                 return unknownType;
             }
         }
 
-        function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementType: Type) {
-            // TODO: Check the properties of the type of this expression as if they are JsxAttributes
+        function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementType: Type, nameTable: Map<boolean>) {
             let type = checkExpression(node.expression);
+            let props = getPropertiesOfType(type);
+            for (var i = 0; i < props.length; i++) {
+                // Is there a corresponding property in the element attributes type? Skip checking of properties
+                // that have already been assigned to, as these are not actually pushed into the resulting type
+                if (nameTable[props[i].name] === undefined) {
+                    let targetPropSym = getPropertyOfType(elementType, props[i].name);
+                    if (targetPropSym) {
+                        checkTypeAssignableTo(getTypeOfSymbol(props[i]), getTypeOfSymbol(targetPropSym), node, Diagnostics.Type_0_is_not_assignable_to_type_1);
+                    }
 
+                    nameTable[props[i].name] = true;
+                }
+            }
         }
 
         function checkJsxClosingElement(node: JsxClosingElement) {
@@ -6466,23 +6478,35 @@ module ts {
             // Check that the constructor type is assignable to the global type JSX.ElementClass
             // and get the type shape of the attributes allowed for this element
             var elemClassType = getJsxElementClassType();
-            var attributesType: Type = undefined;
+            var targetAttributesType: Type = undefined;
             if (elemClassType !== undefined) {
                 checkTypeRelatedTo(elementType, elemClassType, assignableRelation, node, Diagnostics.Type_0_is_not_assignable_to_type_1);
-                attributesType = getJsxElementAttributesType(elementType);
+                targetAttributesType = getJsxElementAttributesType(elementType);
             }
             else {
-                attributesType = anyType;
+                targetAttributesType = anyType;
             }
 
-            // Check attributes
-            for (var i = 0, n = node.attributes.length; i < n; i++) {
+            var nameTable: Map<boolean> = {};
+            // Process this array in right-to-left order so we know which
+            // attributes (mostly from spreads) are being overwritten and
+            // thus should have their types ignored
+            for (var i = node.attributes.length - 1; i >= 0; i--) {
                 if (node.attributes[i].kind === SyntaxKind.JsxAttribute) {
-                    checkJsxAttribute(<JsxAttribute>(node.attributes[i]), attributesType);
+                    checkJsxAttribute(<JsxAttribute>(node.attributes[i]), targetAttributesType, nameTable);
                 } else if (node.attributes[i].kind === SyntaxKind.JsxSpreadAttribute) {
-                    checkJsxSpreadAttribute(<JsxSpreadAttribute>(node.attributes[i]), attributesType);
+                    checkJsxSpreadAttribute(<JsxSpreadAttribute>(node.attributes[i]), targetAttributesType, nameTable);
                 } else {
                     throw new Error('Unknown JSX attribute kind');
+                }
+            }
+            // Check that all required properties have been provided
+            let targetProperties = getPropertiesOfType(targetAttributesType);
+            for (var i = 0; i < targetProperties.length; i++) {
+                if (!(targetProperties[i].flags & SymbolFlags.Optional) &&
+                    nameTable[targetProperties[i].name] === undefined) {
+
+                    error(node, Diagnostics.Property_0_is_missing_in_type_1, targetProperties[i].name, typeToString(targetAttributesType));
                 }
             }
 
