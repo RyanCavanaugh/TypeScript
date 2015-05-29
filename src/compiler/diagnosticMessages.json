@@ -1448,6 +1448,10 @@
         "category": "Error",
         "code": 2503
     },
+    "JSX element attributes type '{0}' must be an object type.": {
+        "category": "Error",
+        "code":  2600
+    },
 
     "Import declaration '{0}' is using private name '{1}'.": {
         "category": "Error",

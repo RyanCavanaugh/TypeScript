@@ -75,7 +75,9 @@ module ts {
             getEmitResolver,
             getExportsOfModule: getExportsOfModuleAsArray,
 
+            getJsxElementType,
             getJsxElementAttributesType,
+            getJsxIntrinsicTagNames
         };
 
         let unknownSymbol = createSymbol(SymbolFlags.Property | SymbolFlags.Transient, "unknown");
@@ -6335,17 +6337,17 @@ module ts {
             return /^[A-Za-z_$]\w*$/.test(name);
         }
 
-        function checkJsxAttribute(node: JsxAttribute, elementType: Type, nameTable: Map<boolean>) {
+        function checkJsxAttribute(node: JsxAttribute, elementAttributesType: Type, nameTable: Map<boolean>) {
             var correspondingPropType: Type = unknownType;
 
             // Look up the corresponding property for this attribute
-            if (elementType !== anyType && elementType !== undefined) {
-                var correspondingPropSymbol = getPropertyOfType(elementType, node.name.text);
+            if (elementAttributesType !== anyType && elementAttributesType !== undefined) {
+                var correspondingPropSymbol = getPropertyOfType(elementAttributesType, node.name.text);
                 correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
                 if (correspondingPropType === undefined) {
                     // If there's no corresponding property with this name, error
                     if (isIdentifierLike(node.name.text) && correspondingPropType === undefined) {
-                        error(node.name, Diagnostics.Property_0_does_not_exist_on_type_1, node.name.text, typeToString(elementType));
+                        error(node.name, Diagnostics.Property_0_does_not_exist_on_type_1, node.name.text, typeToString(elementAttributesType));
                         return unknownType;
                     }
                 }
@@ -6353,7 +6355,12 @@ module ts {
 
             if (node.initializer) {
                 var exprType = checkExpression(node.initializer);
-                if (elementType !== anyType) {
+                // TODO: Why is this needed?? rebinding of '_this' and typechecking
+                // do not occur otherwise, even though checkExpression above
+                // properly recurses into the correct places...
+                typeToString(exprType);
+
+                if (elementAttributesType !== anyType) {
                     checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
                 }
                 nameTable[node.name.text] = true;
@@ -6363,14 +6370,14 @@ module ts {
             }
         }
 
-        function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementType: Type, nameTable: Map<boolean>) {
+        function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementAttributesType: Type, nameTable: Map<boolean>) {
             let type = checkExpression(node.expression);
             let props = getPropertiesOfType(type);
             for (var i = 0; i < props.length; i++) {
                 // Is there a corresponding property in the element attributes type? Skip checking of properties
                 // that have already been assigned to, as these are not actually pushed into the resulting type
                 if (nameTable[props[i].name] === undefined) {
-                    let targetPropSym = getPropertyOfType(elementType, props[i].name);
+                    let targetPropSym = getPropertyOfType(elementAttributesType, props[i].name);
                     if (targetPropSym) {
                         checkTypeAssignableTo(getTypeOfSymbol(props[i]), getTypeOfSymbol(targetPropSym), node, Diagnostics.Type_0_is_not_assignable_to_type_1);
                     }
@@ -6384,13 +6391,21 @@ module ts {
             // Nothing to do yet
         }
 
-        function getJsxElementType(node: JsxOpeningElement) {
-            var constructorOrFactoryType: Type = undefined;
-
+        function getJsxIntrinsicType() {
             // Intrinsic case
             var jsxNamespace = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, undefined);
             var intrinsicsSymbol = jsxNamespace && getSymbol(jsxNamespace.exports, JsxNames.Intrinsics, SymbolFlags.Type);
             var intrinsicsType = intrinsicsSymbol && getDeclaredTypeOfSymbol(intrinsicsSymbol);
+            return intrinsicsType;
+        }
+
+        function getJsxElementType(elemOrOpeningElem: JsxElement|JsxOpeningElement) {
+            let node: JsxOpeningElement = (elemOrOpeningElem.kind === SyntaxKind.JsxElement) ? (<JsxElement>elemOrOpeningElem).openingElement : <JsxOpeningElement>elemOrOpeningElem;
+
+            var constructorOrFactoryType: Type = undefined;
+
+            // Intrinsic case
+            var intrinsicsType = getJsxIntrinsicType();
             var intrinsicProp = intrinsicsType && getPropertyOfType(intrinsicsType, getTextOfNode(node.tagName));
             if (intrinsicProp) {
                 constructorOrFactoryType = getTypeOfPropertyOfType(intrinsicsType, getTextOfNode(node.tagName));
@@ -6398,7 +6413,7 @@ module ts {
 
             // Intrinsic string indexer case
             if (constructorOrFactoryType === undefined && intrinsicsType) {
-                var indexSignatureType = getIndexTypeOfSymbol(intrinsicsSymbol, IndexKind.String);
+                var indexSignatureType = getIndexTypeOfSymbol(intrinsicsType.symbol, IndexKind.String);
                 if (indexSignatureType) {
                     constructorOrFactoryType = indexSignatureType;
                 }
@@ -6436,7 +6451,7 @@ module ts {
             return undefined;
         }
 
-        function getJsxElementAttributesType(elementType: Type) {
+        function getJsxElementAttributesType(elementType: Type): Type {
             var jsxNamespace = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/undefined);
             var attribsPropTypeSym = jsxNamespace && getSymbol(jsxNamespace.exports, JsxNames.ElementAttributesProperty, SymbolFlags.Type);
 
@@ -6455,7 +6470,7 @@ module ts {
         }
 
 
-        function getJsxElementClassType() {
+        function getJsxElementClassType(): Type {
             var jsxNS = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/ undefined);
             if (jsxNS) {
                 var sym = getSymbol(jsxNS.exports, JsxNames.ElementClass, SymbolFlags.Type);
@@ -6465,6 +6480,10 @@ module ts {
             else {
                 return undefined;
             }
+        }
+
+        function getJsxIntrinsicTagNames(): Symbol[] {
+            return getPropertiesOfType(getJsxIntrinsicType());
         }
 
         function checkJsxOpeningElement(node: JsxOpeningElement) {
@@ -6482,6 +6501,14 @@ module ts {
             if (elemClassType !== undefined) {
                 checkTypeRelatedTo(elementType, elemClassType, assignableRelation, node, Diagnostics.Type_0_is_not_assignable_to_type_1);
                 targetAttributesType = getJsxElementAttributesType(elementType);
+
+                if (targetAttributesType &&
+                    targetAttributesType !== anyType &&
+                    targetAttributesType !== unknownType &&
+                    !(targetAttributesType.flags & TypeFlags.ObjectType)) {
+
+                    error(node.tagName, Diagnostics.JSX_element_attributes_type_0_must_be_an_object_type, typeToString(targetAttributesType));
+                }
             }
             else {
                 targetAttributesType = anyType;
@@ -6500,13 +6527,16 @@ module ts {
                     throw new Error('Unknown JSX attribute kind');
                 }
             }
-            // Check that all required properties have been provided
-            let targetProperties = getPropertiesOfType(targetAttributesType);
-            for (var i = 0; i < targetProperties.length; i++) {
-                if (!(targetProperties[i].flags & SymbolFlags.Optional) &&
-                    nameTable[targetProperties[i].name] === undefined) {
 
-                    error(node, Diagnostics.Property_0_is_missing_in_type_1, targetProperties[i].name, typeToString(targetAttributesType));
+            // Check that all required properties have been provided
+            if (targetAttributesType) {
+                let targetProperties = getPropertiesOfType(targetAttributesType);
+                for (var i = 0; i < targetProperties.length; i++) {
+                    if (!(targetProperties[i].flags & SymbolFlags.Optional) &&
+                        nameTable[targetProperties[i].name] === undefined) {
+
+                        error(node, Diagnostics.Property_0_is_missing_in_type_1, targetProperties[i].name, typeToString(targetAttributesType));
+                    }
                 }
             }
 
@@ -6518,9 +6548,12 @@ module ts {
         }
 
         function checkJsxExpression(node: JsxExpression) {
+            console.log('do check a jsx expression ' + getTextOfNode(node));
             if (node.expression) {
+                console.log('subcheck to ' + getTextOfNode(node.expression));
                 return checkExpression(node.expression);
             } else {
+                console.log('no expression?');
                 return anyType;
             }
         }
@@ -7647,7 +7680,6 @@ module ts {
 
         function checkFunctionExpressionOrObjectLiteralMethod(node: FunctionExpression | MethodDeclaration, contextualMapper?: TypeMapper): Type {
             Debug.assert(node.kind !== SyntaxKind.MethodDeclaration || isObjectLiteralMethod(node));
-
             // Grammar checking
             let hasGrammarError = checkGrammarDeclarationNameInStrictMode(node) || checkGrammarFunctionLikeDeclaration(node);
             if (!hasGrammarError && node.kind === SyntaxKind.FunctionExpression) {

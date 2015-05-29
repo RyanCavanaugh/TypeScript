@@ -9,7 +9,7 @@ declare module JSX {
     /// If the resolved element type has a property matching the single
     /// property name present in this type, attributes are typechecked against
     /// the corresponding properties in that property's type
-    interface ElementAttributeProperty { }
+    interface ElementAttributesProperty { }
 
     /// Element names are resolved using the properties in this
     /// interface before being resolved as a value.

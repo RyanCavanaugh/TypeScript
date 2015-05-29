@@ -364,8 +364,12 @@ declare module React {
 }
 
 declare module JSX {
+    interface Element {
+        type: {};
+    }
+
     interface ElementClass {
-        render(): any;
+        render(): JSX.Element;
     }
 
     interface ElementAttributesProperty {

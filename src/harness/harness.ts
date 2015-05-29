@@ -1123,7 +1123,9 @@ module Harness {
                             break;
 
                         case 'jsx':
-                            options.jsx = setting.value === 'true';
+                            options.jsx = setting.value.toLowerCase() === 'react' ? ts.JsxEmit.React :
+                                setting.value.toLowerCase() === 'preserve' ? ts.JsxEmit.Preserve :
+                                    ts.JsxEmit.None;
                             break;
 
                         default:
