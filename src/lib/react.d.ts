@@ -347,6 +347,9 @@ declare module React {
 }
 
 declare module JSX {
+    interface Element {
+    }
+
     interface ElementClass {
         render(): any;
     }

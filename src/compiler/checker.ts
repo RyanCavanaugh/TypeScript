@@ -6477,12 +6477,11 @@ module ts {
             }
 
             // Value type case (e.g. <MyComponent />)
-            let valueType = getJsxElementClassType(node);
-            if (valueType) {
-
+            let elemInstanceType = getJsxElementClassType(node);
+            if (elemInstanceType) {
                 var propsName = getJsxElementPropertiesName();
                 if (propsName) {
-                    var attributesType = getTypeOfPropertyOfType(valueType, propsName);
+                    var attributesType = getTypeOfPropertyOfType(elemInstanceType, propsName);
 
                     if (attributesType &&
                         attributesType !== anyType &&
@@ -6492,10 +6491,11 @@ module ts {
                         error(node.tagName, Diagnostics.JSX_element_attributes_type_0_must_be_an_object_type, typeToString(attributesType));
                     }
 
-                    // TODO: What should the default case (when 'props' is missing) be here?
+                    // TODO: What should the default case (when 'props' is missing from the element class type) be here?
                     return attributesType || emptyObjectType;
                 } else {
-                    return anyType;
+                    // If there is no e.g. 'props' member, use the element class type instead
+                    return elemInstanceType;
                 }
             }
             else {
