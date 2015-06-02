@@ -655,7 +655,7 @@ module ts {
      */
     export const supportedExtensions = [".tsx", ".ts", ".d.ts", ".js"];
 
-    const extensionsToRemove = [".d.ts", ".ts", ".js"];
+    const extensionsToRemove = [".d.ts", ".ts", ".js", ".tsx"];
     export function removeFileExtension(path: string): string {
         for (let ext of extensionsToRemove) {
             if (fileExtensionIs(path, ext)) {

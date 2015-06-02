@@ -6304,7 +6304,7 @@ module ts {
         }
 
         function checkJsxElement(node: JsxElement) {
-            if (compilerOptions.jsx || JsxEmit.None === JsxEmit.None) {
+            if ((compilerOptions.jsx || JsxEmit.None) === JsxEmit.None) {
                 error(node, Diagnostics.Cannot_use_JSX_unless_the_jsx_flag_is_provided);
             }
 
@@ -6423,8 +6423,8 @@ module ts {
                 }
                 else {
                     // Check that the constructor/factory returns an object type
-                    var returnType = getUnionType(signatures.map(s => s.resolvedReturnType));
-                    if (!(returnType.flags & TypeFlags.ObjectType)) {
+                    var returnType = getUnionType(signatures.map(s => getReturnTypeOfSignature(s)));
+                    if (returnType !== anyType && !(returnType.flags & TypeFlags.ObjectType)) {
                         error(node.tagName, Diagnostics.The_return_type_of_a_JSX_element_constructor_or_factory_function_must_return_an_object_type);
                         return unknownType;
                     }
