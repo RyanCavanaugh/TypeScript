@@ -6304,11 +6304,16 @@ module ts {
         }
 
         function checkJsxElement(node: JsxElement) {
-            if (compilerOptions.jsx === JsxEmit.None) {
+            if (compilerOptions.jsx || JsxEmit.None === JsxEmit.None) {
                 error(node, Diagnostics.Cannot_use_JSX_unless_the_jsx_flag_is_provided);
             }
 
             checkGrammarJsxElement(node);
+
+            if (jsxElementType === undefined) {
+                error(node, Diagnostics.The_global_type_JSX_Element_must_exist_when_using_JSX);
+                return unknownType;
+            }
 
             var elemType = checkJsxOpeningElement(node.openingElement);
 
@@ -6328,13 +6333,7 @@ module ts {
                 checkSourceElement(node.closingElement);
             }
 
-            if (jsxElementType === undefined) {
-                error(node, Diagnostics.The_global_type_JSX_Element_must_exist_when_using_JSX);
-                return unknownType;
-            }
-            else {
-                return jsxElementType;
-            }
+            return jsxElementType;
         }
 
         function isIdentifierLike(name: string) {
