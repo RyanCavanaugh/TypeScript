@@ -1225,8 +1225,8 @@ module ts {
         getAliasedSymbol(symbol: Symbol): Symbol;
         getExportsOfModule(moduleSymbol: Symbol): Symbol[];
 
-        getJsxElementType(elementNode: JsxElement): Type;
-        getJsxElementAttributesType(elementType: Type): Type;
+        getJsxElementValueType(elementNode: JsxOpeningElement): Type;
+        getJsxElementAttributesType(elementNode: JsxOpeningElement): Type;
         getJsxIntrinsicTagNames(): Symbol[];
 
         // Should not be called directly.  Should only be accessed through the Program instance.

@@ -366,6 +366,13 @@ module ts {
         _0_is_referenced_directly_or_indirectly_in_its_own_type_annotation: { code: 2502, category: DiagnosticCategory.Error, key: "'{0}' is referenced directly or indirectly in its own type annotation." },
         Cannot_find_namespace_0: { code: 2503, category: DiagnosticCategory.Error, key: "Cannot find namespace '{0}'." },
         JSX_element_attributes_type_0_must_be_an_object_type: { code: 2600, category: DiagnosticCategory.Error, key: "JSX element attributes type '{0}' must be an object type." },
+        The_return_type_of_a_JSX_element_constructor_or_factory_function_must_return_an_object_type: { code: 2601, category: DiagnosticCategory.Error, key: "The return type of a JSX element constructor or factory function must return an object type." },
+        The_global_type_JSX_Element_must_exist_when_using_JSX: { code: 2602, category: DiagnosticCategory.Error, key: "The global type 'JSX.Element' must exist when using JSX." },
+        Property_0_in_type_1_is_not_assignable_to_type_2: { code: 2603, category: DiagnosticCategory.Error, key: "Property '{0}' in type '{1}' is not assignable to type '{2}'" },
+        JSX_element_0_is_not_a_constructor_function_or_factory_function: { code: 2604, category: DiagnosticCategory.Error, key: "JSX element '{0}' is not a constructor function or factory function." },
+        JSX_element_0_is_not_a_constructor_function_or_factory_function_for_JSX_elements: { code: 2605, category: DiagnosticCategory.Error, key: "JSX element '{0}' is not a constructor function or factory function for JSX elements." },
+        Property_0_of_JSX_spread_attribute_is_not_assignable_to_target_property: { code: 2606, category: DiagnosticCategory.Error, key: "Property '{0}' of JSX spread attribute is not assignable to target property." },
+        Cannot_emit_namespaced_JSX_elements_in_React: { code: 2650, category: DiagnosticCategory.Error, key: "Cannot emit namespaced JSX elements in React" },
         Import_declaration_0_is_using_private_name_1: { code: 4000, category: DiagnosticCategory.Error, key: "Import declaration '{0}' is using private name '{1}'." },
         Type_parameter_0_of_exported_class_has_or_is_using_private_name_1: { code: 4002, category: DiagnosticCategory.Error, key: "Type parameter '{0}' of exported class has or is using private name '{1}'." },
         Type_parameter_0_of_exported_interface_has_or_is_using_private_name_1: { code: 4004, category: DiagnosticCategory.Error, key: "Type parameter '{0}' of exported interface has or is using private name '{1}'." },
@@ -552,7 +559,6 @@ module ts {
         JSX_elements_cannot_have_multiple_attributes_with_the_same_name: { code: 17001, category: DiagnosticCategory.Error, key: "JSX elements cannot have multiple attributes with the same name." },
         Expected_corresponding_JSX_closing_tag_for_0: { code: 17002, category: DiagnosticCategory.Error, key: "Expected corresponding JSX closing tag for '{0}'." },
         JSX_attribute_expected: { code: 17003, category: DiagnosticCategory.Error, key: "JSX attribute expected." },
-        JSX_factory_cannot_have_multiple_assignments: { code: 17004, category: DiagnosticCategory.Error, key: "JSX factory cannot have multiple assignments." },
-        JSX_elements_are_not_currently_supported: { code: 17005, category: DiagnosticCategory.Error, key: "JSX elements are not currently supported." },
+        Cannot_use_JSX_unless_the_jsx_flag_is_provided: { code: 17004, category: DiagnosticCategory.Error, key: "Cannot use JSX unless the '--jsx' flag is provided." },
     };
 }

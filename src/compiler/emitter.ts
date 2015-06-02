@@ -5846,15 +5846,13 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 
             function emitJsxElement(node: JsxElement) {
                 switch (compilerOptions.jsx) {
-                    case JsxEmit.Preserve:
-                        jsxEmitPreserve(node);
-                        break;
                     case JsxEmit.React:
                         jsxEmitReact(node);
                         break;
+                    // Fall back to preserve if None was specified (we'll error earlier)
                     default:
-                        // Should not be here
-                        throw new Error('Unrecognized JSX emit system');
+                        jsxEmitPreserve(node);
+                        break;
                 }
             }
 

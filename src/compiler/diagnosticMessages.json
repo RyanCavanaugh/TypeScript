@@ -1448,9 +1448,39 @@
         "category": "Error",
         "code": 2503
     },
+
     "JSX element attributes type '{0}' must be an object type.": {
         "category": "Error",
         "code":  2600
+    },
+    "The return type of a JSX element constructor or factory function must return an object type.": {
+        "category": "Error",
+        "code":  2601
+    },
+    "The global type 'JSX.Element' must exist when using JSX.": {
+        "category": "Error",
+        "code":  2602
+    },
+    "Property '{0}' in type '{1}' is not assignable to type '{2}'": {
+        "category": "Error",
+        "code": 2603
+    },
+    "JSX element '{0}' is not a constructor function or factory function.": {
+        "category": "Error",
+        "code": 2604
+    },
+    "JSX element '{0}' is not a constructor function or factory function for JSX elements.": {
+        "category": "Error",
+        "code": 2605
+    },
+    "Property '{0}' of JSX spread attribute is not assignable to target property.": {
+        "category": "Error",
+        "code": 2606
+    },
+
+    "Cannot emit namespaced JSX elements in React": {
+        "category": "Error",
+        "code":  2650
     },
 
     "Import declaration '{0}' is using private name '{1}'.": {
@@ -2200,17 +2230,8 @@
         "category": "Error",
         "code": 17003
     },
-    "JSX factory cannot have multiple assignments.": {
+    "Cannot use JSX unless the '--jsx' flag is provided.": {
         "category": "Error",
         "code": 17004
-    },
-    "JSX elements are not currently supported.": {
-        "category": "Error",
-        "code": 17005
-    },
-    "JSX elements are not currently supported.": {
-        "category": "Error",
-        "code" : 17005
     }
-
 }

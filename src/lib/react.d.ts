@@ -86,12 +86,12 @@ declare module React {
     type WheelEvent = (data: WheelEventData) => any;
 
     type primitive = string|boolean|number;
-    interface ReactInstance {
+    interface ReactElementInstance {
         ref?: primitive;
         key?: primitive;
     }
 
-    interface ReactDomEvents {
+    interface DomEvents {
         // Clipboard events
         onCopy?: ClipboardEvent;
         onCut?: ClipboardEvent;
@@ -172,7 +172,7 @@ declare module React {
     }
 
     // https://facebook.github.io/react/docs/tags-and-attributes.html
-    interface ReactHtmlElementAttributes extends ReactDomEvents {
+    interface HtmlElementAttributes extends DomEvents {
         accept?: string;
         acceptCharset?: string;
         accessKey?: string;
@@ -298,15 +298,7 @@ declare module React {
         dangerouslySetInnerHTML?: string;
     }
 
-    interface HtmlElementInstance extends JSX.ElementClass {
-        props: ReactHtmlElementAttributes;
-    }
-
-    interface HtmlElementConstructor {
-        new (): HtmlElementInstance;
-    }
-
-    interface ReactSvgElementAttributes extends ReactDomEvents {
+    interface SvgElementAttributes extends DomEvents {
         clipPath?: string;
         cx?: string;
         cy?: string;
@@ -352,24 +344,11 @@ declare module React {
         y2?: string;
         y?: string;
     }
-
-    interface SvgElementInstance extends JSX.ElementClass {
-        props: ReactSvgElementAttributes;
-    }
-
-    interface SvgElementConstructor {
-        new (): SvgElementInstance;
-    }
-
 }
 
 declare module JSX {
-    interface Element {
-        type: {};
-    }
-
     interface ElementClass {
-        render(): JSX.Element;
+        render(): any;
     }
 
     interface ElementAttributesProperty {
@@ -377,137 +356,137 @@ declare module JSX {
     }
 
     interface IntrinsicElements {
-        a: React.HtmlElementConstructor;
-        abbr: React.HtmlElementConstructor;
-        address: React.HtmlElementConstructor;
-        area: React.HtmlElementConstructor;
-        article: React.HtmlElementConstructor;
-        aside: React.HtmlElementConstructor;
-        audio: React.HtmlElementConstructor;
-        b: React.HtmlElementConstructor;
-        base: React.HtmlElementConstructor;
-        bdi: React.HtmlElementConstructor;
-        bdo: React.HtmlElementConstructor;
-        big: React.HtmlElementConstructor;
-        blockquote: React.HtmlElementConstructor;
-        body: React.HtmlElementConstructor;
-        br: React.HtmlElementConstructor;
-        button: React.HtmlElementConstructor;
-        canvas: React.HtmlElementConstructor;
-        caption: React.HtmlElementConstructor;
-        cite: React.HtmlElementConstructor;
-        code: React.HtmlElementConstructor;
-        col: React.HtmlElementConstructor;
-        colgroup: React.HtmlElementConstructor;
-        data: React.HtmlElementConstructor;
-        datalist: React.HtmlElementConstructor;
-        dd: React.HtmlElementConstructor;
-        del: React.HtmlElementConstructor;
-        details: React.HtmlElementConstructor;
-        dfn: React.HtmlElementConstructor;
-        dialog: React.HtmlElementConstructor;
-        div: React.HtmlElementConstructor;
-        dl: React.HtmlElementConstructor;
-        dt: React.HtmlElementConstructor;
-        em: React.HtmlElementConstructor;
-        embed: React.HtmlElementConstructor;
-        fieldset: React.HtmlElementConstructor;
-        figcaption: React.HtmlElementConstructor;
-        figure: React.HtmlElementConstructor;
-        footer: React.HtmlElementConstructor;
-        form: React.HtmlElementConstructor;
-        h1: React.HtmlElementConstructor;
-        h2: React.HtmlElementConstructor;
-        h3: React.HtmlElementConstructor;
-        h4: React.HtmlElementConstructor;
-        h5: React.HtmlElementConstructor;
-        h6: React.HtmlElementConstructor;
-        head: React.HtmlElementConstructor;
-        header: React.HtmlElementConstructor;
-        hr: React.HtmlElementConstructor;
-        html: React.HtmlElementConstructor;
-        i: React.HtmlElementConstructor;
-        iframe: React.HtmlElementConstructor;
-        img: React.HtmlElementConstructor;
-        input: React.HtmlElementConstructor;
-        ins: React.HtmlElementConstructor;
-        kbd: React.HtmlElementConstructor;
-        keygen: React.HtmlElementConstructor;
-        label: React.HtmlElementConstructor;
-        legend: React.HtmlElementConstructor;
-        li: React.HtmlElementConstructor;
-        link: React.HtmlElementConstructor;
-        main: React.HtmlElementConstructor;
-        map: React.HtmlElementConstructor;
-        mark: React.HtmlElementConstructor;
-        menu: React.HtmlElementConstructor;
-        menuitem: React.HtmlElementConstructor;
-        meta: React.HtmlElementConstructor;
-        meter: React.HtmlElementConstructor;
-        nav: React.HtmlElementConstructor;
-        noscript: React.HtmlElementConstructor;
-        object: React.HtmlElementConstructor;
-        ol: React.HtmlElementConstructor;
-        optgroup: React.HtmlElementConstructor;
-        option: React.HtmlElementConstructor;
-        output: React.HtmlElementConstructor;
-        p: React.HtmlElementConstructor;
-        param: React.HtmlElementConstructor;
-        picture: React.HtmlElementConstructor;
-        pre: React.HtmlElementConstructor;
-        progress: React.HtmlElementConstructor;
-        q: React.HtmlElementConstructor;
-        rp: React.HtmlElementConstructor;
-        rt: React.HtmlElementConstructor;
-        ruby: React.HtmlElementConstructor;
-        s: React.HtmlElementConstructor;
-        samp: React.HtmlElementConstructor;
-        script: React.HtmlElementConstructor;
-        section: React.HtmlElementConstructor;
-        select: React.HtmlElementConstructor;
-        small: React.HtmlElementConstructor;
-        source: React.HtmlElementConstructor;
-        span: React.HtmlElementConstructor;
-        strong: React.HtmlElementConstructor;
-        style: React.HtmlElementConstructor;
-        sub: React.HtmlElementConstructor;
-        summary: React.HtmlElementConstructor;
-        sup: React.HtmlElementConstructor;
-        table: React.HtmlElementConstructor;
-        tbody: React.HtmlElementConstructor;
-        td: React.HtmlElementConstructor;
-        textarea: React.HtmlElementConstructor;
-        tfoot: React.HtmlElementConstructor;
-        th: React.HtmlElementConstructor;
-        thead: React.HtmlElementConstructor;
-        time: React.HtmlElementConstructor;
-        title: React.HtmlElementConstructor;
-        tr: React.HtmlElementConstructor;
-        track: React.HtmlElementConstructor;
-        u: React.HtmlElementConstructor;
-        ul: React.HtmlElementConstructor;
-        'var': React.HtmlElementConstructor;
-        video: React.HtmlElementConstructor;
-        wbr: React.HtmlElementConstructor;
+        a: React.HtmlElementAttributes;
+        abbr: React.HtmlElementAttributes;
+        address: React.HtmlElementAttributes;
+        area: React.HtmlElementAttributes;
+        article: React.HtmlElementAttributes;
+        aside: React.HtmlElementAttributes;
+        audio: React.HtmlElementAttributes;
+        b: React.HtmlElementAttributes;
+        base: React.HtmlElementAttributes;
+        bdi: React.HtmlElementAttributes;
+        bdo: React.HtmlElementAttributes;
+        big: React.HtmlElementAttributes;
+        blockquote: React.HtmlElementAttributes;
+        body: React.HtmlElementAttributes;
+        br: React.HtmlElementAttributes;
+        button: React.HtmlElementAttributes;
+        canvas: React.HtmlElementAttributes;
+        caption: React.HtmlElementAttributes;
+        cite: React.HtmlElementAttributes;
+        code: React.HtmlElementAttributes;
+        col: React.HtmlElementAttributes;
+        colgroup: React.HtmlElementAttributes;
+        data: React.HtmlElementAttributes;
+        datalist: React.HtmlElementAttributes;
+        dd: React.HtmlElementAttributes;
+        del: React.HtmlElementAttributes;
+        details: React.HtmlElementAttributes;
+        dfn: React.HtmlElementAttributes;
+        dialog: React.HtmlElementAttributes;
+        div: React.HtmlElementAttributes;
+        dl: React.HtmlElementAttributes;
+        dt: React.HtmlElementAttributes;
+        em: React.HtmlElementAttributes;
+        embed: React.HtmlElementAttributes;
+        fieldset: React.HtmlElementAttributes;
+        figcaption: React.HtmlElementAttributes;
+        figure: React.HtmlElementAttributes;
+        footer: React.HtmlElementAttributes;
+        form: React.HtmlElementAttributes;
+        h1: React.HtmlElementAttributes;
+        h2: React.HtmlElementAttributes;
+        h3: React.HtmlElementAttributes;
+        h4: React.HtmlElementAttributes;
+        h5: React.HtmlElementAttributes;
+        h6: React.HtmlElementAttributes;
+        head: React.HtmlElementAttributes;
+        header: React.HtmlElementAttributes;
+        hr: React.HtmlElementAttributes;
+        html: React.HtmlElementAttributes;
+        i: React.HtmlElementAttributes;
+        iframe: React.HtmlElementAttributes;
+        img: React.HtmlElementAttributes;
+        input: React.HtmlElementAttributes;
+        ins: React.HtmlElementAttributes;
+        kbd: React.HtmlElementAttributes;
+        keygen: React.HtmlElementAttributes;
+        label: React.HtmlElementAttributes;
+        legend: React.HtmlElementAttributes;
+        li: React.HtmlElementAttributes;
+        link: React.HtmlElementAttributes;
+        main: React.HtmlElementAttributes;
+        map: React.HtmlElementAttributes;
+        mark: React.HtmlElementAttributes;
+        menu: React.HtmlElementAttributes;
+        menuitem: React.HtmlElementAttributes;
+        meta: React.HtmlElementAttributes;
+        meter: React.HtmlElementAttributes;
+        nav: React.HtmlElementAttributes;
+        noscript: React.HtmlElementAttributes;
+        object: React.HtmlElementAttributes;
+        ol: React.HtmlElementAttributes;
+        optgroup: React.HtmlElementAttributes;
+        option: React.HtmlElementAttributes;
+        output: React.HtmlElementAttributes;
+        p: React.HtmlElementAttributes;
+        param: React.HtmlElementAttributes;
+        picture: React.HtmlElementAttributes;
+        pre: React.HtmlElementAttributes;
+        progress: React.HtmlElementAttributes;
+        q: React.HtmlElementAttributes;
+        rp: React.HtmlElementAttributes;
+        rt: React.HtmlElementAttributes;
+        ruby: React.HtmlElementAttributes;
+        s: React.HtmlElementAttributes;
+        samp: React.HtmlElementAttributes;
+        script: React.HtmlElementAttributes;
+        section: React.HtmlElementAttributes;
+        select: React.HtmlElementAttributes;
+        small: React.HtmlElementAttributes;
+        source: React.HtmlElementAttributes;
+        span: React.HtmlElementAttributes;
+        strong: React.HtmlElementAttributes;
+        style: React.HtmlElementAttributes;
+        sub: React.HtmlElementAttributes;
+        summary: React.HtmlElementAttributes;
+        sup: React.HtmlElementAttributes;
+        table: React.HtmlElementAttributes;
+        tbody: React.HtmlElementAttributes;
+        td: React.HtmlElementAttributes;
+        textarea: React.HtmlElementAttributes;
+        tfoot: React.HtmlElementAttributes;
+        th: React.HtmlElementAttributes;
+        thead: React.HtmlElementAttributes;
+        time: React.HtmlElementAttributes;
+        title: React.HtmlElementAttributes;
+        tr: React.HtmlElementAttributes;
+        track: React.HtmlElementAttributes;
+        u: React.HtmlElementAttributes;
+        ul: React.HtmlElementAttributes;
+        'var': React.HtmlElementAttributes;
+        video: React.HtmlElementAttributes;
+        wbr: React.HtmlElementAttributes;
 
-        circle: React.SvgElementConstructor;
-        clipPath: React.SvgElementConstructor;
-        defs: React.SvgElementConstructor;
-        ellipse: React.SvgElementConstructor;
-        g: React.SvgElementConstructor;
-        line: React.SvgElementConstructor;
-        linearGradient: React.SvgElementConstructor;
-        mask: React.SvgElementConstructor;
-        path: React.SvgElementConstructor;
-        pattern: React.SvgElementConstructor;
-        polygon: React.SvgElementConstructor;
-        polyline: React.SvgElementConstructor;
-        radialGradient: React.SvgElementConstructor;
-        rect: React.SvgElementConstructor;
-        stop: React.SvgElementConstructor;
-        svg: React.SvgElementConstructor;
-        text: React.SvgElementConstructor;
-        tspan: React.SvgElementConstructor;
+        circle: React.SvgElementAttributes;
+        clipPath: React.SvgElementAttributes;
+        defs: React.SvgElementAttributes;
+        ellipse: React.SvgElementAttributes;
+        g: React.SvgElementAttributes;
+        line: React.SvgElementAttributes;
+        linearGradient: React.SvgElementAttributes;
+        mask: React.SvgElementAttributes;
+        path: React.SvgElementAttributes;
+        pattern: React.SvgElementAttributes;
+        polygon: React.SvgElementAttributes;
+        polyline: React.SvgElementAttributes;
+        radialGradient: React.SvgElementAttributes;
+        rect: React.SvgElementAttributes;
+        stop: React.SvgElementAttributes;
+        svg: React.SvgElementAttributes;
+        text: React.SvgElementAttributes;
+        tspan: React.SvgElementAttributes;
     }
 }
 
