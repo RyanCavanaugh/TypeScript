@@ -1225,7 +1225,7 @@ module ts {
         getAliasedSymbol(symbol: Symbol): Symbol;
         getExportsOfModule(moduleSymbol: Symbol): Symbol[];
 
-        getJsxElementValueType(elementNode: JsxOpeningElement): Type;
+        getJsxElementClassType(elementNode: JsxOpeningElement): Type;
         getJsxElementAttributesType(elementNode: JsxOpeningElement): Type;
         getJsxIntrinsicTagNames(): Symbol[];
 
@@ -1939,7 +1939,7 @@ module ts {
 
     export interface CompilerHost {
         getSourceFile(fileName: string, languageVersion: ScriptTarget, onError?: (message: string) => void): SourceFile;
-        getDefaultLibFileNames(options: CompilerOptions): string[];
+        getDefaultLibFileName(options: CompilerOptions): string;
         getCancellationToken? (): CancellationToken;
         writeFile: WriteFileCallback;
         getCurrentDirectory(): string;

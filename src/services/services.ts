@@ -957,7 +957,7 @@ module ts {
         getLocalizedDiagnosticMessages?(): any;
         getCancellationToken?(): CancellationToken;
         getCurrentDirectory(): string;
-        getDefaultLibFileNames(options: CompilerOptions): string[];
+        getDefaultLibFileName(options: CompilerOptions): string;
         log?(s: string): void;
         trace?(s: string): void;
         error?(s: string): void;
@@ -1604,6 +1604,7 @@ module ts {
         return {
             target: ScriptTarget.ES5,
             module: ModuleKind.None,
+            jsx: JsxEmit.Preserve
         };
     }
 
@@ -1792,7 +1793,7 @@ module ts {
                 Debug.assert(outputText === undefined, "Unexpected multiple outputs for the file: " + name);
                 outputText = text;
             },
-            getDefaultLibFileNames: () => ["lib.d.ts"],
+            getDefaultLibFileName: () => "lib.d.ts",
             useCaseSensitiveFileNames: () => false,
             getCanonicalFileName: fileName => fileName,
             getCurrentDirectory: () => "",
@@ -2432,7 +2433,7 @@ module ts {
                 getCanonicalFileName,
                 useCaseSensitiveFileNames: () => useCaseSensitivefileNames,
                 getNewLine: () => host.getNewLine ? host.getNewLine() : "\r\n",
-                getDefaultLibFileNames: (options) => host.getDefaultLibFileNames(options),
+                getDefaultLibFileName: (options) => host.getDefaultLibFileName(options),
                 writeFile: (fileName, data, writeByteOrderMark) => { },
                 getCurrentDirectory: () => host.getCurrentDirectory()
             });
@@ -2854,11 +2855,7 @@ module ts {
             let node = currentToken;
             let isRightOfDot = false;
             let isRightOfOpenTag = false;
-            if (contextToken) {
-                console.log('context token = "' + getTextOfNode(contextToken) + '"');
-            } else {
-                console.log('there is no context token');
-            }
+
             if (contextToken && contextToken.kind === SyntaxKind.DotToken && contextToken.parent.kind === SyntaxKind.PropertyAccessExpression) {
                 node = (<PropertyAccessExpression>contextToken.parent).expression;
                 isRightOfDot = true;
@@ -2866,8 +2863,7 @@ module ts {
             else if (contextToken && contextToken.kind === SyntaxKind.DotToken && contextToken.parent.kind === SyntaxKind.QualifiedName) {
                 node = (<QualifiedName>contextToken.parent).left;
                 isRightOfDot = true;
-            } else if (contextToken && contextToken.kind === SyntaxKind.LessThanToken) {
-                console.log('right of open tag');
+            } else if (contextToken && contextToken.kind === SyntaxKind.LessThanToken && sourceFile.isTSXFile) {
                 isRightOfOpenTag = true;
                 location = contextToken;
             }
@@ -2983,8 +2979,8 @@ module ts {
                     var expr = getAncestor(contextToken, SyntaxKind.JsxExpression);
                     if (!expr) {
                         // Cursor is inside a JSX element
-                        var t = typeChecker.getJsxElementType(<JsxElement>getAncestor(contextToken, SyntaxKind.JsxElement));
-                        symbols = typeChecker.getPropertiesOfType(typeChecker.getJsxElementAttributesType(t));
+                        var t = typeChecker.getJsxElementAttributesType((<JsxElement>getAncestor(contextToken, SyntaxKind.JsxElement)).openingElement);
+                        symbols = typeChecker.getPropertiesOfType(t);
                         isMemberCompletion = true;
                     }
                 }
@@ -6535,12 +6531,12 @@ module ts {
                     let declarations = symbol.getDeclarations();
                     if (declarations && declarations.length > 0) {
                         // Disallow rename for elements that are defined in the standard TypeScript library.
-                        let defaultLibFileNames = host.getDefaultLibFileNames(host.getCompilationSettings());
-                        if (defaultLibFileNames && defaultLibFileNames.length) {
+                        let defaultLibFileName = host.getDefaultLibFileName(host.getCompilationSettings());
+                        if (defaultLibFileName) {
                             for (let current of declarations) {
                                 let sourceFile = current.getSourceFile();
                                 var canonicalName = getCanonicalFileName(ts.normalizePath(sourceFile.fileName));
-                                if (sourceFile && defaultLibFileNames.some(libFn => getCanonicalFileName(ts.normalizePath(libFn)) === canonicalName)) {
+                                if (sourceFile && getCanonicalFileName(ts.normalizePath(sourceFile.fileName)) === getCanonicalFileName(ts.normalizePath(defaultLibFileName))) {
                                     return getRenameInfoError(getLocaleSpecificMessage(Diagnostics.You_cannot_rename_elements_that_are_defined_in_the_standard_TypeScript_library.key));
                                 }
                             }
@@ -7131,10 +7127,10 @@ module ts {
       * node package.
       * The functionality is not supported if the ts module is consumed outside of a node module. 
       */
-    export function getDefaultLibFilePaths(options: CompilerOptions): string[] {
+    export function getDefaultLibFilePath(options: CompilerOptions): string {
         // Check __dirname is defined and that we are on a node.js system.
         if (typeof __dirname !== "undefined") {
-            return getDefaultLibFileNames(options).map(fn => __dirname + directorySeparator + fn);
+            return __dirname + directorySeparator + getDefaultLibFileName(options);
         }
 
         throw new Error("getDefaultLibFilePath is only supported when consumed as a node module. ");

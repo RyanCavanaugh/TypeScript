@@ -1,4 +1,4 @@
-//@jsx: true
+// @jsx: preserve
 
 // A built-in element (OK)
 var a1 = <div id="foo" />;

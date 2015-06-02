@@ -1,145 +1,194 @@
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(4,2): error TS2304: Cannot find name ''.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(4,2): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(5,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(5,3): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,2): error TS2304: Cannot find name ''.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,2): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(3,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(3,2): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(4,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(4,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(4,3): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(5,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(5,2): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,6): error TS1005: '{' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,6): error TS2304: Cannot find name 'd'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,9): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(6,10): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(7,1): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(7,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(7,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(7,6): error TS1005: '{' expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(7,9): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(7,10): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(8,1): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(8,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(8,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(8,4): error TS17002: Expected corresponding JSX closing tag for 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(9,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(9,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(9,4): error TS17002: Expected corresponding JSX closing tag for 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(9,13): error TS1002: Unterminated string literal.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(10,1): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(10,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(10,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(10,13): error TS1002: Unterminated string literal.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(11,1): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(10,3): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(10,6): error TS17002: Expected corresponding JSX closing tag for 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(11,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(11,2): error TS2304: Cannot find name 'a'.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(11,3): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(11,6): error TS17002: Expected corresponding JSX closing tag for 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(12,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(12,3): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(11,5): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(11,11): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(12,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(12,2): error TS2503: Cannot find namespace 'a'.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(12,5): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(12,11): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(12,13): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(13,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(13,2): error TS2503: Cannot find namespace 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(13,2): error TS2304: Cannot find name 'a.b'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(13,5): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(13,13): error TS1005: '>' expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(14,2): error TS2503: Cannot find namespace 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(14,2): error TS2304: Cannot find name 'a.b.c'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(14,8): error TS17002: Expected corresponding JSX closing tag for 'a.b.c'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(15,2): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(15,2): error TS2304: Cannot find name '.a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(15,7): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,2): error TS2503: Cannot find namespace 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,2): error TS2304: Cannot find name 'a.'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,4): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,9): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(13,8): error TS17002: Expected corresponding JSX closing tag for 'a.b.c'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(14,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(14,2): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(14,7): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(15,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(15,2): error TS2503: Cannot find namespace 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(15,4): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(15,9): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,3): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(16,12): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(17,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(17,2): error TS2304: Cannot find name 'a'.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(17,3): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(17,12): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(17,14): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(18,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(18,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(18,3): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(18,14): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(18,4): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(18,5): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(19,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(19,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(19,5): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(20,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(20,9): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(20,10): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(20,23): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(20,24): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(21,9): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(21,10): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(21,24): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,10): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,51): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,10): error TS1005: '}' expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,11): error TS1012: Unexpected token.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,13): error TS2304: Cannot find name ''.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,13): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,14): error TS1005: '>' expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,14): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,16): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(24,2): error TS2304: Cannot find name 'span'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(24,20): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(21,50): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(21,51): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,10): error TS1005: '}' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,11): error TS1012: Unexpected token.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,12): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,13): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,14): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,14): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(22,16): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,2): error TS2304: Cannot find name 'span'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(23,20): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(24,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(24,2): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(24,15): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(25,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(25,2): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(25,15): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(26,2): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(26,7): error TS1005: '...' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(25,7): error TS1005: '...' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(25,7): error TS2304: Cannot find name 'props'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(27,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(27,2): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(27,17): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(27,18): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(27,26): error TS1012: Unexpected token.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(27,27): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(27,28): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,2): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,17): error TS1005: '>' expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,18): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,26): error TS1012: Unexpected token.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,27): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,28): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(29,2): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(29,28): error TS1005: '>' expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(29,29): error TS1129: Statement expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(29,32): error TS2304: Cannot find name 'props'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(29,38): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(29,39): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,10): error TS2304: Cannot find name 'props'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,28): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,29): error TS1129: Statement expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,32): error TS2304: Cannot find name 'props'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,38): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(28,39): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(30,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(30,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(31,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(31,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(32,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(32,2): error TS2304: Cannot find name 'a'.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(32,6): error TS1005: '{' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(33,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(33,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(33,6): error TS1005: '{' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(33,6): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(33,7): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(33,8): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(33,9): error TS1109: Expression expected.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,7): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,8): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,4): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,5): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,6): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,7): error TS1005: '>' expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,7): error TS2304: Cannot find name 'a'.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(34,9): error TS1109: Expression expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,4): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,6): error TS2304: Cannot find name ''.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,6): error TS1003: Identifier expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,7): error TS1005: '>' expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,7): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,9): error TS1109: Expression expected.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,2): error TS2304: Cannot find name 'a'.
-tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: Identifier expected.
+tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(35,4): error TS1003: Identifier expected.
 
 
-==== tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx (94 errors) ====
-    /// <JSX factory="React.createElement" />
+==== tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx (125 errors) ====
     declare var React: any;
     
     </>;
-     
-!!! error TS2304: Cannot find name ''.
+    ~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS1003: Identifier expected.
     <a: />;
+    ~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
       ~
 !!! error TS1003: Identifier expected.
     <:a />;
-     
-!!! error TS2304: Cannot find name ''.
+    ~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS1003: Identifier expected.
     <a b=d />;
+    ~~~~~~~~~~
      ~
 !!! error TS2304: Cannot find name 'a'.
          ~
 !!! error TS1005: '{' expected.
+         ~
+!!! error TS2304: Cannot find name 'd'.
             ~
 !!! error TS1109: Expression expected.
              ~
 !!! error TS1109: Expression expected.
     <a>;
+    ~~~~
     ~
 !!! error TS1003: Identifier expected.
+    ~~~~
      ~
 !!! error TS2304: Cannot find name 'a'.
     <a></b>;
+    ~~~~~~~~
+    ~~~~~~~~
+    ~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
        ~~~~
 !!! error TS17002: Expected corresponding JSX closing tag for 'a'.
     <a foo="bar;
+    ~~~~~~~~~~~~
+    ~~~~~~~~~~~~
+    ~~~~~~~~~~~~
      ~
 !!! error TS2304: Cannot find name 'a'.
                 
 !!! error TS1002: Unterminated string literal.
     <a:b></b>;
+    ~~~~~~~~~~
+    ~~~~~~~~~~
+    ~~~~~~~~~~
     ~
 !!! error TS1003: Identifier expected.
+    ~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
       ~
@@ -147,6 +196,11 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
          ~~~~
 !!! error TS17002: Expected corresponding JSX closing tag for 'a'.
     <a:b.c></a:b.c>;
+    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
       ~
@@ -156,38 +210,55 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
               ~
 !!! error TS1005: '>' expected.
     <a.b:c></a.b:c>;
+    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2503: Cannot find namespace 'a'.
-     ~~~
-!!! error TS2304: Cannot find name 'a.b'.
         ~
 !!! error TS1003: Identifier expected.
                 ~
 !!! error TS1005: '>' expected.
     <a.b.c></a>;
+    ~~~~~~~~~~~~
+    ~~~~~~~~~~~~
+    ~~~~~~~~~~~~
+    ~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2503: Cannot find namespace 'a'.
-     ~~~~~
-!!! error TS2304: Cannot find name 'a.b.c'.
            ~~~~
 !!! error TS17002: Expected corresponding JSX closing tag for 'a.b.c'.
     <.a></.a>;
+    ~~~~~~~~~~
+    ~~~~~~~~~~
+    ~~~~~~~~~~
+    ~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS1003: Identifier expected.
-     ~~
-!!! error TS2304: Cannot find name '.a'.
           ~
 !!! error TS1003: Identifier expected.
     <a.></a.>;
+    ~~~~~~~~~~
+    ~~~~~~~~~~
+    ~~~~~~~~~~
+    ~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2503: Cannot find namespace 'a'.
-     ~~
-!!! error TS2304: Cannot find name 'a.'.
        ~
 !!! error TS1003: Identifier expected.
             ~
 !!! error TS1003: Identifier expected.
     <a[foo]></a[foo]>;
+    ~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
       ~
@@ -195,6 +266,11 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
                ~
 !!! error TS1005: '>' expected.
     <a['foo']></a['foo']>;
+    ~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
       ~
@@ -202,32 +278,73 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
                  ~
 !!! error TS1005: '>' expected.
     <a><a />;
+    ~~~~~~~~~
+    ~~~~~~~~~
+    ~~~~~~~~~
+    ~~~~~~~~~
      ~
 !!! error TS2304: Cannot find name 'a'.
+       ~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
         ~
 !!! error TS2304: Cannot find name 'a'.
     <a b={}>;
+    ~~~~~~~~~
+    ~~~~~~~~~
+    ~~~~~~~~~
+    ~~~~~~~~~
+    ~~~~~~~~~
      ~
 !!! error TS2304: Cannot find name 'a'.
     var x = <div>one</div><div>two</div>;;
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            ~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
              ~~~
 !!! error TS2304: Cannot find name 'div'.
+                          ~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
                            ~~~
 !!! error TS2304: Cannot find name 'div'.
     var x = <div>one</div> /* intervening comment */ <div>two</div>;;
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+            ~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
              ~~~
 !!! error TS2304: Cannot find name 'div'.
+                                                     ~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
                                                       ~~~
 !!! error TS2304: Cannot find name 'div'.
     <a>{"str";}</a>;
+    ~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+    ~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+    ~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+    ~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+    ~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+    ~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
              ~
 !!! error TS1005: '}' expected.
               ~
 !!! error TS1012: Unexpected token.
-                
-!!! error TS2304: Cannot find name ''.
+               ~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
                 ~
 !!! error TS1003: Identifier expected.
                  ~
@@ -237,22 +354,35 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
                    ~
 !!! error TS1109: Expression expected.
     <span className="a", id="b" />;
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~~~~
 !!! error TS2304: Cannot find name 'span'.
                        ~
 !!! error TS1003: Identifier expected.
     <div className"app">;
+    ~~~~~~~~~~~~~~~~~~~~~
      ~~~
 !!! error TS2304: Cannot find name 'div'.
                   ~~~~~
 !!! error TS1003: Identifier expected.
     <div {props} />;
+    ~~~~~~~~~~~~~~~~
+    ~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~~~
 !!! error TS2304: Cannot find name 'div'.
           ~~~~~
 !!! error TS1005: '...' expected.
+          ~~~~~
+!!! error TS2304: Cannot find name 'props'.
+    
     
     <div>stuff</div {...props}>;
+    ~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+    ~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~~~
 !!! error TS2304: Cannot find name 'div'.
                     ~
@@ -266,8 +396,12 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
                                ~
 !!! error TS1109: Expression expected.
     <div {...props}>stuff</div {...props}>;
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~~~
 !!! error TS2304: Cannot find name 'div'.
+             ~~~~~
+!!! error TS2304: Cannot find name 'props'.
                                ~
 !!! error TS1005: '>' expected.
                                 ~~~
@@ -280,19 +414,30 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
 !!! error TS1109: Expression expected.
     
     <a>></a>;
+    ~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
     <a> ></a>;
+    ~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
     <a b=}>;
+    ~~~~~~~~
      ~
 !!! error TS2304: Cannot find name 'a'.
          ~
 !!! error TS1005: '{' expected.
     <a b=<}>;
+    ~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+    ~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
+         ~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
           ~
 !!! error TS1003: Identifier expected.
            ~
@@ -304,8 +449,8 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
 !!! error TS2304: Cannot find name 'a'.
        ~
 !!! error TS1109: Expression expected.
-         
-!!! error TS2304: Cannot find name ''.
+        ~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
          ~
 !!! error TS1003: Identifier expected.
           ~
@@ -315,6 +460,8 @@ tests/cases/conformance/jsx/jsxInvalidEsprimaTestSuite.tsx(36,4): error TS1003: 
             ~
 !!! error TS1109: Expression expected.
     <a .../*hai*/asdf/>;
+    ~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
      ~
 !!! error TS2304: Cannot find name 'a'.
        ~~~

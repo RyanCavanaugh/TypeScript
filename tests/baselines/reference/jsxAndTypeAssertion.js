@@ -1,5 +1,4 @@
 //// [jsxAndTypeAssertion.tsx]
-/// <JSX factory="createElement" />
 
 declare var createElement: any;
 
@@ -24,7 +23,6 @@ x = <foo>x</foo>, x = <foo/>;
 
 
 //// [jsxAndTypeAssertion.tsx.js]
-/// <JSX factory="createElement" />
 var foo = (function () {
     function foo() {
     }
@@ -33,7 +31,7 @@ var foo = (function () {
 var x;
 x = { test: <any></any> };
 x = <any></any>;
-x = <foo>hello{{}}</foo>;
+x = <foo>hello {{}} </foo>;
 x = <foo test={{}}>hello</foo>;
 x = <foo test={{}}>hello{{}}</foo>;
 x = <foo>x</foo>, x = <foo />;

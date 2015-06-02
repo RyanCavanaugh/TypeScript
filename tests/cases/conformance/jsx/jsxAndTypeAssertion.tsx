@@ -1,4 +1,4 @@
-/// <JSX factory="createElement" />
+// @jsx: preserve
 
 declare var createElement: any;
 

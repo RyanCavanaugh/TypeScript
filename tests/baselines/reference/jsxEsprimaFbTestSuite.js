@@ -1,5 +1,4 @@
 //// [jsxEsprimaFbTestSuite.tsx]
-/// <JSX factory="React.createElement" />
 declare var React: any;
 declare var 日本語;
 declare var AbC_def;
@@ -63,8 +62,10 @@ baz
 <a b="&notanentity;"/>;
 <a />;
 <日本語></日本語>;
-<AbC_def test="&#x0026;&#38;">bar
-baz</AbC_def>;
+<AbC_def test="&#x0026;&#38;">
+bar
+baz
+</AbC_def>;
 <a b={x ? <c /> : <d />}/>;
 <a>{}</a>;
 <a>{}</a>;
@@ -77,4 +78,4 @@ baz</AbC_def>;
 <div {...props}/>;
 <div {...props} post="attribute"/>;
 <div pre="leading" pre2="attribute" {...props}></div>;
-<a></a>;
+<a>    </a>;

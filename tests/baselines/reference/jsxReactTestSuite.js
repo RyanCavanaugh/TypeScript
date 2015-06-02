@@ -1,5 +1,5 @@
 //// [jsxReactTestSuite.tsx]
-/// <JSX factory="React.createElement" />
+
 declare var React: any;
 declare var Component:any;
 declare var Composite:any;
@@ -119,21 +119,41 @@ var x =
 
 //// [jsxReactTestSuite.tsx.js]
 <div>text</div>;
-<div>{this.props.children}</div>;
-<div><div><br /></div><Component>{foo}<br />{bar}</Component><br /></div>;
-<Composite>{this.props.children}</Composite>;
-<Composite><Composite2 /></Composite>;
+<div>
+  {this.props.children}
+</div>;
+<div>
+  <div><br /></div>
+  <Component>{foo}<br />{bar}</Component>
+  <br />
+</div>;
+<Composite>
+    {this.props.children}
+</Composite>;
+<Composite>
+    <Composite2 />
+</Composite>;
 var x = <div attr1={"foo" + "bar"} attr2={"foo" + "bar" +
     "baz" + "bug"} attr3={"foo" + "bar" +
-    "baz" + "bug"} attr4="baz"></div>;
-(<div>{}{}<span>{}</span>{}<br />{}{}</div>);
-(<div 
-/* a multi-line
-   comment */
-attr1="foo"><span // a double-slash comment
- attr2="bar"/></div>);
+    "baz" + "bug"} attr4="baz">
+  </div>;
+(<div>
+    {}
+    {}
+    <span>
+      {}
+    </span>
+    {}
+    <br />
+    {}
+    {}
+  </div>);
+(<div attr1="foo">
+    <span // a double-slash comment
+ attr2="bar"/>
+  </div>);
 <div>&nbsp;</div>;
-<div>&nbsp;</div>;
+<div>&nbsp; </div>;
 <hasOwnProperty>testing</hasOwnProperty>;
 <Component constructor="foo"/>;
 <Namespace.Component />;

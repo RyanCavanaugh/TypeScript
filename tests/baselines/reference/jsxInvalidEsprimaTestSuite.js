@@ -1,5 +1,4 @@
 //// [jsxInvalidEsprimaTestSuite.tsx]
-/// <JSX factory="React.createElement" />
 declare var React: any;
 
 </>;
@@ -40,13 +39,30 @@ var x = <div>one</div> /* intervening comment */ <div>two</div>;;
 < />;
 <a />;
 < a=/>;
-<a b={d /  > }><a>;<a></b>;<a foo="bar;><a b=></b>;<a b= c=></a>:b.c>;<a.b c=></a.b>:c>;<a.b.c></a>;<.a></.a>;<a.></a.>;<a>[foo]></a>[foo]>;<a>['foo']></a>['foo']>;<a><a />;<a b={}>;
-var x =<div>one</div><div>two</div>;;
-var x =<div>one</div> /* intervening comment */<div>two</div>;;<a>{"str"};</></></></></></>;
+<a b={d /  > }>
+<a>;
+<a></b>;
+<a foo="bar;>
+<a b=></b>;
+<a b= c=></a>:b.c>;
+<a.b c=></a.b>:c>;
+<a.b.c></a>;
+<.a></.a>;
+<a.></a.>;
+<a>[foo]></a>[foo]>;
+<a>['foo']></a>['foo']>;
+<a><a />;
+<a b={}>;
+var x = <div>one</div><div>two</div>;;
+var x = <div>one</div> /* intervening comment */ /* intervening comment */ <div>two</div>;;
+<a>{"str"};</></></></></></>;
 < />;
 a > ;
 <span className="a" id="b"/>;
-<div className=>"app">;<div {...props}/>;<div>stuff</div>{}...props</>;
+<div className=>"app">;
+<div {...props}/>;
+
+<div>stuff</div> {}...props</>;
  > ;
 <div {...props}>stuff</div>;
 {
@@ -54,8 +70,9 @@ a > ;
 }
  > ;
 <a>></a>;
-<a>></a>;
-<a b={}>;<a b=<></>></></>;
+<a> ></a>;
+<a b={}>;
+<a b=<></>></></>;
  > ;
 ;
 < />;

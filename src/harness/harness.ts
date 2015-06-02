@@ -194,7 +194,7 @@ module Utils {
     }
 
     export function sourceFileToJSON(file: ts.SourceFile): string {
-        return JSON.stringify(file,(k, v) => {
+        return JSON.stringify(file, (k, v) => {
             return isNodeOrArray(v) ? serializeNode(v) : v;
         }, "    ");
 
@@ -208,7 +208,7 @@ module Utils {
             }
 
             var result = "";
-            ts.forEach(Object.getOwnPropertyNames(flags),(v: any) => {
+            ts.forEach(Object.getOwnPropertyNames(flags), (v: any) => {
                 if (isFinite(v)) {
                     v = +v;
                     if (f === +v) {
@@ -400,7 +400,7 @@ module Harness {
         deleteFile(fileName: string): void;
         listFiles(path: string, filter: RegExp, options?: { recursive?: boolean }): string[];
         log(text: string): void;
-        getMemoryUsage? (): number;
+        getMemoryUsage?(): number;
     }
 
     module IOImpl {
@@ -783,7 +783,7 @@ module Harness {
 
             public reset() { this.fileCollection = {}; }
 
-            public toArray(): { fileName: string; file: WriterAggregator; }[]{
+            public toArray(): { fileName: string; file: WriterAggregator; }[] {
                 var result: { fileName: string; file: WriterAggregator; }[] = [];
                 for (var p in this.fileCollection) {
                     if (this.fileCollection.hasOwnProperty(p)) {
@@ -810,13 +810,9 @@ module Harness {
         const carriageReturnLineFeed = "\r\n";
         const lineFeed = "\n";
 
-        var lib_d_ts = 'lib.d.ts';
-        var jsx_d_ts = 'lib.jsx.d.ts';
-        // Note: entry 0 must be lib.d.ts
-        export var defaultLibFileNames = [lib_d_ts];
-        export var defaultLibSourceFile = createSourceFileAndAssertInvariants(lib_d_ts, IO.readFile(libFolder + 'lib.core.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
-        export var defaultES6LibSourceFile = createSourceFileAndAssertInvariants(lib_d_ts, IO.readFile(libFolder + 'lib.core.es6.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
-        export var defaultJsxLibSourceFile = createSourceFileAndAssertInvariants(lib_d_ts, IO.readFile(libFolder + 'lib.jsx.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
+        export var defaultLibFileName = 'lib.d.ts';
+        export var defaultLibSourceFile = createSourceFileAndAssertInvariants(defaultLibFileName, IO.readFile(libFolder + 'lib.core.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
+        export var defaultES6LibSourceFile = createSourceFileAndAssertInvariants(defaultLibFileName, IO.readFile(libFolder + 'lib.core.es6.d.ts'), /*languageVersion*/ ts.ScriptTarget.Latest);
 
         // Cache these between executions so we don't have to re-parse them for every test
         export var fourslashFileName = 'fourslash.ts';
@@ -873,16 +869,14 @@ module Harness {
                         return fourslashSourceFile;
                     }
                     else {
-                        if (fn === lib_d_ts) {
+                        if (fn === defaultLibFileName) {
                             return languageVersion === ts.ScriptTarget.ES6 ? defaultES6LibSourceFile : defaultLibSourceFile;
-                        } else if (fn === jsx_d_ts) {
-                            return defaultJsxLibSourceFile;
                         }
                         // Don't throw here -- the compiler might be looking for a test that actually doesn't exist as part of the TC
                         return undefined;
                     }
                 },
-                getDefaultLibFileNames: options => options.jsx ? defaultLibFileNames.concat(jsx_d_ts) : defaultLibFileNames,
+                getDefaultLibFileName: options => defaultLibFileName,
                 writeFile,
                 getCanonicalFileName,
                 useCaseSensitiveFileNames: () => useCaseSensitiveFileNames,
@@ -928,7 +922,7 @@ module Harness {
             }
 
             public emitAll(ioHost?: IEmitterIOHost) {
-                this.compileFiles(this.inputFiles, [],(result) => {
+                this.compileFiles(this.inputFiles, [], (result) => {
                     result.files.forEach(file => {
                         ioHost.writeFile(file.fileName, file.code, false);
                     });
@@ -938,7 +932,7 @@ module Harness {
                     result.sourceMaps.forEach(file => {
                         ioHost.writeFile(file.fileName, file.code, false);
                     });
-                },() => { }, this.compileOptions);
+                }, () => { }, this.compileOptions);
             }
 
             public compileFiles(inputFiles: { unitName: string; content: string }[],
@@ -1117,24 +1111,19 @@ module Harness {
                         case 'inlinesourcemap':
                             options.inlineSourceMap = setting.value === 'true';
                             break;
-                        
+
                         case 'inlinesources':
                             options.inlineSources = setting.value === 'true';
                             break;
 
-                        case 'jsx':
-                            options.jsx = setting.value.toLowerCase() === 'react' ? ts.JsxEmit.React :
-                                setting.value.toLowerCase() === 'preserve' ? ts.JsxEmit.Preserve :
-                                    ts.JsxEmit.None;
-                            break;
-
+                        case 'jsx':                            options.jsx = setting.value.toLowerCase() === 'react' ? ts.JsxEmit.React :                                          setting.value.toLowerCase() === 'preserve' ? ts.JsxEmit.Preserve :                                          ts.JsxEmit.None;                            break;
                         default:
                             throw new Error('Unsupported compiler setting ' + setting.flag);
                     }
                 });
-                
+
                 var fileOutputs: GeneratedFile[] = [];
-                
+
                 var programFiles = inputFiles.concat(includeBuiltFiles).map(file => file.unitName);
                 var program = ts.createProgram(programFiles, options, createCompilerHost(inputFiles.concat(includeBuiltFiles).concat(otherFiles),
                     (fn, contents, writeByteOrderMark) => fileOutputs.push({ fileName: fn, code: contents, writeByteOrderMark: writeByteOrderMark }),
@@ -1214,7 +1203,7 @@ module Harness {
                         }
 
                         var dTsFileName = ts.removeFileExtension(sourceFileName) + ".d.ts";
-                        
+
                         return ts.forEach(result.declFilesCode, declFile => declFile.fileName === dTsFileName ? declFile : undefined);
                     }
 
@@ -1649,9 +1638,9 @@ module Harness {
 
         function baselinePath(fileName: string, type: string, baselineFolder: string, subfolder?: string) {
             if (subfolder !== undefined) {
-                return Harness.userSpecifiedroot + baselineFolder + '/' +  subfolder + '/' + type + '/' + fileName;
+                return Harness.userSpecifiedroot + baselineFolder + '/' + subfolder + '/' + type + '/' + fileName;
             } else {
-                return Harness.userSpecifiedroot + baselineFolder + '/'  + type + '/' + fileName;
+                return Harness.userSpecifiedroot + baselineFolder + '/' + type + '/' + fileName;
             }
         }
 

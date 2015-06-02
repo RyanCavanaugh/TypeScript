@@ -1,4 +1,4 @@
-/// <JSX factory="React.createElement" />
+// @jsx: preserve
 declare var React: any;
 declare var 日本語;
 declare var AbC_def;

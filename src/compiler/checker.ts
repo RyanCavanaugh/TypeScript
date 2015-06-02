@@ -75,7 +75,7 @@ module ts {
             getEmitResolver,
             getExportsOfModule: getExportsOfModuleAsArray,
 
-            getJsxElementValueType,
+            getJsxElementClassType,
             getJsxElementAttributesType,
             getJsxIntrinsicTagNames
         };
@@ -6403,7 +6403,7 @@ module ts {
             return intrinsicsType;
         }
 
-        function getJsxElementValueType(node: JsxOpeningElement) {
+        function getJsxElementClassType(node: JsxOpeningElement) {
             var valueTypeSymbol = resolveEntityName(node.tagName, SymbolFlags.Value);
             if (valueTypeSymbol) {
                 let valueType = getTypeOfSymbol(valueTypeSymbol);
@@ -6431,8 +6431,10 @@ module ts {
                     }
 
                     // Issue an error if this return type isn't assignable to JSX.ElementClass
-                    var elemClassType = getJsxElementClassType();
-                    checkTypeRelatedTo(returnType, elemClassType, assignableRelation, node, Diagnostics.JSX_element_0_is_not_a_constructor_function_or_factory_function_for_JSX_elements);
+                    var elemClassType = getJsxGlobalElementClassType();
+                    if (elemClassType) {
+                        checkTypeRelatedTo(returnType, elemClassType, assignableRelation, node, Diagnostics.JSX_element_0_is_not_a_constructor_function_or_factory_function_for_JSX_elements);
+                    }
 
                     return returnType;
                 }
@@ -6476,7 +6478,7 @@ module ts {
             }
 
             // Value type case (e.g. <MyComponent />)
-            let valueType = getJsxElementValueType(node);
+            let valueType = getJsxElementClassType(node);
             if (valueType) {
 
                 var propsName = getJsxElementPropertiesName();
@@ -6502,7 +6504,7 @@ module ts {
             }
         }
 
-        function getJsxElementClassType(): Type {
+        function getJsxGlobalElementClassType(): Type {
             var jsxNS = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/ undefined);
             if (jsxNS) {
                 let sym = getSymbol(jsxNS.exports, JsxNames.ElementClass, SymbolFlags.Type);

@@ -89,9 +89,9 @@ module ts.server {
         constructor(public host: ServerHost, public project: Project) {
         }
 
-        getDefaultLibFileNames() {
+        getDefaultLibFileName() {
             var nodeModuleBinDir = ts.getDirectoryPath(ts.normalizePath(this.host.getExecutingFilePath()));
-            return ts.getDefaultLibFileNames(this.compilationSettings).map(fn => ts.combinePaths(nodeModuleBinDir, fn));
+            return ts.combinePaths(nodeModuleBinDir, ts.getDefaultLibFileName(this.compilationSettings));
         }
 
         getScriptSnapshot(filename: string): ts.IScriptSnapshot {

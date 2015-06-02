@@ -1,40 +1,70 @@
-tests/cases/conformance/tsx/tsxTypeErrors.tsx(6,15): error TS2339: Property 'srce' does not exist on type 'img'.
-tests/cases/conformance/tsx/tsxTypeErrors.tsx(10,18): error TS2322: Type '{ oops: number; }' is not assignable to type 'string'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(3,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(3,11): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(6,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(6,11): error TS2304: Cannot find name 'img'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(10,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(10,11): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(13,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/tsx/tsxTypeErrors.tsx(13,11): error TS2304: Cannot find name 'imag'.
-tests/cases/conformance/tsx/tsxTypeErrors.tsx(19,15): error TS2339: Property 'magical-attribs' does not exist on type 'div'.
-tests/cases/conformance/tsx/tsxTypeErrors.tsx(38,34): error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
-  Types of property 'y' are incompatible.
-    Type 'string' is not assignable to type 'number'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(16,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(16,11): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(17,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(17,11): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(19,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(19,11): error TS2304: Cannot find name 'div'.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(32,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(38,10): error TS2602: The global type 'JSX.Element' must exist when using JSX.
+tests/cases/conformance/tsx/tsxTypeErrors.tsx(42,12): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 
 
-==== tests/cases/conformance/tsx/tsxTypeErrors.tsx (5 errors) ====
+==== tests/cases/conformance/tsx/tsxTypeErrors.tsx (17 errors) ====
     
     // A built-in element (OK)
     var a1 = <div id="foo" />;
+             ~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+              ~~~
+!!! error TS2304: Cannot find name 'div'.
     
     // A built-in element with a mistyped property (error)
     var a2 = <img srce="foo.jpg" />
-                  ~~~~~~~~~~~~~~
-!!! error TS2339: Property 'srce' does not exist on type 'img'.
+             ~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+              ~~~
+!!! error TS2304: Cannot find name 'img'.
     
     // A built-in element with a badly-typed attribute value (error)
     var thing = { oops: 100 };
     var a3 = <div id={thing} />
-                     ~~~~~~~
-!!! error TS2322: Type '{ oops: number; }' is not assignable to type 'string'.
+             ~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+              ~~~
+!!! error TS2304: Cannot find name 'div'.
     
     // Mistyped html name (error)
     var e1 = <imag src="bar.jpg" />
+             ~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
               ~~~~
 !!! error TS2304: Cannot find name 'imag'.
     
     // Special prefixed property names are OK
     var s1 = <div data-quackquack="moo" />
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+              ~~~
+!!! error TS2304: Cannot find name 'div'.
     var s2 = <div aria-moo="quackquack" />
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+              ~~~
+!!! error TS2304: Cannot find name 'div'.
     // Invalid prefix names are still an error
     var s3 = <div magical-attribs="no" />
-                  ~~~~~~~~~~~~~~~~~~~~
-!!! error TS2339: Property 'magical-attribs' does not exist on type 'div'.
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
+              ~~~
+!!! error TS2304: Cannot find name 'div'.
     
     // A custom type
     class MyClass {
@@ -48,18 +78,20 @@ tests/cases/conformance/tsx/tsxTypeErrors.tsx(38,34): error TS2322: Type '{ x: n
     // Let's use it
     // TODO: Error on missing 'reqd'
     var b1 = <MyClass />; 
+             ~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
     
     // Mistyped attribute member
     // sample.tsx(23,22): error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
     //  Types of property 'y' are incompatible.
     //    Type 'string' is not assignable to type 'number'.
     var b2 = <MyClass reqd={true} pt={{x: 4, y: 'oops'}} />;
-                                     ~~~~~~~~~~~~~~~~~~~
-!!! error TS2322: Type '{ x: number; y: string; }' is not assignable to type '{ x: number; y: number; }'.
-!!! error TS2322:   Types of property 'y' are incompatible.
-!!! error TS2322:     Type 'string' is not assignable to type 'number'.
+             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
     
     // Variables of type 'any' are good for anything
     declare var AnyThing: any;
     var any1 = <AnyThing foo="32" bar={'xyz'} />;
+               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
     

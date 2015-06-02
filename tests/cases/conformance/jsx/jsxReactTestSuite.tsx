@@ -1,4 +1,5 @@
-/// <JSX factory="React.createElement" />
+// @jsx: preserve
+
 declare var React: any;
 declare var Component:any;
 declare var Composite:any;
