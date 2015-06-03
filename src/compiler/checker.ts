@@ -5239,6 +5239,10 @@ module ts {
                     case SyntaxKind.ThrowStatement:
                     case SyntaxKind.TryStatement:
                     case SyntaxKind.CatchClause:
+                    case SyntaxKind.JsxElement:
+                    case SyntaxKind.JsxAttribute:
+                    case SyntaxKind.JsxSpreadAttribute:
+                    case SyntaxKind.JsxOpeningElement:
                         return forEachChild(node, isAssignedIn);
                 }
                 return false;
@@ -6374,10 +6378,6 @@ module ts {
 
             if (node.initializer) {
                 var exprType = checkExpression(node.initializer);
-                // TODO: Why is this needed?? rebinding of '_this' and typechecking
-                // do not occur otherwise, even though checkExpression above
-                // properly recurses into the correct places...
-                typeToString(exprType);
 
                 if (elementAttributesType !== anyType && correspondingPropType) {
                     checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
@@ -6410,7 +6410,6 @@ module ts {
 
         /// Returns the type JSX.IntrinsicElements. May return 'undefined' if that type is not present.
         function getJsxIntrinsicElementsType() {
-            // Intrinsic case
             let jsxNamespace = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, undefined);
             let intrinsicsSymbol = jsxNamespace && getSymbol(jsxNamespace.exports, JsxNames.IntrinsicElements, SymbolFlags.Type);
             let intrinsicsType = intrinsicsSymbol && getDeclaredTypeOfSymbol(intrinsicsSymbol);
@@ -6563,9 +6562,11 @@ module ts {
             for (var i = node.attributes.length - 1; i >= 0; i--) {
                 if (node.attributes[i].kind === SyntaxKind.JsxAttribute) {
                     checkJsxAttribute(<JsxAttribute>(node.attributes[i]), targetAttributesType, nameTable);
-                } else if (node.attributes[i].kind === SyntaxKind.JsxSpreadAttribute) {
+                }
+                else if (node.attributes[i].kind === SyntaxKind.JsxSpreadAttribute) {
                     checkJsxSpreadAttribute(<JsxSpreadAttribute>(node.attributes[i]), targetAttributesType, nameTable);
-                } else {
+                }
+                else {
                     throw new Error('Unknown JSX attribute kind');
                 }
             }
@@ -6585,7 +6586,7 @@ module ts {
 
         function checkJsxExpression(node: JsxExpression) {
             if (node.expression) {
-                return checkExpression(node.expression);
+                return checkExpressionCached(node.expression);
             } else {
                 return anyType;
             }
@@ -11312,6 +11313,11 @@ module ts {
                 case SyntaxKind.EnumMember:
                 case SyntaxKind.ExportAssignment:
                 case SyntaxKind.SourceFile:
+                case SyntaxKind.JsxExpression:
+                case SyntaxKind.JsxElement:
+                case SyntaxKind.JsxAttribute:
+                case SyntaxKind.JsxSpreadAttribute:
+                case SyntaxKind.JsxOpeningElement:
                     forEachChild(node, checkFunctionExpressionBodies);
                     break;
             }
