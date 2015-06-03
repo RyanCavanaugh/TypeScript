@@ -5954,13 +5954,24 @@ module ts {
             return node === conditional.whenTrue || node === conditional.whenFalse ? getContextualType(conditional) : undefined;
         }
 
-        function getContextualTypeForJsxExpression(expr: JsxExpression): Type {
+        function getContextualTypeForJsxExpression(expr: JsxExpression|JsxSpreadAttribute): Type {
             // Contextual type only applies to JSX expressions that are in attribute assignments (not in 'Children' positions)
             if (expr.parent.kind === SyntaxKind.JsxAttribute) {
                 let attrib = <JsxAttribute>expr.parent;
                 let elem = <JsxOpeningElement>attrib.parent;
                 let attrsType = getJsxElementAttributesType(elem);
-                return getTypeOfPropertyOfType(attrsType, attrib.name.text);
+                if (attrsType === anyType || attrsType === undefined) {
+                    return undefined;
+                }
+                else {
+                    return getTypeOfPropertyOfType(attrsType, attrib.name.text);
+                }
+            }
+            else if (expr.kind === SyntaxKind.JsxSpreadAttribute) {
+                let attrib = <JsxSpreadAttribute>expr.parent;
+                let elem = <JsxOpeningElement>attrib.parent;
+                let attrsType = getJsxElementAttributesType(elem);
+                return getJsxElementAttributesType(elem);
             }
             else {
                 return undefined;
@@ -6008,6 +6019,7 @@ module ts {
                 case SyntaxKind.ParenthesizedExpression:
                     return getContextualType(<ParenthesizedExpression>parent);
                 case SyntaxKind.JsxExpression:
+                case SyntaxKind.JsxSpreadAttribute:
                     return getContextualTypeForJsxExpression(<JsxExpression>parent);
             }
             return undefined;
@@ -6338,7 +6350,7 @@ module ts {
 
         function isIdentifierLike(name: string) {
             // - is the only character supported in JSX attribute names that isn't valid in JavaScript identifiers
-            return name.indexOf('-') >= 0;
+            return name.indexOf('-') < 0;
         }
 
         function checkJsxAttribute(node: JsxAttribute, elementAttributesType: Type, nameTable: Map<boolean>) {
@@ -6367,7 +6379,7 @@ module ts {
                 // properly recurses into the correct places...
                 typeToString(exprType);
 
-                if (elementAttributesType !== anyType) {
+                if (elementAttributesType !== anyType && correspondingPropType) {
                     checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
                 }
 
