@@ -1,0 +1,18 @@
+tests/cases/conformance/jsx/tsxElementResolution1.tsx(12,2): error TS2304: Cannot find name 'span'.
+
+
+==== tests/cases/conformance/jsx/tsxElementResolution1.tsx (1 errors) ====
+    declare module JSX {
+    	interface Element { }
+    	interface IntrinsicElements {
+    		div: any
+    	}
+    }
+    
+    // OK
+    <div />;
+    
+    // Fail
+    <span />;
+     ~~~~
+!!! error TS2304: Cannot find name 'span'.

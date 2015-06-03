@@ -6337,15 +6337,18 @@ module ts {
         }
 
         function isIdentifierLike(name: string) {
-            // TODO: Use the scanner for this?
-            return /^[A-Za-z_$]\w*$/.test(name);
+            // - is the only character supported in JSX attribute names that isn't valid in JavaScript identifiers
+            return name.indexOf('-') >= 0;
         }
 
         function checkJsxAttribute(node: JsxAttribute, elementAttributesType: Type, nameTable: Map<boolean>) {
             var correspondingPropType: Type = unknownType;
 
             // Look up the corresponding property for this attribute
-            if (elementAttributesType !== anyType && elementAttributesType !== undefined) {
+            if (elementAttributesType === voidType && !isIdentifierLike(node.name.text)) {
+                error(node.parent, Diagnostics.JSX_element_class_does_not_support_attributes_because_it_does_not_have_a_0_property, getJsxElementPropertiesName(node));
+            }
+            else if (elementAttributesType !== anyType && elementAttributesType !== undefined) {
                 var correspondingPropSymbol = getPropertyOfType(elementAttributesType, node.name.text);
                 correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
                 if (correspondingPropType === undefined) {
@@ -6443,15 +6446,23 @@ module ts {
             }
         }
 
-        /// e.g. "props" for React.d.ts, or undefined
-        function getJsxElementPropertiesName() {
+        /// e.g. "props" for React.d.ts, 'undefined' if ElementAttributesPropery doesn't exist, or '' if it has 0 properties
+        function getJsxElementPropertiesName(errNode: Node) {
             let jsxNamespace = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/undefined);
             let attribsPropTypeSym = jsxNamespace && getSymbol(jsxNamespace.exports, JsxNames.ElementAttributesProperty, SymbolFlags.Type);
             let attribPropType = attribsPropTypeSym && getDeclaredTypeOfSymbol(attribsPropTypeSym);
             let attribProperties = attribPropType && getPropertiesOfType(attribPropType);
 
-            if (attribProperties && attribProperties.length === 1) {
-                return attribProperties[0].name;
+            if (attribProperties) {
+                if (attribProperties.length === 0) {
+                    return '';
+                }
+                else if (attribProperties.length === 1) {
+                    return attribProperties[0].name;
+                }
+                else {
+                    error(errNode, Diagnostics.The_global_type_JSX_0_may_not_have_more_than_one_property, JsxNames.ElementAttributesProperty);
+                }
             }
             else {
                 return undefined;
@@ -6478,24 +6489,35 @@ module ts {
 
             // Value type case (e.g. <MyComponent />)
             let elemInstanceType = getJsxElementClassType(node);
-            if (elemInstanceType) {
-                var propsName = getJsxElementPropertiesName();
-                if (propsName) {
+            if (elemInstanceType === anyType) {
+                return anyType;
+            }
+            else if (elemInstanceType) {
+                var propsName = getJsxElementPropertiesName(node);
+                if (propsName === undefined) {
+                    // There is no type ElementAttributesProperty, return 'any'
+                    return anyType;
+                }
+                else if (propsName === '') {
+                    // If there is no e.g. 'props' member in ElementAttributesProperty, use the element class type instead
+                    return elemInstanceType;
+                }
+                else {
                     var attributesType = getTypeOfPropertyOfType(elemInstanceType, propsName);
 
-                    if (attributesType &&
-                        attributesType !== anyType &&
-                        attributesType !== unknownType &&
-                        !(attributesType.flags & TypeFlags.ObjectType)) {
-
-                        error(node.tagName, Diagnostics.JSX_element_attributes_type_0_must_be_an_object_type, typeToString(attributesType));
+                    if (attributesType === undefined) {
+                        return voidType;
                     }
-
-                    // TODO: What should the default case (when 'props' is missing from the element class type) be here?
-                    return attributesType || emptyObjectType;
-                } else {
-                    // If there is no e.g. 'props' member, use the element class type instead
-                    return elemInstanceType;
+                    else if (attributesType === anyType || attributesType === unknownType) {
+                        return attributesType;
+                    }
+                    else if (!(attributesType.flags & TypeFlags.ObjectType)) {
+                        error(node.tagName, Diagnostics.JSX_element_attributes_type_0_must_be_an_object_type, typeToString(attributesType));
+                        return anyType;
+                    }
+                    else {
+                        return attributesType;
+                    }
                 }
             }
             else {
@@ -6521,11 +6543,7 @@ module ts {
 
         function checkJsxOpeningElement(node: JsxOpeningElement) {
             var targetAttributesType = getJsxElementAttributesType(node);
-
-            if (targetAttributesType === undefined) {
-                error(node.tagName, Diagnostics.Cannot_find_name_0, getTextOfNode(node.tagName));
-            }
-
+            
             var nameTable: Map<boolean> = {};
             // Process this array in right-to-left order so we know which
             // attributes (mostly from spreads) are being overwritten and

@@ -25,7 +25,7 @@ var d = <Other />;
 var e = <Dotted.Name />;
 
 
-//// [tsxElementResolution.tsx.js]
+//// [tsxElementResolution.jsx]
 var foundFirst = (function () {
     function foundFirst() {
     }

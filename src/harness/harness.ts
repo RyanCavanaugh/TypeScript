@@ -1116,7 +1116,12 @@ module Harness {
                             options.inlineSources = setting.value === 'true';
                             break;
 
-                        case 'jsx':                            options.jsx = setting.value.toLowerCase() === 'react' ? ts.JsxEmit.React :                                          setting.value.toLowerCase() === 'preserve' ? ts.JsxEmit.Preserve :                                          ts.JsxEmit.None;                            break;
+                        case 'jsx':
+                            options.jsx = setting.value.toLowerCase() === 'react' ? ts.JsxEmit.React :
+                                          setting.value.toLowerCase() === 'preserve' ? ts.JsxEmit.Preserve :
+                                          ts.JsxEmit.None;
+                            break;
+
                         default:
                             throw new Error('Unsupported compiler setting ' + setting.flag);
                     }
@@ -1431,12 +1436,19 @@ module Harness {
             return stringEndsWith(fileName, '.ts');
         }
 
+        export function isTSX(fileName: string) {
+            return stringEndsWith(fileName, '.tsx');
+        }
+
         export function isDTS(fileName: string) {
             return stringEndsWith(fileName, '.d.ts');
         }
 
         export function isJS(fileName: string) {
             return stringEndsWith(fileName, '.js');
+        }
+        export function isJSX(fileName: string) {
+            return stringEndsWith(fileName, '.jsx');
         }
 
         export function isJSMap(fileName: string) {
@@ -1458,7 +1470,7 @@ module Harness {
                     if (isDTS(emittedFile.fileName)) {
                         // .d.ts file, add to declFiles emit
                         this.declFilesCode.push(emittedFile);
-                    } else if (isJS(emittedFile.fileName)) {
+                    } else if (isJS(emittedFile.fileName) || isJSX(emittedFile.fileName)) {
                         // .js file, add to files
                         this.files.push(emittedFile);
                     } else if (isJSMap(emittedFile.fileName)) {

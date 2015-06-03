@@ -1477,6 +1477,14 @@
         "category": "Error",
         "code": 2606
     },
+    "JSX element class does not support attributes because it does not have a '{0}' property": {
+        "category": "Error",
+        "code": 2607
+    },
+    "The global type 'JSX.{0}' may not have more than one property": {
+        "category": "Error",
+        "code": 2608
+    },
 
     "Cannot emit namespaced JSX elements in React": {
         "category": "Error",
