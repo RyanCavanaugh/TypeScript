@@ -1,0 +1,17 @@
+=== tests/cases/conformance/jsx/tsxElementResolution6.tsx ===
+declare module JSX {
+>JSX : any
+
+	interface Element { }
+>Element : Element
+}
+
+var div: any;
+>div : any
+
+// OK
+<div n='x' />;
+><div n='x' /> : JSX.Element
+>div : any
+>n : any
+

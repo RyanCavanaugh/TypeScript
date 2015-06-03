@@ -35,7 +35,7 @@ var x = <div>one</div> /* intervening comment */ <div>two</div>;;
 <a>}</a>;
 <a .../*hai*/asdf/>;
 
-//// [jsxInvalidEsprimaTestSuite.tsx.js]
+//// [jsxInvalidEsprimaTestSuite.jsx]
 < />;
 <a />;
 < a=/>;

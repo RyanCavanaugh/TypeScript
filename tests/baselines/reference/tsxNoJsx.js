@@ -4,6 +4,6 @@
 <nope />;
 
 
-//// [tsxNoJsx.tsx.js]
+//// [tsxNoJsx.jsx]
 /// @jsx: preserve
 <nope />;

@@ -1,0 +1,14 @@
+=== tests/cases/conformance/jsx/tsxElementResolution6.tsx ===
+declare module JSX {
+>JSX : Symbol(JSX, Decl(tsxElementResolution6.tsx, 0, 0))
+
+	interface Element { }
+>Element : Symbol(Element, Decl(tsxElementResolution6.tsx, 0, 20))
+}
+
+var div: any;
+>div : Symbol(div, Decl(tsxElementResolution6.tsx, 4, 3))
+
+// OK
+<div n='x' />;
+

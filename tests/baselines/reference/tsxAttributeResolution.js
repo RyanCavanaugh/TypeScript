@@ -10,5 +10,5 @@ declare namespace JSX {
 
 
 
-//// [tsxAttributeResolution.tsx.js]
+//// [tsxAttributeResolution.jsx]
 /// @jsx: preserve

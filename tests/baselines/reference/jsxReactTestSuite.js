@@ -117,7 +117,7 @@ var x =
 
 
 
-//// [jsxReactTestSuite.tsx.js]
+//// [jsxReactTestSuite.jsx]
 <div>text</div>;
 <div>
   {this.props.children}

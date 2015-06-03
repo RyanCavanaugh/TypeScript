@@ -54,7 +54,7 @@ baz
 <a>    </a>;
 
 
-//// [jsxEsprimaFbTestSuite.tsx.js]
+//// [jsxEsprimaFbTestSuite.jsx]
 <a />;
 //<n:a n:v />; Namespace unsuported
 //<a n:foo="bar"> {value} <b><c /></b></a>;  Namespace unsuported

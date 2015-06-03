@@ -1,0 +1,27 @@
+tests/cases/conformance/jsx/tsxElementResolution10.tsx(12,1): error TS2605: JSX element '{ x: number; }' is not a constructor function or factory function for JSX elements.
+  Property 'render' is missing in type '{ x: number; }'.
+
+
+==== tests/cases/conformance/jsx/tsxElementResolution10.tsx (1 errors) ====
+    declare module JSX {
+    	interface Element { }
+    	interface ElementClass {
+    		render: any;
+    	}
+    }
+    
+    interface Obj1 {
+    	new(n: string): { x: number };
+    }
+    var obj1: Obj1;
+    <obj1 x={10} />; // Error, no render member
+    ~~~~~~~~~~~~~~~
+!!! error TS2605: JSX element '{ x: number; }' is not a constructor function or factory function for JSX elements.
+!!! error TS2605:   Property 'render' is missing in type '{ x: number; }'.
+    
+    interface Obj2 {
+    	(n: string): { x: number; render: any; };
+    }
+    var obj2: Obj2;
+    <obj2 x={32} render={100} />; // OK
+    

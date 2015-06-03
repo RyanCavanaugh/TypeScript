@@ -5,38 +5,21 @@ tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(18,1): error TS2602: The g
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(21,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(23,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(29,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(29,11): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(29,12): error TS2304: Cannot find name 'c'.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(29,19): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(29,20): error TS2304: Cannot find name 'd'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(31,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(33,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(35,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(35,2): error TS2304: Cannot find name 'div'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(37,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(37,2): error TS2304: Cannot find name 'div'.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(37,6): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(37,7): error TS2304: Cannot find name 'br'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(39,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(39,17): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(39,29): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(39,30): error TS2304: Cannot find name 'b'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(41,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(41,2): error TS2503: Cannot find namespace 'a'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(43,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(43,2): error TS2503: Cannot find namespace 'a'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(45,2): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(45,3): error TS2304: Cannot find name 'div'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(47,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(47,2): error TS2304: Cannot find name 'div'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(49,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(49,2): error TS2304: Cannot find name 'div'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(51,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
-tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(51,2): error TS2304: Cannot find name 'div'.
 tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(53,1): error TS2602: The global type 'JSX.Element' must exist when using JSX.
 
 
-==== tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx (36 errors) ====
+==== tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx (19 errors) ====
     declare var React: any;
     declare var 日本語;
     declare var AbC_def;
@@ -85,14 +68,6 @@ tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(53,1): error TS2602: The g
     <a b={x ? <c /> : <d />} />;
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-              ~~~~~
-!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-               ~
-!!! error TS2304: Cannot find name 'c'.
-                      ~~~~~
-!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-                       ~
-!!! error TS2304: Cannot find name 'd'.
     
     <a>{}</a>;
     ~~~~~~~~~
@@ -105,64 +80,38 @@ tests/cases/conformance/jsx/jsxEsprimaFbTestSuite.tsx(53,1): error TS2602: The g
     <div>@test content</div>;
     ~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-     ~~~
-!!! error TS2304: Cannot find name 'div'.
     
     <div><br />7x invalid-js-identifier</div>;
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-     ~~~
-!!! error TS2304: Cannot find name 'div'.
-         ~~~~~~
-!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-          ~~
-!!! error TS2304: Cannot find name 'br'.
     
     <LeftRight left=<a /> right=<b>monkeys /> gorillas</b> />;
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-                    ~~~~~
-!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-                                ~~~~~~~~~~~~~~~~~~~~~~~~~~
-!!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-                                 ~
-!!! error TS2304: Cannot find name 'b'.
     
     <a.b></a.b>;
     ~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-     ~
-!!! error TS2503: Cannot find namespace 'a'.
     
     <a.b.c></a.b.c>;
     ~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-     ~
-!!! error TS2503: Cannot find namespace 'a'.
     
     (<div />) < x;
      ~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-      ~~~
-!!! error TS2304: Cannot find name 'div'.
     
     <div {...props} />;
     ~~~~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-     ~~~
-!!! error TS2304: Cannot find name 'div'.
     
     <div {...props} post="attribute" />;
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-     ~~~
-!!! error TS2304: Cannot find name 'div'.
     
     <div pre="leading" pre2="attribute" {...props}></div>;
     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2602: The global type 'JSX.Element' must exist when using JSX.
-     ~~~
-!!! error TS2304: Cannot find name 'div'.
     
     <a>    </a>;
     ~~~~~~~~~~~

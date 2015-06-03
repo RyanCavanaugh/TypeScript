@@ -1,0 +1,29 @@
+tests/cases/conformance/jsx/tsxElementResolution7.tsx(11,5): error TS2305: Module 'my' has no exported member 'other'.
+tests/cases/conformance/jsx/tsxElementResolution7.tsx(18,11): error TS2305: Module 'my' has no exported member 'non'.
+
+
+==== tests/cases/conformance/jsx/tsxElementResolution7.tsx (2 errors) ====
+    declare module JSX {
+    	interface Element { }
+    }
+    
+    module my {
+        export var div: any;
+    }
+    // OK
+    <my.div n='x' />;
+    // Error
+    <my.other />;
+        ~~~~~
+!!! error TS2305: Module 'my' has no exported member 'other'.
+    
+    module q {
+        import mine = my;
+        // OK
+        <mine.div n='x' />;
+        // Error
+        <mine.non />;
+              ~~~
+!!! error TS2305: Module 'my' has no exported member 'non'.
+    }
+    

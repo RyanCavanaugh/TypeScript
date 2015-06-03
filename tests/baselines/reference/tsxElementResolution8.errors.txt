@@ -1,0 +1,49 @@
+tests/cases/conformance/jsx/tsxElementResolution8.tsx(7,2): error TS2604: JSX element 'div' is not a constructor function or factory function.
+tests/cases/conformance/jsx/tsxElementResolution8.tsx(15,2): error TS2601: The return type of a JSX element constructor or factory function must return an object type.
+tests/cases/conformance/jsx/tsxElementResolution8.tsx(28,2): error TS2601: The return type of a JSX element constructor or factory function must return an object type.
+tests/cases/conformance/jsx/tsxElementResolution8.tsx(33,2): error TS2604: JSX element 'obj3' is not a constructor function or factory function.
+
+
+==== tests/cases/conformance/jsx/tsxElementResolution8.tsx (4 errors) ====
+    declare module JSX {
+    	interface Element { }
+    }
+    
+    // Error
+    var div = 3;
+    <div />;
+     ~~~
+!!! error TS2604: JSX element 'div' is not a constructor function or factory function.
+    
+    // OK
+    function fact(): any { return null; }
+    <fact />
+    
+    // Error
+    function fnum(): number{ return 42; }
+    <fnum />
+     ~~~~
+!!! error TS2601: The return type of a JSX element constructor or factory function must return an object type.
+    
+    interface Obj1 {
+    	new(): {};
+    	(): number;
+    }
+    var obj1: Obj1;
+    <obj1 />; // OK, prefer construct signatures
+    
+    interface Obj2 {
+    	(): number;
+    }
+    var obj2: Obj2;
+    <obj2 />; // Error
+     ~~~~
+!!! error TS2601: The return type of a JSX element constructor or factory function must return an object type.
+    
+    interface Obj3 {
+    }
+    var obj3: Obj3;
+    <obj3 />; // Error
+     ~~~~
+!!! error TS2604: JSX element 'obj3' is not a constructor function or factory function.
+    

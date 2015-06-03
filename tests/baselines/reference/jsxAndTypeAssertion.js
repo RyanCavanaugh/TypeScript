@@ -22,7 +22,7 @@ x = <foo>x</foo>, x = <foo/>;
     
 
 
-//// [jsxAndTypeAssertion.tsx.js]
+//// [jsxAndTypeAssertion.jsx]
 var foo = (function () {
     function foo() {
     }
