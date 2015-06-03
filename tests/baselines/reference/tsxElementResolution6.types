@@ -13,5 +13,7 @@ var div: any;
 <div n='x' />;
 ><div n='x' /> : JSX.Element
 >div : any
+>n='x' : any
 >n : any
+>'x' : string
 
