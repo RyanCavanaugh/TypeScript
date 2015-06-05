@@ -30,6 +30,7 @@ var my;
 <my.other />;
 var q;
 (function (q) {
+    var mine = my;
     // OK
     <mine.div n='x'/>;
     // Error
