@@ -6374,18 +6374,20 @@ module ts {
                 }
             }
 
+            let exprType: Type;
             if (node.initializer) {
-                var exprType = checkExpression(node.initializer);
-
-                if (elementAttributesType !== anyType && correspondingPropType) {
-                    checkTypeAssignableTo(exprType, correspondingPropType, node.initializer);
-                }
-
-                nameTable[node.name.text] = true;
-                return exprType;
-            } else {
-                return unknownType;
+                exprType = checkExpression(node.initializer);
             }
+            else {
+                exprType = booleanType;
+            }
+
+            if (elementAttributesType !== anyType && correspondingPropType) {
+                checkTypeAssignableTo(exprType, correspondingPropType, node);
+            }
+
+            nameTable[node.name.text] = true;
+            return exprType;
         }
 
         function checkJsxSpreadAttribute(node: JsxSpreadAttribute, elementAttributesType: Type, nameTable: Map<boolean>) {
