@@ -75,7 +75,6 @@ module ts {
             getEmitResolver,
             getExportsOfModule: getExportsOfModuleAsArray,
 
-            getJsxElementClassType,
             getJsxElementAttributesType,
             getJsxIntrinsicTagNames
         };
@@ -117,6 +116,7 @@ module ts {
         let globalESSymbolType: ObjectType;
         let globalIterableType: ObjectType;
         let jsxElementType: ObjectType;
+        let jsxIntrinsicElementsType: ObjectType;
 
         let anyArrayType: Type;
         let getGlobalClassDecoratorType: () => ObjectType;
@@ -5962,8 +5962,7 @@ module ts {
             // Contextual type only applies to JSX expressions that are in attribute assignments (not in 'Children' positions)
             if (expr.parent.kind === SyntaxKind.JsxAttribute) {
                 let attrib = <JsxAttribute>expr.parent;
-                let elem = <JsxOpeningElement>attrib.parent;
-                let attrsType = getJsxElementAttributesType(elem);
+                let attrsType = getJsxElementAttributesType(<JsxOpeningElement>attrib.parent);
                 if (attrsType === anyType || attrsType === undefined) {
                     return undefined;
                 }
@@ -5972,10 +5971,8 @@ module ts {
                 }
             }
             else if (expr.kind === SyntaxKind.JsxSpreadAttribute) {
-                let attrib = <JsxSpreadAttribute>expr.parent;
-                let elem = <JsxOpeningElement>attrib.parent;
-                let attrsType = getJsxElementAttributesType(elem);
-                return getJsxElementAttributesType(elem);
+                Debug.assert(expr.parent.kind === SyntaxKind.JsxOpeningElement);
+                return getJsxElementAttributesType(<JsxOpeningElement>expr.parent);
             }
             else {
                 return undefined;
@@ -6362,14 +6359,15 @@ module ts {
 
             // Look up the corresponding property for this attribute
             if (elementAttributesType === voidType && !isIdentifierLike(node.name.text)) {
-                error(node.parent, Diagnostics.JSX_element_class_does_not_support_attributes_because_it_does_not_have_a_0_property, getJsxElementPropertiesName(node));
+                // If there is no 'props' property, you may not have non-"data-" attributes
+                error(node.parent, Diagnostics.JSX_element_class_does_not_support_attributes_because_it_does_not_have_a_0_property, getJsxElementPropertiesName());
             }
-            else if (elementAttributesType !== anyType && elementAttributesType !== undefined) {
+            else if (elementAttributesType && !(elementAttributesType.flags & TypeFlags.Any)) {
                 var correspondingPropSymbol = getPropertyOfType(elementAttributesType, node.name.text);
                 correspondingPropType = correspondingPropSymbol && getTypeOfSymbol(correspondingPropSymbol);
                 if (correspondingPropType === undefined) {
                     // If there's no corresponding property with this name, error
-                    if (isIdentifierLike(node.name.text) && correspondingPropType === undefined) {
+                    if (isIdentifierLike(node.name.text)) {
                         error(node.name, Diagnostics.Property_0_does_not_exist_on_type_1, node.name.text, typeToString(elementAttributesType));
                         return unknownType;
                     }
@@ -6380,7 +6378,7 @@ module ts {
                 var exprType = checkExpression(node.initializer);
 
                 if (elementAttributesType !== anyType && correspondingPropType) {
-                    checkTypeAssignableTo(exprType, correspondingPropType, node.initializer, Diagnostics.Type_0_is_not_assignable_to_type_1);
+                    checkTypeAssignableTo(exprType, correspondingPropType, node.initializer);
                 }
 
                 nameTable[node.name.text] = true;
@@ -6408,57 +6406,122 @@ module ts {
             }
         }
 
-        /// Returns the type JSX.IntrinsicElements. May return 'undefined' if that type is not present.
+        /// Returns the type JSX.IntrinsicElements. May return `unknownType` if that type is not present.
         function getJsxIntrinsicElementsType() {
-            let jsxNamespace = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, undefined);
-            let intrinsicsSymbol = jsxNamespace && getSymbol(jsxNamespace.exports, JsxNames.IntrinsicElements, SymbolFlags.Type);
-            let intrinsicsType = intrinsicsSymbol && getDeclaredTypeOfSymbol(intrinsicsSymbol);
-            return intrinsicsType;
+            if (jsxIntrinsicElementsType === undefined) {
+                let jsxNamespace = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, undefined);
+                let intrinsicsSymbol = jsxNamespace && getSymbol(jsxNamespace.exports, JsxNames.IntrinsicElements, SymbolFlags.Type);
+                let intrinsicsType = intrinsicsSymbol && getDeclaredTypeOfSymbol(intrinsicsSymbol);
+                jsxIntrinsicElementsType = intrinsicsType || unknownType;
+            }
+            return jsxIntrinsicElementsType;
         }
 
-        function getJsxElementClassType(node: JsxOpeningElement) {
-            var valueTypeSymbol = resolveEntityName(node.tagName, SymbolFlags.Value);
-            if (valueTypeSymbol) {
-                let valueType = getTypeOfSymbol(valueTypeSymbol);
-
-                // Short-circuit any/unknowns/fails before trying to look up call signatures
-                if (valueType === undefined || valueType === anyType || valueType === unknownType) {
-                    return valueType;
-                }
-
-                // Resolve the signatures, preferring constructors
-                var signatures = getSignaturesOfType(valueType, SignatureKind.Construct);
-                if (signatures === undefined || signatures.length === 0) {
-                    signatures = getSignaturesOfType(valueType, SignatureKind.Call);
-                }
-                if (signatures === undefined || signatures.length === 0) {
-                    error(node.tagName, Diagnostics.JSX_element_0_is_not_a_constructor_function_or_factory_function, getTextOfNode(node.tagName));
-                    return unknownType;
-                }
-                else {
-                    // Check that the constructor/factory returns an object type
-                    var returnType = getUnionType(signatures.map(s => getReturnTypeOfSignature(s)));
-                    if (returnType !== anyType && !(returnType.flags & TypeFlags.ObjectType)) {
-                        error(node.tagName, Diagnostics.The_return_type_of_a_JSX_element_constructor_or_factory_function_must_return_an_object_type);
-                        return unknownType;
-                    }
-
-                    // Issue an error if this return type isn't assignable to JSX.ElementClass
-                    var elemClassType = getJsxGlobalElementClassType();
-                    if (elemClassType) {
-                        checkTypeRelatedTo(returnType, elemClassType, assignableRelation, node, Diagnostics.JSX_element_0_is_not_a_constructor_function_or_factory_function_for_JSX_elements);
-                    }
-
-                    return returnType;
-                }
+        /// Given a JSX opening element, return the symbol of the property that the tag name points to if
+        /// this is an intrinsic tag (otherwise returns unknownSymbol). This might be a named
+        /// property of the IntrinsicElements interface, or its string indexer.
+        /// If this is a class-based tag (otherwise returns undefined), returns the symbol of the class
+        /// type or factory function.
+        /// Otherwise, returns unknownSymbol.
+        function getJsxElementTagSymbol(node: JsxOpeningElement): Symbol {
+            let flags: JsxFlags = JsxFlags.UnknownElement;
+            var links = getNodeLinks(node);
+            if (!links.resolvedSymbol) {
+                links.resolvedSymbol = lookupIntrinsicTag(node) || lookupClassTag(node);
             }
-            else {
+            return links.resolvedSymbol;
+
+            function lookupIntrinsicTag(node: JsxOpeningElement): Symbol {
+                let intrinsicElementsType = getJsxIntrinsicElementsType();
+                if (intrinsicElementsType) {
+                    // Property case
+                    let intrinsicProp = getPropertyOfType(intrinsicElementsType, getTextOfNode(node.tagName));
+                    if (intrinsicProp) {
+                        links.jsxFlags |= JsxFlags.IntrinsicNamedElement;
+                        return intrinsicProp;
+                    }
+
+                    // Intrinsic string indexer case
+                    let indexSignatureType = getIndexTypeOfType(intrinsicElementsType, IndexKind.String);
+                    if (indexSignatureType) {
+                        links.jsxFlags |= JsxFlags.IntrinsicIndexedElement;
+                        return intrinsicElementsType.symbol;
+                    }
+                }
                 return undefined;
             }
+
+            function lookupClassTag(node: JsxOpeningElement): Symbol {
+                let valueSym: Symbol;
+
+                if (node.tagName.kind === SyntaxKind.Identifier) {
+                    valueSym = getResolvedSymbol(<Identifier>node.tagName);
+                }
+                else {
+                    valueSym = checkQualifiedName(<QualifiedName>node.tagName).symbol;
+                }
+                
+                // Look up the value in the current scope
+                if (valueSym !== unknownSymbol) {
+                    links.jsxFlags |= JsxFlags.ClassElement;
+                }
+                return valueSym || unknownSymbol;
+            }
         }
 
-        /// e.g. "props" for React.d.ts, 'undefined' if ElementAttributesPropery doesn't exist, or '' if it has 0 properties
-        function getJsxElementPropertiesName(errNode: Node) {
+        /// Given a JSX element that is a class element, finds the Element Instance Type. If the
+        /// element is not a class element, or the class element type cannot be determined, returns 'undefined'.
+        /// For example, in the element <MyClass>, the element instance type is `MyClass` (not `typeof MyClass`).
+        function getJsxElementInstanceType(node: JsxOpeningElement) {
+            if ((getNodeLinks(node).jsxFlags & JsxFlags.ClassElement) === 0) {
+                return undefined;
+            }
+
+            var classSymbol = getJsxElementTagSymbol(node);
+            if (classSymbol === unknownSymbol) {
+                return anyType;
+            }
+
+            var valueType = getTypeOfSymbol(classSymbol);
+            if (valueType === anyType) {
+                return valueType;
+            }
+
+            // Resolve the signatures, preferring constructors
+            var signatures = getSignaturesOfType(valueType, SignatureKind.Construct);
+            if (signatures.length === 0) {
+                // No construct signatures, try call signatures
+                signatures = getSignaturesOfType(valueType, SignatureKind.Call);
+            }
+            if (signatures.length === 0) {
+                error(node.tagName, Diagnostics.JSX_element_0_is_not_a_constructor_function_or_factory_function, getTextOfNode(node.tagName));
+                return undefined;
+            }
+            else {
+                // Check that the constructor/factory returns an object type
+                var returnType = getUnionType(signatures.map(s => getReturnTypeOfSignature(s)));
+                if (returnType !== anyType && !(returnType.flags & TypeFlags.ObjectType)) {
+                    error(node.tagName, Diagnostics.The_return_type_of_a_JSX_element_constructor_or_factory_function_must_return_an_object_type);
+                    return undefined;
+                }
+
+                // Issue an error if this return type isn't assignable to JSX.ElementClass
+                // TODO: Move this to a 'check' function
+                var elemClassType = getJsxGlobalElementClassType();
+                if (elemClassType) {
+                    checkTypeRelatedTo(returnType, elemClassType, assignableRelation, node, Diagnostics.JSX_element_0_is_not_a_constructor_function_or_factory_function_for_JSX_elements);
+                }
+
+                return returnType;
+            }
+        }
+
+        /// e.g. "props" for React.d.ts,
+        /// or 'undefined' if ElementAttributesPropery doesn't exist (which means all
+        ///     non-intrinsic elements' attributes type is 'any'),
+        /// or '' if it has 0 properties (which means all
+        ///     non-instrinsic elements' attributes type is the element instance type)
+        function getJsxElementPropertiesName() {
             let jsxNamespace = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/undefined);
             let attribsPropTypeSym = jsxNamespace && getSymbol(jsxNamespace.exports, JsxNames.ElementAttributesProperty, SymbolFlags.Type);
             let attribPropType = attribsPropTypeSym && getDeclaredTypeOfSymbol(attribsPropTypeSym);
@@ -6472,7 +6535,8 @@ module ts {
                     return attribProperties[0].name;
                 }
                 else {
-                    error(errNode, Diagnostics.The_global_type_JSX_0_may_not_have_more_than_one_property, JsxNames.ElementAttributesProperty);
+                    error(attribsPropTypeSym.declarations[0], Diagnostics.The_global_type_JSX_0_may_not_have_more_than_one_property, JsxNames.ElementAttributesProperty);
+                    return undefined;
                 }
             }
             else {
@@ -6480,59 +6544,62 @@ module ts {
             }
         }
 
-        function getJsxElementAttributesType(elemOrOpeningElem: JsxElement|JsxOpeningElement): Type {
-            let node: JsxOpeningElement = (elemOrOpeningElem.kind === SyntaxKind.JsxElement) ? (<JsxElement>elemOrOpeningElem).openingElement : <JsxOpeningElement>elemOrOpeningElem;
-
-            // Intrinsic case (e.g. <div />)
-            let intrinsicsType = getJsxIntrinsicElementsType();
-            if (intrinsicsType) {
-                let intrinsicProp = getPropertyOfType(intrinsicsType, getTextOfNode(node.tagName));
-                if (intrinsicProp) {
-                    return getTypeOfPropertyOfType(intrinsicsType, getTextOfNode(node.tagName));
-                }
-
-                // Intrinsic string indexer case
-                let indexSignatureType = getIndexTypeOfSymbol(intrinsicsType.symbol, IndexKind.String);
-                if (indexSignatureType) {
-                    return indexSignatureType;
-                }
+        /// Given an opening element, get the 'element attributes type', i.e. the type that tells
+        /// us which attributes are valid on a given element.
+        function getJsxElementAttributesType(node: JsxOpeningElement): Type {
+            let links = getNodeLinks(node);
+            if (!links.resolvedType) {
+                links.resolvedType = lookup();
             }
+            return links.resolvedType;
 
-            // Value type case (e.g. <MyComponent />)
-            let elemInstanceType = getJsxElementClassType(node);
-            if (elemInstanceType === anyType) {
-                return anyType;
-            }
-            else if (elemInstanceType) {
-                var propsName = getJsxElementPropertiesName(node);
-                if (propsName === undefined) {
-                    // There is no type ElementAttributesProperty, return 'any'
-                    return anyType;
-                }
-                else if (propsName === '') {
-                    // If there is no e.g. 'props' member in ElementAttributesProperty, use the element class type instead
-                    return elemInstanceType;
-                }
-                else {
-                    var attributesType = getTypeOfPropertyOfType(elemInstanceType, propsName);
+            function lookup() {
+                let sym = getJsxElementTagSymbol(node);
 
-                    if (attributesType === undefined) {
-                        return voidType;
-                    }
-                    else if (attributesType === anyType || attributesType === unknownType) {
-                        return attributesType;
-                    }
-                    else if (!(attributesType.flags & TypeFlags.ObjectType)) {
-                        error(node.tagName, Diagnostics.JSX_element_attributes_type_0_must_be_an_object_type, typeToString(attributesType));
+                if (links.jsxFlags & JsxFlags.ClassElement) {
+                    let elemInstanceType = getJsxElementInstanceType(node);
+
+                    if (elemInstanceType === anyType) {
                         return anyType;
                     }
+
+                    var propsName = getJsxElementPropertiesName();
+                    if (propsName === undefined) {
+                        // There is no type ElementAttributesProperty, return 'any'
+                        return anyType;
+                    }
+                    else if (propsName === '') {
+                        // If there is no e.g. 'props' member in ElementAttributesProperty, use the element class type instead
+                        return elemInstanceType;
+                    }
                     else {
-                        return attributesType;
+                        var attributesType = getTypeOfPropertyOfType(elemInstanceType, propsName);
+
+                        if (attributesType === undefined) {
+                            return voidType;
+                        }
+                        else if (attributesType === anyType || attributesType === unknownType) {
+                            return attributesType;
+                        }
+                        else if (!(attributesType.flags & TypeFlags.ObjectType)) {
+                            error(node.tagName, Diagnostics.JSX_element_attributes_type_0_must_be_an_object_type, typeToString(attributesType));
+                            return anyType;
+                        }
+                        else {
+                            return attributesType;
+                        }
                     }
                 }
-            }
-            else {
-                return anyType;
+                else if (links.jsxFlags & JsxFlags.IntrinsicNamedElement) {
+                    return getTypeOfSymbol(sym);
+                }
+                else if (links.jsxFlags & JsxFlags.IntrinsicIndexedElement) {
+                    return getIndexTypeOfSymbol(sym, IndexKind.String);
+                }
+                else {
+                    // Resolution failed
+                    return unknownType;
+                }
             }
         }
 
@@ -6548,13 +6615,15 @@ module ts {
             }
         }
 
-        function getJsxIntrinsicTagNames(): Symbol[] {
-            return getPropertiesOfType(getJsxIntrinsicElementsType());
+        /// Returns all the properties of the Jsx.IntrinsicElements interface
+        function getJsxIntrinsicTagNames(): Symbol[]{
+            let intrinsics = getJsxIntrinsicElementsType();
+            return intrinsics ? getPropertiesOfType(intrinsics) : [];
         }
 
         function checkJsxOpeningElement(node: JsxOpeningElement) {
             var targetAttributesType = getJsxElementAttributesType(node);
-            
+
             var nameTable: Map<boolean> = {};
             // Process this array in right-to-left order so we know which
             // attributes (mostly from spreads) are being overwritten and
@@ -6586,9 +6655,11 @@ module ts {
 
         function checkJsxExpression(node: JsxExpression) {
             if (node.expression) {
-                return checkExpressionCached(node.expression);
-            } else {
-                return anyType;
+                return checkExpression(node.expression);
+            }
+            else {
+                /// <Foo enabled /> is shorthand for <Foo enabled={true} />
+                return booleanType;
             }
         }
 

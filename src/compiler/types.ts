@@ -369,6 +369,16 @@ module ts {
         HasAggregatedChildData = 1 << 7
     }
 
+    export const enum JsxFlags {
+        None = 0,
+        IntrinsicNamedElement = 1 << 0,
+        IntrinsicIndexedElement = 1 << 1,
+        ClassElement = 1 << 2,
+        UnknownElement = 1 << 3,
+
+        IntrinsicElement = IntrinsicNamedElement | IntrinsicIndexedElement
+    }
+
     /* @internal */
     export const enum RelationComparisonResult {
         Succeeded = 1, // Should be truthy
@@ -1225,7 +1235,6 @@ module ts {
         getAliasedSymbol(symbol: Symbol): Symbol;
         getExportsOfModule(moduleSymbol: Symbol): Symbol[];
 
-        getJsxElementClassType(elementNode: JsxOpeningElement): Type;
         getJsxElementAttributesType(elementNode: JsxOpeningElement): Type;
         getJsxIntrinsicTagNames(): Symbol[];
 
@@ -1491,6 +1500,8 @@ module ts {
         assignmentChecks?: Map<boolean>;  // Cache of assignment checks
         hasReportedStatementInAmbientContext?: boolean;  // Cache boolean if we report statements in ambient context
         importOnRightSide?: Symbol;       // for import declarations - import that appear on the right side
+        jsxFlags?: JsxFlags;              // flags for knowning what kind of element/attributes we're dealing with
+
     }
 
     export const enum TypeFlags {
