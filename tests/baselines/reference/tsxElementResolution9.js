@@ -1,6 +1,7 @@
 //// [tsxElementResolution9.tsx]
 declare module JSX {
 	interface Element { }
+	interface IntrinsicElements { }
 }
 
 interface Obj1 {

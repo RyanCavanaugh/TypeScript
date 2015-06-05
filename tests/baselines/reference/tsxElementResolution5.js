@@ -3,10 +3,10 @@ declare module JSX {
 	interface Element { }
 }
 
-// Error
+// OK, but implicit any
 <div n='x' />;
 
 
 //// [tsxElementResolution5.jsx]
-// Error
+// OK, but implicit any
 <div n='x'/>;

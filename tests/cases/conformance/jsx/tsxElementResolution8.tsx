@@ -2,6 +2,7 @@
 //@jsx: preserve
 declare module JSX {
 	interface Element { }
+	interface IntrinsicElements { }
 }
 
 // Error

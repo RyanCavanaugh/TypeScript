@@ -1,4 +1,4 @@
-tests/cases/conformance/jsx/tsxElementResolution10.tsx(12,1): error TS2605: JSX element '{ x: number; }' is not a constructor function or factory function for JSX elements.
+tests/cases/conformance/jsx/tsxElementResolution10.tsx(13,1): error TS2605: JSX element '{ x: number; }' is not a constructor function or factory function for JSX elements.
   Property 'render' is missing in type '{ x: number; }'.
 
 
@@ -8,6 +8,7 @@ tests/cases/conformance/jsx/tsxElementResolution10.tsx(12,1): error TS2605: JSX 
     	interface ElementClass {
     		render: any;
     	}
+    	interface IntrinsicElements { }
     }
     
     interface Obj1 {

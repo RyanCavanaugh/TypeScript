@@ -1,10 +1,11 @@
-tests/cases/conformance/jsx/tsxElementResolution11.tsx(16,7): error TS2339: Property 'x' does not exist on type '{ q?: number; }'.
+tests/cases/conformance/jsx/tsxElementResolution11.tsx(17,7): error TS2339: Property 'x' does not exist on type '{ q?: number; }'.
 
 
 ==== tests/cases/conformance/jsx/tsxElementResolution11.tsx (1 errors) ====
     declare module JSX {
     	interface Element { }
     	interface ElementAttributesProperty { }
+    	interface IntrinsicElements { }
     }
     
     interface Obj1 {

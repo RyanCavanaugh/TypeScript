@@ -4,6 +4,7 @@ declare module JSX {
 	interface ElementClass {
 		render: any;
 	}
+	interface IntrinsicElements { }
 }
 
 interface Obj1 {

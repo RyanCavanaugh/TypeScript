@@ -374,6 +374,7 @@ module ts {
         Property_0_of_JSX_spread_attribute_is_not_assignable_to_target_property: { code: 2606, category: DiagnosticCategory.Error, key: "Property '{0}' of JSX spread attribute is not assignable to target property." },
         JSX_element_class_does_not_support_attributes_because_it_does_not_have_a_0_property: { code: 2607, category: DiagnosticCategory.Error, key: "JSX element class does not support attributes because it does not have a '{0}' property" },
         The_global_type_JSX_0_may_not_have_more_than_one_property: { code: 2608, category: DiagnosticCategory.Error, key: "The global type 'JSX.{0}' may not have more than one property" },
+        JSX_element_implicitly_has_type_any_because_no_interface_JSX_0_exists: { code: 2609, category: DiagnosticCategory.Error, key: "JSX element implicitly has type 'any' because no interface JSX.{0} exists" },
         Cannot_emit_namespaced_JSX_elements_in_React: { code: 2650, category: DiagnosticCategory.Error, key: "Cannot emit namespaced JSX elements in React" },
         Import_declaration_0_is_using_private_name_1: { code: 4000, category: DiagnosticCategory.Error, key: "Import declaration '{0}' is using private name '{1}'." },
         Type_parameter_0_of_exported_class_has_or_is_using_private_name_1: { code: 4002, category: DiagnosticCategory.Error, key: "Type parameter '{0}' of exported class has or is using private name '{1}'." },

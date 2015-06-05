@@ -4,6 +4,7 @@
 //@filename: file.tsx
 declare module JSX {
 	interface Element { }
+	interface IntrinsicElements { }
 }
 
 declare module 'elements1' {

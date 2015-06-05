@@ -4,10 +4,13 @@ declare module JSX {
 
 	interface Element { }
 >Element : Symbol(Element, Decl(tsxElementResolution6.tsx, 0, 20))
+
+	interface IntrinsicElements { }
+>IntrinsicElements : Symbol(IntrinsicElements, Decl(tsxElementResolution6.tsx, 1, 22))
 }
 
 var div: any;
->div : Symbol(div, Decl(tsxElementResolution6.tsx, 4, 3))
+>div : Symbol(div, Decl(tsxElementResolution6.tsx, 5, 3))
 
 // OK
 <div n='x' />;

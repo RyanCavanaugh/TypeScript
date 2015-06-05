@@ -7,6 +7,7 @@ tests/cases/conformance/jsx/tsxElementResolution15.tsx(3,12): error TS2608: The 
     	interface ElementAttributesProperty { pr1: any; pr2: any; }
     	          ~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2608: The global type 'JSX.ElementAttributesProperty' may not have more than one property
+    	interface IntrinsicElements { }
     }
     
     interface Obj1 {

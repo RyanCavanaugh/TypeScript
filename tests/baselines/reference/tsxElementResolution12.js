@@ -2,6 +2,7 @@
 declare module JSX {
 	interface Element { }
 	interface ElementAttributesProperty { pr: any; }
+	interface IntrinsicElements { }
 }
 
 interface Obj1 {

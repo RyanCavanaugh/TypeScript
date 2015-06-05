@@ -6435,7 +6435,7 @@ module ts {
 
             function lookupIntrinsicTag(node: JsxOpeningElement): Symbol {
                 let intrinsicElementsType = getJsxIntrinsicElementsType();
-                if (intrinsicElementsType) {
+                if (intrinsicElementsType !== unknownType) {
                     // Property case
                     let intrinsicProp = getPropertyOfType(intrinsicElementsType, getTextOfNode(node.tagName));
                     if (intrinsicProp) {
@@ -6450,6 +6450,13 @@ module ts {
                         return intrinsicElementsType.symbol;
                     }
                 }
+                else {
+                    if (compilerOptions.noImplicitAny) {
+                        error(node, Diagnostics.JSX_element_implicitly_has_type_any_because_no_interface_JSX_0_exists, JsxNames.IntrinsicElements);
+                    }
+                    return unknownSymbol;
+                }
+
                 return undefined;
             }
 
@@ -6600,7 +6607,7 @@ module ts {
                 }
                 else {
                     // Resolution failed
-                    return unknownType;
+                    return anyType;
                 }
             }
         }

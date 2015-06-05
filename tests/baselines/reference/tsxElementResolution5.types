@@ -1,18 +1,12 @@
-=== tests/cases/conformance/jsx/tsxElementResolution6.tsx ===
+=== tests/cases/conformance/jsx/tsxElementResolution5.tsx ===
 declare module JSX {
 >JSX : any
 
 	interface Element { }
 >Element : Element
-
-	interface IntrinsicElements { }
->IntrinsicElements : IntrinsicElements
 }
 
-var div: any;
->div : any
-
-// OK
+// OK, but implicit any
 <div n='x' />;
 ><div n='x' /> : JSX.Element
 >div : any

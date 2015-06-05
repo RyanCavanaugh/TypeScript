@@ -1485,6 +1485,10 @@
         "category": "Error",
         "code": 2608
     },
+    "JSX element implicitly has type 'any' because no interface JSX.{0} exists": {
+        "category": "Error",
+        "code": 2609
+    },
 
     "Cannot emit namespaced JSX elements in React": {
         "category": "Error",

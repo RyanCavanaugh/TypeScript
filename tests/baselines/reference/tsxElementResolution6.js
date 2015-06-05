@@ -1,6 +1,7 @@
 //// [tsxElementResolution6.tsx]
 declare module JSX {
 	interface Element { }
+	interface IntrinsicElements { }
 }
 
 var div: any;

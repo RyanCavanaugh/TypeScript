@@ -16,18 +16,21 @@ declare module JSX {
 
 	interface Element { }
 >Element : Symbol(Element, Decl(file.tsx, 1, 20))
+
+	interface IntrinsicElements { }
+>IntrinsicElements : Symbol(IntrinsicElements, Decl(file.tsx, 2, 22))
 }
 
 declare module 'elements1' {
 	class MyElement {
->MyElement : Symbol(MyElement, Decl(file.tsx, 5, 28))
+>MyElement : Symbol(MyElement, Decl(file.tsx, 6, 28))
 
 	}
 }
 
 declare module 'elements2' {
 	class MyElement {
->MyElement : Symbol(MyElement, Decl(file.tsx, 11, 28))
+>MyElement : Symbol(MyElement, Decl(file.tsx, 12, 28))
 
 	}
 }

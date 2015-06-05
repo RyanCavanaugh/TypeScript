@@ -19,6 +19,9 @@ declare module JSX {
 
 	interface Element { }
 >Element : Element
+
+	interface IntrinsicElements { }
+>IntrinsicElements : IntrinsicElements
 }
 
 declare module 'elements1' {

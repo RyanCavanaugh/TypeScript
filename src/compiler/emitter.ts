@@ -5876,6 +5876,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
             function emitJsxExpression(node: JsxExpression) {
                 switch (compilerOptions.jsx) {
                     case JsxEmit.Preserve:
+                    default:
                         write('{');
                         emit(node.expression);
                         write('}');
@@ -5883,9 +5884,6 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
                     case JsxEmit.React:
                         emit(node.expression);
                         break;
-                    default:
-                        // Should not be here
-                        throw new Error('Unrecognized JSX emit system');
                 }
             }
 

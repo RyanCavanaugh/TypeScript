@@ -1,10 +1,9 @@
-//@filename: file.tsx
 //@jsx: preserve
+//@filename: file1.tsx
+//@noimplicitany: true
 declare module JSX {
 	interface Element { }
-	interface IntrinsicElements { }
 }
 
-var div: any;
-// OK
+// Error under implicit any
 <div n='x' />;
