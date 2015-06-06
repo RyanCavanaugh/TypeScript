@@ -8,6 +8,7 @@ import s2 = require('elements2');
 >s2 : Symbol(s2, Decl(consumer.tsx, 2, 33))
 
 <s1.MyElement />;
+>MyElement : Symbol(s1.MyElement, Decl(file.tsx, 6, 28))
 
 === tests/cases/conformance/jsx/file.tsx ===
 

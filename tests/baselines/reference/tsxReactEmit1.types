@@ -25,59 +25,42 @@ var selfClosed2 = <div x="1" />;
 >selfClosed2 : JSX.Element
 ><div x="1" /> : JSX.Element
 >div : any
->x="1" : any
 >x : any
->"1" : string
 
 var selfClosed3 = <div x='1' />;
 >selfClosed3 : JSX.Element
 ><div x='1' /> : JSX.Element
 >div : any
->x='1' : any
 >x : any
->'1' : string
 
 var selfClosed4 = <div x="1" y='0' />;
 >selfClosed4 : JSX.Element
 ><div x="1" y='0' /> : JSX.Element
 >div : any
->x="1" : any
 >x : any
->"1" : string
->y='0' : any
 >y : any
->'0' : string
 
 var selfClosed5 = <div x={0} y='0' />;
 >selfClosed5 : JSX.Element
 ><div x={0} y='0' /> : JSX.Element
 >div : any
->x={0} : any
 >x : any
->y='0' : any
 >y : any
->'0' : string
 
 var selfClosed6 = <div x={"1"} y='0' />;
 >selfClosed6 : JSX.Element
 ><div x={"1"} y='0' /> : JSX.Element
 >div : any
->x={"1"} : any
 >x : any
->y='0' : any
 >y : any
->'0' : string
 
 var selfClosed7 = <div x={p} y='p' />;
 >selfClosed7 : JSX.Element
 ><div x={p} y='p' /> : JSX.Element
 >div : any
->x={p} : any
 >x : any
 >p : any
->y='p' : any
 >y : any
->'p' : string
 
 var openClosed1 = <div></div>;
 >openClosed1 : JSX.Element
@@ -89,18 +72,14 @@ var openClosed2 = <div n='m'>foo</div>;
 >openClosed2 : JSX.Element
 ><div n='m'>foo</div> : JSX.Element
 >div : any
->n='m' : any
 >n : any
->'m' : string
 >div : any
 
 var openClosed3 = <div n='m'>{p}</div>;
 >openClosed3 : JSX.Element
 ><div n='m'>{p}</div> : JSX.Element
 >div : any
->n='m' : any
 >n : any
->'m' : string
 >p : any
 >div : any
 
@@ -108,9 +87,7 @@ var openClosed4 = <div n='m'>{p < p}</div>;
 >openClosed4 : JSX.Element
 ><div n='m'>{p < p}</div> : JSX.Element
 >div : any
->n='m' : any
 >n : any
->'m' : string
 >p < p : boolean
 >p : any
 >p : any
@@ -120,9 +97,7 @@ var openClosed5 = <div n='m'>{p > p}</div>;
 >openClosed5 : JSX.Element
 ><div n='m'>{p > p}</div> : JSX.Element
 >div : any
->n='m' : any
 >n : any
->'m' : string
 >p > p : boolean
 >p : any
 >p : any
@@ -165,7 +140,6 @@ class SomeClass {
 >rewrites4 : JSX.Element
 ><div a={() => this}></div> : JSX.Element
 >div : any
->a={() => this} : any
 >a : any
 >() => this : () => SomeClass
 >this : SomeClass
@@ -175,7 +149,6 @@ class SomeClass {
 >rewrites5 : JSX.Element
 ><div a={[p, ...p, p]}></div> : JSX.Element
 >div : any
->a={[p, ...p, p]} : any
 >a : any
 >[p, ...p, p] : any[]
 >p : any
@@ -188,7 +161,6 @@ class SomeClass {
 >rewrites6 : JSX.Element
 ><div a={{p}}></div> : JSX.Element
 >div : any
->a={{p}} : any
 >a : any
 >{p} : { p: any; }
 >p : any

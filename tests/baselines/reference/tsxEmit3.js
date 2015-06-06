@@ -1,6 +1,7 @@
 //// [tsxEmit3.tsx]
 declare module JSX {
 	interface Element { }
+	interface IntrinsicElements { }
 }
 
 module M {
@@ -61,23 +62,23 @@ var M;
 var M;
 (function (M) {
     // Emit M.Foo
-    M.Foo, <Foo />;
+    M.Foo, <M.Foo />;
     var S;
     (function (S) {
         // Emit M.Foo
-        M.Foo, <Foo />;
+        M.Foo, <M.Foo />;
         // Emit S.Bar
-        S.Bar, <Bar />;
+        S.Bar, <S.Bar />;
     })(S = M.S || (M.S = {}));
 })(M || (M = {}));
 var M;
 (function (M) {
     // Emit M.S.Bar
-    M.S.Bar, <S.Bar />;
+    M.S.Bar, <M.S.Bar />;
 })(M || (M = {}));
 var M;
 (function (M_1) {
     var M = 100;
     // Emit M_1.Foo
-    M_1.Foo, <Foo />;
+    M_1.Foo, <M_1.Foo />;
 })(M || (M = {}));

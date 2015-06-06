@@ -15,6 +15,9 @@ declare module JSX {
 
 // OK
 <div />;
+>div : Symbol(JSX.IntrinsicElements, Decl(tsxElementResolution2.tsx, 1, 22))
 
 // OK
 <span />;
+>span : Symbol(JSX.IntrinsicElements, Decl(tsxElementResolution2.tsx, 1, 22))
+

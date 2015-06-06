@@ -6612,6 +6612,15 @@ module ts {
             }
         }
 
+        /// Given a JSX attribute, returns the symbol for the corresponds property
+        /// of the element attributes type. Will return unknownSymbol for attributes
+        /// that have no matching element attributes type property.
+        function getJsxAttributePropertySymbol(attrib: JsxAttribute): Symbol {
+            let attributesType = getJsxElementAttributesType(<JsxOpeningElement>attrib.parent);
+            let prop = getPropertyOfType(attributesType, attrib.name.text);
+            return prop || unknownSymbol;
+        }
+
         function getJsxGlobalElementClassType(): Type {
             var jsxNS = getGlobalSymbol(JsxNames.JSX, SymbolFlags.Namespace, /*diagnosticMessage*/ undefined);
             if (jsxNS) {
@@ -11795,6 +11804,12 @@ module ts {
                 // return the alias symbol.
                 meaning |= SymbolFlags.Alias;
                 return resolveEntityName(<EntityName>entityName, meaning);
+            }
+            else if (entityName.parent.kind === SyntaxKind.JsxOpeningElement) {
+                return getJsxElementTagSymbol(<JsxOpeningElement>entityName.parent);
+            }
+            else if (entityName.parent.kind === SyntaxKind.JsxAttribute) {
+                return getJsxAttributePropertySymbol(<JsxAttribute>entityName.parent);
             }
 
             // Do we want to return undefined here?
