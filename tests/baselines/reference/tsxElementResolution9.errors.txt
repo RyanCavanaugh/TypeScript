@@ -12,8 +12,8 @@ tests/cases/conformance/jsx/tsxElementResolution9.tsx(18,2): error TS2601: The r
     	new(n: string): { x: number };
     	new(n: number): { y: string };
     }
-    var obj1: Obj1;
-    <obj1 />; // Error, return type is not an object type
+    var Obj1: Obj1;
+    <Obj1 />; // Error, return type is not an object type
      ~~~~
 !!! error TS2601: The return type of a JSX element constructor or factory function must return an object type.
     
@@ -21,8 +21,8 @@ tests/cases/conformance/jsx/tsxElementResolution9.tsx(18,2): error TS2601: The r
     	(n: string): { x: number };
     	(n: number): { y: string };
     }
-    var obj2: Obj2;
-    <obj2 />; // Error, return type is not an object type
+    var Obj2: Obj2;
+    <Obj2 />; // Error, return type is not an object type
      ~~~~
 !!! error TS2601: The return type of a JSX element constructor or factory function must return an object type.
     
@@ -30,6 +30,6 @@ tests/cases/conformance/jsx/tsxElementResolution9.tsx(18,2): error TS2601: The r
     	(n: string): { x: number };
     	(n: number): { x: number; y: string };
     }
-    var obj3: Obj3;
-    <obj3 x={42} />; // OK
+    var Obj3: Obj3;
+    <Obj3 x={42} />; // OK
     

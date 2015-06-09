@@ -8,14 +8,14 @@ declare module JSX {
 	interface IntrinsicElements { }
 }
 
-interface Obj1 {
+interface Obj1type {
 	new(n: string): { x: number };
 }
-var obj1: Obj1;
-<obj1 x={10} />; // Error, no render member
+var Obj1: Obj1type;
+<Obj1 x={10} />; // Error, no render member
 
-interface Obj2 {
+interface Obj2type {
 	(n: string): { x: number; render: any; };
 }
-var obj2: Obj2;
-<obj2 x={32} render={100} />; // OK
+var Obj2: Obj2type;
+<Obj2 x={32} render={100} />; // OK

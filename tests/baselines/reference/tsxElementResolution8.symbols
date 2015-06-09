@@ -1,0 +1,67 @@
+=== tests/cases/conformance/jsx/tsxElementResolution8.tsx ===
+declare module JSX {
+>JSX : Symbol(JSX, Decl(tsxElementResolution8.tsx, 0, 0))
+
+	interface Element { }
+>Element : Symbol(Element, Decl(tsxElementResolution8.tsx, 0, 20))
+
+	interface IntrinsicElements { }
+>IntrinsicElements : Symbol(IntrinsicElements, Decl(tsxElementResolution8.tsx, 1, 22))
+}
+
+// Error
+var div = 3;
+>div : Symbol(div, Decl(tsxElementResolution8.tsx, 6, 3))
+
+<div />;
+>div : Symbol(unknown)
+
+// OK
+function fact(): any { return null; }
+>fact : Symbol(fact, Decl(tsxElementResolution8.tsx, 7, 8))
+
+<fact />
+>fact : Symbol(unknown)
+
+// Error
+function fnum(): number{ return 42; }
+>fnum : Symbol(fnum, Decl(tsxElementResolution8.tsx, 11, 8))
+
+<fnum />
+>fnum : Symbol(unknown)
+
+interface Obj1 {
+>Obj1 : Symbol(Obj1, Decl(tsxElementResolution8.tsx, 15, 8))
+
+	new(): {};
+	(): number;
+}
+var obj1: Obj1;
+>obj1 : Symbol(obj1, Decl(tsxElementResolution8.tsx, 21, 3))
+>Obj1 : Symbol(Obj1, Decl(tsxElementResolution8.tsx, 15, 8))
+
+<obj1 />; // OK, prefer construct signatures
+>obj1 : Symbol(unknown)
+
+interface Obj2 {
+>Obj2 : Symbol(Obj2, Decl(tsxElementResolution8.tsx, 22, 9))
+
+	(): number;
+}
+var obj2: Obj2;
+>obj2 : Symbol(obj2, Decl(tsxElementResolution8.tsx, 27, 3))
+>Obj2 : Symbol(Obj2, Decl(tsxElementResolution8.tsx, 22, 9))
+
+<obj2 />; // Error
+>obj2 : Symbol(unknown)
+
+interface Obj3 {
+>Obj3 : Symbol(Obj3, Decl(tsxElementResolution8.tsx, 28, 9))
+}
+var obj3: Obj3;
+>obj3 : Symbol(obj3, Decl(tsxElementResolution8.tsx, 32, 3))
+>Obj3 : Symbol(Obj3, Decl(tsxElementResolution8.tsx, 28, 9))
+
+<obj3 />; // Error
+>obj3 : Symbol(unknown)
+

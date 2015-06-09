@@ -5,11 +5,11 @@ declare module JSX {
 }
 
 var div: any;
-// OK
+// Still an error
 <div n='x' />;
 
 
 //// [tsxElementResolution6.jsx]
 var div;
-// OK
+// Still an error
 <div n='x'/>;

@@ -1,0 +1,67 @@
+=== tests/cases/conformance/jsx/tsxElementResolution9.tsx ===
+declare module JSX {
+>JSX : Symbol(JSX, Decl(tsxElementResolution9.tsx, 0, 0))
+
+	interface Element { }
+>Element : Symbol(Element, Decl(tsxElementResolution9.tsx, 0, 20))
+
+	interface IntrinsicElements { }
+>IntrinsicElements : Symbol(IntrinsicElements, Decl(tsxElementResolution9.tsx, 1, 22))
+}
+
+interface Obj1 {
+>Obj1 : Symbol(Obj1, Decl(tsxElementResolution9.tsx, 3, 1))
+
+	new(n: string): { x: number };
+>n : Symbol(n, Decl(tsxElementResolution9.tsx, 6, 5))
+>x : Symbol(x, Decl(tsxElementResolution9.tsx, 6, 18))
+
+	new(n: number): { y: string };
+>n : Symbol(n, Decl(tsxElementResolution9.tsx, 7, 5))
+>y : Symbol(y, Decl(tsxElementResolution9.tsx, 7, 18))
+}
+var obj1: Obj1;
+>obj1 : Symbol(obj1, Decl(tsxElementResolution9.tsx, 9, 3))
+>Obj1 : Symbol(Obj1, Decl(tsxElementResolution9.tsx, 3, 1))
+
+<obj1 />; // Error, return type is not an object type
+>obj1 : Symbol(unknown)
+
+interface Obj2 {
+>Obj2 : Symbol(Obj2, Decl(tsxElementResolution9.tsx, 10, 9))
+
+	(n: string): { x: number };
+>n : Symbol(n, Decl(tsxElementResolution9.tsx, 13, 2))
+>x : Symbol(x, Decl(tsxElementResolution9.tsx, 13, 15))
+
+	(n: number): { y: string };
+>n : Symbol(n, Decl(tsxElementResolution9.tsx, 14, 2))
+>y : Symbol(y, Decl(tsxElementResolution9.tsx, 14, 15))
+}
+var obj2: Obj2;
+>obj2 : Symbol(obj2, Decl(tsxElementResolution9.tsx, 16, 3))
+>Obj2 : Symbol(Obj2, Decl(tsxElementResolution9.tsx, 10, 9))
+
+<obj2 />; // Error, return type is not an object type
+>obj2 : Symbol(unknown)
+
+interface Obj3 {
+>Obj3 : Symbol(Obj3, Decl(tsxElementResolution9.tsx, 17, 9))
+
+	(n: string): { x: number };
+>n : Symbol(n, Decl(tsxElementResolution9.tsx, 20, 2))
+>x : Symbol(x, Decl(tsxElementResolution9.tsx, 20, 15))
+
+	(n: number): { x: number; y: string };
+>n : Symbol(n, Decl(tsxElementResolution9.tsx, 21, 2))
+>x : Symbol(x, Decl(tsxElementResolution9.tsx, 21, 15))
+>y : Symbol(y, Decl(tsxElementResolution9.tsx, 21, 26))
+}
+var obj3: Obj3;
+>obj3 : Symbol(obj3, Decl(tsxElementResolution9.tsx, 23, 3))
+>Obj3 : Symbol(Obj3, Decl(tsxElementResolution9.tsx, 17, 9))
+
+<obj3 x={42} />; // OK
+>obj3 : Symbol(unknown)
+>x : Symbol(unknown)
+

@@ -6354,6 +6354,15 @@ module ts {
             return name.indexOf('-') < 0;
         }
 
+        function isJsxIntrinsicIdentifier(tagName: Identifier|QualifiedName) {
+            if (tagName.kind === SyntaxKind.QualifiedName) {
+                return false;
+            } else {
+                let firstChar = (<Identifier>tagName).text.charAt(0);
+                return firstChar.toLowerCase() === firstChar;
+            }
+        }
+
         function checkJsxAttribute(node: JsxAttribute, elementAttributesType: Type, nameTable: Map<boolean>) {
             var correspondingPropType: Type = unknownType;
 
@@ -6420,7 +6429,7 @@ module ts {
         }
 
         /// Given a JSX opening element, return the symbol of the property that the tag name points to if
-        /// this is an intrinsic tag (otherwise returns unknownSymbol). This might be a named
+        /// this is an intrinsic tag. This might be a named
         /// property of the IntrinsicElements interface, or its string indexer.
         /// If this is a class-based tag (otherwise returns undefined), returns the symbol of the class
         /// type or factory function.
@@ -6429,7 +6438,11 @@ module ts {
             let flags: JsxFlags = JsxFlags.UnknownElement;
             var links = getNodeLinks(node);
             if (!links.resolvedSymbol) {
-                links.resolvedSymbol = lookupIntrinsicTag(node) || lookupClassTag(node);
+                if (isJsxIntrinsicIdentifier(node.tagName)) {
+                    links.resolvedSymbol = lookupIntrinsicTag(node);
+                } else {
+                    links.resolvedSymbol = lookupClassTag(node);
+                }
             }
             return links.resolvedSymbol;
 
@@ -6449,15 +6462,16 @@ module ts {
                         links.jsxFlags |= JsxFlags.IntrinsicIndexedElement;
                         return intrinsicElementsType.symbol;
                     }
+
+                    // Wasn't found
+                    error(node, Diagnostics.Property_0_does_not_exist_on_type_1, getTextOfNode(node.tagName), 'JSX.' + JsxNames.IntrinsicElements);
+                    return unknownSymbol;
                 }
                 else {
                     if (compilerOptions.noImplicitAny) {
                         error(node, Diagnostics.JSX_element_implicitly_has_type_any_because_no_interface_JSX_0_exists, JsxNames.IntrinsicElements);
                     }
-                    return unknownSymbol;
                 }
-
-                return undefined;
             }
 
             function lookupClassTag(node: JsxOpeningElement): Symbol {

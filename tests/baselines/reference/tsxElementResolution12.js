@@ -5,39 +5,39 @@ declare module JSX {
 	interface IntrinsicElements { }
 }
 
-interface Obj1 {
+interface Obj1type {
 	new(n: string): any;
 }
-var obj1: Obj1;
-<obj1 x={10} />; // OK
+var Obj1: Obj1type;
+<Obj1 x={10} />; // OK
 
-interface Obj2 {
+interface Obj2type {
 	new(n: string): { q?: number; pr: any };
 }
-var obj2: Obj2;
-<obj2 x={10} />; // OK
+var obj2: Obj2type;
+<Obj2 x={10} />; // OK
 
-interface Obj3 {
+interface Obj3type {
 	new(n: string): { x: number; };
 }
-var obj3: Obj3;
-<obj3 x={10} />; // Error
+var Obj3: Obj3type;
+<Obj3 x={10} />; // Error
 
-interface Obj4 {
+interface Obj4type {
 	new(n: string): { x: number; pr: { x: number; } };
 }
-var obj4: Obj4;
-<obj4 x={10} />; // OK
-<obj4 x={'10'} />; // Error
+var Obj4: Obj4type;
+<Obj4 x={10} />; // OK
+<Obj4 x={'10'} />; // Error
 
 
 //// [tsxElementResolution12.jsx]
-var obj1;
-<obj1 x={10}/>; // OK
+var Obj1;
+<Obj1 x={10}/>; // OK
 var obj2;
-<obj2 x={10}/>; // OK
-var obj3;
-<obj3 x={10}/>; // Error
-var obj4;
-<obj4 x={10}/>; // OK
-<obj4 x={'10'}/>; // Error
+<Obj2 x={10}/>; // OK
+var Obj3;
+<Obj3 x={10}/>; // Error
+var Obj4;
+<Obj4 x={10}/>; // OK
+<Obj4 x={'10'}/>; // Error

@@ -6,5 +6,5 @@ declare module JSX {
 }
 
 var div: any;
-// OK
+// Still an error
 <div n='x' />;

@@ -5,13 +5,13 @@ declare module JSX {
 	interface IntrinsicElements { }
 }
 
-interface Obj1 {
+interface Obj1type {
 	new(n: string): {};
 }
-var obj1: Obj1;
-<obj1 x={10} />; // Error
+var Obj1: Obj1type;
+<Obj1 x={10} />; // Error
 
 
 //// [tsxElementResolution15.jsx]
-var obj1;
-<obj1 x={10}/>; // Error
+var Obj1;
+<Obj1 x={10}/>; // Error

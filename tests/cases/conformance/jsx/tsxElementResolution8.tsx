@@ -6,31 +6,31 @@ declare module JSX {
 }
 
 // Error
-var div = 3;
-<div />;
+var Div = 3;
+<Div />;
 
 // OK
-function fact(): any { return null; }
-<fact />
+function Fact(): any { return null; }
+<Fact />
 
 // Error
-function fnum(): number{ return 42; }
-<fnum />
+function Fnum(): number{ return 42; }
+<Fnum />
 
 interface Obj1 {
 	new(): {};
 	(): number;
 }
-var obj1: Obj1;
-<obj1 />; // OK, prefer construct signatures
+var Obj1: Obj1;
+<Obj1 />; // OK, prefer construct signatures
 
 interface Obj2 {
 	(): number;
 }
-var obj2: Obj2;
-<obj2 />; // Error
+var Obj2: Obj2;
+<Obj2 />; // Error
 
 interface Obj3 {
 }
-var obj3: Obj3;
-<obj3 />; // Error
+var Obj3: Obj3;
+<Obj3 />; // Error

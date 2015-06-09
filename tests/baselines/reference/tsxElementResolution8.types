@@ -1,0 +1,76 @@
+=== tests/cases/conformance/jsx/tsxElementResolution8.tsx ===
+declare module JSX {
+>JSX : any
+
+	interface Element { }
+>Element : Element
+
+	interface IntrinsicElements { }
+>IntrinsicElements : IntrinsicElements
+}
+
+// Error
+var div = 3;
+>div : number
+>3 : number
+
+<div />;
+><div /> : JSX.Element
+>div : any
+
+// OK
+function fact(): any { return null; }
+>fact : () => any
+>null : null
+
+<fact />
+><fact /> : JSX.Element
+>fact : any
+
+// Error
+function fnum(): number{ return 42; }
+>fnum : () => number
+>42 : number
+
+<fnum />
+><fnum /> : JSX.Element
+>fnum : any
+
+interface Obj1 {
+>Obj1 : Obj1
+
+	new(): {};
+	(): number;
+}
+var obj1: Obj1;
+>obj1 : Obj1
+>Obj1 : Obj1
+
+<obj1 />; // OK, prefer construct signatures
+><obj1 /> : JSX.Element
+>obj1 : any
+
+interface Obj2 {
+>Obj2 : Obj2
+
+	(): number;
+}
+var obj2: Obj2;
+>obj2 : Obj2
+>Obj2 : Obj2
+
+<obj2 />; // Error
+><obj2 /> : JSX.Element
+>obj2 : any
+
+interface Obj3 {
+>Obj3 : Obj3
+}
+var obj3: Obj3;
+>obj3 : Obj3
+>Obj3 : Obj3
+
+<obj3 />; // Error
+><obj3 /> : JSX.Element
+>obj3 : any
+

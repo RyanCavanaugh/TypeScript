@@ -1,0 +1,86 @@
+=== tests/cases/conformance/jsx/tsxElementResolution12.tsx ===
+declare module JSX {
+>JSX : any
+
+	interface Element { }
+>Element : Element
+
+	interface ElementAttributesProperty { pr: any; }
+>ElementAttributesProperty : ElementAttributesProperty
+>pr : any
+
+	interface IntrinsicElements { }
+>IntrinsicElements : IntrinsicElements
+}
+
+interface Obj1 {
+>Obj1 : Obj1
+
+	new(n: string): any;
+>n : string
+}
+var obj1: Obj1;
+>obj1 : Obj1
+>Obj1 : Obj1
+
+<obj1 x={10} />; // OK
+><obj1 x={10} /> : JSX.Element
+>obj1 : any
+>x : any
+
+interface Obj2 {
+>Obj2 : Obj2
+
+	new(n: string): { q?: number; pr: any };
+>n : string
+>q : number
+>pr : any
+}
+var obj2: Obj2;
+>obj2 : Obj2
+>Obj2 : Obj2
+
+<obj2 x={10} />; // OK
+><obj2 x={10} /> : JSX.Element
+>obj2 : any
+>x : any
+
+interface Obj3 {
+>Obj3 : Obj3
+
+	new(n: string): { x: number; };
+>n : string
+>x : number
+}
+var obj3: Obj3;
+>obj3 : Obj3
+>Obj3 : Obj3
+
+<obj3 x={10} />; // Error
+><obj3 x={10} /> : JSX.Element
+>obj3 : any
+>x : any
+
+interface Obj4 {
+>Obj4 : Obj4
+
+	new(n: string): { x: number; pr: { x: number; } };
+>n : string
+>x : number
+>pr : { x: number; }
+>x : number
+}
+var obj4: Obj4;
+>obj4 : Obj4
+>Obj4 : Obj4
+
+<obj4 x={10} />; // OK
+><obj4 x={10} /> : JSX.Element
+>obj4 : any
+>x : any
+
+<obj4 x={'10'} />; // Error
+><obj4 x={'10'} /> : JSX.Element
+>obj4 : any
+>x : any
+

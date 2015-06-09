@@ -1,0 +1,28 @@
+tests/cases/conformance/jsx/tsxElementResolution2.tsx(13,20): error TS2304: Cannot find name 'document'.
+
+
+==== tests/cases/conformance/jsx/tsxElementResolution2.tsx (1 errors) ====
+    declare module JSX {
+    	interface Element { }
+    	interface IntrinsicElements {
+    		divider: { displayText: string };
+    	    [x: string]: any;
+    	}
+    	interface ElementClass {
+    		render(): number;
+    	}
+    }
+    
+    class MyClass {
+    	render() { return document.getElementById('foo'); }
+    	                  ~~~~~~~~
+!!! error TS2304: Cannot find name 'document'.
+    }
+    
+    var x = <MyClass />;
+    
+    // OK
+    <divider displayText={'foo'} />;
+    
+    // OK
+    <span />;

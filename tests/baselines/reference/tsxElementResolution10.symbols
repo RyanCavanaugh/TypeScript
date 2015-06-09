@@ -1,0 +1,49 @@
+=== tests/cases/conformance/jsx/tsxElementResolution10.tsx ===
+declare module JSX {
+>JSX : Symbol(JSX, Decl(tsxElementResolution10.tsx, 0, 0))
+
+	interface Element { }
+>Element : Symbol(Element, Decl(tsxElementResolution10.tsx, 0, 20))
+
+	interface ElementClass {
+>ElementClass : Symbol(ElementClass, Decl(tsxElementResolution10.tsx, 1, 22))
+
+		render: any;
+>render : Symbol(render, Decl(tsxElementResolution10.tsx, 2, 25))
+	}
+	interface IntrinsicElements { }
+>IntrinsicElements : Symbol(IntrinsicElements, Decl(tsxElementResolution10.tsx, 4, 2))
+}
+
+interface Obj1 {
+>Obj1 : Symbol(Obj1, Decl(tsxElementResolution10.tsx, 6, 1))
+
+	new(n: string): { x: number };
+>n : Symbol(n, Decl(tsxElementResolution10.tsx, 9, 5))
+>x : Symbol(x, Decl(tsxElementResolution10.tsx, 9, 18))
+}
+var obj1: Obj1;
+>obj1 : Symbol(obj1, Decl(tsxElementResolution10.tsx, 11, 3))
+>Obj1 : Symbol(Obj1, Decl(tsxElementResolution10.tsx, 6, 1))
+
+<obj1 x={10} />; // Error, no render member
+>obj1 : Symbol(unknown)
+>x : Symbol(unknown)
+
+interface Obj2 {
+>Obj2 : Symbol(Obj2, Decl(tsxElementResolution10.tsx, 12, 16))
+
+	(n: string): { x: number; render: any; };
+>n : Symbol(n, Decl(tsxElementResolution10.tsx, 15, 2))
+>x : Symbol(x, Decl(tsxElementResolution10.tsx, 15, 15))
+>render : Symbol(render, Decl(tsxElementResolution10.tsx, 15, 26))
+}
+var obj2: Obj2;
+>obj2 : Symbol(obj2, Decl(tsxElementResolution10.tsx, 17, 3))
+>Obj2 : Symbol(Obj2, Decl(tsxElementResolution10.tsx, 12, 16))
+
+<obj2 x={32} render={100} />; // OK
+>obj2 : Symbol(unknown)
+>x : Symbol(unknown)
+>render : Symbol(unknown)
+

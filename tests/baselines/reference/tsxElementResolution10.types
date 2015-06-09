@@ -1,0 +1,51 @@
+=== tests/cases/conformance/jsx/tsxElementResolution10.tsx ===
+declare module JSX {
+>JSX : any
+
+	interface Element { }
+>Element : Element
+
+	interface ElementClass {
+>ElementClass : ElementClass
+
+		render: any;
+>render : any
+	}
+	interface IntrinsicElements { }
+>IntrinsicElements : IntrinsicElements
+}
+
+interface Obj1 {
+>Obj1 : Obj1
+
+	new(n: string): { x: number };
+>n : string
+>x : number
+}
+var obj1: Obj1;
+>obj1 : Obj1
+>Obj1 : Obj1
+
+<obj1 x={10} />; // Error, no render member
+><obj1 x={10} /> : JSX.Element
+>obj1 : any
+>x : any
+
+interface Obj2 {
+>Obj2 : Obj2
+
+	(n: string): { x: number; render: any; };
+>n : string
+>x : number
+>render : any
+}
+var obj2: Obj2;
+>obj2 : Obj2
+>Obj2 : Obj2
+
+<obj2 x={32} render={100} />; // OK
+><obj2 x={32} render={100} /> : JSX.Element
+>obj2 : any
+>x : any
+>render : any
+
