@@ -16,7 +16,6 @@
 
 goTo.marker('c');
 goTo.definition();
-debug.printCurrentFileState();
 verify.caretAtMarker('ct');
 
 goTo.marker('p');
