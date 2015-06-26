@@ -1,0 +1,40 @@
+=== tests/cases/conformance/types/strict/strictInterfaceParsing.ts ===
+namespace A {
+>A : typeof A
+
+	let strict = 0;
+>strict : number
+>0 : number
+}
+namespace A {
+>A : typeof A
+
+	var strict = 1;
+>strict : number
+>1 : number
+}
+namespace A {
+>A : typeof A
+
+	class strict {
+>strict : strict
+	}
+}
+namespace strict {
+>strict : any
+
+}
+
+namespace A {
+>A : typeof A
+
+	interface strict {
+>strict : strict
+
+	}
+
+	strict interface strict {
+>strict : strict
+		
+	}
+}

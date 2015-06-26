@@ -1,0 +1,58 @@
+tests/cases/conformance/types/strict/strictInterface1.ts(21,1): error TS2322: Type 'number' is not assignable to type 'Options'.
+tests/cases/conformance/types/strict/strictInterface1.ts(22,1): error TS2322: Type '{ x: string; }' is not assignable to type 'Options'.
+  Property 'x' is missing in type 'Options'.
+tests/cases/conformance/types/strict/strictInterface1.ts(24,1): error TS2322: Type '{ name: number; }' is not assignable to type 'Options'.
+  Types of property 'name' are incompatible.
+    Type 'number' is not assignable to type 'string'.
+tests/cases/conformance/types/strict/strictInterface1.ts(31,1): error TS2322: Type '{ name: number; }' is not assignable to type 'MoreOptions'.
+  Types of property 'name' are incompatible.
+    Type 'number' is not assignable to type 'string'.
+
+
+==== tests/cases/conformance/types/strict/strictInterface1.ts (4 errors) ====
+    
+    strict interface Options {
+    	name?: string;
+    	length?: number;
+    	self?: Options;
+    }
+    
+    // Augmented strict interfaces are ok
+    interface Options {
+    	other?: any;
+    }
+    
+    // It's OK to extend a strict interface; strictness
+    // is not inherited
+    interface MoreOptions extends Options {}
+    
+    
+    
+    var a: Options;
+    a = {}; // OK
+    a = 32; // Error
+    ~
+!!! error TS2322: Type 'number' is not assignable to type 'Options'.
+    a = { x: '' }; // Error
+    ~
+!!! error TS2322: Type '{ x: string; }' is not assignable to type 'Options'.
+!!! error TS2322:   Property 'x' is missing in type 'Options'.
+    a = { name: '' }; // OK
+    a = { name: 32 }; // Error
+    ~
+!!! error TS2322: Type '{ name: number; }' is not assignable to type 'Options'.
+!!! error TS2322:   Types of property 'name' are incompatible.
+!!! error TS2322:     Type 'number' is not assignable to type 'string'.
+    
+    var b: MoreOptions;
+    b = {}; // OK
+    b = 32; // OK
+    b = { x: '' }; // OK
+    b = { name: '' }; // OK
+    b = { name: 32 }; // OK
+    ~
+!!! error TS2322: Type '{ name: number; }' is not assignable to type 'MoreOptions'.
+!!! error TS2322:   Types of property 'name' are incompatible.
+!!! error TS2322:     Type 'number' is not assignable to type 'string'.
+    
+    
