@@ -1085,6 +1085,9 @@ namespace ts {
             if (token === SyntaxKind.DefaultKeyword) {
                 return nextTokenIsClassOrFunction();
             }
+            if (token === SyntaxKind.StrictKeyword) {
+                return nextTokenIsInterface();
+            }
             nextToken();
             return canFollowModifier();
         }
@@ -1103,6 +1106,11 @@ namespace ts {
         function nextTokenIsClassOrFunction(): boolean {
             nextToken();
             return token === SyntaxKind.ClassKeyword || token === SyntaxKind.FunctionKeyword;
+        }
+
+        function nextTokenIsInterface(): boolean {
+            nextToken();
+            return token === SyntaxKind.InterfaceKeyword;
         }
 
         // True if positioned at the start of a list element
@@ -3821,6 +3829,7 @@ namespace ts {
                     case SyntaxKind.PrivateKeyword:
                     case SyntaxKind.ProtectedKeyword:
                     case SyntaxKind.StaticKeyword:
+                    case SyntaxKind.StrictKeyword:
                         nextToken();
                         continue;
                     default:
@@ -3864,6 +3873,7 @@ namespace ts {
                 case SyntaxKind.ConstKeyword:
                 case SyntaxKind.ExportKeyword:
                 case SyntaxKind.ImportKeyword:
+                case SyntaxKind.StrictKeyword:
                     return isStartOfDeclaration();
 
                 case SyntaxKind.DeclareKeyword:
@@ -3958,6 +3968,7 @@ namespace ts {
                 case SyntaxKind.ProtectedKeyword:
                 case SyntaxKind.PublicKeyword:
                 case SyntaxKind.StaticKeyword:
+                case SyntaxKind.StrictKeyword:
                     if (isStartOfDeclaration()) {
                         return parseDeclaration();
                     }

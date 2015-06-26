@@ -88,6 +88,7 @@ namespace ts {
         "set": SyntaxKind.SetKeyword,
         "static": SyntaxKind.StaticKeyword,
         "string": SyntaxKind.StringKeyword,
+        "strict": SyntaxKind.StrictKeyword,
         "super": SyntaxKind.SuperKeyword,
         "switch": SyntaxKind.SwitchKeyword,
         "symbol": SyntaxKind.SymbolKeyword,

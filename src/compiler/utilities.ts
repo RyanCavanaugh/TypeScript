@@ -1371,6 +1371,7 @@ namespace ts {
             case SyntaxKind.PrivateKeyword:
             case SyntaxKind.ProtectedKeyword:
             case SyntaxKind.StaticKeyword:
+            case SyntaxKind.StrictKeyword:
             case SyntaxKind.ExportKeyword:
             case SyntaxKind.DeclareKeyword:
             case SyntaxKind.ConstKeyword:
@@ -1866,6 +1867,7 @@ namespace ts {
 
     export function modifierToFlag(token: SyntaxKind): NodeFlags {
         switch (token) {
+            case SyntaxKind.StrictKeyword: return NodeFlags.Strict;
             case SyntaxKind.StaticKeyword: return NodeFlags.Static;
             case SyntaxKind.PublicKeyword: return NodeFlags.Public;
             case SyntaxKind.ProtectedKeyword: return NodeFlags.Protected;

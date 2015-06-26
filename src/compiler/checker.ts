@@ -2772,6 +2772,7 @@ namespace ts {
             if (!links.declaredType) {
                 let kind = symbol.flags & SymbolFlags.Class ? TypeFlags.Class : TypeFlags.Interface;
                 let type = links.declaredType = <InterfaceType>createObjectType(kind, symbol);
+
                 let outerTypeParameters = getOuterTypeParametersOfClassOrInterface(symbol);
                 let localTypeParameters = getLocalTypeParametersOfClassOrInterfaceOrTypeAlias(symbol);
                 if (outerTypeParameters || localTypeParameters) {
@@ -2784,6 +2785,13 @@ namespace ts {
                     (<GenericType>type).target = <GenericType>type;
                     (<GenericType>type).typeArguments = type.typeParameters;
                 }
+
+                if (kind === TypeFlags.Interface) {
+                    if (symbol.declarations.some(d => !!(d.flags & NodeFlags.Strict))) {
+                        type.flags |= TypeFlags.Strict;
+                    }
+                }
+
             }
             return <InterfaceType>links.declaredType;
         }
@@ -4406,8 +4414,8 @@ namespace ts {
                 // it may hold in a structural comparison.
                 // Report structural errors only if we haven't reported any errors yet
                 let reportStructuralErrors = reportErrors && errorInfo === saveErrorInfo;
-                // identity relation does not use apparent type
-                let sourceOrApparentType = relation === identityRelation ? source : getApparentType(source);
+                // identity relation and strict type comparisons do not use apparent type
+                let sourceOrApparentType = (relation === identityRelation || target.flags & TypeFlags.Strict) ? source : getApparentType(source);
                 if (sourceOrApparentType.flags & TypeFlags.ObjectType && target.flags & TypeFlags.ObjectType) {
                     if (result = objectTypeRelatedTo(sourceOrApparentType, <ObjectType>target, reportStructuralErrors)) {
                         errorInfo = saveErrorInfo;
@@ -4569,6 +4577,9 @@ namespace ts {
                                 result &= stringIndexTypesRelatedTo(source, target, reportErrors);
                                 if (result) {
                                     result &= numberIndexTypesRelatedTo(source, target, reportErrors);
+                                    if (result && (target.flags & TypeFlags.Strict)) {
+                                        result &= noSurplusProperties(source, target, reportErrors);
+                                    }
                                 }
                             }
                         }
@@ -4905,6 +4916,22 @@ namespace ts {
                     return isRelatedTo(sourceType, targetType);
                 }
                 return Ternary.False;
+            }
+
+            // Checks that there are no properties in 'source' that are not present in 'target'
+            function noSurplusProperties(source: ObjectType, target: ObjectType, reportErrors: boolean): Ternary {
+                var sourceProperties = getPropertiesOfObjectType(source);
+                for (var i = 0; i < sourceProperties.length; i++) {
+                    var targetProp = getPropertyOfType(target, sourceProperties[i].name);
+                    if (!targetProp) {
+                        if (reportErrors) {
+                            reportError(Diagnostics.Property_0_is_missing_in_type_1, symbolToString(sourceProperties[i]), typeToString(target));
+                        }
+                        return Ternary.False;
+                    }
+                }
+
+                return Ternary.True;
             }
         }
 
@@ -13187,6 +13214,17 @@ namespace ts {
                         flags |= NodeFlags.Ambient;
                         lastDeclare = modifier
                         break;
+
+                    case SyntaxKind.StrictKeyword:
+                        if(flags & NodeFlags.Strict) {
+                            return grammarErrorOnNode(modifier, Diagnostics._0_modifier_already_seen, "strict");
+                        }
+                        if(node.parent.kind === SyntaxKind.ClassDeclaration) {
+                            return grammarErrorOnNode(modifier, Diagnostics._0_modifier_cannot_appear_on_a_class_element, "strict");
+                        }
+                        flags |= NodeFlags.Strict;
+                        break;
+
                 }
             }
 

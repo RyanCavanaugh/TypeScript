@@ -151,6 +151,7 @@ namespace ts {
         RequireKeyword,
         NumberKeyword,
         SetKeyword,
+        StrictKeyword,
         StringKeyword,
         SymbolKeyword,
         TypeKeyword,
@@ -349,11 +350,12 @@ namespace ts {
         DeclarationFile =   0x00000800,  // Node is a .d.ts file
         Let =               0x00001000,  // Variable declaration
         Const =             0x00002000,  // Variable declaration
-        OctalLiteral =      0x00004000,  // Octal numeric literal
-        Namespace =         0x00008000,  // Namespace declaration
-        ExportContext =     0x00010000,  // Export context (initialized by binding)
+        Strict =            0x00004000,  // Strict type
+        OctalLiteral =      0x00008000,  // Octal numeric literal
+        Namespace =         0x00010000,  // Namespace declaration
+        ExportContext =     0x00020000,  // Export context (initialized by binding)
 
-        Modifier = Export | Ambient | Public | Private | Protected | Static | Default,
+        Modifier = Export | Ambient | Public | Private | Protected | Static | Strict | Default,
         AccessibilityModifier = Public | Private | Protected,
         BlockScoped = Let | Const
     }
@@ -1623,14 +1625,16 @@ namespace ts {
         Union                   = 0x00004000,  // Union
         Anonymous               = 0x00008000,  // Anonymous
         Instantiated            = 0x00010000,  // Instantiated anonymous type
+        Strict                  = 0x00020000,  // Strict type
         /* @internal */
-        FromSignature           = 0x00020000,  // Created for signature assignment check
-        ObjectLiteral           = 0x00040000,  // Originates in an object literal
+        FromSignature           = 0x00040000,  // Created for signature assignment check
+        ObjectLiteral           = 0x00080000,  // Originates in an object literal
         /* @internal */
-        ContainsUndefinedOrNull = 0x00080000,  // Type is or contains Undefined or Null type
+        ContainsUndefinedOrNull = 0x00100000,  // Type is or contains Undefined or Null type
         /* @internal */
-        ContainsObjectLiteral   = 0x00100000,  // Type is or contains object literal type
-        ESSymbol                = 0x00200000,  // Type of symbol primitive introduced in ES6
+        ContainsObjectLiteral   = 0x00200000,  // Type is or contains object literal type
+        ESSymbol                = 0x00400000,  // Type of symbol primitive introduced in ES6
+
 
         /* @internal */ 
         Intrinsic = Any | String | Number | Boolean | ESSymbol | Void | Undefined | Null,
