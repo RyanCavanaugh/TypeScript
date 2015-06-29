@@ -11298,9 +11298,11 @@ namespace ts {
                     // run subsequent checks only if first set succeeded
                     if (checkInheritedPropertiesAreIdentical(type, node.name)) {
                         forEach(getBaseTypes(type), baseType => {
-                            if ((baseType.flags & TypeFlags.Strict) === 0) {
-                                checkTypeAssignableTo(type, baseType, node.name, Diagnostics.Interface_0_incorrectly_extends_interface_1);
-                            }
+                            let save = baseType.flags;
+                            // Temporarily ignore strict-ness for this check
+                            baseType.flags &= ~TypeFlags.Strict;
+                            checkTypeAssignableTo(type, baseType, node.name, Diagnostics.Interface_0_incorrectly_extends_interface_1);
+                            baseType.flags = save;
                         });
                         checkIndexConstraints(type);
                     }

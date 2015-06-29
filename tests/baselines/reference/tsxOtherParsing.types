@@ -1,0 +1,32 @@
+=== tests/cases/conformance/jsx/tsxOtherParsing.tsx ===
+/// @jsx: preserve
+
+declare namespace JSX {
+>JSX : any
+
+	interface IntrinsicElements {
+>IntrinsicElements : IntrinsicElements
+
+		x: { y: number; z: string; };
+>x : { y: number; z: string; }
+>y : number
+>z : string
+	}
+}
+
+var foo = [];
+>foo : any[]
+>[] : undefined[]
+
+for (var i = 0; i < foo.length; i++) { }
+>i : number
+>0 : number
+>i < foo.length : boolean
+>i : number
+>foo.length : number
+>foo : any[]
+>length : number
+>i++ : number
+>i : number
+
+

@@ -1,0 +1,28 @@
+=== tests/cases/conformance/jsx/tsxOtherParsing.tsx ===
+/// @jsx: preserve
+
+declare namespace JSX {
+>JSX : Symbol(JSX, Decl(tsxOtherParsing.tsx, 0, 0))
+
+	interface IntrinsicElements {
+>IntrinsicElements : Symbol(IntrinsicElements, Decl(tsxOtherParsing.tsx, 2, 23))
+
+		x: { y: number; z: string; };
+>x : Symbol(x, Decl(tsxOtherParsing.tsx, 3, 30))
+>y : Symbol(y, Decl(tsxOtherParsing.tsx, 4, 6))
+>z : Symbol(z, Decl(tsxOtherParsing.tsx, 4, 17))
+	}
+}
+
+var foo = [];
+>foo : Symbol(foo, Decl(tsxOtherParsing.tsx, 8, 3))
+
+for (var i = 0; i < foo.length; i++) { }
+>i : Symbol(i, Decl(tsxOtherParsing.tsx, 9, 8))
+>i : Symbol(i, Decl(tsxOtherParsing.tsx, 9, 8))
+>foo.length : Symbol(Array.length, Decl(lib.d.ts, 1007, 20))
+>foo : Symbol(foo, Decl(tsxOtherParsing.tsx, 8, 3))
+>length : Symbol(Array.length, Decl(lib.d.ts, 1007, 20))
+>i : Symbol(i, Decl(tsxOtherParsing.tsx, 9, 8))
+
+

@@ -1,0 +1,32 @@
+tests/cases/conformance/types/strict/strictInterfaceParsing.ts(20,2): error TS2304: Cannot find name 'strict'.
+tests/cases/conformance/types/strict/strictInterfaceParsing.ts(20,9): error TS1005: ';' expected.
+
+
+==== tests/cases/conformance/types/strict/strictInterfaceParsing.ts (2 errors) ====
+    namespace A {
+    	let strict = 0;
+    }
+    namespace A {
+    	var strict = 1;
+    }
+    namespace A {
+    	class strict {
+    	}
+    }
+    namespace strict {
+    
+    }
+    
+    namespace A {
+    	interface strict {
+    
+    	}
+    
+    	strict interface strict {
+    	~~~~~~
+!!! error TS2304: Cannot find name 'strict'.
+    	       ~~~~~~~~~
+!!! error TS1005: ';' expected.
+    		
+    	}
+    }
