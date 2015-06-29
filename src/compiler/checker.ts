@@ -4578,7 +4578,9 @@ namespace ts {
                                 if (result) {
                                     result &= numberIndexTypesRelatedTo(source, target, reportErrors);
                                     if (result && (target.flags & TypeFlags.Strict)) {
-                                        result &= noSurplusProperties(source, target, reportErrors);
+                                        result &= noSurplusProperties(source, target, reportErrors) &&
+                                            noSurplusSignatures(source, target, SignatureKind.Call, reportErrors) &&
+                                            noSurplusSignatures(source, target, SignatureKind.Construct, reportErrors);
                                     }
                                 }
                             }
@@ -4920,7 +4922,7 @@ namespace ts {
 
             // Checks that there are no properties in 'source' that are not present in 'target'
             function noSurplusProperties(source: ObjectType, target: ObjectType, reportErrors: boolean): Ternary {
-                var sourceProperties = getPropertiesOfObjectType(source);
+                var sourceProperties = getPropertiesOfType(source);
                 for (var i = 0; i < sourceProperties.length; i++) {
                     var targetProp = getPropertyOfType(target, sourceProperties[i].name);
                     if (!targetProp) {
@@ -4931,6 +4933,20 @@ namespace ts {
                     }
                 }
 
+                return Ternary.True;
+            }
+
+            function noSurplusSignatures(source: ObjectType, target: ObjectType, kind: SignatureKind, reportErrors: boolean): Ternary {
+                let sourceSignatures = getSignaturesOfType(source, kind);
+                let targetSignatures = getSignaturesOfType(target, kind);
+                for (var i = 0; i < sourceSignatures.length; i++) {
+                    if(!targetSignatures.some(t => isSignatureAssignableTo(sourceSignatures[i], t))) {
+                        if(reportErrors) {
+                            reportError(Diagnostics.Property_0_is_missing_in_type_1, signatureToString(sourceSignatures[i]), typeToString(target));
+                        }
+                        return Ternary.False;
+                    }
+                }
                 return Ternary.True;
             }
         }
@@ -11282,7 +11298,9 @@ namespace ts {
                     // run subsequent checks only if first set succeeded
                     if (checkInheritedPropertiesAreIdentical(type, node.name)) {
                         forEach(getBaseTypes(type), baseType => {
-                            checkTypeAssignableTo(type, baseType, node.name, Diagnostics.Interface_0_incorrectly_extends_interface_1);
+                            if ((baseType.flags & TypeFlags.Strict) === 0) {
+                                checkTypeAssignableTo(type, baseType, node.name, Diagnostics.Interface_0_incorrectly_extends_interface_1);
+                            }
                         });
                         checkIndexConstraints(type);
                     }
