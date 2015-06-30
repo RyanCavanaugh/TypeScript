@@ -1,0 +1,36 @@
+=== tests/cases/conformance/types/strict/strictInterface2.ts ===
+strict interface EventHandle {
+>EventHandle : EventHandle
+
+	name: string;
+>name : string
+}
+
+// Should be OK
+interface EH2 extends EventHandle {
+>EH2 : EH2
+>EventHandle : EventHandle
+
+	quality: string;
+>quality : string
+}
+
+function addHandler(x: (n: EventHandle) => void) {}
+>addHandler : (x: (n: EventHandle) => void) => void
+>x : (n: EventHandle) => void
+>n : EventHandle
+>EventHandle : EventHandle
+
+// Should be an error
+addHandler((x: EH2) => {
+>addHandler((x: EH2) => {	return null;}) : void
+>addHandler : (x: (n: EventHandle) => void) => void
+>(x: EH2) => {	return null;} : (x: EH2) => any
+>x : EH2
+>EH2 : EH2
+
+	return null;
+>null : null
+
+});
+

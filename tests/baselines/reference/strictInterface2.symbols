@@ -1,0 +1,32 @@
+=== tests/cases/conformance/types/strict/strictInterface2.ts ===
+strict interface EventHandle {
+>EventHandle : Symbol(EventHandle, Decl(strictInterface2.ts, 0, 0))
+
+	name: string;
+>name : Symbol(name, Decl(strictInterface2.ts, 0, 30))
+}
+
+// Should be OK
+interface EH2 extends EventHandle {
+>EH2 : Symbol(EH2, Decl(strictInterface2.ts, 2, 1))
+>EventHandle : Symbol(EventHandle, Decl(strictInterface2.ts, 0, 0))
+
+	quality: string;
+>quality : Symbol(quality, Decl(strictInterface2.ts, 5, 35))
+}
+
+function addHandler(x: (n: EventHandle) => void) {}
+>addHandler : Symbol(addHandler, Decl(strictInterface2.ts, 7, 1))
+>x : Symbol(x, Decl(strictInterface2.ts, 9, 20))
+>n : Symbol(n, Decl(strictInterface2.ts, 9, 24))
+>EventHandle : Symbol(EventHandle, Decl(strictInterface2.ts, 0, 0))
+
+// Should be an error
+addHandler((x: EH2) => {
+>addHandler : Symbol(addHandler, Decl(strictInterface2.ts, 7, 1))
+>x : Symbol(x, Decl(strictInterface2.ts, 12, 12))
+>EH2 : Symbol(EH2, Decl(strictInterface2.ts, 2, 1))
+
+	return null;
+});
+

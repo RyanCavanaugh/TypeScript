@@ -96,5 +96,5 @@ You may, but a class will almost certainly have more properties than the strict 
 A few notes on how this impacts the spec:
  
  * Do not take the apparent type of the source type when the target type is strict. Adding the apparent members from `Object` will cause the relation to fail.
- * When checking `interface A extends B { ... }` where `B` is strict, `B`'s strictness is ignored for the check that `A` is assignable to `B` (otherwise `A` could declare no members!)
- * 
+ * When checking `interface A extends B { ... }` where `B` is strict, `B`'s strictness is ignored for the check that `A` is assignable to `B` (otherwise `A` could declare no new members!)
+ 

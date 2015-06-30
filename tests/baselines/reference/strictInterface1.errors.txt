@@ -1,16 +1,17 @@
-tests/cases/conformance/types/strict/strictInterface1.ts(21,1): error TS2322: Type 'number' is not assignable to type 'Options'.
-tests/cases/conformance/types/strict/strictInterface1.ts(22,1): error TS2322: Type '{ x: string; }' is not assignable to type 'Options'.
+tests/cases/conformance/types/strict/strictInterface1.ts(20,1): error TS2322: Type 'number' is not assignable to type 'Options'.
+tests/cases/conformance/types/strict/strictInterface1.ts(21,1): error TS2322: Type '{ x: string; }' is not assignable to type 'Options'.
   Property 'x' is missing in type 'Options'.
-tests/cases/conformance/types/strict/strictInterface1.ts(24,1): error TS2322: Type '{ name: number; }' is not assignable to type 'Options'.
+tests/cases/conformance/types/strict/strictInterface1.ts(23,1): error TS2322: Type '{ name: number; }' is not assignable to type 'Options'.
   Types of property 'name' are incompatible.
     Type 'number' is not assignable to type 'string'.
-tests/cases/conformance/types/strict/strictInterface1.ts(31,1): error TS2322: Type '{ name: number; }' is not assignable to type 'MoreOptions'.
+tests/cases/conformance/types/strict/strictInterface1.ts(24,1): error TS2322: Type '() => Options' is not assignable to type 'Options'.
+  Property '(): Options' is missing in type 'Options'.
+tests/cases/conformance/types/strict/strictInterface1.ts(33,1): error TS2322: Type '{ name: number; }' is not assignable to type 'MoreOptions'.
   Types of property 'name' are incompatible.
     Type 'number' is not assignable to type 'string'.
 
 
-==== tests/cases/conformance/types/strict/strictInterface1.ts (4 errors) ====
-    
+==== tests/cases/conformance/types/strict/strictInterface1.ts (5 errors) ====
     strict interface Options {
     	name?: string;
     	length?: number;
@@ -26,7 +27,7 @@ tests/cases/conformance/types/strict/strictInterface1.ts(31,1): error TS2322: Ty
     // is not inherited
     interface MoreOptions extends Options {}
     
-    
+    function getOptions(): Options { return undefined; }
     
     var a: Options;
     a = {}; // OK
@@ -43,6 +44,12 @@ tests/cases/conformance/types/strict/strictInterface1.ts(31,1): error TS2322: Ty
 !!! error TS2322: Type '{ name: number; }' is not assignable to type 'Options'.
 !!! error TS2322:   Types of property 'name' are incompatible.
 !!! error TS2322:     Type 'number' is not assignable to type 'string'.
+    a = getOptions; // Error
+    ~
+!!! error TS2322: Type '() => Options' is not assignable to type 'Options'.
+!!! error TS2322:   Property '(): Options' is missing in type 'Options'.
+    a = getOptions(); // OK
+    
     
     var b: MoreOptions;
     b = {}; // OK
