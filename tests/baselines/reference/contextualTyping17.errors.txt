@@ -1,0 +1,7 @@
+tests/cases/compiler/contextualTyping17.ts(1,47): error TS2339: Property 'name' does not exist on type '{ id: number; }'.
+
+
+==== tests/cases/compiler/contextualTyping17.ts (1 errors) ====
+    var foo: {id:number;} = {id:4}; foo = {id: 5, name:"foo"};
+                                                  ~~~~
+!!! error TS2339: Property 'name' does not exist on type '{ id: number; }'.

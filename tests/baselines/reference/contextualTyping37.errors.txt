@@ -1,0 +1,7 @@
+tests/cases/compiler/contextualTyping37.ts(1,33): error TS2339: Property 'foo' does not exist on type '{ id: number; }'.
+
+
+==== tests/cases/compiler/contextualTyping37.ts (1 errors) ====
+    var foo = <{ id: number; }[]>[{ foo: "s" }, {  }];
+                                    ~~~
+!!! error TS2339: Property 'foo' does not exist on type '{ id: number; }'.

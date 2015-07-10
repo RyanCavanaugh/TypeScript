@@ -1,8 +1,14 @@
 tests/cases/conformance/es6/destructuring/iterableArrayPattern24.ts(2,1): error TS2488: Type must have a '[Symbol.iterator]()' method that returns an iterator.
+tests/cases/conformance/es6/destructuring/iterableArrayPattern24.ts(2,15): error TS2339: Property '0' does not exist on type '(string | boolean)[]'.
+tests/cases/conformance/es6/destructuring/iterableArrayPattern24.ts(2,22): error TS2339: Property '1' does not exist on type '(string | boolean)[]'.
 
 
-==== tests/cases/conformance/es6/destructuring/iterableArrayPattern24.ts (1 errors) ====
+==== tests/cases/conformance/es6/destructuring/iterableArrayPattern24.ts (3 errors) ====
     var a: string, b: boolean[];
     [a, ...b] = { 0: "", 1: true };
     ~~~~~~~~~
 !!! error TS2488: Type must have a '[Symbol.iterator]()' method that returns an iterator.
+                  ~
+!!! error TS2339: Property '0' does not exist on type '(string | boolean)[]'.
+                         ~
+!!! error TS2339: Property '1' does not exist on type '(string | boolean)[]'.

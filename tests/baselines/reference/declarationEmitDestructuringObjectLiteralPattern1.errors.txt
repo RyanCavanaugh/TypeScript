@@ -1,0 +1,23 @@
+tests/cases/compiler/declarationEmitDestructuringObjectLiteralPattern1.ts(3,23): error TS2339: Property 'y4' does not exist on type '{ x4: any; }'.
+tests/cases/compiler/declarationEmitDestructuringObjectLiteralPattern1.ts(4,16): error TS2339: Property 'x5' does not exist on type '{ y5: any; }'.
+tests/cases/compiler/declarationEmitDestructuringObjectLiteralPattern1.ts(6,27): error TS2339: Property 'y7' does not exist on type '{ x7: any; }'.
+tests/cases/compiler/declarationEmitDestructuringObjectLiteralPattern1.ts(7,20): error TS2339: Property 'x8' does not exist on type '{ y8: any; }'.
+
+
+==== tests/cases/compiler/declarationEmitDestructuringObjectLiteralPattern1.ts (4 errors) ====
+    
+    var { } = { x: 5, y: "hello" };
+    var { x4 } = { x4: 5, y4: "hello" };
+                          ~~
+!!! error TS2339: Property 'y4' does not exist on type '{ x4: any; }'.
+    var { y5 } = { x5: 5, y5: "hello" };
+                   ~~
+!!! error TS2339: Property 'x5' does not exist on type '{ y5: any; }'.
+    var { x6, y6 } = { x6: 5, y6: "hello" };
+    var { x7: a1 } = { x7: 5, y7: "hello" };
+                              ~~
+!!! error TS2339: Property 'y7' does not exist on type '{ x7: any; }'.
+    var { y8: b1 } = { x8: 5, y8: "hello" };
+                       ~~
+!!! error TS2339: Property 'x8' does not exist on type '{ y8: any; }'.
+    var { x9: a2, y9: b2 } = { x9: 5, y9: "hello" };

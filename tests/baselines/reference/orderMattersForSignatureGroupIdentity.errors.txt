@@ -1,7 +1,9 @@
+tests/cases/compiler/orderMattersForSignatureGroupIdentity.ts(19,12): error TS2339: Property 'n' does not exist on type '{ s: string; }'.
 tests/cases/compiler/orderMattersForSignatureGroupIdentity.ts(22,5): error TS2403: Subsequent variable declarations must have the same type.  Variable 'w' must be of type 'A', but here has type 'C'.
+tests/cases/compiler/orderMattersForSignatureGroupIdentity.ts(24,12): error TS2339: Property 'n' does not exist on type '{ s: string; }'.
 
 
-==== tests/cases/compiler/orderMattersForSignatureGroupIdentity.ts (1 errors) ====
+==== tests/cases/compiler/orderMattersForSignatureGroupIdentity.ts (3 errors) ====
     interface A {
         (x: { s: string }): string
         (x: { n: number }): number
@@ -21,6 +23,8 @@ tests/cases/compiler/orderMattersForSignatureGroupIdentity.ts(22,5): error TS240
     var v: B;
     
     v({ s: "", n: 0 }).toLowerCase();
+               ~
+!!! error TS2339: Property 'n' does not exist on type '{ s: string; }'.
     
     var w: A;
     var w: C;
@@ -28,3 +32,5 @@ tests/cases/compiler/orderMattersForSignatureGroupIdentity.ts(22,5): error TS240
 !!! error TS2403: Subsequent variable declarations must have the same type.  Variable 'w' must be of type 'A', but here has type 'C'.
     
     w({ s: "", n: 0 }).toLowerCase();
+               ~
+!!! error TS2339: Property 'n' does not exist on type '{ s: string; }'.

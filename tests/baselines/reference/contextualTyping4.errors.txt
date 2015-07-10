@@ -1,0 +1,7 @@
+tests/cases/compiler/contextualTyping4.ts(1,46): error TS2339: Property 'name' does not exist on type '{ id: number; }'.
+
+
+==== tests/cases/compiler/contextualTyping4.ts (1 errors) ====
+    class foo { public bar:{id:number;} = {id:5, name:"foo"}; }
+                                                 ~~~~
+!!! error TS2339: Property 'name' does not exist on type '{ id: number; }'.

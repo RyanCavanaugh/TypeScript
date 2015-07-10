@@ -1,0 +1,30 @@
+tests/cases/compiler/surplusObjectLiteralProperties.ts(14,21): error TS2339: Property 'thing3' does not exist on type 'Options1'.
+
+
+==== tests/cases/compiler/surplusObjectLiteralProperties.ts (1 errors) ====
+    interface Options1 {
+      thing1?: string;
+      thing2?: number;
+    }
+    
+    interface Options2 {
+      thing: number;
+      otherThing?: string;
+    }
+    
+    interface Options3 extends Options1, Options2 { }
+    
+    // Should error
+    let x: Options1 = { thing3: 'foo' };
+                        ~~~~~~
+!!! error TS2339: Property 'thing3' does not exist on type 'Options1'.
+    
+    let y: Options3;
+    // Should be OK
+    x = y;
+    
+    
+    interface Map {
+      [s: string]: any;
+    }
+    let z: Map = { ok: 10 };

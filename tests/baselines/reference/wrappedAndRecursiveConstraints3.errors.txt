@@ -1,0 +1,21 @@
+tests/cases/conformance/types/typeParameters/typeArgumentLists/wrappedAndRecursiveConstraints3.ts(14,28): error TS2339: Property 'charAt' does not exist on type '{ length: number; }'.
+
+
+==== tests/cases/conformance/types/typeParameters/typeArgumentLists/wrappedAndRecursiveConstraints3.ts (1 errors) ====
+    // no errors expected
+    
+    class C<T extends { length: number }> {
+        constructor(x: T) { }
+        foo<U extends T>(x: U) {
+            function bar<V extends U>(x: V) {
+                return x;
+            }
+            return bar;
+        }
+    }
+    
+    var c = new C({ length: 2 });
+    var r = c.foo({ length: 3, charAt: (x: number) => { '' } });
+                               ~~~~~~
+!!! error TS2339: Property 'charAt' does not exist on type '{ length: number; }'.
+    var r2 = r('');

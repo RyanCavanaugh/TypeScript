@@ -1,0 +1,30 @@
+tests/cases/compiler/overloadResolutionOverNonCTObjectLit.ts(19,93): error TS2339: Property 'state' does not exist on type 'IToken'.
+tests/cases/compiler/overloadResolutionOverNonCTObjectLit.ts(19,106): error TS2339: Property 'length' does not exist on type 'IToken'.
+
+
+==== tests/cases/compiler/overloadResolutionOverNonCTObjectLit.ts (2 errors) ====
+    module Bugs {
+                    export interface IToken {
+                                    startIndex:number;
+                                    type:string;
+                                    bracket:number;
+                    }
+                    
+                    export interface IState {
+                    }
+    
+                    export interface IStateToken extends IToken {
+                                    state: IState;
+                                    length: number;
+                    }
+                    
+                    function bug3() {
+                                    var tokens:IToken[]= [];
+                                    tokens.push({ startIndex: 1, type: '', bracket: 3 });
+                                    tokens.push(<IToken>({ startIndex: 1, type: '', bracket: 3, state: null, length: 10 }));
+                                                                                                ~~~~~
+!!! error TS2339: Property 'state' does not exist on type 'IToken'.
+                                                                                                             ~~~~~~
+!!! error TS2339: Property 'length' does not exist on type 'IToken'.
+                    }
+    }
