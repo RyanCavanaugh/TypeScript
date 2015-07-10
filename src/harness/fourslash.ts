@@ -2685,7 +2685,6 @@ module FourSlash {
         return {
             content: output,
             fileOptions: {},
-            version: 0,
             fileName: fileName
         };
     }

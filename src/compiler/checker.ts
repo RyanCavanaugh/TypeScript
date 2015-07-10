@@ -1978,15 +1978,12 @@ namespace ts {
             }
 
             return _displayBuilder || (_displayBuilder = {
-                symbolToString: symbolToString,
-                typeToString: typeToString,
                 buildSymbolDisplay: buildSymbolDisplay,
                 buildTypeDisplay: buildTypeDisplay,
                 buildTypeParameterDisplay: buildTypeParameterDisplay,
                 buildParameterDisplay: buildParameterDisplay,
                 buildDisplayForParametersAndDelimiters: buildDisplayForParametersAndDelimiters,
                 buildDisplayForTypeParametersAndDelimiters: buildDisplayForTypeParametersAndDelimiters,
-                buildDisplayForTypeArgumentsAndDelimiters: buildDisplayForTypeArgumentsAndDelimiters,
                 buildTypeParameterDisplayFromSymbol: buildTypeParameterDisplayFromSymbol,
                 buildSignatureDisplay: buildSignatureDisplay,
                 buildReturnTypeDisplay: buildReturnTypeDisplay
@@ -6851,6 +6848,17 @@ namespace ts {
             let contextualType = getContextualType(node);
             let typeFlags: TypeFlags;
 
+            let allowedPropertyNames: string[] = undefined;
+            if(contextualType &&
+                contextualType.flags & TypeFlags.ObjectType &&
+                !getIndexTypeOfType(contextualType, IndexKind.String)) {
+
+                let properties = getPropertiesOfType(contextualType);
+                if(properties.length > 0) {
+                    allowedPropertyNames = map(properties, s => s.name);
+                }
+            }
+
             for (let memberDecl of node.properties) {
                 let member = memberDecl.symbol;
                 if (memberDecl.kind === SyntaxKind.PropertyAssignment ||
@@ -6891,6 +6899,10 @@ namespace ts {
 
                 if (!hasDynamicName(memberDecl)) {
                     propertiesTable[member.name] = member;
+
+                    if(allowedPropertyNames && allowedPropertyNames.indexOf(member.name) < 0) {
+                        error(memberDecl.name, Diagnostics.Property_0_does_not_exist_on_type_1, member.name, typeToString(contextualType));
+                    }
                 }
                 propertiesArray.push(member);
             }

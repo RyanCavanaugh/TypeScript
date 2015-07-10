@@ -1984,8 +1984,7 @@ namespace ts {
         return {
             acquireDocument,
             updateDocument,
-            releaseDocument,
-            reportStats
+            releaseDocument
         };
     }
 
@@ -2475,7 +2474,6 @@ namespace ts {
             // Now create a new compiler
             let newProgram = createProgram(hostCache.getRootFileNames(), newSettings, {
                 getSourceFile: getOrCreateSourceFile,
-                getCancellationToken: () => cancellationToken,
                 getCanonicalFileName,
                 useCaseSensitiveFileNames: () => useCaseSensitivefileNames,
                 getNewLine: () => host.getNewLine ? host.getNewLine() : "\r\n",
@@ -4386,7 +4384,6 @@ namespace ts {
                 let end = node.getEnd();
 
                 return {
-                    fileName: sourceFile.fileName,
                     textSpan: createTextSpanFromBounds(start, end),
                     kind: HighlightSpanKind.none
                 };
@@ -4956,7 +4953,6 @@ namespace ts {
 
                             if (shouldCombindElseAndIf) {
                                 result.push({
-                                    fileName: fileName,
                                     textSpan: createTextSpanFromBounds(elseKeyword.getStart(), ifKeyword.end),
                                     kind: HighlightSpanKind.reference
                                 });

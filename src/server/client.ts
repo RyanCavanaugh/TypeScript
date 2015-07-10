@@ -199,12 +199,10 @@ namespace ts.server {
             var request = this.processRequest<protocol.CompletionsRequest>(CommandNames.Completions, args);
             var response = this.processResponse<protocol.CompletionsResponse>(request);
 
-            return  {
+            return {
                 isMemberCompletion: false,
                 isNewIdentifierLocation: false,
-                entries: response.body,
-                fileName: fileName,
-                position: position
+                entries: response.body
             };
         }
      

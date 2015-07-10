@@ -432,7 +432,7 @@ namespace ts {
         return diagnostics.map(d => realizeDiagnostic(d, newLine));
     }
 
-    function realizeDiagnostic(diagnostic: Diagnostic, newLine: string): { message: string; start: number; length: number; category: string; } {
+    function realizeDiagnostic(diagnostic: Diagnostic, newLine: string): { message: string; start: number; length: number; category: string; code: number; } {
         return {
             message: flattenDiagnosticMessageText(diagnostic.messageText, newLine),
             start: diagnostic.start,
