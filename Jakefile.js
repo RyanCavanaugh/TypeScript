@@ -720,7 +720,7 @@ task('tsc-instrumented', [loggedIOJsPath, instrumenterJsPath, tscFile], function
     ex.run();
 }, { async: true });
 
-desc("Updates the sublime plugin's tsserver");
+desc("Updates the sublime plugin's tsserver");
 task("update-sublime", ["local", serverFile], function() {
     jake.cpR(serverFile, "../TypeScript-Sublime-Plugin/tsserver/");
     jake.cpR(serverFile + ".map", "../TypeScript-Sublime-Plugin/tsserver/");
@@ -739,3 +739,9 @@ task("lint", [], function() {
         });
     }
 }, { async: true });
+
+task('compile', [], function(cmdLine) {
+    var cmd = host + ' ' + tscFile + ' ' + cmdLine;
+    console.log(cmd);
+    exec(cmd);
+});
