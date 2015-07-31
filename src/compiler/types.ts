@@ -1867,6 +1867,7 @@ namespace ts {
         constructSignatures: Signature[];  // Construct signatures of type
         stringIndexType?: Type;            // String index type
         numberIndexType?: Type;            // Numeric index type
+        enumIndexer?: Type;                // The type of the indexer itself if it's an enum
     }
 
     /* @internal */

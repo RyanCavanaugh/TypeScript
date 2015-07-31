@@ -1860,7 +1860,12 @@ namespace ts {
                         writer.writeParameter(getIndexerParameterName(resolved, IndexKind.Number, /*fallbackName*/"x"));
                         writePunctuation(writer, SyntaxKind.ColonToken);
                         writeSpace(writer);
-                        writeKeyword(writer, SyntaxKind.NumberKeyword);
+                        if (resolved.enumIndexer) {
+                            writeType(resolved.enumIndexer, TypeFormatFlags.None);
+                        }
+                        else {
+                            writeKeyword(writer, SyntaxKind.NumberKeyword);
+                        }
                         writePunctuation(writer, SyntaxKind.CloseBracketToken);
                         writePunctuation(writer, SyntaxKind.ColonToken);
                         writeSpace(writer);
@@ -10306,6 +10311,11 @@ namespace ts {
                             Diagnostics.A_type_predicate_is_only_allowed_in_return_type_position_for_functions_and_methods);
                     }
                 }
+                else if (node.kind === SyntaxKind.IndexSignature) {
+                    if (!(getTypeFromTypeNode(node.parameters[0].type).flags & (TypeFlags.String | TypeFlags.Enum | TypeFlags.Number))) {
+                        error(node, Diagnostics.An_index_signature_parameter_type_must_be_string_or_number);
+                    }
+                }
                 else {
                     checkSourceElement(node.type);
                 }
@@ -14895,9 +14905,6 @@ namespace ts {
             }
             if (!parameter.type) {
                 return grammarErrorOnNode(parameter.name, Diagnostics.An_index_signature_parameter_must_have_a_type_annotation);
-            }
-            if (parameter.type.kind !== SyntaxKind.StringKeyword && parameter.type.kind !== SyntaxKind.NumberKeyword) {
-                return grammarErrorOnNode(parameter.name, Diagnostics.An_index_signature_parameter_type_must_be_string_or_number);
             }
             if (!node.type) {
                 return grammarErrorOnNode(node, Diagnostics.An_index_signature_must_have_a_type_annotation);
