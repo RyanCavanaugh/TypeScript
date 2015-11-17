@@ -263,10 +263,10 @@ http.createServer(function (req: http.ServerRequest, res: http.ServerResponse) {
 
 var browserPath: string;
 if ((browser && browser === 'chrome')) {
-    let defaultChromePath = "";
-    switch (os.platform()) {
-        case "win32":
-        case "win64":
+    const platform = os.platform();
+    let defaultChromePath: string;
+    switch(platform) {
+        case "win32": 
             defaultChromePath = "C:/Program Files (x86)/Google/Chrome/Application/chrome.exe";
             break;
         case "darwin":
@@ -276,7 +276,7 @@ if ((browser && browser === 'chrome')) {
             defaultChromePath = "/opt/google/chrome/chrome"
             break;
         default:
-            console.log(`default Chrome location is unknown for platform '${os.platform()}'`);
+            console.log(`Default Chrome location for platform ${platform} is unknown`);
             break;
     }
     if (fs.existsSync(defaultChromePath)) {

@@ -387,6 +387,8 @@ namespace ts {
         ContainsThis =      1 << 18,  // Interface contains references to "this"
         HasImplicitReturn =     1 << 19,  // If function implicitly returns on one of codepaths (initialized by binding)
         HasExplicitReturn =     1 << 20,  // If function has explicit reachable return on one of codepaths (initialized by binding)
+        InferredClass =         1 << 21,  // A JavaScript function with a property assignment to its 'prototype' property
+
         Modifier = Export | Ambient | Public | Private | Protected | Static | Abstract | Default | Async,
         AccessibilityModifier = Public | Private | Protected,
         BlockScoped = Let | Const,
