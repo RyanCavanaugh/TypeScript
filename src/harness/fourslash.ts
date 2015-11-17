@@ -568,7 +568,6 @@ namespace FourSlash {
         }
 
         public verifyCompletionListStartsWithItemsInOrder(items: string[]): void {
-            this.taoInvalidReason = "verifyCompletionListContainsItemsPreservingOrder NYI";
             if (items.length === 0) {
                 return;
             }
@@ -581,7 +580,6 @@ namespace FourSlash {
         }
 
         public noItemsWithSameNameButDifferentKind(): void {
-            this.taoInvalidReason = "noItemsWithSameNameButDifferentKind NYI";
             const completions = this.getCompletionListAtCaret();
             const uniqueItems: ts.Map<string> = {};
             for (const item of completions.entries) {

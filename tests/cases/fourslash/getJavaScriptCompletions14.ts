@@ -10,5 +10,4 @@
 ////x./*1*/
 
 goTo.marker("1");
-verify.noItemsWithSameNameButDifferentKind();
 verify.completionListContains("toExponential", /*displayText:*/ undefined, /*documentation*/ undefined, "method");

@@ -975,7 +975,7 @@ namespace ts {
     }
 
     // @kind(SyntaxKind.CallExpression)
-    export interface CallExpression extends LeftHandSideExpression {
+    export interface CallExpression extends LeftHandSideExpression, Declaration {
         expression: LeftHandSideExpression;
         typeArguments?: NodeArray<TypeNode>;
         arguments: NodeArray<Expression>;
