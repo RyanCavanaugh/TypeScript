@@ -453,6 +453,7 @@ namespace ts {
         let nodeCount: number;
         let identifiers: Map<string>;
         let identifierCount: number;
+        let isJavaScript: boolean;
 
         let parsingContext: ParsingContext;
 
@@ -606,44 +607,28 @@ namespace ts {
                 fixupParentReferences(sourceFile);
             }
 
-            // If this is a javascript file, proactively see if we can get JSDoc comments for
-            // relevant nodes in the file.  We'll use these to provide typing informaion if they're
-            // available.
-            if (isSourceFileJavaScript(sourceFile)) {
-                addJSDocComments();
-            }
-
             return sourceFile;
         }
 
-        function addJSDocComments() {
-            forEachChild(sourceFile, visit);
-            return;
 
-            function visit(node: Node) {
-                // Add additional cases as necessary depending on how we see JSDoc comments used
-                // in the wild.
-                switch (node.kind) {
-                    case SyntaxKind.VariableStatement:
-                    case SyntaxKind.FunctionDeclaration:
-                    case SyntaxKind.Parameter:
-                        addJSDocComment(node);
-                }
-
-                forEachChild(node, visit);
-            }
-        }
-
-        function addJSDocComment(node: Node) {
-            const comments = getLeadingCommentRangesOfNode(node, sourceFile);
-            if (comments) {
-                for (const comment of comments) {
-                    const jsDocComment = JSDocParser.parseJSDocComment(node, comment.pos, comment.end - comment.pos);
-                    if (jsDocComment) {
-                        node.jsDocComment = jsDocComment;
+        function addJSDocComment<T extends Node>(node: T): T {
+            if (contextFlags & ParserContextFlags.JavaScriptFile) {
+                speculationHelper(() => {
+                    const comments = getLeadingCommentRangesOfNode(node, sourceFile);
+                    if (comments) {
+                        for (const comment of comments) {
+                            const jsDocComment = JSDocParser.parseJSDocComment(node, comment.pos, comment.end - comment.pos);
+                            if (jsDocComment) {
+                                node.jsDocComment = jsDocComment;
+                            }
+                        }
                     }
-                }
+                    // The JSDoc parser might chnage the scanner's source text, so set it back to the file content as part of speculation reset
+                    scanner.setText(sourceText);
+                }, /*isLookAhead*/ true);
             }
+
+            return node;
         }
 
         export function fixupParentReferences(sourceFile: Node) {
@@ -2049,7 +2034,8 @@ namespace ts {
             // contexts. In addition, parameter initializers are semantically disallowed in
             // overload signatures. So parameter initializers are transitively disallowed in
             // ambient contexts.
-            return finishNode(node);
+
+            return addJSDocComment(finishNode(node));
         }
 
         function parseBindingElementInitializer(inParameter: boolean) {
@@ -4695,7 +4681,7 @@ namespace ts {
             setModifiers(node, modifiers);
             node.declarationList = parseVariableDeclarationList(/*inForStatementInitializer*/ false);
             parseSemicolon();
-            return finishNode(node);
+            return addJSDocComment(finishNode(node));
         }
 
         function parseFunctionDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: ModifiersArray): FunctionDeclaration {
@@ -4709,7 +4695,7 @@ namespace ts {
             const isAsync = !!(node.flags & NodeFlags.Async);
             fillSignature(SyntaxKind.ColonToken, /*yieldContext*/ isGenerator, /*awaitContext*/ isAsync, /*requireCompleteParameterList*/ false, node);
             node.body = parseFunctionBlockOrSemicolon(isGenerator, isAsync, Diagnostics.or_expected);
-            return finishNode(node);
+            return addJSDocComment(finishNode(node));
         }
 
         function parseConstructorDeclaration(pos: number, decorators: NodeArray<Decorator>, modifiers: ModifiersArray): ConstructorDeclaration {
