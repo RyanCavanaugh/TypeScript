@@ -5860,67 +5860,61 @@ namespace ts {
                 Debug.assert(start <= end);
                 Debug.assert(end <= content.length);
 
+                let token: SyntaxKind;
                 let tags: NodeArray<JSDocTag>;
-                let pos: number;
+                // let pos: number;
 
-                // NOTE(cyrusn): This is essentially a handwritten scanner for JSDocComments. I
-                // considered using an actual Scanner, but this would complicate things.  The
-                // scanner would need to know it was in a Doc Comment.  Otherwise, it would then
-                // produce comments *inside* the doc comment.  In the end it was just easier to
-                // write a simple scanner rather than go that route.
-                if (length >= "/** */".length) {
-                    if (content.charCodeAt(start) === CharacterCodes.slash &&
-                        content.charCodeAt(start + 1) === CharacterCodes.asterisk &&
-                        content.charCodeAt(start + 2) === CharacterCodes.asterisk &&
-                        content.charCodeAt(start + 3) !== CharacterCodes.asterisk) {
+                // Check for /** (JSDoc opening part)
+                if (content.charCodeAt(start) === CharacterCodes.slash &&
+                    content.charCodeAt(start + 1) === CharacterCodes.asterisk &&
+                    content.charCodeAt(start + 2) === CharacterCodes.asterisk &&
+                    content.charCodeAt(start + 3) !== CharacterCodes.asterisk) {
 
+                    // 3 for /**, 5 in total for /** */
+                    scanner.scanRange(start + 3, length - 5, () => {
                         // Initially we can parse out a tag.  We also have seen a starting asterisk.
                         // This is so that /** * @type */ doesn't parse.
                         let canParseTag = true;
                         let seenAsterisk = true;
 
-                        for (pos = start + "/**".length; pos < end; ) {
-                            const ch = content.charCodeAt(pos);
-                            pos++;
-
-                            if (ch === CharacterCodes.at && canParseTag) {
-                                parseTag();
-
-                                // Once we parse out a tag, we cannot keep parsing out tags on this line.
-                                canParseTag = false;
-                                continue;
-                            }
-
-                            if (isLineBreak(ch)) {
-                                // After a line break, we can parse a tag, and we haven't seen as asterisk
-                                // on the next line yet.
-                                canParseTag = true;
-                                seenAsterisk = false;
-                                continue;
-                            }
-
-                            if (isWhiteSpace(ch)) {
-                                // Whitespace doesn't affect any of our parsing.
-                                continue;
-                            }
-
-                            // Ignore the first asterisk on a line.
-                            if (ch === CharacterCodes.asterisk) {
-                                if (seenAsterisk) {
-                                    // If we've already seen an asterisk, then we can no longer parse a tag
-                                    // on this line.
+                        token = scanner.scanJSDocToken();
+                        while (token !== SyntaxKind.EndOfFileToken) {
+                            switch (token) {
+                                case SyntaxKind.AtToken:
+                                    if (canParseTag) {
+                                        parseTag();
+                                    }
+                                    // Once we parse out a tag, we cannot keep parsing out tags on this line
                                     canParseTag = false;
-                                }
-                                seenAsterisk = true;
-                                continue;
-                            }
+                                    break;
 
-                            // Anything else is doc comment text.  We can't do anything with it.  Because it
-                            // wasn't a tag, we can no longer parse a tag on this line until we hit the next
-                            // line break.
-                            canParseTag = false;
+                                case SyntaxKind.NewLineTrivia:
+                                    // After a line break, we can parse a tag, and we haven't seen an asterisk on the next line yet
+                                    canParseTag = true;
+                                    seenAsterisk = false;
+                                    break;
+
+                                case SyntaxKind.AsteriskToken:
+                                    if (seenAsterisk) {
+                                        // If we've already seen an asterisk, then we can no longer parse a tag on this line
+                                        canParseTag = false;
+                                    }
+                                    // Ignore the first asterisk on a line
+                                    seenAsterisk = true;
+                                    break;
+
+                                case SyntaxKind.Identifier:
+                                    // Anything else is doc comment text.  We can't do anything with it.  Because it
+                                    // wasn't a tag, we can no longer parse a tag on this line until we hit the next
+                                    // line break.
+                                    canParseTag = false;
+                                    break;
+
+                                case SyntaxKind.EndOfFileToken:
+                                    break;
+                            }
                         }
-                    }
+                    });
                 }
 
                 return createJSDocComment();
@@ -5936,15 +5930,15 @@ namespace ts {
                 }
 
                 function skipWhitespace(): void {
-                    while (pos < end && isWhiteSpace(content.charCodeAt(pos))) {
-                        pos++;
+                    while (token === SyntaxKind.WhitespaceTrivia) {
+                        token = scanner.scanJSDocToken();
                     }
                 }
 
                 function parseTag(): void {
-                    Debug.assert(content.charCodeAt(pos - 1) === CharacterCodes.at);
-                    const atToken = createNode(SyntaxKind.AtToken, pos - 1);
-                    atToken.end = pos;
+                    Debug.assert(token === SyntaxKind.AtToken);
+                    const atToken = createNode(SyntaxKind.AtToken, scanner.getTokenPos() - 1);
+                    atToken.end = scanner.getTokenPos();
 
                     const tagName = scanIdentifier();
                     if (!tagName) {
@@ -5977,7 +5971,7 @@ namespace ts {
                     const result = <JSDocTag>createNode(SyntaxKind.JSDocTag, atToken.pos);
                     result.atToken = atToken;
                     result.tagName = tagName;
-                    return finishNode(result, pos);
+                    return finishNode(result, scanner.getStartPos());
                 }
 
                 function addTag(tag: JSDocTag): void {
@@ -5994,8 +5988,8 @@ namespace ts {
 
                 function tryParseTypeExpression(): JSDocTypeExpression {
                     skipWhitespace();
-
-                    if (content.charCodeAt(pos) !== CharacterCodes.openBrace) {
+                    
+                    if (token !== SyntaxKind.OpenBraceToken) {
                         return undefined;
                     }
 
@@ -6112,23 +6106,11 @@ namespace ts {
                 }
 
                 function scanIdentifier(): Identifier {
-                    const startPos = pos;
-                    for (; pos < end; pos++) {
-                        const ch = content.charCodeAt(pos);
-                        if (pos === startPos && isIdentifierStart(ch, ScriptTarget.Latest)) {
-                            continue;
-                        }
-                        else if (pos > startPos && isIdentifierPart(ch, ScriptTarget.Latest)) {
-                            continue;
-                        }
+                    const startPos = scanner.getTokenPos();
+                    const tokenKind = scanner.scanJSDocToken();
+                    Debug.assert(tokenKind === SyntaxKind.Identifier);
 
-                        break;
-                    }
-
-                    if (startPos === pos) {
-                        return undefined;
-                    }
-
+                    const pos = scanner.getTokenPos();
                     const result = <Identifier>createNode(SyntaxKind.Identifier, startPos);
                     result.text = content.substring(startPos, pos);
                     return finishNode(result, pos);

@@ -29,6 +29,8 @@ namespace ts {
         scanJsxIdentifier(): SyntaxKind;
         reScanJsxToken(): SyntaxKind;
         scanJsxToken(): SyntaxKind;
+        scanJSDocToken(): SyntaxKind;
+        scanLineRemainder(): string;
         scan(): SyntaxKind;
         // Sets the text for the scanner to scan.  An optional subrange starting point and length
         // can be provided to have the scanner only scan a portion of the text.
@@ -41,6 +43,10 @@ namespace ts {
         // was in immediately prior to invoking the callback.  The result of invoking the callback
         // is returned from this function.
         lookAhead<T>(callback: () => T): T;
+
+        // Invokes the callback with the scanner set to scan the specified range. When the callback
+        // returns, the scanner is restored to the state it was in before scanRange was called.
+        scanRange<T>(start: number, length: number, callback: () => T): T;
 
         // Invokes the provided callback.  If the callback returns something falsy, then it restores
         // the scanner to the state it was in immediately prior to invoking the callback.  If the
@@ -169,6 +175,7 @@ namespace ts {
         "|=": SyntaxKind.BarEqualsToken,
         "^=": SyntaxKind.CaretEqualsToken,
         "@": SyntaxKind.AtToken,
+        "/**": SyntaxKind.JSDocStart,
     };
 
     /*
@@ -727,6 +734,8 @@ namespace ts {
             scanJsxIdentifier,
             reScanJsxToken,
             scanJsxToken,
+            scanJSDocToken,
+            scanLineRemainder,
             scan,
             setText,
             setScriptTarget,
@@ -735,6 +744,7 @@ namespace ts {
             setTextPos,
             tryScan,
             lookAhead,
+            scanRange,
         };
 
         function error(message: DiagnosticMessage, length?: number): void {
@@ -1611,6 +1621,50 @@ namespace ts {
             return token;
         }
 
+        function scanJSDocToken(): SyntaxKind {
+            let identifierStarted = false;
+            while (pos < end) {
+                const ch = text.charCodeAt(pos);
+                pos++;
+                if (identifierStarted) {
+                    if (isWhiteSpace(ch)) {
+                        return token = SyntaxKind.Identifier;
+                    }
+                }
+                else {
+                    if (ch === CharacterCodes.at) {
+                        return token = SyntaxKind.AtToken;
+                    }
+                    else if (isLineBreak(ch)) {
+                        return token = SyntaxKind.NewLineTrivia;
+                    }
+                    else if (ch === CharacterCodes.asterisk) {
+                        return token = SyntaxKind.AsteriskToken;
+                    }
+                    else if(isWhiteSpace(ch)) {
+                        // Keep going
+                    }
+                    else
+                    {
+                        identifierStarted = true;
+                    }
+                }
+            }
+            return token = SyntaxKind.EndOfFileToken;
+        }
+
+        function scanLineRemainder(): string {
+            const resultStart = pos;
+            while (pos < end) {
+                const ch = text.charCodeAt(pos);
+                pos++;
+                if (isLineBreak(ch)) {
+                    break;
+                }
+            }
+            return text.substr(resultStart, pos - resultStart);
+        }
+
         function speculationHelper<T>(callback: () => T, isLookahead: boolean): T {
             const savePos = pos;
             const saveStartPos = startPos;
@@ -1630,6 +1684,19 @@ namespace ts {
                 tokenValue = saveTokenValue;
                 precedingLineBreak = savePrecedingLineBreak;
             }
+            return result;
+        }
+
+        function scanRange<T>(start: number, length: number, callback: () => T): T {
+            const saveEnd = end;
+            const savePos = pos;
+
+            setText(text, start, length);
+            const result = speculationHelper(callback, /*isLookahead*/ true);
+
+            end = saveEnd;
+            pos = savePos;
+
             return result;
         }
 
