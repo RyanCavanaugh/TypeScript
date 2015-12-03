@@ -10,5 +10,7 @@
 //// let x = /*1*/foo;
 //// foo(1)./**/
 
+goTo.marker('1');
+debug.printCurrentQuickInfo();
 goTo.marker();
 verify.completionListContains("toExponential", /*displayText:*/ undefined, /*documentation*/ undefined, "method");

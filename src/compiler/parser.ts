@@ -5830,7 +5830,8 @@ namespace ts {
 
             export function parseIsolatedJSDocComment(content: string, start: number, length: number) {
                 initializeState("file.js", content, ScriptTarget.Latest, /*isJavaScriptFile*/ true, /*_syntaxCursor:*/ undefined);
-                const jsDocComment = parseJSDocComment(/*parent:*/ undefined, start, length);
+                sourceFile = <SourceFile>{ languageVariant: LanguageVariant.Standard, text: content };
+                const jsDocComment = parseJSDocComment(/*parent:*/ sourceFile, start, length);
                 const diagnostics = parseDiagnostics;
                 clearState();
 
@@ -5996,6 +5997,7 @@ namespace ts {
                 }
 
                 function handleParamTag(atToken: Node, tagName: Identifier) {
+                    debugger;
                     let typeExpression = tryParseTypeExpression();
 
                     skipWhitespace();
@@ -6005,11 +6007,19 @@ namespace ts {
                     const startPos = scanner.getTextPos();
                     if (parseOptionalToken(SyntaxKind.OpenBracketToken)) {
                         name = scanJsDocIdentifier();
+                        nextJSDocToken();
                         isBracketed = true;
+
+                        // May have an optional default, e.g. '[foo = 42]'
+                        if(parseOptionalToken(SyntaxKind.EqualsToken)) {
+                            parseExpression();
+                        }
+
                         parseExpected(SyntaxKind.CloseBracketToken);
                     }
                     else if (token === SyntaxKind.Identifier) {
                         name = scanJsDocIdentifier();
+                        nextJSDocToken();
                     }
                     else {
                         // ??
@@ -6097,13 +6107,14 @@ namespace ts {
                             break;
                         }
                     }
-                    typeParameters.end = scanner.getTextPos();
 
                     const result = <JSDocTemplateTag>createNode(SyntaxKind.JSDocTemplateTag, atToken.pos);
                     result.atToken = atToken;
                     result.tagName = tagName;
                     result.typeParameters = typeParameters;
-                    return finishNode(result);
+                    finishNode(result);
+                    typeParameters.end = result.end;
+                    return result;
                 }
 
                 function nextJSDocToken(): SyntaxKind {

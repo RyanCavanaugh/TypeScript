@@ -1659,6 +1659,15 @@ namespace ts {
                     else if (ch === CharacterCodes.closeBrace) {
                         return pos++, token = SyntaxKind.CloseBraceToken;
                     }
+                    else if (ch === CharacterCodes.openBracket) {
+                        return pos++, token = SyntaxKind.OpenBracketToken;
+                    }
+                    else if (ch === CharacterCodes.closeBracket) {
+                        return pos++, token = SyntaxKind.CloseBracketToken;
+                    }
+                    else if (ch === CharacterCodes.equals) {
+                        return pos++, token = SyntaxKind.EqualsToken;
+                    }
                     else if (ch === CharacterCodes.comma) {
                         return pos++, token = SyntaxKind.CommaToken;
                     }

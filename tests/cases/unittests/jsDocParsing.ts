@@ -1002,10 +1002,12 @@ module ts {
                     // Turn on a human-readable diff
                     if (typeof require !== 'undefined') {
                         require('chai').config.showDiff = true;
+                        expect(JSON.parse(result)).equal(JSON.parse(expected));
+                    }
+                    else {
+                        assert.equal(result, expected);
                     }
                 }
-                // assert.equal(result, expected);
-                expect(JSON.parse(result)).equal(JSON.parse(expected));
             }
 
             function parsesIncorrectly(content: string) {
@@ -1589,7 +1591,7 @@ module ts {
         "0": {
             "kind": "JSDocParameterTag",
             "pos": 8,
-            "end": 30,
+            "end": 31,
             "atToken": {
                 "kind": "AtToken",
                 "pos": 8,
@@ -1621,7 +1623,7 @@ module ts {
         },
         "length": 1,
         "pos": 8,
-        "end": 30
+        "end": 31
     }
 }`);
                 });
@@ -1639,7 +1641,7 @@ module ts {
         "0": {
             "kind": "JSDocParameterTag",
             "pos": 8,
-            "end": 31,
+            "end": 36,
             "atToken": {
                 "kind": "AtToken",
                 "pos": 8,
@@ -1671,7 +1673,7 @@ module ts {
         },
         "length": 1,
         "pos": 8,
-        "end": 31
+        "end": 36
     }
 }`);
                 });
@@ -2125,7 +2127,7 @@ module ts {
         "0": {
             "kind": "JSDocTemplateTag",
             "pos": 8,
-            "end": 24,
+            "end": 23,
             "atToken": {
                 "kind": "AtToken",
                 "pos": 8,
@@ -2162,12 +2164,12 @@ module ts {
                 },
                 "length": 2,
                 "pos": 17,
-                "end": 24
+                "end": 23
             }
         },
         "length": 1,
         "pos": 8,
-        "end": 24
+        "end": 23
     }
 }`);
                 });
