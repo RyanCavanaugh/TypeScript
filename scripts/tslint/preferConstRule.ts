@@ -110,7 +110,7 @@ class PreferConstWalker extends Lint.RuleWalker {
                     this.markAssignment(element.name as ts.Identifier);
                 }
                 else if (isBindingPattern(element.name)) {
-                    this.visitBindingPatternIdentifiers(element.name as ts.BindingPattern);
+                    this.visitBindingPatternIdentifiers(element.name as ts.Node as ts.BindingPattern);
                 }
             }
         }

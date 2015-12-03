@@ -175,7 +175,6 @@ namespace ts {
         "|=": SyntaxKind.BarEqualsToken,
         "^=": SyntaxKind.CaretEqualsToken,
         "@": SyntaxKind.AtToken,
-        "/**": SyntaxKind.JSDocStart,
     };
 
     /*
@@ -1622,33 +1621,66 @@ namespace ts {
         }
 
         function scanJSDocToken(): SyntaxKind {
+            startPos = pos;
+
+            // Eat leading whitespace
+            while (pos < end) {
+                const ch = text.charCodeAt(pos);
+                if (isWhiteSpace(ch)) {
+                    pos++;
+                }
+                else {
+                    break;
+                }
+            }
+            tokenPos = pos;
+
             let identifierStarted = false;
             while (pos < end) {
                 const ch = text.charCodeAt(pos);
-                pos++;
                 if (identifierStarted) {
-                    if (isWhiteSpace(ch)) {
+                    if (!isIdentifierPart(ch, ScriptTarget.Latest)) {
                         return token = SyntaxKind.Identifier;
                     }
                 }
                 else {
                     if (ch === CharacterCodes.at) {
-                        return token = SyntaxKind.AtToken;
+                        return pos++, token = SyntaxKind.AtToken;
                     }
                     else if (isLineBreak(ch)) {
-                        return token = SyntaxKind.NewLineTrivia;
+                        return pos++, token = SyntaxKind.NewLineTrivia;
                     }
                     else if (ch === CharacterCodes.asterisk) {
-                        return token = SyntaxKind.AsteriskToken;
+                        return pos++, token = SyntaxKind.AsteriskToken;
                     }
-                    else if(isWhiteSpace(ch)) {
-                        // Keep going
+                    else if (ch === CharacterCodes.openBrace) {
+                        return pos++, token = SyntaxKind.OpenBraceToken;
+                    }
+                    else if (ch === CharacterCodes.closeBrace) {
+                        return pos++, token = SyntaxKind.CloseBraceToken;
+                    }
+                    else if (ch === CharacterCodes.comma) {
+                        return pos++, token = SyntaxKind.CommaToken;
+                    }
+                    else if (isWhiteSpace(ch)) {
+                        /*
+                        // Eat all available whitespace
+                        while (pos < end) {
+                            pos++;
+                            const ch = text.charCodeAt(pos);
+                            if(isWhiteSpace(ch) && !isLineBreak(ch)) {
+                                break;
+                            }
+                        }
+                        return token = SyntaxKind.WhitespaceTrivia;
+                        */
                     }
                     else
                     {
                         identifierStarted = true;
                     }
                 }
+                pos++;
             }
             return token = SyntaxKind.EndOfFileToken;
         }

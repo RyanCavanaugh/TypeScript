@@ -623,7 +623,8 @@ namespace ts {
                             }
                         }
                     }
-                    // The JSDoc parser might chnage the scanner's source text, so set it back to the file content as part of speculation reset
+                    // The JSDoc parser might change the scanner's source text, so set it back to the file content as part of speculation reset
+                    // TODO: Should be unneeded now that we're using scanRange?
                     scanner.setText(sourceText);
                 }, /*isLookAhead*/ true);
             }
@@ -5512,23 +5513,19 @@ namespace ts {
 
             export function parseJSDocTypeExpressionForTests(content: string, start: number, length: number) {
                 initializeState("file.js", content, ScriptTarget.Latest, /*isJavaScriptFile*/ true, /*_syntaxCursor:*/ undefined);
-                const jsDocTypeExpression = parseJSDocTypeExpression(start, length);
+                scanner.setText(content, start, length);
+                token = scanner.scan();
+                const jsDocTypeExpression = parseJSDocTypeExpression();
                 const diagnostics = parseDiagnostics;
                 clearState();
 
                 return jsDocTypeExpression ? { jsDocTypeExpression, diagnostics } : undefined;
             }
 
-            // Parses out a JSDoc type expression.  The starting position should be right at the open
-            // curly in the type expression.  Returns 'undefined' if it encounters any errors while parsing.
+            // Parses out a JSDoc type expression. Returns 'undefined' if it encounters any errors while parsing.
             /* @internal */
-            export function parseJSDocTypeExpression(start: number, length: number): JSDocTypeExpression {
-                scanner.setText(sourceText, start, length);
-
-                // Prime the first token for us to start processing.
-                token = nextToken();
-
-                const result = <JSDocTypeExpression>createNode(SyntaxKind.JSDocTypeExpression);
+            export function parseJSDocTypeExpression(): JSDocTypeExpression {
+                const result = <JSDocTypeExpression>createNode(SyntaxKind.JSDocTypeExpression, scanner.getTokenPos());
 
                 parseExpected(SyntaxKind.OpenBraceToken);
                 result.type = parseJSDocTopLevelType();
@@ -5860,9 +5857,7 @@ namespace ts {
                 Debug.assert(start <= end);
                 Debug.assert(end <= content.length);
 
-                let token: SyntaxKind;
                 let tags: NodeArray<JSDocTag>;
-                // let pos: number;
 
                 // Check for /** (JSDoc opening part)
                 if (content.charCodeAt(start) === CharacterCodes.slash &&
@@ -5870,22 +5865,22 @@ namespace ts {
                     content.charCodeAt(start + 2) === CharacterCodes.asterisk &&
                     content.charCodeAt(start + 3) !== CharacterCodes.asterisk) {
 
-                    // 3 for /**, 5 in total for /** */
+                    // + 3 for leading /**, - 5 in total for /** */
                     scanner.scanRange(start + 3, length - 5, () => {
                         // Initially we can parse out a tag.  We also have seen a starting asterisk.
                         // This is so that /** * @type */ doesn't parse.
                         let canParseTag = true;
                         let seenAsterisk = true;
 
-                        token = scanner.scanJSDocToken();
+                        nextJSDocToken();
                         while (token !== SyntaxKind.EndOfFileToken) {
                             switch (token) {
                                 case SyntaxKind.AtToken:
                                     if (canParseTag) {
                                         parseTag();
                                     }
-                                    // Once we parse out a tag, we cannot keep parsing out tags on this line
-                                    canParseTag = false;
+                                    // This will take us to the end of the line, so it's OK to parse a tag on the next pass through the loop
+                                    seenAsterisk = false;
                                     break;
 
                                 case SyntaxKind.NewLineTrivia:
@@ -5913,6 +5908,8 @@ namespace ts {
                                 case SyntaxKind.EndOfFileToken:
                                     break;
                             }
+
+                            nextJSDocToken();
                         }
                     });
                 }
@@ -5930,26 +5927,29 @@ namespace ts {
                 }
 
                 function skipWhitespace(): void {
-                    while (token === SyntaxKind.WhitespaceTrivia) {
-                        token = scanner.scanJSDocToken();
+                    while (token === SyntaxKind.WhitespaceTrivia || token === SyntaxKind.NewLineTrivia) {
+                        nextJSDocToken();
                     }
                 }
 
                 function parseTag(): void {
                     Debug.assert(token === SyntaxKind.AtToken);
-                    const atToken = createNode(SyntaxKind.AtToken, scanner.getTokenPos() - 1);
-                    atToken.end = scanner.getTokenPos();
+                    const atToken = createNode(SyntaxKind.AtToken, scanner.getTokenPos());
+                    atToken.end = scanner.getTextPos();
+                    nextJSDocToken();
 
-                    const tagName = scanIdentifier();
+                    const tagName = scanJsDocIdentifier();
                     if (!tagName) {
                         return;
                     }
 
+                    token = scanner.scanJSDocToken();
                     const tag = handleTag(atToken, tagName) || handleUnknownTag(atToken, tagName);
                     addTag(tag);
                 }
 
                 function handleTag(atToken: Node, tagName: Identifier): JSDocTag {
+                    debugger;
                     if (tagName) {
                         switch (tagName.text) {
                             case "param":
@@ -5971,7 +5971,7 @@ namespace ts {
                     const result = <JSDocTag>createNode(SyntaxKind.JSDocTag, atToken.pos);
                     result.atToken = atToken;
                     result.tagName = tagName;
-                    return finishNode(result, scanner.getStartPos());
+                    return finishNode(result);
                 }
 
                 function addTag(tag: JSDocTag): void {
@@ -5987,14 +5987,11 @@ namespace ts {
                 }
 
                 function tryParseTypeExpression(): JSDocTypeExpression {
-                    skipWhitespace();
-                    
                     if (token !== SyntaxKind.OpenBraceToken) {
                         return undefined;
                     }
 
-                    const typeExpression = parseJSDocTypeExpression(pos, end - pos);
-                    pos = typeExpression.end;
+                    const typeExpression = parseJSDocTypeExpression();
                     return typeExpression;
                 }
 
@@ -6004,18 +6001,23 @@ namespace ts {
                     skipWhitespace();
                     let name: Identifier;
                     let isBracketed: boolean;
-                    if (content.charCodeAt(pos) === CharacterCodes.openBracket) {
-                        pos++;
-                        skipWhitespace();
-                        name = scanIdentifier();
+                    // Looking for something like '[foo]' or 'foo'
+                    const startPos = scanner.getTextPos();
+                    if (parseOptionalToken(SyntaxKind.OpenBracketToken)) {
+                        name = scanJsDocIdentifier();
                         isBracketed = true;
+                        parseExpected(SyntaxKind.CloseBracketToken);
+                    }
+                    else if (token === SyntaxKind.Identifier) {
+                        name = scanJsDocIdentifier();
                     }
                     else {
-                        name = scanIdentifier();
+                        // ??
                     }
 
                     if (!name) {
-                        parseErrorAtPosition(pos, 0, Diagnostics.Identifier_expected);
+                        parseErrorAtPosition(scanner.getStartPos(), 0, Diagnostics.Identifier_expected);
+                        return undefined;
                     }
 
                     let preName: Identifier, postName: Identifier;
@@ -6037,83 +6039,88 @@ namespace ts {
                     result.typeExpression = typeExpression;
                     result.postParameterName = postName;
                     result.isBracketed = isBracketed;
-                    return finishNode(result, pos);
+                    return finishNode(result);
                 }
 
                 function handleReturnTag(atToken: Node, tagName: Identifier): JSDocReturnTag {
                     if (forEach(tags, t => t.kind === SyntaxKind.JSDocReturnTag)) {
-                        parseErrorAtPosition(tagName.pos, pos - tagName.pos, Diagnostics._0_tag_already_specified, tagName.text);
+                        parseErrorAtPosition(tagName.pos, scanner.getTokenPos() - tagName.pos, Diagnostics._0_tag_already_specified, tagName.text);
                     }
 
                     const result = <JSDocReturnTag>createNode(SyntaxKind.JSDocReturnTag, atToken.pos);
                     result.atToken = atToken;
                     result.tagName = tagName;
                     result.typeExpression = tryParseTypeExpression();
-                    return finishNode(result, pos);
+                    return finishNode(result);
                 }
 
                 function handleTypeTag(atToken: Node, tagName: Identifier): JSDocTypeTag {
                     if (forEach(tags, t => t.kind === SyntaxKind.JSDocTypeTag)) {
-                        parseErrorAtPosition(tagName.pos, pos - tagName.pos, Diagnostics._0_tag_already_specified, tagName.text);
+                        parseErrorAtPosition(tagName.pos, scanner.getTokenPos() - tagName.pos, Diagnostics._0_tag_already_specified, tagName.text);
                     }
 
                     const result = <JSDocTypeTag>createNode(SyntaxKind.JSDocTypeTag, atToken.pos);
                     result.atToken = atToken;
                     result.tagName = tagName;
                     result.typeExpression = tryParseTypeExpression();
-                    return finishNode(result, pos);
+                    return finishNode(result);
                 }
 
                 function handleTemplateTag(atToken: Node, tagName: Identifier): JSDocTemplateTag {
                     if (forEach(tags, t => t.kind === SyntaxKind.JSDocTemplateTag)) {
-                        parseErrorAtPosition(tagName.pos, pos - tagName.pos, Diagnostics._0_tag_already_specified, tagName.text);
+                        parseErrorAtPosition(tagName.pos, scanner.getTokenPos() - tagName.pos, Diagnostics._0_tag_already_specified, tagName.text);
                     }
 
+                    // Type parameter list looks like '@template T,U,V'
                     const typeParameters = <NodeArray<TypeParameterDeclaration>>[];
-                    typeParameters.pos = pos;
+                    typeParameters.pos = scanner.getStartPos();
 
                     while (true) {
-                        skipWhitespace();
-
-                        const startPos = pos;
-                        const name = scanIdentifier();
+                        const name = scanJsDocIdentifier();
                         if (!name) {
-                            parseErrorAtPosition(startPos, 0, Diagnostics.Identifier_expected);
+                            debugger;
+                            parseErrorAtPosition(scanner.getStartPos(), 0, Diagnostics.Identifier_expected);
                             return undefined;
                         }
 
                         const typeParameter = <TypeParameterDeclaration>createNode(SyntaxKind.TypeParameter, name.pos);
                         typeParameter.name = name;
-                        finishNode(typeParameter, pos);
+                        nextJSDocToken();
+                        finishNode(typeParameter);
 
                         typeParameters.push(typeParameter);
 
-                        skipWhitespace();
-                        if (content.charCodeAt(pos) !== CharacterCodes.comma) {
+                        if (token === SyntaxKind.CommaToken) {
+                            nextJSDocToken();
+                        }
+                        else {
                             break;
                         }
-
-                        pos++;
                     }
-
-                    typeParameters.end = pos;
+                    typeParameters.end = scanner.getTextPos();
 
                     const result = <JSDocTemplateTag>createNode(SyntaxKind.JSDocTemplateTag, atToken.pos);
                     result.atToken = atToken;
                     result.tagName = tagName;
                     result.typeParameters = typeParameters;
-                    return finishNode(result, pos);
+                    return finishNode(result);
                 }
 
-                function scanIdentifier(): Identifier {
-                    const startPos = scanner.getTokenPos();
-                    const tokenKind = scanner.scanJSDocToken();
-                    Debug.assert(tokenKind === SyntaxKind.Identifier);
+                function nextJSDocToken(): SyntaxKind {
+                    return token = scanner.scanJSDocToken();
+                }
+
+                function scanJsDocIdentifier(): Identifier {
+                    // skipWhitespace();
+                    if (token !== SyntaxKind.Identifier) {
+                        parseErrorAtCurrentToken(Diagnostics.Identifier_expected);
+                        return undefined;
+                    }
 
                     const pos = scanner.getTokenPos();
-                    const result = <Identifier>createNode(SyntaxKind.Identifier, startPos);
-                    result.text = content.substring(startPos, pos);
-                    return finishNode(result, pos);
+                    const result = <Identifier>createNode(SyntaxKind.Identifier, pos);
+                    result.text = content.substring(scanner.getTokenPos(), scanner.getTextPos());
+                    return finishNode(result, scanner.getTextPos());
                 }
             }
         }

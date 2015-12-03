@@ -985,15 +985,27 @@ module ts {
         describe("DocComments", () => {
             function parsesCorrectly(content: string, expected: string) {
                 let comment = parseIsolatedJSDocComment(content);
-                Debug.assert(comment && comment.diagnostics.length === 0);
+                if (!comment) {
+                    Debug.fail('Comment failed to parse entirely');
+                }
+                if (comment.diagnostics.length > 0) {
+                    Debug.fail('Comment has at least one diagnostic: ' + comment.diagnostics[0].messageText);
+                }
 
                 let result = JSON.stringify(comment.jsDocComment, (k, v) => {
                     return v && v.pos !== undefined
                         ? JSON.parse(Utils.sourceFileToJSON(v))
                         : v;
-                }, "    ");
+                }, 4);
                 
-                assert.equal(result, expected);
+                if (result !== expected) {
+                    // Turn on a human-readable diff
+                    if (typeof require !== 'undefined') {
+                        require('chai').config.showDiff = true;
+                    }
+                }
+                // assert.equal(result, expected);
+                expect(JSON.parse(result)).equal(JSON.parse(expected));
             }
 
             function parsesIncorrectly(content: string) {
