@@ -5950,7 +5950,6 @@ namespace ts {
                 }
 
                 function handleTag(atToken: Node, tagName: Identifier): JSDocTag {
-                    debugger;
                     if (tagName) {
                         switch (tagName.text) {
                             case "param":
@@ -5997,7 +5996,6 @@ namespace ts {
                 }
 
                 function handleParamTag(atToken: Node, tagName: Identifier) {
-                    debugger;
                     let typeExpression = tryParseTypeExpression();
 
                     skipWhitespace();
@@ -6088,7 +6086,6 @@ namespace ts {
                     while (true) {
                         const name = scanJsDocIdentifier();
                         if (!name) {
-                            debugger;
                             parseErrorAtPosition(scanner.getStartPos(), 0, Diagnostics.Identifier_expected);
                             return undefined;
                         }
