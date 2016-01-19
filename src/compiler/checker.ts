@@ -5754,11 +5754,19 @@ namespace ts {
                     else {
                         // See if all declared properties of this type are assignable to the target type's string indexer type
                         for (const prop of getPropertiesOfType(source)) {
-                            if (!isTypeAssignableTo(getTypeOfSymbol(prop), targetType)) {
-                                if (reportErrors) {
-                                    reportError(Diagnostics.Property_0_in_type_1_is_not_assignable_to_type_2, prop.name, typeToString(source), typeToString(targetType));
+                            if (pushTypeResolution(prop, TypeSystemPropertyName.Type)) {
+                                const isAssignable = isTypeAssignableTo(getTypeOfSymbol(prop), targetType);
+                                popTypeResolution();
+
+                                if (!isAssignable) {
+                                    if (reportErrors) {
+                                        reportError(Diagnostics.Property_0_in_type_1_is_not_assignable_to_type_2, prop.name, typeToString(source), typeToString(targetType));
+                                    }
+                                    return Ternary.False;
                                 }
-                                return Ternary.False;
+                            }
+                            else {
+                                return Ternary.Maybe;
                             }
                         }
                     }
