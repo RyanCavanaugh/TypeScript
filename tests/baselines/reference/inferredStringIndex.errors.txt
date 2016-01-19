@@ -1,18 +1,10 @@
-tests/cases/compiler/inferredStringIndex.ts(17,1): error TS2322: Type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'Headers'.
-  Index signature is missing in type '{ 'User-agent': string; 'Timeout': any; }'.
 tests/cases/compiler/inferredStringIndex.ts(18,1): error TS2322: Type '{ x: number; y: number; }' is not assignable to type 'Headers'.
-  Index signature is missing in type '{ x: number; y: number; }'.
+  Property 'x' in type '{ x: number; y: number; }' is not assignable to type 'string'
 tests/cases/compiler/inferredStringIndex.ts(21,1): error TS2322: Type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'Counts'.
-  Index signature is missing in type '{ 'User-agent': string; 'Timeout': any; }'.
-tests/cases/compiler/inferredStringIndex.ts(22,1): error TS2322: Type '{ x: number; y: number; }' is not assignable to type 'Counts'.
-  Index signature is missing in type '{ x: number; y: number; }'.
-tests/cases/compiler/inferredStringIndex.ts(25,1): error TS2322: Type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'Primitives'.
-  Index signature is missing in type '{ 'User-agent': string; 'Timeout': any; }'.
-tests/cases/compiler/inferredStringIndex.ts(26,1): error TS2322: Type '{ x: number; y: number; }' is not assignable to type 'Primitives'.
-  Index signature is missing in type '{ x: number; y: number; }'.
+  Property 'User-agent' in type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'number'
 
 
-==== tests/cases/compiler/inferredStringIndex.ts (6 errors) ====
+==== tests/cases/compiler/inferredStringIndex.ts (2 errors) ====
     
     interface Headers {
       [x: string]: string;
@@ -30,31 +22,19 @@ tests/cases/compiler/inferredStringIndex.ts(26,1): error TS2322: Type '{ x: numb
     
     let h: Headers;
     h = a; // OK
-    ~
-!!! error TS2322: Type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'Headers'.
-!!! error TS2322:   Index signature is missing in type '{ 'User-agent': string; 'Timeout': any; }'.
     h = b; // Error
     ~
 !!! error TS2322: Type '{ x: number; y: number; }' is not assignable to type 'Headers'.
-!!! error TS2322:   Index signature is missing in type '{ x: number; y: number; }'.
+!!! error TS2322:   Property 'x' in type '{ x: number; y: number; }' is not assignable to type 'string'
     
     let c: Counts;
     c = a; // Error
     ~
 !!! error TS2322: Type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'Counts'.
-!!! error TS2322:   Index signature is missing in type '{ 'User-agent': string; 'Timeout': any; }'.
+!!! error TS2322:   Property 'User-agent' in type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'number'
     c = b; // OK
-    ~
-!!! error TS2322: Type '{ x: number; y: number; }' is not assignable to type 'Counts'.
-!!! error TS2322:   Index signature is missing in type '{ x: number; y: number; }'.
     
     let p: Primitives
     p = a; // OK
-    ~
-!!! error TS2322: Type '{ 'User-agent': string; 'Timeout': any; }' is not assignable to type 'Primitives'.
-!!! error TS2322:   Index signature is missing in type '{ 'User-agent': string; 'Timeout': any; }'.
     p = b; // OK
-    ~
-!!! error TS2322: Type '{ x: number; y: number; }' is not assignable to type 'Primitives'.
-!!! error TS2322:   Index signature is missing in type '{ x: number; y: number; }'.
     

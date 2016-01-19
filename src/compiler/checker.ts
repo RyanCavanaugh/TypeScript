@@ -5732,6 +5732,7 @@ namespace ts {
                     return indexTypesIdenticalTo(IndexKind.String, source, target);
                 }
                 const targetType = getIndexTypeOfType(target, IndexKind.String);
+
                 if (targetType) {
                     if ((targetType.flags & TypeFlags.Any) && !(originalSource.flags & TypeFlags.Primitive)) {
                         // non-primitive assignment to any is always allowed, eg
@@ -5739,23 +5740,32 @@ namespace ts {
                         return Ternary.True;
                     }
                     const sourceType = getIndexTypeOfType(source, IndexKind.String);
-                    if (!sourceType) {
-                        if (reportErrors) {
-                            reportError(Diagnostics.Index_signature_is_missing_in_type_0, typeToString(source));
+                    if (sourceType) {
+                        const related = isRelatedTo(sourceType, targetType, reportErrors);
+                        if (!related) {
+                            if (reportErrors) {
+                                reportError(Diagnostics.Index_signatures_are_incompatible);
+                            }
+                            return Ternary.False;
                         }
-                        return Ternary.False;
+
+                        return related;
                     }
-                    const related = isRelatedTo(sourceType, targetType, reportErrors);
-                    if (!related) {
-                        if (reportErrors) {
-                            reportError(Diagnostics.Index_signatures_are_incompatible);
+                    else {
+                        // See if all declared properties of this type are assignable to the target type's string indexer type
+                        for (const prop of getPropertiesOfType(source)) {
+                            if (!isTypeAssignableTo(getTypeOfSymbol(prop), targetType)) {
+                                if (reportErrors) {
+                                    reportError(Diagnostics.Property_0_in_type_1_is_not_assignable_to_type_2, prop.name, typeToString(source), typeToString(targetType));
+                                }
+                                return Ternary.False;
+                            }
                         }
-                        return Ternary.False;
                     }
-                    return related;
                 }
                 return Ternary.True;
             }
+
 
             function numberIndexTypesRelatedTo(source: Type, originalSource: Type, target: Type, reportErrors: boolean): Ternary {
                 if (relation === identityRelation) {
