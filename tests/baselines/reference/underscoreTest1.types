@@ -1581,7 +1581,7 @@ _.mixin({
 >(<any>_("fabio")).capitalize : any
 >(<any>_("fabio")) : any
 ><any>_("fabio") : any
->_("fabio") : Underscore.WrappedObject<string>
+>_("fabio") : Underscore.WrappedDictionary<{}>
 >_ : Underscore.Static
 >"fabio" : string
 >capitalize : any
