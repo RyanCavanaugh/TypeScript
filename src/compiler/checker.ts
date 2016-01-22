@@ -3894,10 +3894,6 @@ namespace ts {
                 }
             }
 
-            if (declaration.typeParameters) {
-                return getTypeParametersFromDeclaration(declaration.typeParameters);
-            }
-
             return undefined;
         }
 
