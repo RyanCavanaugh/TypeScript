@@ -2364,6 +2364,10 @@ namespace ts {
     }
 
     function isSupportedExpressionWithTypeArgumentsRest(node: Expression): boolean {
+        if (!node) {
+            return false;
+        }
+        
         if (node.kind === SyntaxKind.Identifier) {
             return true;
         }
