@@ -10185,22 +10185,22 @@ namespace ts {
                 return voidType;
             }
             if (node.kind === SyntaxKind.NewExpression) {
-                const declaration = signature.declaration;
+                // When resolved signature is a call signature (and not a construct signature) the result type is any, unless
+                // the declaring function had members created through 'x.prototype.y = expr' or 'this.y = expr' psuedodeclarations
+                // in a JS file
+                const funcSymbol = checkExpressionCached(node.expression).symbol;
+                if (funcSymbol && funcSymbol.valueDeclaration && isInJavaScriptFile(funcSymbol.valueDeclaration) && funcSymbol.members && (funcSymbol.flags & SymbolFlags.Function)) {
+                    return getInferredClassType(funcSymbol);
+                }
 
+                const declaration = signature.declaration;
                 if (declaration &&
                     declaration.kind !== SyntaxKind.Constructor &&
                     declaration.kind !== SyntaxKind.ConstructSignature &&
                     declaration.kind !== SyntaxKind.ConstructorType &&
                     !isJSDocConstructSignature(declaration)) {
 
-                    // When resolved signature is a call signature (and not a construct signature) the result type is any, unless
-                    // the declaring function had members created through 'x.prototype.y = expr' or 'this.y = expr' psuedodeclarations
-                    // in a JS file
-                    const funcSymbol = checkExpression(node.expression).symbol;
-                    if (funcSymbol && funcSymbol.members && (funcSymbol.flags & SymbolFlags.Function)) {
-                        return getInferredClassType(funcSymbol);
-                    }
-                    else if (compilerOptions.noImplicitAny) {
+                    if (compilerOptions.noImplicitAny) {
                         error(node, Diagnostics.new_expression_whose_target_lacks_a_construct_signature_implicitly_has_an_any_type);
                     }
                     return anyType;
