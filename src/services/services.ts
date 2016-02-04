@@ -378,62 +378,99 @@ namespace ts {
         function getCommentFromJsDocTag(tag: JSDocTag, rangeEnd: number, sourceFile: SourceFile): SymbolDisplayPart {
             const text = sourceFile.text;
 
-            const parts: string[] = [];
-            let start = tag.end + 1;
+            let parts: string[] = [];
 
-            // Eat any leading ignored characters
-            while (start < rangeEnd) {
-                const ch = text.charCodeAt(start);
-                if (ch === CharacterCodes.asterisk || isWhiteSpace(ch)) {
-                    start++;
-                }
-                else if (ch === CharacterCodes.at) {
-                    // Most likely a malformed tag
-                    return undefined;
-                }
-                else {
-                    break;
+            let i: number = tag.end + 1;
+
+            // Consumes any amount of whitespace, one asterisk, and one whitespace,
+            // leaving 'i' on the following character
+            function consumeLineStart() {
+                let seenAsterisk = false;
+                while (i < rangeEnd) {
+                    const ch = text.charCodeAt(i);
+                    if (isWhiteSpace(ch)) {
+                        if (seenAsterisk) {
+                            // We're done
+                            i++;
+                            break;
+                        }
+                    }
+                    else if (ch === CharacterCodes.asterisk) {
+                        seenAsterisk = true;
+                    } 
+                    else if (isLineBreak(ch)) {
+                        break;
+                    }
+                    i++;
                 }
             }
 
-            let i: number;
-            for (i = start; i < rangeEnd; i++) {
-                const ch = text.charCodeAt(i);
-                if (isLineBreak(ch)) {
-                    // Line break, push any non-empty content so far
-                    if (start !== i) {
-                        parts.push(text.substr(start, i - start));
-                    }
-
-                    // Keep scanning until we hit either a non-ws/non-asterisk char
-                    while (i < rangeEnd) {
+            // Consume until we hit newline or EOF
+            function consumeLineRemainder() {
+                while (i < rangeEnd) {
+                    const ch = text.charCodeAt(i);
+                    if (isLineBreak(ch)) {
+                        // Eat second part of CR/LF pair
                         i++;
-                        const nextCh = text.charCodeAt(i);
-                        if ((nextCh === CharacterCodes.asterisk) || (isWhiteSpace(nextCh) || isLineBreak(nextCh))) {
-                            // Eat *s and whitespace
-                            continue;
+                        if ((ch === CharacterCodes.carriageReturn) && (text.charCodeAt(i) === CharacterCodes.lineFeed)) {
+                            i++;
                         }
-                        else if (nextCh === CharacterCodes.at) {
-                            // Abort, we're running into another malformed jsdoc tag
-                            i = rangeEnd;
-                            break;
-                        }
-                        else {
-                            // Scan this
-                            break;
-                        }
+                        break;
                     }
-                    start = i;
+                    i++;
                 }
+            }
+
+            // Consume lone leading '-'
+            if (text.charCodeAt(i) === CharacterCodes.minus) {
+                i++;
+            }
+
+            // Consume any empty lines
+            consumeLineStart();
+            while (isLineBreak(text.charCodeAt(i)) && i < rangeEnd) {
+                i++;
+                consumeLineStart();
+            }
+
+            let start = i;
+            while (i < rangeEnd) {
+                consumeLineRemainder();
+                // If the next char is @, that means we actually consumed the front part
+                // of the next line's JSDoc tag, so ignore and stop
+                if (text.charCodeAt(i) === CharacterCodes.at) {
+                    start = rangeEnd;
+                    break;
+                }
+
+                // -1 from total length since we consumed the newline
+                parts.push(text.substr(start, i - start - 1));
+                consumeLineStart();
+                start = i;
             }
 
             if (start < rangeEnd) {
                 parts.push(text.substr(start, rangeEnd - start));
             }
 
+            // Cull leading/trailing empty lines
+            let firstNonEmpty = Infinity;
+            let lastNonEmpty = -Infinity;
+            for (i = 0; i < parts.length; i++) {
+                if (parts[i].length) {
+                    firstNonEmpty = Math.min(i, firstNonEmpty);
+                    lastNonEmpty = Math.max(i, lastNonEmpty);
+                }
+            }
+            parts = parts.slice(firstNonEmpty, lastNonEmpty + 1);
+
+            if (parts.length === 0) {
+                return undefined;
+            }
+
             return {
                 kind: "documentation",
-                text: parts.join("\n")
+                text: parts.join("\n").trim()
             };
         }
 

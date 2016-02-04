@@ -39,7 +39,7 @@
 ////  * This is second Line
 ////  * @param param1 first line of param
 ////  *
-////  *  param information third line
+////  * param information third line
 ////  * @random tag This should be third line
 ////  */
 ////function /*f*/f(param1: string) { /*3*/param1 = "hello"; }
@@ -48,7 +48,7 @@
 ////  * This is second Line
 ////  * @param param1
 ////  *
-////  *  param information first line
+////  * param information first line
 ////  * @random tag This should be third line
 ////  */
 ////function /*g*/g(param1: string) { /*4*/param1 = "hello"; }
@@ -57,9 +57,9 @@
 ////  * This is second Line
 ////  * @param param1
 ////  *
-////  *  param information first line
+////  * param information first line
 ////  *
-////  *  param information third line
+////  * param information third line
 ////  * @random tag This should be third line
 ////  */
 ////function /*h*/h(param1: string) { /*5*/param1 = "hello"; }
@@ -68,9 +68,9 @@
 ////  * This is second Line
 ////  * @param param1
 ////  *
-////  *  param information first line
+////  * param information first line
 ////  *
-////  *  param information third line
+////  * param information third line
 ////  *
 ////  */
 ////function /*i*/i(param1: string) { /*6*/param1 = "hello"; }
@@ -79,9 +79,9 @@
 ////  * This is second Line
 ////  * @param param1
 ////  *
-////  *  param information first line
+////  * param information first line
 ////  *
-////  *  param information third line
+////  * param information third line
 ////  */
 ////function /*j*/j(param1: string) { /*7*/param1 = "hello"; }
 /////** 
@@ -94,18 +94,8 @@
 ////  *  random information third line
 ////  */
 ////function /*k*/k(param1: string) { /*8*/param1 = "hello"; }
-/////** 
-////  * This is firstLine
-////  * This is second Line
-////  * @param param1 first Line text
-////  *
-////  * @param param1 
-////  *
-////  * blank line that shouldnt be shown when starting this 
-////  * second time information about the param again
-////  */
-////function /*l*/l(param1: string) { /*9*/param1 = "hello"; }
 
+/*
 goTo.marker('a');
 verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line\n\nThis is fourth Line");
 
@@ -127,8 +117,9 @@ verify.quickInfoIs(undefined, "");
 
 goTo.marker('f');
 verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line\n@random tag This should be third line");
+*/
 goTo.marker('3');
-verify.quickInfoIs(undefined, "first line of param\nparam information third line");
+verify.quickInfoIs(undefined, "first line of param\n\nparam information third line");
 
 goTo.marker('g');
 verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line\n@random tag This should be third line");
@@ -138,24 +129,19 @@ verify.quickInfoIs(undefined, "param information first line");
 goTo.marker('h');
 verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line\n@random tag This should be third line");
 goTo.marker('5');
-verify.quickInfoIs(undefined, "param information first line\nparam information third line");
+verify.quickInfoIs(undefined, "param information first line\n\nparam information third line");
 
 goTo.marker('i');
 verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line");
 goTo.marker('6');
-verify.quickInfoIs(undefined, "param information first line\nparam information third line");
+verify.quickInfoIs(undefined, "param information first line\n\nparam information third line");
 
 goTo.marker('j');
 verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line");
 goTo.marker('7');
-verify.quickInfoIs(undefined, "param information first line\nparam information third line");
+verify.quickInfoIs(undefined, "param information first line\n\nparam information third line");
 
 goTo.marker('k');
 verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line\n@randomtag \n\n random information first line\n\n random information third line");
 goTo.marker('8');
-verify.quickInfoIs(undefined, "hello   ");
-
-goTo.marker('l');
-verify.quickInfoIs(undefined, "This is firstLine\nThis is second Line");
-goTo.marker('9');
-verify.quickInfoIs(undefined, "first Line text\nblank line that shouldnt be shown when starting this \nsecond time information about the param again");
+verify.quickInfoIs(undefined, "");
