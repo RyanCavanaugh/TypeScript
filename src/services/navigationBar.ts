@@ -381,6 +381,14 @@ namespace ts.NavigationBar {
 
                 case SyntaxKind.FunctionDeclaration:
                     return createFunctionItem(<FunctionDeclaration>node);
+
+                case SyntaxKind.ExpressionStatement:
+                    const expr = (node as ExpressionStatement).expression;
+                    const special = getSpecialPropertyAssignmentKind(expr);
+                    if (special !== SpecialPropertyAssignmentKind.None) {
+                        
+                    }
+
             }
 
             return undefined;

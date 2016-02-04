@@ -1967,11 +1967,11 @@ namespace FourSlash {
             this.raiseError(`verifyGetScriptLexicalStructureListContains failed - could not find the item: ${JSON.stringify(missingItem)} in the returned list: (${JSON.stringify(items, null, " ")})`);
         }
 
-        private navigationBarItemsContains(items: ts.NavigationBarItem[], name: string, kind: string) {
+        private navigationBarItemsContains(items: ts.NavigationBarItem[], name: string, kind?: string) {
             if (items) {
                 for (let i = 0; i < items.length; i++) {
                     const item = items[i];
-                    if (item && item.text === name && item.kind === kind) {
+                    if (item && item.text === name && (kind === undefined || item.kind === kind)) {
                         return true;
                     }
 
