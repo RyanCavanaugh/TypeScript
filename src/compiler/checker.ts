@@ -14937,6 +14937,34 @@ namespace ts {
             }
         }
 
+        function checkExportImplementsDeclaration(node: ExportImplementsDeclaration) {
+            const container = node.parent;
+            let containerSymbol: Symbol;
+
+            if (container.kind === SyntaxKind.SourceFile) {
+                containerSymbol = container.symbol;
+            }
+            else if (container.kind === SyntaxKind.ModuleBlock) {
+                containerSymbol = container.parent.symbol;
+            }
+            else {
+                error(node, Diagnostics.Export_implements_declarations_may_only_appear_in_a_module_or_namespace);
+                return;
+            }
+
+            if (node.modifiers) {
+                for (const mod of node.modifiers) {
+                    if (mod.kind !== SyntaxKind.ExportKeyword) {
+                        error(mod, Diagnostics.Export_implements_declarations_may_not_have_modifiers);
+                    }
+                }
+            }
+
+            const targetType = getTypeOfNode(node.type);
+            const sourceType = getTypeOfSymbol(containerSymbol);
+            checkTypeAssignableTo(sourceType, targetType, node, Diagnostics.Module_0_incorrectly_implements_interface_1);
+        }
+
         function checkExportDeclaration(node: ExportDeclaration) {
             if (checkGrammarModuleElementContext(node, Diagnostics.An_export_declaration_can_only_be_used_in_a_module)) {
                 // If we hit an export in an illegal context, just bail out to avoid cascading errors.
@@ -15184,6 +15212,8 @@ namespace ts {
                     return checkImportDeclaration(<ImportDeclaration>node);
                 case SyntaxKind.ImportEqualsDeclaration:
                     return checkImportEqualsDeclaration(<ImportEqualsDeclaration>node);
+                case SyntaxKind.ExportImplementsDeclaration:
+                    return checkExportImplementsDeclaration(<ExportImplementsDeclaration>node);
                 case SyntaxKind.ExportDeclaration:
                     return checkExportDeclaration(<ExportDeclaration>node);
                 case SyntaxKind.ExportAssignment:

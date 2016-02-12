@@ -1,0 +1,84 @@
+tests/cases/conformance/internalModules/moduleDeclarations/test1.ts(2,2): error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+tests/cases/conformance/internalModules/moduleDeclarations/test1.ts(2,2): error TS1148: Cannot compile modules unless the '--module' flag is provided. Consider setting the 'module' compiler option in a 'tsconfig.json' file.
+tests/cases/conformance/internalModules/moduleDeclarations/test1.ts(2,2): error TS2673: Module 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test1"' incorrectly implements interface 'Foo'
+  Property 'x' is missing in type 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test1"'.
+tests/cases/conformance/internalModules/moduleDeclarations/test1.ts(3,1): error TS1128: Declaration or statement expected.
+tests/cases/conformance/internalModules/moduleDeclarations/test2.ts(2,2): error TS1131: Property or signature expected.
+tests/cases/conformance/internalModules/moduleDeclarations/test2.ts(2,2): error TS2673: Module 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test2"' incorrectly implements interface 'Foo'
+  Property 'x' is missing in type 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test2"'.
+tests/cases/conformance/internalModules/moduleDeclarations/test2.ts(3,1): error TS1128: Declaration or statement expected.
+tests/cases/conformance/internalModules/moduleDeclarations/test3.ts(2,2): error TS2674: Export implements declarations may not have modifiers.
+tests/cases/conformance/internalModules/moduleDeclarations/test3.ts(2,2): error TS2673: Module 'typeof M' incorrectly implements interface 'Foo'
+  Property 'x' is missing in type 'typeof M'.
+tests/cases/conformance/internalModules/moduleDeclarations/test4.ts(2,2): error TS2672: Export implements declarations may only appear in a module or namespace.
+tests/cases/conformance/internalModules/moduleDeclarations/test5.ts(3,3): error TS2672: Export implements declarations may only appear in a module or namespace.
+tests/cases/conformance/internalModules/moduleDeclarations/test6.ts(3,3): error TS2672: Export implements declarations may only appear in a module or namespace.
+
+
+==== tests/cases/conformance/internalModules/moduleDeclarations/decl.d.ts (0 errors) ====
+    interface Foo {
+      x: number;
+      y: string;
+    }
+    
+==== tests/cases/conformance/internalModules/moduleDeclarations/test1.ts (4 errors) ====
+    class X {
+    	export implements Foo;
+    	~~~~~~
+!!! error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+    	~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS1148: Cannot compile modules unless the '--module' flag is provided. Consider setting the 'module' compiler option in a 'tsconfig.json' file.
+    	~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2673: Module 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test1"' incorrectly implements interface 'Foo'
+!!! error TS2673:   Property 'x' is missing in type 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test1"'.
+    }
+    ~
+!!! error TS1128: Declaration or statement expected.
+    
+==== tests/cases/conformance/internalModules/moduleDeclarations/test2.ts (3 errors) ====
+    interface Y {
+    	export implements Foo;
+    	~~~~~~
+!!! error TS1131: Property or signature expected.
+    	~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2673: Module 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test2"' incorrectly implements interface 'Foo'
+!!! error TS2673:   Property 'x' is missing in type 'typeof "tests/cases/conformance/internalModules/moduleDeclarations/test2"'.
+    }
+    ~
+!!! error TS1128: Declaration or statement expected.
+    
+==== tests/cases/conformance/internalModules/moduleDeclarations/test3.ts (2 errors) ====
+    module M {
+    	public export implements Foo;
+    	~~~~~~
+!!! error TS2674: Export implements declarations may not have modifiers.
+    	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2673: Module 'typeof M' incorrectly implements interface 'Foo'
+!!! error TS2673:   Property 'x' is missing in type 'typeof M'.
+    }
+    
+==== tests/cases/conformance/internalModules/moduleDeclarations/test4.ts (1 errors) ====
+    function fn() {
+    	export implements Foo;
+    	~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2672: Export implements declarations may only appear in a module or namespace.
+    }
+    
+==== tests/cases/conformance/internalModules/moduleDeclarations/test5.ts (1 errors) ====
+    module M {
+    	function fn() {
+    		export implements Foo;
+    		~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2672: Export implements declarations may only appear in a module or namespace.
+    	}	
+    }
+    
+==== tests/cases/conformance/internalModules/moduleDeclarations/test6.ts (1 errors) ====
+    module M {
+    	if (true) {
+    		export implements Foo;
+    		~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2672: Export implements declarations may only appear in a module or namespace.
+    	}
+    }
+    

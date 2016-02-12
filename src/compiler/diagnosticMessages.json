@@ -1823,6 +1823,18 @@
         "category": "Error",
         "code": 2671
     },
+    "Export implements declarations may only appear in a module or namespace.": {
+        "category": "Error",
+        "code": 2672
+    },
+    "Module '{0}' incorrectly implements interface '{1}'": {
+        "category": "Error",
+        "code": 2673
+    },
+    "Export implements declarations may not have modifiers.": {
+        "category": "Error",
+        "code": 2674
+    },
     "Import declaration '{0}' is using private name '{1}'.": {
         "category": "Error",
         "code": 4000

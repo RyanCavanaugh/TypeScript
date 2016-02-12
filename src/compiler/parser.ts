@@ -306,6 +306,10 @@ namespace ts {
             case SyntaxKind.NamedImports:
             case SyntaxKind.NamedExports:
                 return visitNodes(cbNodes, (<NamedImportsOrExports>node).elements);
+            case SyntaxKind.ExportImplementsDeclaration:
+                return visitNodes(cbNodes, node.decorators) ||
+                    visitNodes(cbNodes, node.modifiers) ||
+                    visitNode(cbNode, (<ExportImplementsDeclaration>node).type);
             case SyntaxKind.ExportDeclaration:
                 return visitNodes(cbNodes, node.decorators) ||
                     visitNodes(cbNodes, node.modifiers) ||
@@ -4387,7 +4391,8 @@ namespace ts {
                     case SyntaxKind.ExportKeyword:
                         nextToken();
                         if (token === SyntaxKind.EqualsToken || token === SyntaxKind.AsteriskToken ||
-                            token === SyntaxKind.OpenBraceToken || token === SyntaxKind.DefaultKeyword) {
+                            token === SyntaxKind.OpenBraceToken || token === SyntaxKind.DefaultKeyword ||
+                            token === SyntaxKind.ImplementsKeyword) {
                             return true;
                         }
                         continue;
@@ -4569,6 +4574,8 @@ namespace ts {
                     return parseModuleDeclaration(fullStart, decorators, modifiers);
                 case SyntaxKind.ImportKeyword:
                     return parseImportDeclarationOrImportEqualsDeclaration(fullStart, decorators, modifiers);
+                case SyntaxKind.ImplementsKeyword:
+                    return parseExportImplementsDeclaration(fullStart, decorators, modifiers);
                 case SyntaxKind.ExportKeyword:
                     nextToken();
                     return token === SyntaxKind.DefaultKeyword || token === SyntaxKind.EqualsToken ?
@@ -5422,6 +5429,16 @@ namespace ts {
                     node.moduleSpecifier = parseModuleSpecifier();
                 }
             }
+            parseSemicolon();
+            return finishNode(node);
+        }
+
+        function parseExportImplementsDeclaration(fullStart: number, decorators: NodeArray<Decorator>, modifiers: ModifiersArray): ExportImplementsDeclaration {
+            const node = <ExportImplementsDeclaration>createNode(SyntaxKind.ExportImplementsDeclaration, fullStart);
+            parseExpected(SyntaxKind.ImplementsKeyword);
+            node.decorators = decorators;
+            setModifiers(node, modifiers);
+            node.type = parseTypeReference();
             parseSemicolon();
             return finishNode(node);
         }

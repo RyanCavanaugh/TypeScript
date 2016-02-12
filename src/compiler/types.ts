@@ -279,6 +279,7 @@ namespace ts {
         NamespaceImport,
         NamedImports,
         ImportSpecifier,
+        ExportImplementsDeclaration,
         ExportAssignment,
         ExportDeclaration,
         NamedExports,
@@ -1359,6 +1360,11 @@ namespace ts {
     }
 
     export type ImportOrExportSpecifier = ImportSpecifier | ExportSpecifier;
+
+    // @kind(SyntaxKind.ExportImplementsDeclaration)
+    export interface ExportImplementsDeclaration extends DeclarationStatement {
+        type: TypeNode;
+    }
 
     // @kind(SyntaxKind.ExportAssignment)
     export interface ExportAssignment extends DeclarationStatement {
