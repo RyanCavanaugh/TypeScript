@@ -9330,8 +9330,14 @@ namespace ts {
             return anySignature;
         }
 
-        function resolveErrorCall(node: CallLikeExpression): Signature {
+        function resolveErrorCall(node: CallLikeExpression, candidates: Signature[]): Signature {
             resolveUntypedCall(node);
+            if (candidates && candidates.length > 0) {
+                const last = candidates[candidates.length - 1];
+                if (!last.typeParameters) {
+                    return last;
+                }
+            }
             return unknownSignature;
         }
 
@@ -9954,7 +9960,7 @@ namespace ts {
             reorderCandidates(signatures, candidates);
             if (!candidates.length) {
                 reportError(Diagnostics.Supplied_parameters_do_not_match_any_signature_of_call_target);
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, signatures);
             }
 
             const args = getEffectiveCallArguments(node);
@@ -10090,7 +10096,7 @@ namespace ts {
                 }
             }
 
-            return resolveErrorCall(node);
+            return resolveErrorCall(node, signatures);
 
             function reportError(message: DiagnosticMessage, arg0?: string, arg1?: string, arg2?: string): void {
                 let errorInfo: DiagnosticMessageChain;
@@ -10190,7 +10196,7 @@ namespace ts {
 
             if (apparentType === unknownType) {
                 // Another error has already been reported
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, /*candidates*/ undefined);
             }
 
             // Technically, this signatures list may be incomplete. We are taking the apparent type,
@@ -10225,7 +10231,7 @@ namespace ts {
                 else {
                     error(node, Diagnostics.Cannot_invoke_an_expression_whose_type_lacks_a_call_signature);
                 }
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, constructSignatures);
             }
             return resolveCall(node, callSignatures, candidatesOutArray);
         }
@@ -10248,7 +10254,7 @@ namespace ts {
             expressionType = getApparentType(expressionType);
             if (expressionType === unknownType) {
                 // Another error has already been reported
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, /*candidates*/ undefined);
             }
 
             // If the expression is a class of abstract type, then it cannot be instantiated.
@@ -10258,7 +10264,7 @@ namespace ts {
             const valueDecl = expressionType.symbol && getClassLikeDeclarationOfSymbol(expressionType.symbol);
             if (valueDecl && valueDecl.flags & NodeFlags.Abstract) {
                 error(node, Diagnostics.Cannot_create_an_instance_of_the_abstract_class_0, declarationNameToString(valueDecl.name));
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, /*candidates*/ undefined);
             }
 
             // TS 1.0 spec: 4.11
@@ -10278,7 +10284,7 @@ namespace ts {
             const constructSignatures = getSignaturesOfType(expressionType, SignatureKind.Construct);
             if (constructSignatures.length) {
                 if (!isConstructorAccessible(node, constructSignatures[0])) {
-                    return resolveErrorCall(node);
+                    return resolveErrorCall(node, constructSignatures);
                 }
                 return resolveCall(node, constructSignatures, candidatesOutArray);
             }
@@ -10297,7 +10303,7 @@ namespace ts {
             }
 
             error(node, Diagnostics.Cannot_use_new_with_an_expression_whose_type_lacks_a_call_or_construct_signature);
-            return resolveErrorCall(node);
+            return resolveErrorCall(node, callSignatures);
         }
 
         function isConstructorAccessible(node: NewExpression, signature: Signature) {
@@ -10336,7 +10342,7 @@ namespace ts {
 
             if (apparentType === unknownType) {
                 // Another error has already been reported
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, /*candidates*/ undefined);
             }
 
             const callSignatures = getSignaturesOfType(apparentType, SignatureKind.Call);
@@ -10347,7 +10353,7 @@ namespace ts {
 
             if (!callSignatures.length) {
                 error(node, Diagnostics.Cannot_invoke_an_expression_whose_type_lacks_a_call_signature);
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, /*candidates*/ undefined);
             }
 
             return resolveCall(node, callSignatures, candidatesOutArray);
@@ -10382,7 +10388,7 @@ namespace ts {
             const funcType = checkExpression(node.expression);
             const apparentType = getApparentType(funcType);
             if (apparentType === unknownType) {
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, /*candidates*/ undefined);
             }
 
             const callSignatures = getSignaturesOfType(apparentType, SignatureKind.Call);
@@ -10396,7 +10402,7 @@ namespace ts {
                 errorInfo = chainDiagnosticMessages(errorInfo, Diagnostics.Cannot_invoke_an_expression_whose_type_lacks_a_call_signature);
                 errorInfo = chainDiagnosticMessages(errorInfo, headMessage);
                 diagnostics.add(createDiagnosticForNodeFromMessageChain(node, errorInfo));
-                return resolveErrorCall(node);
+                return resolveErrorCall(node, callSignatures);
             }
 
             return resolveCall(node, callSignatures, candidatesOutArray, headMessage);

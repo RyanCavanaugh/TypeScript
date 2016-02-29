@@ -11,9 +11,14 @@ tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts(1
   Types of property '0' are incompatible.
     Type '{ x1: number; x2: string; x3: boolean; }' is not assignable to type '{ x: number; y: string; z: boolean; }'.
       Object literal may only specify known properties, and 'x1' does not exist in type '{ x: number; y: string; z: boolean; }'.
+tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts(12,39): error TS2339: Property 'x1' does not exist on type 'C1'.
+tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts(12,45): error TS2339: Property 'x2' does not exist on type 'C1'.
+tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts(12,51): error TS2339: Property 'x3' does not exist on type 'C1'.
+tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts(12,57): error TS2339: Property 'y' does not exist on type 'C1'.
+tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts(12,62): error TS2339: Property 'z' does not exist on type 'C1'.
 
 
-==== tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts (10 errors) ====
+==== tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts (15 errors) ====
     type ObjType1 = { x: number; y: string; z: boolean }
     type TupleType1 = [ObjType1, number, string]
     
@@ -49,3 +54,13 @@ tests/cases/conformance/es6/destructuring/destructuringParameterProperties5.ts(1
 !!! error TS2345:     Type '{ x1: number; x2: string; x3: boolean; }' is not assignable to type '{ x: number; y: string; z: boolean; }'.
 !!! error TS2345:       Object literal may only specify known properties, and 'x1' does not exist in type '{ x: number; y: string; z: boolean; }'.
     var [a_x1, a_x2, a_x3, a_y, a_z] = [a.x1, a.x2, a.x3, a.y, a.z];
+                                          ~~
+!!! error TS2339: Property 'x1' does not exist on type 'C1'.
+                                                ~~
+!!! error TS2339: Property 'x2' does not exist on type 'C1'.
+                                                      ~~
+!!! error TS2339: Property 'x3' does not exist on type 'C1'.
+                                                            ~
+!!! error TS2339: Property 'y' does not exist on type 'C1'.
+                                                                 ~
+!!! error TS2339: Property 'z' does not exist on type 'C1'.

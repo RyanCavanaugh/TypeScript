@@ -1,9 +1,11 @@
 tests/cases/conformance/types/members/typesWithPublicConstructor.ts(8,5): error TS2322: Type 'Function' is not assignable to type '() => void'.
   Type 'Function' provides no match for the signature '(): void'
 tests/cases/conformance/types/members/typesWithPublicConstructor.ts(15,10): error TS2346: Supplied parameters do not match any signature of call target.
+tests/cases/conformance/types/members/typesWithPublicConstructor.ts(16,5): error TS2322: Type 'Function' is not assignable to type '(x: number) => void'.
+  Type 'Function' provides no match for the signature '(x: number): void'
 
 
-==== tests/cases/conformance/types/members/typesWithPublicConstructor.ts (2 errors) ====
+==== tests/cases/conformance/types/members/typesWithPublicConstructor.ts (3 errors) ====
     // public is allowed on a constructor but is not meaningful
     
     class C {
@@ -25,3 +27,6 @@ tests/cases/conformance/types/members/typesWithPublicConstructor.ts(15,10): erro
              ~~~~~~~~
 !!! error TS2346: Supplied parameters do not match any signature of call target.
     var r2: (x: number) => void = c2.constructor;
+        ~~
+!!! error TS2322: Type 'Function' is not assignable to type '(x: number) => void'.
+!!! error TS2322:   Type 'Function' provides no match for the signature '(x: number): void'

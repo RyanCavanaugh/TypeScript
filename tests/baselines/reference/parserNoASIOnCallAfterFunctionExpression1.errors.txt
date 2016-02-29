@@ -1,8 +1,9 @@
 tests/cases/conformance/parser/ecmascript5/parserNoASIOnCallAfterFunctionExpression1.ts(1,9): error TS2346: Supplied parameters do not match any signature of call target.
 tests/cases/conformance/parser/ecmascript5/parserNoASIOnCallAfterFunctionExpression1.ts(2,7): error TS2304: Cannot find name 'window'.
+tests/cases/conformance/parser/ecmascript5/parserNoASIOnCallAfterFunctionExpression1.ts(2,15): error TS2339: Property 'foo' does not exist on type 'void'.
 
 
-==== tests/cases/conformance/parser/ecmascript5/parserNoASIOnCallAfterFunctionExpression1.ts (2 errors) ====
+==== tests/cases/conformance/parser/ecmascript5/parserNoASIOnCallAfterFunctionExpression1.ts (3 errors) ====
     var x = function () { }
             ~~~~~~~~~~~~~~~
     (<any>window).foo;
@@ -10,4 +11,6 @@ tests/cases/conformance/parser/ecmascript5/parserNoASIOnCallAfterFunctionExpress
 !!! error TS2346: Supplied parameters do not match any signature of call target.
           ~~~~~~
 !!! error TS2304: Cannot find name 'window'.
+                  ~~~
+!!! error TS2339: Property 'foo' does not exist on type 'void'.
     
