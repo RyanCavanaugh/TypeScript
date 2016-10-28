@@ -3191,7 +3191,8 @@ namespace ts {
         JS = 1,
         JSX = 2,
         TS = 3,
-        TSX = 4
+        TSX = 4,
+        External = 5
     }
 
     export const enum ScriptTarget {
@@ -3224,6 +3225,11 @@ namespace ts {
         errors: Diagnostic[];
         wildcardDirectories?: MapLike<WatchDirectoryFlags>;
         compileOnSave?: boolean;
+
+        /**
+         * Extras from tsconfig.json
+         */
+        "ng-templates"?: string[];
     }
 
     export const enum WatchDirectoryFlags {

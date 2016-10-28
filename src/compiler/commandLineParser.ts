@@ -846,9 +846,9 @@ namespace ts {
         const typingOptions: TypingOptions = convertTypingOptionsFromJsonWorker(json["typingOptions"], basePath, errors, configFileName);
 
         if (json["extends"]) {
-            let [include, exclude, files, baseOptions]: [string[], string[], string[], CompilerOptions] = [undefined, undefined, undefined, {}];
+            let [include, exclude, files, ngTemplates, baseOptions]: [string[], string[], string[], string[], CompilerOptions] = [undefined, undefined, undefined, undefined, {}];
             if (typeof json["extends"] === "string") {
-                [include, exclude, files, baseOptions] = (tryExtendsName(json["extends"]) || [include, exclude, files, baseOptions]);
+                [include, exclude, files, ngTemplates, baseOptions] = (tryExtendsName(json["extends"]) || [include, exclude, files, ngTemplates, baseOptions]);
             }
             else {
                 errors.push(createCompilerDiagnostic(Diagnostics.Compiler_option_0_requires_a_value_of_type_1, "extends", "string"));
@@ -861,6 +861,9 @@ namespace ts {
             }
             if (files && !json["files"]) {
                 json["files"] = files;
+            }
+            if (ngTemplates && !json["ng-templates"]) {
+                json["ng-templates"] = ngTemplates;
             }
             options = assign({}, baseOptions, options);
         }
@@ -881,7 +884,7 @@ namespace ts {
             compileOnSave
         };
 
-        function tryExtendsName(extendedConfig: string): [string[], string[], string[], CompilerOptions] {
+        function tryExtendsName(extendedConfig: string): [string[], string[], string[], string[], CompilerOptions] {
             // If the path isn't a rooted or relative path, don't try to resolve it (we reserve the right to special case module-id like paths in the future)
             if (!(isRootedDiskPath(extendedConfig) || startsWith(normalizeSlashes(extendedConfig), "./") || startsWith(normalizeSlashes(extendedConfig), "../"))) {
                 errors.push(createCompilerDiagnostic(Diagnostics.The_path_in_an_extends_options_must_be_relative_or_rooted));
@@ -906,12 +909,12 @@ namespace ts {
             // Merge configs (copy the resolution stack so it is never reused between branches in potential diamond-problem scenarios)
             const result = parseJsonConfigFileContent(extendedResult.config, host, extendedDirname, /*existingOptions*/undefined, getBaseFileName(extendedConfigPath), resolutionStack.concat([resolvedPath]));
             errors.push(...result.errors);
-            const [include, exclude, files] = map(["include", "exclude", "files"], key => {
+            const [include, exclude, files, ngTemplates] = map(["include", "exclude", "files", "ng-templates"], key => {
                 if (!json[key] && extendedResult.config[key]) {
                     return map(extendedResult.config[key], updatePath);
                 }
             });
-            return [include, exclude, files, result.options];
+            return [include, exclude, files, ngTemplates, result.options];
         }
 
         function getFileNames(errors: Diagnostic[]): ExpandResult {

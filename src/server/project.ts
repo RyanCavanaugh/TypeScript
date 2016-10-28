@@ -99,7 +99,7 @@ namespace ts.server {
         private cachedUnresolvedImportsPerFile = new UnresolvedImportsMap();
         private lastCachedUnresolvedImportsList: SortedReadonlyArray<string>;
 
-        private languageService: LanguageService;
+        protected languageService: LanguageService;
         builder: Builder;
         /**
          * Set of files that was returned from the last call to getChangesSinceVersion.
@@ -217,6 +217,10 @@ namespace ts.server {
         abstract getProjectName(): string;
         abstract getProjectRootPath(): string | undefined;
         abstract getTypingOptions(): TypingOptions;
+
+        getExternalFiles(): string[] {
+            return [];
+        }
 
         getSourceFile(path: Path) {
             if (!this.program) {
@@ -725,6 +729,7 @@ namespace ts.server {
         private directoryWatcher: FileWatcher;
         private directoriesWatchedForWildcards: Map<FileWatcher>;
         private typeRootsWatchers: FileWatcher[];
+        private proxyStack = '';
 
         /** Used for configured projects which may have multiple open roots */
         openRefCount = 0;
@@ -736,8 +741,35 @@ namespace ts.server {
             compilerOptions: CompilerOptions,
             private wildcardDirectories: Map<WatchDirectoryFlags>,
             languageServiceEnabled: boolean,
-            public compileOnSaveEnabled: boolean) {
+            public compileOnSaveEnabled: boolean,
+            private raw: any) {
             super(ProjectKind.Configured, projectService, documentRegistry, hasExplicitListOfFiles, languageServiceEnabled, compilerOptions, compileOnSaveEnabled);
+            this.enableProxies();
+        }
+
+        enableProxies() {
+            this.projectService.logger.info("NGLS: examine project templates");
+            console.log('looking at some project options');
+            if (this.raw['ng-templates'] !== undefined) {
+                this.projectService.logger.info("NGLS: ng-load");
+                console.log('ng-load');
+                // Walk from the config file to node_modules to find the angular service
+                // TODO: Do this dynamically!
+                this.projectService.logger.info("Start proxy");
+                const proxy = require('C:/github/ng-tsls/lib/index.js');
+                this.projectService.logger.info("got proxy object");
+                this.enableProxy('ng-templates', proxy.create);
+                this.projectService.logger.info("installed project");
+            }
+        }
+
+        enableProxy(name: string, factory: (project: Project, underlying: LanguageService) => LanguageService) {
+            // See if the proxy is already at the end of the stack
+            if (this.proxyStack.indexOf(name) === this.proxyStack.length - name.length) {
+                return;
+            }
+            this.proxyStack += ' - ' + name;
+            this.languageService = factory(this, this.languageService);
         }
 
         getProjectRootPath() {
@@ -758,6 +790,10 @@ namespace ts.server {
 
         getProjectName() {
             return this.configFileName;
+        }
+
+        getExternalFiles() {
+            return ['foo.html'];
         }
 
         watchConfigFile(callback: (project: ConfiguredProject) => void) {

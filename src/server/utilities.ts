@@ -236,6 +236,11 @@ namespace ts.server {
         compilerOptions?: CompilerOptions;
         typingOptions?: TypingOptions;
         compileOnSave?: boolean;
+
+        /**
+         * Additional behavior
+         */
+        "ng-templates"?: string[];
     }
 
     export function isInferredProjectName(name: string) {

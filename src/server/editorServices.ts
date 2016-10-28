@@ -791,7 +791,8 @@ namespace ts.server {
                 configHasFilesProperty: config["files"] !== undefined,
                 wildcardDirectories: createMap(parsedCommandLine.wildcardDirectories),
                 typingOptions: parsedCommandLine.typingOptions,
-                compileOnSave: parsedCommandLine.compileOnSave
+                compileOnSave: parsedCommandLine.compileOnSave,
+                "ng-templates": parsedCommandLine.raw["ng-templates"]
             };
             return { success: true, projectOptions, configFileErrors: errors };
         }
@@ -850,7 +851,8 @@ namespace ts.server {
                 projectOptions.compilerOptions,
                 projectOptions.wildcardDirectories,
                 /*languageServiceEnabled*/ !sizeLimitExceeded,
-                projectOptions.compileOnSave === undefined ? false : projectOptions.compileOnSave);
+                projectOptions.compileOnSave === undefined ? false : projectOptions.compileOnSave,
+                projectOptions);
 
             this.addFilesToProjectAndUpdateGraph(project, projectOptions.files, fileNamePropertyReader, clientFileName, projectOptions.typingOptions, configFileErrors);
 
@@ -1004,6 +1006,13 @@ namespace ts.server {
                 if (!project.languageServiceEnabled) {
                     project.enableLanguageService();
                 }
+                // Update external files
+                // 
+                // for(const extFile of project.getExternalFiles()) {
+                //     console.log('add extfile ' + extFile);
+                //     this.getOrCreateScriptInfo(extFile, /*openedByClient*/ false, /*fileContent*/ undefined, ScriptKind.External);
+                // }
+
                 this.watchConfigDirectoryForProject(project, projectOptions);
                 this.updateNonInferredProject(project, projectOptions.files, fileNamePropertyReader, projectOptions.compilerOptions, projectOptions.typingOptions, projectOptions.compileOnSave, configFileErrors);
             }
