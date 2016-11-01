@@ -729,7 +729,6 @@ namespace ts.server {
         private directoryWatcher: FileWatcher;
         private directoriesWatchedForWildcards: Map<FileWatcher>;
         private typeRootsWatchers: FileWatcher[];
-        private proxyStack = '';
 
         /** Used for configured projects which may have multiple open roots */
         openRefCount = 0;
@@ -741,35 +740,55 @@ namespace ts.server {
             compilerOptions: CompilerOptions,
             private wildcardDirectories: Map<WatchDirectoryFlags>,
             languageServiceEnabled: boolean,
-            public compileOnSaveEnabled: boolean,
-            private raw: any) {
+            public compileOnSaveEnabled: boolean) {
             super(ProjectKind.Configured, projectService, documentRegistry, hasExplicitListOfFiles, languageServiceEnabled, compilerOptions, compileOnSaveEnabled);
-            this.enableProxies();
+            this.enablePlugins();
         }
 
-        enableProxies() {
-            this.projectService.logger.info("NGLS: examine project templates");
-            console.log('looking at some project options');
-            if (this.raw['ng-templates'] !== undefined) {
-                this.projectService.logger.info("NGLS: ng-load");
-                console.log('ng-load');
-                // Walk from the config file to node_modules to find the angular service
-                // TODO: Do this dynamically!
-                this.projectService.logger.info("Start proxy");
-                const proxy = require('C:/github/ng-tsls/lib/index.js');
-                this.projectService.logger.info("got proxy object");
-                this.enableProxy('ng-templates', proxy.create);
-                this.projectService.logger.info("installed project");
-            }
-        }
-
-        enableProxy(name: string, factory: (project: Project, underlying: LanguageService) => LanguageService) {
-            // See if the proxy is already at the end of the stack
-            if (this.proxyStack.indexOf(name) === this.proxyStack.length - name.length) {
+        enablePlugins() {
+            const host = this.projectService.host;
+            const options = this.getCompilerOptions();
+            if (!(options.plugins && options.plugins.length)) {
+                // No plugins
                 return;
             }
-            this.proxyStack += ' - ' + name;
-            this.languageService = factory(this, this.languageService);
+
+            if (typeof require === 'undefined') {
+                this.projectService.logger.info('Plugins were requested but not running in node environment. Nothing will be loaded');
+                return;
+            }
+
+            for (const plugin of options.plugins) {
+                this.projectService.logger.info(`Load plugin ${plugin.name}`);
+                let searchPath = combinePaths(this.configFileName, '../node_modules');
+                this.projectService.logger.info(`Root plugin search path is ${searchPath}`);
+                let loaded = false;
+                // Walk up probing node_modules paths
+                while (!loaded && getBaseFileName(searchPath) !== '') {
+                    const probePath = combinePaths(searchPath, plugin.name);
+                    if (host.directoryExists(probePath)) {
+                        this.projectService.logger.info(`Loading plugin ${plugin.name} from ${probePath}`);
+                        try {
+                            const pluginModule = require(probePath);
+                            this.enableProxy(pluginModule, plugin);
+                        } catch (e) {
+                            this.projectService.logger.info(`Require failed: ${e}`);
+                        }
+                        loaded = true;
+                    }
+                    else {
+                        searchPath = normalizePath(combinePaths(searchPath, '..'));
+                    }
+                }
+
+                if (!loaded) {
+                    this.projectService.logger.info(`Failed to load ${plugin.name}`);
+                }
+            }
+        }
+
+        enableProxy(pluginModule: any, configEntry: PluginImport) {
+            this.languageService = pluginModule.create(this, this.languageService, configEntry);
         }
 
         getProjectRootPath() {
@@ -792,8 +811,9 @@ namespace ts.server {
             return this.configFileName;
         }
 
-        getExternalFiles() {
-            return ['foo.html'];
+        getExternalFiles(): string[] {
+            // TODO: Ask plugins for this information as well
+            return [];
         }
 
         watchConfigFile(callback: (project: ConfiguredProject) => void) {
