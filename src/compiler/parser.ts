@@ -2043,13 +2043,6 @@ namespace ts {
             return finishNode(node);
         }
 
-        function parsePartialType(): PartialTypeNode {
-            const node = <PartialTypeNode>createNode(SyntaxKind.PartialType);
-            parseExpected(SyntaxKind.PartialKeyword);
-            node.type = parseType();
-            return finishNode(node);
-        }
-
         function parseTypeParameter(): TypeParameterDeclaration {
             const node = <TypeParameterDeclaration>createNode(SyntaxKind.TypeParameter);
             node.name = parseIdentifier();

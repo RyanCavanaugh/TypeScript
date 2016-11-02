@@ -4475,11 +4475,10 @@ namespace ts {
                     }
                     else if ((<ObjectType>type).objectFlags & ObjectFlags.Anonymous) {
                         resolveAnonymousTypeMembers(<AnonymousType>type);
-                    } else if ((<ObjectType>type).objectFlags & ObjectFlags.Partial) {
+                    }
+                    else if ((<ObjectType>type).objectFlags & ObjectFlags.Partial) {
                         resolvePartialTypeMembers(<PartialType>type);
                     }
-                    else if ((<ObjectType>type).flags & TypeFlags.Partial) {
-                    resolvePartialTypeMembers(<PartialType>type);
                 }
                 else if (type.flags & TypeFlags.Union) {
                     resolveUnionTypeMembers(<UnionType>type);
