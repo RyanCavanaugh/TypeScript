@@ -5755,8 +5755,6 @@ namespace ts {
             return links.resolvedType;
         }
 
-<<<<<<< d147616ccc57b7c9f6418074c8edffd3ee258961
-<<<<<<< 7b34b612beda66b0812462a3feeabc63852cd842
         function getIndexTypeForTypeParameter(type: TypeParameter) {
             if (!type.resolvedIndexType) {
                 type.resolvedIndexType = <IndexType>createType(TypeFlags.Index);
@@ -5788,7 +5786,7 @@ namespace ts {
                         links.resolvedType = getIndexType(getTypeFromTypeNodeNoAlias(node.type));
                         break;
                     case SyntaxKind.PartialKeyword:
-                        links.resolvedType = getPartialType(getTypeOfNode(node.type));
+                        links.resolvedType = getPartialType(getTypeFromTypeNodeNoAlias(node.type));
                         break;
                     default:
                         Debug.fail('Unknown operator of type operator type')
@@ -18433,8 +18431,6 @@ namespace ts {
                 case SyntaxKind.UnionType:
                 case SyntaxKind.IntersectionType:
                     return checkUnionOrIntersectionType(<UnionOrIntersectionTypeNode>node);
-                case SyntaxKind.PartialType:
-                    return checkPartialType(<PartialTypeNode>node);
                 case SyntaxKind.ParenthesizedType:
                 case SyntaxKind.TypeOperator:
                     return checkSourceElement((<ParenthesizedTypeNode | TypeOperatorNode>node).type);

@@ -58,6 +58,7 @@ namespace ts.SymbolDisplay {
                     if (rootSymbolFlags & (SymbolFlags.PropertyOrAccessor | SymbolFlags.Variable)) {
                         return ScriptElementKind.memberVariableElement;
                     }
+                    Debug.assert(!!(rootSymbolFlags & SymbolFlags.Method));
                 });
                 if (!unionPropertyKind) {
                     // If this was union of all methods,
