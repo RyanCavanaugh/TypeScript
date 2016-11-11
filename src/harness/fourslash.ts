@@ -260,7 +260,9 @@ namespace FourSlash {
 
                 if (ts.getBaseFileName(file.fileName).toLowerCase() === "tsconfig.json") {
                     const configJson = ts.parseConfigFileTextToJson(file.fileName, file.content);
-                    assert.isTrue(configJson.config !== undefined);
+                    if (configJson.config === undefined) {
+                        throw new Error(`Failed to parse test tsconfig.json: ${configJson.error.messageText}`);
+                    }
 
                     // Extend our existing compiler options so that we can also support tsconfig only options
                     if (configJson.config.compilerOptions) {

@@ -142,6 +142,34 @@ namespace ts.server {
             return this.cachedUnresolvedImportsPerFile;
         }
 
+        public static resolveModule(moduleName: string, initialDir: string, host: ServerHost, log: (message: string) => void): {} {
+            log(`Resolving module ${moduleName}`);
+            let searchPath = initialDir;
+            log(`Root plugin search path is ${searchPath}`);
+            let loaded = false;
+            // Walk up probing node_modules paths
+            while (!loaded && getBaseFileName(searchPath) !== '') {
+                const probePath = combinePaths(combinePaths(searchPath, 'node_modules'), moduleName);
+                if (host.directoryExists(probePath)) {
+                    log(`Loading ${moduleName} from ${probePath}`);
+                    try {
+                        const pluginModule = require(probePath);
+                        return pluginModule;
+                    } catch (e) {
+                        log(`Require failed: ${e}`);
+                    }
+                    loaded = true;
+                }
+                else {
+                    searchPath = normalizePath(combinePaths(searchPath, '..'));
+                    log(`Walking up to probe ${searchPath}`);
+                }
+            }
+
+            log(`Failed to load ${moduleName}`);
+            return undefined;
+        }
+
         constructor(
             readonly projectKind: ProjectKind,
             readonly projectService: ProjectService,
@@ -748,6 +776,14 @@ namespace ts.server {
         enablePlugins() {
             const host = this.projectService.host;
             const options = this.getCompilerOptions();
+            const log = (message: string) => {
+                console.log(message);
+                this.projectService.logger.info(message);
+            };
+
+            console.log('Enable plugins');
+            console.log(JSON.stringify(options));
+
             if (!(options.plugins && options.plugins.length)) {
                 // No plugins
                 return;
@@ -758,36 +794,16 @@ namespace ts.server {
                 return;
             }
 
-            for (const plugin of options.plugins) {
-                this.projectService.logger.info(`Load plugin ${plugin.name}`);
-                let searchPath = combinePaths(this.configFileName, '../node_modules');
-                this.projectService.logger.info(`Root plugin search path is ${searchPath}`);
-                let loaded = false;
-                // Walk up probing node_modules paths
-                while (!loaded && getBaseFileName(searchPath) !== '') {
-                    const probePath = combinePaths(searchPath, plugin.name);
-                    if (host.directoryExists(probePath)) {
-                        this.projectService.logger.info(`Loading plugin ${plugin.name} from ${probePath}`);
-                        try {
-                            const pluginModule = require(probePath);
-                            this.enableProxy(pluginModule, plugin);
-                        } catch (e) {
-                            this.projectService.logger.info(`Require failed: ${e}`);
-                        }
-                        loaded = true;
-                    }
-                    else {
-                        searchPath = normalizePath(combinePaths(searchPath, '..'));
-                    }
-                }
-
-                if (!loaded) {
-                    this.projectService.logger.info(`Failed to load ${plugin.name}`);
+            for (const pluginConfigEntry of options.plugins) {
+                const searchPath = combinePaths(this.configFileName, '../node_modules');
+                const resolvedModule = Project.resolveModule(pluginConfigEntry.name, searchPath, host, log);
+                if (resolvedModule) {
+                    this.enableProxy(resolvedModule, pluginConfigEntry);
                 }
             }
         }
 
-        enableProxy(pluginModule: any, configEntry: PluginImport) {
+        private enableProxy(pluginModule: any, configEntry: PluginImport) {
             this.languageService = pluginModule.create(this, this.languageService, configEntry);
         }
 

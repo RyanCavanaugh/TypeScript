@@ -3058,7 +3058,9 @@ namespace ts {
         NodeJs   = 2
     }
 
-    export type PluginImport = { name: string };
+    export interface PluginImport {
+        name: string
+    }
 
     export type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[];
 
@@ -3115,7 +3117,7 @@ namespace ts {
         outDir?: string;
         outFile?: string;
         paths?: MapLike<string[]>;
-        plugins?: PluginImport[];
+        /*@internal*/ plugins?: PluginImport[];
         preserveConstEnums?: boolean;
         project?: string;
         /* @internal */ pretty?: DiagnosticStyle;
@@ -3243,7 +3245,7 @@ namespace ts {
     /* @internal */
     export interface CommandLineOptionBase {
         name: string;
-        type: "string" | "number" | "boolean" | "object" | "list" | Map<number | string>;    // a value of a primitive type, or an object literal mapping named values to actual values
+        type: "string" | "number" | "boolean" | "object" | "json" | "list" | Map<number | string>;    // a value of a primitive type, or an object literal mapping named values to actual values
         isFilePath?: boolean;                                   // True if option value is a path or fileName
         shortName?: string;                                     // A short mnemonic for convenience - for instance, 'h' can be used in place of 'help'
         description?: DiagnosticMessage;                        // The message describing what the command line switch does
@@ -3264,7 +3266,7 @@ namespace ts {
 
     /* @internal */
     export interface TsConfigOnlyOption extends CommandLineOptionBase {
-        type: "object";
+        type: "object" | "json";
     }
 
     /* @internal */

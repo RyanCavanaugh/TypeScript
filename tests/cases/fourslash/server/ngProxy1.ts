@@ -2,8 +2,12 @@
 
 // @Filename: tsconfig.json
 //// {
-////     "files": ["a.ts"],
-////     "ng-templates": ["foo.html"]
+////     "compilerOptions": {
+////         "plugins": [
+////             { "name": "ng-proxy" }
+////         ]
+////     },
+////     "files": ["a.ts"]
 //// }
 
 // @Filename: a.ts
