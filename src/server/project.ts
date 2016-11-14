@@ -90,8 +90,16 @@ namespace ts.server {
         }
     }
 
+    export interface PluginCreateInfo {
+        project: Project;
+        languageService: LanguageService;
+        serverHost: ServerHost;
+        config: any;
+    }
+
     export interface PluginModule {
-        create(proj: Project, languageService: LanguageService, config: any): LanguageService;
+        create(createInfo: PluginCreateInfo): LanguageService;
+        getExternalFiles?(proj: Project): string[];
     }
 
     export abstract class Project {
@@ -763,6 +771,8 @@ namespace ts.server {
         private directoriesWatchedForWildcards: Map<FileWatcher>;
         private typeRootsWatchers: FileWatcher[];
 
+        private plugins: PluginModule[] = [];
+
         /** Used for configured projects which may have multiple open roots */
         openRefCount = 0;
 
@@ -806,7 +816,14 @@ namespace ts.server {
 
         private enableProxy(pluginModule: PluginModule, configEntry: PluginImport) {
             try {
-                this.languageService = pluginModule.create(this, this.languageService, configEntry);
+                const info: PluginCreateInfo = {
+                    config: configEntry,
+                    project: this,
+                    languageService: this.languageService,
+                    serverHost: this.projectService.host
+                };
+                this.languageService = pluginModule.create(info);
+                this.plugins.push(pluginModule);
             }
             catch (e) {
                 this.projectService.logger.info(`Plugin activation failed: ${e}`);
@@ -834,8 +851,13 @@ namespace ts.server {
         }
 
         getExternalFiles(): string[] {
-            // TODO: Ask plugins for this information as well
-            return [];
+            const items: string[] = [];
+            for (const plugin of this.plugins) {
+                if (plugin.getExternalFiles) {
+                    items.push(...plugin.getExternalFiles(this));
+                }
+            }
+            return items;
         }
 
         watchConfigFile(callback: (project: ConfiguredProject) => void) {

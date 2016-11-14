@@ -248,9 +248,10 @@ namespace FourSlash {
         static mockResolveModule(moduleName: string, _initialDir: string, _host: ts.server.ServerHost, log: (message: string) => void): ts.server.PluginModule {
             log(`Mock resolving ${moduleName}`);
             return {
-                create(_proj: any, langSvc: any, _config: any) {
+                create(info: ts.server.PluginCreateInfo) {
                     // tslint:disable-next-line:no-null-keyword
                     const proxy = Object.create(null);
+                    const langSvc: any = info.languageService;
                     for (const k of Object.keys(langSvc)) {
                         proxy[k] = function () {
                             return langSvc[k].apply(langSvc, arguments);
