@@ -16,4 +16,4 @@
 //// 
 
 goTo.marker();
-debug.printCurrentQuickInfo();
+verify.quickInfoIs('Proxied x: number[]Check');

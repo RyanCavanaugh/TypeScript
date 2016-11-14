@@ -245,11 +245,39 @@ namespace FourSlash {
             }
         }
 
+        static mockResolveModule(moduleName: string, _initialDir: string, _host: ts.server.ServerHost, log: (message: string) => void): ts.server.PluginModule {
+            log(`Mock resolving ${moduleName}`);
+            return {
+                create(_proj: any, langSvc: any, _config: any) {
+                    // tslint:disable-next-line:no-null-keyword
+                    const proxy = Object.create(null);
+                    for (const k of Object.keys(langSvc)) {
+                        proxy[k] = function () {
+                            return langSvc[k].apply(langSvc, arguments);
+                        };
+                    }
+
+                    proxy.getQuickInfoAtPosition = function () {
+                        const parts = langSvc.getQuickInfoAtPosition.apply(langSvc, arguments);
+                        if (parts.displayParts.length > 0) {
+                            parts.displayParts[0].text = "Proxied";
+                        }
+                        parts.displayParts.push({ text: "Check", kind: "punctuation" });
+                        return parts;
+                    };
+
+                    return proxy;
+                }
+            };
+        }
+
         constructor(private basePath: string, private testType: FourSlashTestType, public testData: FourSlashData) {
             // Create a new Services Adapter
             this.cancellationToken = new TestCancellationToken();
             let compilationOptions = convertGlobalOptionsToCompilerOptions(this.testData.globalOptions);
             compilationOptions.skipDefaultLibCheck = true;
+
+            ts.server.Project.resolveModule = TestState.mockResolveModule;
 
             // Initialize the language service with all the scripts
             let startResolveFileRef: FourSlashFile;
@@ -480,7 +508,7 @@ namespace FourSlash {
                 endPos = endMarker.position;
             }
 
-            errors.forEach(function(error: ts.Diagnostic) {
+            errors.forEach(function (error: ts.Diagnostic) {
                 if (predicate(error.start, error.start + error.length, startPos, endPos)) {
                     exists = true;
                 }
@@ -497,7 +525,7 @@ namespace FourSlash {
                 Harness.IO.log("Unexpected error(s) found.  Error list is:");
             }
 
-            errors.forEach(function(error: ts.Diagnostic) {
+            errors.forEach(function (error: ts.Diagnostic) {
                 Harness.IO.log("  minChar: " + error.start +
                     ", limChar: " + (error.start + error.length) +
                     ", message: " + ts.flattenDiagnosticMessageText(error.messageText, Harness.IO.newLine()) + "\n");

@@ -90,6 +90,10 @@ namespace ts.server {
         }
     }
 
+    export interface PluginModule {
+        create(proj: Project, languageService: LanguageService, config: any): LanguageService;
+    }
+
     export abstract class Project {
         private rootFiles: ScriptInfo[] = [];
         private rootFilesMap: FileMap<ScriptInfo> = createFileMap<ScriptInfo>();
@@ -148,20 +152,21 @@ namespace ts.server {
             log(`Root plugin search path is ${searchPath}`);
             let loaded = false;
             // Walk up probing node_modules paths
-            while (!loaded && getBaseFileName(searchPath) !== '') {
-                const probePath = combinePaths(combinePaths(searchPath, 'node_modules'), moduleName);
+            while (!loaded && getBaseFileName(searchPath) !== "") {
+                const probePath = combinePaths(combinePaths(searchPath, "node_modules"), moduleName);
                 if (host.directoryExists(probePath)) {
                     log(`Loading ${moduleName} from ${probePath}`);
                     try {
                         const pluginModule = require(probePath);
                         return pluginModule;
-                    } catch (e) {
+                    }
+                    catch (e) {
                         log(`Require failed: ${e}`);
                     }
                     loaded = true;
                 }
                 else {
-                    searchPath = normalizePath(combinePaths(searchPath, '..'));
+                    searchPath = normalizePath(combinePaths(searchPath, ".."));
                     log(`Walking up to probe ${searchPath}`);
                 }
             }
@@ -777,34 +782,35 @@ namespace ts.server {
             const host = this.projectService.host;
             const options = this.getCompilerOptions();
             const log = (message: string) => {
-                console.log(message);
                 this.projectService.logger.info(message);
             };
-
-            console.log('Enable plugins');
-            console.log(JSON.stringify(options));
 
             if (!(options.plugins && options.plugins.length)) {
                 // No plugins
                 return;
             }
 
-            if (typeof require === 'undefined') {
-                this.projectService.logger.info('Plugins were requested but not running in node environment. Nothing will be loaded');
+            if (typeof require === "undefined") {
+                this.projectService.logger.info("Plugins were requested but not running in node environment. Nothing will be loaded");
                 return;
             }
 
             for (const pluginConfigEntry of options.plugins) {
-                const searchPath = combinePaths(this.configFileName, '../node_modules');
-                const resolvedModule = Project.resolveModule(pluginConfigEntry.name, searchPath, host, log);
+                const searchPath = combinePaths(this.configFileName, "..");
+                const resolvedModule = <PluginModule>Project.resolveModule(pluginConfigEntry.name, searchPath, host, log);
                 if (resolvedModule) {
                     this.enableProxy(resolvedModule, pluginConfigEntry);
                 }
             }
         }
 
-        private enableProxy(pluginModule: any, configEntry: PluginImport) {
-            this.languageService = pluginModule.create(this, this.languageService, configEntry);
+        private enableProxy(pluginModule: PluginModule, configEntry: PluginImport) {
+            try {
+                this.languageService = pluginModule.create(this, this.languageService, configEntry);
+            }
+            catch (e) {
+                this.projectService.logger.info(`Plugin activation failed: ${e}`);
+            }
         }
 
         getProjectRootPath() {

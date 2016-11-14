@@ -1004,7 +1004,6 @@ namespace ts.server {
                 if (!project.languageServiceEnabled) {
                     project.enableLanguageService();
                 }
-                
                 this.watchConfigDirectoryForProject(project, projectOptions);
                 this.updateNonInferredProject(project, projectOptions.files, fileNamePropertyReader, projectOptions.compilerOptions, projectOptions.typingOptions, projectOptions.compileOnSave, configFileErrors);
             }
