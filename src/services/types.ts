@@ -144,6 +144,7 @@ namespace ts {
         getScriptKind?(fileName: string): ScriptKind;
         getScriptVersion(fileName: string): string;
         getScriptSnapshot(fileName: string): IScriptSnapshot | undefined;
+        getExternalScriptSnapshot(fileName: string): IScriptSnapshot | undefined;
         getLocalizedDiagnosticMessages?(): any;
         getCancellationToken?(): HostCancellationToken;
         getCurrentDirectory(): string;

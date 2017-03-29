@@ -570,16 +570,16 @@ namespace ts.server {
             return hasChanges;
         }
 
-        getScriptInfoLSHost(fileName: string) {
-            const scriptInfo = this.projectService.getOrCreateScriptInfo(fileName, /*openedByClient*/ false);
+        getScriptInfoLSHost(fileName: string, kind?: ScriptKind) {
+            const scriptInfo = this.projectService.getOrCreateScriptInfo(fileName, /*openedByClient*/ false, /* fileContent */ undefined, kind);
             if (scriptInfo) {
                 scriptInfo.attachToProject(this);
             }
             return scriptInfo;
         }
 
-        getScriptInfoForNormalizedPath(fileName: NormalizedPath) {
-            const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(fileName, /*openedByClient*/ false);
+        getScriptInfoForNormalizedPath(fileName: NormalizedPath, kind?: ScriptKind) {
+            const scriptInfo = this.projectService.getOrCreateScriptInfoForNormalizedPath(fileName, /*openedByClient*/ false, /* fileContent */ undefined, kind);
             if (scriptInfo && !scriptInfo.isAttached(this)) {
                 return Errors.ThrowProjectDoesNotContainDocument(fileName, this);
             }
@@ -588,6 +588,10 @@ namespace ts.server {
 
         getScriptInfo(uncheckedFileName: string) {
             return this.getScriptInfoForNormalizedPath(toNormalizedPath(uncheckedFileName));
+        }
+
+        getScriptInfoExternal(uncheckedFileName: string) {
+            return this.getScriptInfoForNormalizedPath(toNormalizedPath(uncheckedFileName), ScriptKind.External);
         }
 
         filesToString() {
@@ -890,7 +894,7 @@ namespace ts.server {
         private enableProxy(pluginModuleFactory: PluginModuleFactory, configEntry: PluginImport) {
             try {
                 if (typeof pluginModuleFactory !== "function") {
-                    this.projectService.logger.info(`Skipped loading plugin ${configEntry.name} because it did expose a proper factory function`);
+                    this.projectService.logger.info(`Skipped loading plugin ${configEntry.name} because it did not expose a proper factory function`);
                     return;
                 }
 
@@ -909,6 +913,17 @@ namespace ts.server {
             catch (e) {
                 this.projectService.logger.info(`Plugin activation failed: ${e}`);
             }
+        }
+
+        getScriptInfos() {
+            const result = super.getScriptInfos();
+            for (const plugin of this.plugins) {
+                result.push(...plugin.getExternalFiles(this).map(filename => this.getScriptInfoExternal(filename)));
+            }
+            return result;
+        }
+
+        getFileNames(excludeFilesFromExternalLibraries?: boolean) {
         }
 
         getProjectRootPath() {
@@ -932,7 +947,7 @@ namespace ts.server {
             for (const plugin of this.plugins) {
                 if (typeof plugin.getExternalFiles === "function") {
                     try {
-                        items.push(...plugin.getExternalFiles(this));
+                        items.push(...plugin.getExternalFiles(this).map(path => normalizePath(path)));
                     }
                     catch (e) {
                         this.projectService.logger.info(`A plugin threw an exception in getExternalFiles: ${e}`);

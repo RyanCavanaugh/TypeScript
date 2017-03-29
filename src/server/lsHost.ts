@@ -179,6 +179,13 @@ namespace ts.server {
             }
         }
 
+        getExternalScriptSnapshot(filename: string): ts.IScriptSnapshot {
+            const scriptInfo = this.project.getScriptInfoLSHost(filename, ScriptKind.External);
+            if (scriptInfo) {
+                return scriptInfo.getSnapshot();
+            }
+        }
+
         getScriptFileNames() {
             return this.project.getRootFilesLSHost();
         }
