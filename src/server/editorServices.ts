@@ -999,7 +999,7 @@ namespace ts.server {
             const printProjects = (projects: Project[], counter: number): number => {
                 for (const project of projects) {
                     project.updateGraph();
-                    this.logger.info(`Project '${project.getProjectName()}' (${ProjectKind[project.projectKind]}) ${counter}`);
+                    this.logger.info(`File list for Project '${project.getProjectName()}' (${ProjectKind[project.projectKind]}) ${counter}`);
                     this.logger.info(project.filesToString());
                     this.logger.info("-----------------------------------------------");
                     counter++;

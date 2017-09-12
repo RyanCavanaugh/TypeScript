@@ -380,7 +380,7 @@ namespace ts.server {
             return emptyArray;
         }
 
-        getFileNames(excludeFilesFromExternalLibraries?: boolean, excludeConfigFiles?: boolean) {
+        getFileNames(excludeFilesFromExternalLibraries?: boolean, excludeConfigFiles?: boolean, excludeExternalFiles?: boolean) {
             if (!this.program) {
                 return [];
             }
@@ -414,6 +414,11 @@ namespace ts.server {
                     }
                 }
             }
+
+            if (!excludeExternalFiles) {
+                result.push(...this.getExternalFiles().map(toNormalizedPath));
+            }
+
             return result;
         }
 
@@ -697,6 +702,13 @@ namespace ts.server {
             for (const file of this.program.getSourceFiles()) {
                 strBuilder += `\t${file.fileName}\n`;
             }
+            
+            if (this.externalFiles) {
+                for (const extFile of this.externalFiles) {
+                    strBuilder += `\t(external) ${extFile}\n`;
+                   
+                }
+           }
             return strBuilder;
         }
 
