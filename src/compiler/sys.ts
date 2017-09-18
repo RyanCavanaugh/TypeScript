@@ -340,7 +340,6 @@ namespace ts {
                 return filter<string>(_fs.readdirSync(path), dir => fileSystemEntryExists(combinePaths(path, dir), FileSystemEntryKind.Directory));
             }
 
-            const noOpFileWatcher: FileWatcher = { close: noop };
             const nodeSystem: System = {
                 args: process.argv.slice(2),
                 newLine: _os.EOL,
@@ -383,15 +382,11 @@ namespace ts {
                         callback(fileName, eventKind);
                     }
                 },
-                watchDirectory: (directoryName, callback, recursive) => {
+                watchDirectory: function watch(directoryName, callback, recursive) {
+                    sys.write(`Watch ${directoryName} (${recursive})\r\n`);
                     // Node 4.0 `fs.watch` function supports the "recursive" option on both OSX and Windows
                     // (ref: https://github.com/nodejs/node/pull/2649 and https://github.com/Microsoft/TypeScript/issues/4643)
                     let options: any;
-                    if (!directoryExists(directoryName)) {
-                        // do nothing if target folder does not exist
-                        return noOpFileWatcher;
-                    }
-
                     if (isNode4OrLater && (process.platform === "win32" || process.platform === "darwin")) {
                         options = { persistent: true, recursive: !!recursive };
                     }
@@ -399,19 +394,59 @@ namespace ts {
                         options = { persistent: true };
                     }
 
-                    return _fs.watch(
-                        directoryName,
-                        options,
-                        (eventName: string, relativeFileName: string) => {
-                            // In watchDirectory we only care about adding and removing files (when event name is
-                            // "rename"); changes made within files are handled by corresponding fileWatchers (when
-                            // event name is "change")
-                            if (eventName === "rename") {
-                                // When deleting a file, the passed baseFileName is null
-                                callback(!relativeFileName ? relativeFileName : normalizePath(combinePaths(directoryName, relativeFileName)));
+                    let currentWatcher = { close: noop };
+                    if (!directoryExists(directoryName)) {
+                        sys.write(`${directoryName} does not exist; watching for parent creation\r\n`);
+                        waitForNextDeeper();
+                        return {
+                            close() {
+                                currentWatcher.close()
                             }
+                        };
+                    }
+
+                    return _fs.watch(directoryName, options, watchCallback);
+
+                    function waitForNextDeeper() {
+                        // Watch for the parent directory to be created
+                        const subdirsToFind: string[] = [];
+                        var deepestExtantDirectory = directoryName;
+                        do {
+                            const parent = getDirectoryPath(deepestExtantDirectory), name = getBaseFileName(deepestExtantDirectory);
+                            subdirsToFind.unshift(name);
+                            deepestExtantDirectory = parent;
+                        } while (!directoryExists(deepestExtantDirectory));
+
+                        sys.write(`Deepest path is ${deepestExtantDirectory}\r\n`);
+                        let currentWatcher = watch(subdirsToFind[0], (relativeFileName: string) => {
+                            const parts = normalizeSlashes(relativeFileName).split('/');
+                            var newExistingPath = deepestExtantDirectory;
+                            while (parts.length > 0 && subdirsToFind.length > 0 && (parts[0] === subdirsToFind[0])) {
+                                parts.shift();
+                                newExistingPath = combinePaths(newExistingPath, subdirsToFind.shift());
+                            }
+
+                            currentWatcher.close();
+                            if (subdirsToFind.length === 0) {
+                                // We got where we wanted to be
+                                sys.write(`Got to where we were going (${directoryName})\r\n`);
+                                currentWatcher = watch(directoryName, callback, recursive);
+                            } else {
+                                sys.write(`Bwaaaaah\r\n`);
+                                waitForNextDeeper();
+                            }
+                        }, false);
+                    }
+
+                    function watchCallback(eventName: string, relativeFileName: string) {
+                        // In watchDirectory we only care about adding and removing files (when event name is
+                        // "rename"); changes made within files are handled by corresponding fileWatchers (when
+                        // event name is "change")
+                        if (eventName === "rename") {
+                            // When deleting a file, the passed baseFileName is null
+                            callback(!relativeFileName ? relativeFileName : normalizePath(combinePaths(directoryName, relativeFileName)));
                         }
-                    );
+                    }
                 },
                 resolvePath: path => _path.resolve(path),
                 fileExists,

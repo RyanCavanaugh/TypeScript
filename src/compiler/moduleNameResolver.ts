@@ -160,6 +160,7 @@ namespace ts {
             }
             return undefined;
         });
+        typeRoots = typeRoots || [combinePaths(currentDirectory, nodeModulesAtTypes)];
         return typeRoots;
     }
     const nodeModulesAtTypes = combinePaths("node_modules", "@types");
