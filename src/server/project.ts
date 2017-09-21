@@ -692,6 +692,9 @@ namespace ts.server {
             for (const file of this.program.getSourceFiles()) {
                 strBuilder += `\t${file.fileName}\n`;
             }
+            for (const file of this.getExternalFiles()) {
+                strBuilder += `\t${file} (external)\n`;
+            }
             return strBuilder;
         }
 
