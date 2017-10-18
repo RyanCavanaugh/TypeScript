@@ -162,6 +162,15 @@ namespace ts.server {
          */
         private projectStateVersion = 0;
 
+        /**
+         * List of loaded plugins
+         */
+        protected plugins: PluginModule[] = [];
+        /**
+         * List of plugin names we've loaded, in the order they were loaded
+         */
+        protected pluginNames: string[] = [];
+
         /*@internal*/
         hasChangedAutomaticTypeDirectiveNames = false;
 
@@ -284,6 +293,80 @@ namespace ts.server {
             });
 
             return addRange(result, this.typingFiles) || ts.emptyArray;
+        }
+
+        protected getPluginSearchPaths(): string[] {
+            // Search our peer node_modules, then any globally-specified probe paths
+            // ../../.. to walk from X/node_modules/typescript/lib/tsserver.js to X/node_modules/
+            return [combinePaths(this.projectService.getExecutingFilePath(), "../../.."), ...this.projectService.pluginProbeLocations];
+        }
+
+        protected enableGlobalPlugins() {
+            if (this.projectService.globalPlugins) {
+                const searchPaths = this.getPluginSearchPaths();
+                // Enable global plugins with synthetic configuration entries
+                for (const globalPluginName of this.projectService.globalPlugins) {
+                    // Skip empty names from odd commandline parses
+                    if (!globalPluginName) continue;
+
+                    // Skip already-locally-loaded plugins
+                    if (this.pluginNames.some(name => name === globalPluginName)) continue;
+
+                    // Provide global: true so plugins can detect why they can't find their config
+                    this.projectService.logger.info(`Loading global plugin ${globalPluginName}`);
+                    this.enablePlugin({ name: globalPluginName, global: true } as PluginImport, searchPaths);
+                }
+            }
+        }
+
+        protected enablePlugin(pluginConfigEntry: PluginImport, searchPaths: string[]) {
+            this.projectService.logger.info(`Enabling plugin ${pluginConfigEntry.name} from candidate paths: ${searchPaths.join(",")}`);
+
+            const log = (message: string) => {
+                this.projectService.logger.info(message);
+            };
+
+            for (const searchPath of searchPaths) {
+                const resolvedModule = <PluginModuleFactory>Project.resolveModule(pluginConfigEntry.name, searchPath, this.projectService.host, log);
+                if (resolvedModule) {
+                    this.enableProxy(resolvedModule, pluginConfigEntry);
+                    return;
+                }
+            }
+            this.projectService.logger.info(`Couldn't find ${pluginConfigEntry.name}`);
+        }
+
+        private enableProxy(pluginModuleFactory: PluginModuleFactory, configEntry: PluginImport) {
+            try {
+                if (typeof pluginModuleFactory !== "function") {
+                    this.projectService.logger.info(`Skipped loading plugin ${configEntry.name} because it did expose a proper factory function`);
+                    return;
+                }
+
+                const info: PluginCreateInfo = {
+                    config: configEntry,
+                    project: this,
+                    languageService: this.languageService,
+                    languageServiceHost: this,
+                    serverHost: this.projectService.host
+                };
+
+                const pluginModule = pluginModuleFactory({ typescript: ts });
+                const newLS = pluginModule.create(info);
+                for (const k of Object.keys(this.languageService)) {
+                    if (!(k in newLS)) {
+                        this.projectService.logger.info(`Plugin activation warning: Missing proxied method ${k} in created LS. Patching.`);
+                        (newLS as any)[k] = (this.languageService as any)[k];
+                    }
+                }
+                this.projectService.logger.info(`Plugin validation succeded`);
+                this.languageService = newLS;
+                this.plugins.push(pluginModule);
+                this.pluginNames.push(configEntry.name);
+            }
+            catch (e) {
+                this.projectService.logger.info(`Plugin activation failed: ${e}`);
+            }
         }
 
         private getOrCreateScriptInfoAndAttachToProject(fileName: string) {
@@ -1082,6 +1165,8 @@ namespace ts.server {
                 projectService.host,
                 currentDirectory);
             this.projectRootPath = projectRootPath && projectService.toCanonicalFileName(projectRootPath);
+
+            this.enableGlobalPlugins();
         }
 
         addRoot(info: ScriptInfo) {
@@ -1142,8 +1227,6 @@ namespace ts.server {
         /*@internal*/
         configFileSpecs: ConfigFileSpecs;
 
-        private plugins: PluginModule[] = [];
-
         /** Ref count to the project when opened from external project */
         private externalProjectRefCount = 0;
 
@@ -1169,7 +1252,8 @@ namespace ts.server {
                 cachedDirectoryStructureHost,
                 getDirectoryPath(configFileName));
             this.canonicalConfigFilePath = asNormalizedPath(projectService.toCanonicalFileName(configFileName));
-            this.enablePlugins();
+            this.enableConfigFilePlugins();
+            this.enableGlobalPlugins();
         }
 
         /**
@@ -1194,7 +1278,7 @@ namespace ts.server {
             return asNormalizedPath(this.getProjectName());
         }
 
-        enablePlugins() {
+        protected enableConfigFilePlugins() {
             const host = this.projectService.host;
             const options = this.getCompilationSettings();
 
@@ -1203,9 +1287,7 @@ namespace ts.server {
                 return;
             }
 
-            // Search our peer node_modules, then any globally-specified probe paths
-            // ../../.. to walk from X/node_modules/typescript/lib/tsserver.js to X/node_modules/
-            const searchPaths = [combinePaths(this.projectService.getExecutingFilePath(), "../../.."), ...this.projectService.pluginProbeLocations];
+            const searchPaths = this.getPluginSearchPaths();
 
             if (this.projectService.allowLocalPluginLoads) {
                 const local = getDirectoryPath(this.canonicalConfigFilePath);
@@ -1218,70 +1300,6 @@ namespace ts.server {
                 for (const pluginConfigEntry of options.plugins) {
                     this.enablePlugin(pluginConfigEntry, searchPaths);
                 }
-            }
-
-            if (this.projectService.globalPlugins) {
-                // Enable global plugins with synthetic configuration entries
-                for (const globalPluginName of this.projectService.globalPlugins) {
-                    // Skip empty names from odd commandline parses
-                    if (!globalPluginName) continue;
-
-                    // Skip already-locally-loaded plugins
-                    if (options.plugins && options.plugins.some(p => p.name === globalPluginName)) continue;
-
-                    // Provide global: true so plugins can detect why they can't find their config
-                    this.projectService.logger.info(`Loading global plugin ${globalPluginName}`);
-                    this.enablePlugin({ name: globalPluginName, global: true } as PluginImport, searchPaths);
-                }
-            }
-        }
-
-        private enablePlugin(pluginConfigEntry: PluginImport, searchPaths: string[]) {
-            this.projectService.logger.info(`Enabling plugin ${pluginConfigEntry.name} from candidate paths: ${searchPaths.join(",")}`);
-
-            const log = (message: string) => {
-                this.projectService.logger.info(message);
-            };
-
-            for (const searchPath of searchPaths) {
-                const resolvedModule = <PluginModuleFactory>Project.resolveModule(pluginConfigEntry.name, searchPath, this.projectService.host, log);
-                if (resolvedModule) {
-                    this.enableProxy(resolvedModule, pluginConfigEntry);
-                    return;
-                }
-            }
-            this.projectService.logger.info(`Couldn't find ${pluginConfigEntry.name}`);
-        }
-
-        private enableProxy(pluginModuleFactory: PluginModuleFactory, configEntry: PluginImport) {
-            try {
-                if (typeof pluginModuleFactory !== "function") {
-                    this.projectService.logger.info(`Skipped loading plugin ${configEntry.name} because it did expose a proper factory function`);
-                    return;
-                }
-
-                const info: PluginCreateInfo = {
-                    config: configEntry,
-                    project: this,
-                    languageService: this.languageService,
-                    languageServiceHost: this,
-                    serverHost: this.projectService.host
-                };
-
-                const pluginModule = pluginModuleFactory({ typescript: ts });
-                const newLS = pluginModule.create(info);
-                for (const k of Object.keys(this.languageService)) {
-                    if (!(k in newLS)) {
-                        this.projectService.logger.info(`Plugin activation warning: Missing proxied method ${k} in created LS. Patching.`);
-                        (newLS as any)[k] = (this.languageService as any)[k];
-                    }
-                }
-                this.projectService.logger.info(`Plugin validation succeded`);
-                this.languageService = newLS;
-                this.plugins.push(pluginModule);
-            }
-            catch (e) {
-                this.projectService.logger.info(`Plugin activation failed: ${e}`);
             }
         }
 

@@ -7168,6 +7168,14 @@ declare namespace ts.server {
          * This property is different from projectStructureVersion since in most cases edits don't affect set of files in the project
          */
         private projectStateVersion;
+        /**
+         * List of loaded plugins
+         */
+        protected plugins: PluginModule[];
+        /**
+         * List of plugin names we've loaded, in the order they were loaded
+         */
+        protected pluginNames: string[];
         private typingFiles;
         private readonly cancellationToken;
         isNonTsProject(): boolean;
@@ -7182,6 +7190,10 @@ declare namespace ts.server {
         getNewLine(): string;
         getProjectVersion(): string;
         getScriptFileNames(): string[];
+        protected getPluginSearchPaths(): string[];
+        protected enableGlobalPlugins(): void;
+        protected enablePlugin(pluginConfigEntry: PluginImport, searchPaths: string[]): void;
+        private enableProxy(pluginModuleFactory, configEntry);
         private getOrCreateScriptInfoAndAttachToProject(fileName);
         getScriptKind(fileName: string): ScriptKind;
         getScriptVersion(filename: string): string;
@@ -7280,7 +7292,6 @@ declare namespace ts.server {
         private typeAcquisition;
         private directoriesWatchedForWildcards;
         readonly canonicalConfigFilePath: NormalizedPath;
-        private plugins;
         /** Ref count to the project when opened from external project */
         private externalProjectRefCount;
         private projectErrors;
@@ -7290,9 +7301,7 @@ declare namespace ts.server {
          */
         updateGraph(): boolean;
         getConfigFilePath(): NormalizedPath;
-        enablePlugins(): void;
-        private enablePlugin(pluginConfigEntry, searchPaths);
-        private enableProxy(pluginModuleFactory, configEntry);
+        protected enableConfigFilePlugins(): void;
         /**
          * Get the errors that dont have any file name associated
          */
