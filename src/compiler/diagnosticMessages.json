@@ -3456,6 +3456,7 @@
         "category": "Message",
         "code": 6186
     },
+<<<<<<< HEAD
     "Enable strict checking of property initialization in classes.": {
         "category": "Message",
         "code": 6187
@@ -3471,6 +3472,26 @@
     "Found 'package.json' at '{0}'. Package ID is '{1}'.": {
         "category": "Message",
         "code": 6190
+    },
+    "Project references may not form a circular graph. Cycle detected: {0}": {
+        "category": "Error",
+        "code": 6187
+    },
+    "Projects to reference": {
+        "category": "Message",
+        "code": 6188
+    },
+    "Referenced project '{0}' must have 'declaration': true": {
+        "category": "Error",
+        "code": 6201
+    },
+    "Referenced project '{0}' must have an explicit 'rootDir' setting": {
+        "category": "Error",
+        "code": 6202
+    },
+    "Output file '{0}' has not been built from source file '{1}'": {
+        "category": "Error",
+        "code": 6203
     },
     "Variable '{0}' implicitly has an '{1}' type.": {
         "category": "Error",

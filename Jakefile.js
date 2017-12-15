@@ -132,6 +132,7 @@ var harnessSources = harnessCoreSources.concat([
     "asserts.ts",
     "builder.ts",
     "commandLineParsing.ts",
+    "projectReferences.ts",
     "configurationExtension.ts",
     "convertCompilerOptionsFromJson.ts",
     "convertTypeAcquisitionFromJson.ts",
