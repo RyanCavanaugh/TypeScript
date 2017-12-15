@@ -2288,7 +2288,10 @@ declare namespace ts {
     interface PluginImport {
         name: string;
     }
-    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | null | undefined;
+    interface ProjectReference {
+        path: string;
+    }
+    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | ProjectReference[] | null | undefined;
     interface CompilerOptions {
         allowJs?: boolean;
         allowSyntheticDefaultImports?: boolean;
@@ -2342,6 +2345,7 @@ declare namespace ts {
         project?: string;
         reactNamespace?: string;
         jsxFactory?: string;
+        references?: ProjectReference[];
         removeComments?: boolean;
         rootDir?: string;
         rootDirs?: string[];
@@ -3928,6 +3932,7 @@ declare namespace ts {
      * @returns A 'Program' object.
      */
     function createProgram(rootNames: ReadonlyArray<string>, options: CompilerOptions, host?: CompilerHost, oldProgram?: Program): Program;
+    function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions, callback: (resolvedFile: string, referencedProject: CompilerOptions) => void, error?: (message: DiagnosticMessage | DiagnosticMessageChain | string, option1?: string) => void): void;
 }
 declare namespace ts {
     interface Node {
@@ -7116,6 +7121,7 @@ declare namespace ts.server.protocol {
         project?: string;
         reactNamespace?: string;
         removeComments?: boolean;
+        references?: ProjectReference[];
         rootDir?: string;
         rootDirs?: string[];
         skipLibCheck?: boolean;
