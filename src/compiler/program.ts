@@ -561,7 +561,6 @@ namespace ts {
 
         const projectReferenceRedirects = createProjectReferenceRedirects(options);
         checkProjectReferenceGraph();
-        void getReferencesSyntax;
 
         // Map from a stringified PackageId to the source file with that id.
         // Only one source file may have a given packageId. Others become redirects (see createRedirectSourceFile).
@@ -2389,9 +2388,11 @@ namespace ts {
             return undefined;
         }
 
+        /*
         function getReferencesSyntax(): ObjectLiteralExpression[] | undefined {
             return getOptionsSyntaxByName("references") as ObjectLiteralExpression[] | undefined;
         }
+        */
 
         function getOptionPathsSyntax(): PropertyAssignment[] {
             return getOptionsSyntaxByName("paths") as PropertyAssignment[] || emptyArray;
