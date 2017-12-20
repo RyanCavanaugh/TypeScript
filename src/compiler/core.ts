@@ -2071,6 +2071,13 @@ namespace ts {
                 : moduleKind === ModuleKind.System;
     }
 
+    export function getEmitDeclarations(compilerOptions: CompilerOptions) {
+        if (compilerOptions.project) {
+            return true;
+        }
+        return compilerOptions.declaration;
+    }
+
     export type StrictOptionName = "noImplicitAny" | "noImplicitThis" | "strictNullChecks" | "strictFunctionTypes" | "strictPropertyInitialization" | "alwaysStrict";
 
     export function getStrictOptionValue(compilerOptions: CompilerOptions, flag: StrictOptionName): boolean {

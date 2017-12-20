@@ -3457,6 +3457,7 @@
         "code": 6186
     },
 <<<<<<< HEAD
+<<<<<<< HEAD
     "Enable strict checking of property initialization in classes.": {
         "category": "Message",
         "code": 6187
@@ -3485,13 +3486,42 @@
         "category": "Error",
         "code": 6201
     },
-    "Referenced project '{0}' must have an explicit 'rootDir' setting": {
+    "Enable project compilation": {
+        "category": "Message",
+        "code": 6302
+    },
+    "Project references may not form a circular graph. Cycle detected: {0}": {
         "category": "Error",
         "code": 6202
     },
-    "Output file '{0}' has not been built from source file '{1}'": {
+    "Projects may not disable declaration emit.": {
         "category": "Error",
-        "code": 6203
+        "code": 6304
+    },
+    "Output file '{0}' has not been built from source file '{1}'.": {
+        "category": "Error",
+        "code": 6305
+    },
+    "Referenced project '{0}' must have setting \"project\": true.": {
+        "category": "Error",
+        "code": 6306
+    },
+    "File '{0}' is not in project file list. Projects must list all files or use an 'include' pattern.": {
+        "category": "Error",
+        "code": 6307
+    },
+
+    "Enable strict checking of property initialization in classes.": {
+        "category": "Message",
+        "code": 6187
+    },
+    "Numeric separators are not allowed here.": {
+        "category": "Error",
+        "code": 6188
+    },
+    "Multiple consecutive numeric separators are not permitted.": {
+        "category": "Error",
+        "code": 6189
     },
     "Variable '{0}' implicitly has an '{1}' type.": {
         "category": "Error",
