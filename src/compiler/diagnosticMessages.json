@@ -3486,23 +3486,35 @@
     },
     "Project references may not form a circular graph. Cycle detected: {0}": {
         "category": "Error",
-        "code": 6187
+        "code": 6200
     },
     "Projects to reference": {
         "category": "Message",
-        "code": 6188
+        "code": 6201
     },
     "Referenced project '{0}' must have 'declaration': true": {
         "category": "Error",
-        "code": 6201
-    },
-    "Referenced project '{0}' must have an explicit 'rootDir' setting": {
-        "category": "Error",
         "code": 6202
     },
-    "Output file '{0}' has not been built from source file '{1}'": {
+    "Enable project compilation": {
+        "category": "Message",
+        "code": 6303
+    },
+    "Projects may not disable declaration emit.": {
         "category": "Error",
-        "code": 6203
+        "code": 6304
+    },
+    "Output file '{0}' has not been built from source file '{1}'.": {
+        "category": "Error",
+        "code": 6305
+    },
+    "Referenced project '{0}' must have setting \"project\": true.": {
+        "category": "Error",
+        "code": 6306
+    },
+    "File '{0}' is not in project file list. Projects must list all files or use an 'include' pattern.": {
+        "category": "Error",
+        "code": 6307
     },
     "Variable '{0}' implicitly has an '{1}' type.": {
         "category": "Error",
