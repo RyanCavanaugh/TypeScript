@@ -2072,7 +2072,7 @@ namespace ts {
     }
 
     export function getEmitDeclarations(compilerOptions: CompilerOptions) {
-        if (compilerOptions.project) {
+        if (compilerOptions.referenceTarget) {
             return true;
         }
         return compilerOptions.declaration;
