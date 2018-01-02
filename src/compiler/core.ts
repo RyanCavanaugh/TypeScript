@@ -2002,6 +2002,15 @@ namespace ts {
         return normalized;
     }
 
+    export function normalizePathAndRoot(path: string): string {
+        const normalized = normalizePathAndParts(path).path;
+        const rootLength = getRootLength(normalized);
+        if (rootLength === 0) {
+            return normalized;
+        }
+        return path.substr(0, rootLength).toLowerCase() + path.substr(rootLength);
+    }
+
     export function normalizePath(path: string): string {
         return normalizePathAndParts(path).path;
     }
