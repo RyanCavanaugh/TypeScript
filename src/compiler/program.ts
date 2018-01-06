@@ -1825,6 +1825,9 @@ namespace ts {
             }
 
             const redirect = getProjectReferenceRedirect(fileName);
+            if (redirect) {
+                ((refFile.redirectedReferences || (refFile.redirectedReferences = [])) as string[]).push(fileName);
+            }
             fileName = redirect || fileName;
 
             // We haven't looked for this file, do so now and cache result
@@ -1908,6 +1911,7 @@ namespace ts {
                 }
                 if (normalized.indexOf(k) === 0) {
                     result = changeExtension(fileName.replace(k, v), ".d.ts");
+                    debugger;
                 }
             });
             return result;
