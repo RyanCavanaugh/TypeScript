@@ -1852,7 +1852,23 @@ namespace ts {
             }
 
             if (moduleNotFoundError) {
-                // report errors only if it was requested
+                // For relative paths, see if this was possibly a projectReference redirect
+                if (pathIsRelative(moduleReference)) {
+                    const sourceFile = getSourceFileOfNode(location);
+                    const redirects = sourceFile.redirectedReferences;
+                    if (redirects) {
+                        const normalizedTargetPath = getNormalizedAbsolutePath(moduleReference, getDirectoryPath(sourceFile.fileName));
+                        // TODO: Get the implementation file probe extensions a different way
+                        for (const ext of [".ts", ".tsx"]) {
+                            const probePath = normalizedTargetPath + ext;
+                            if (redirects.indexOf(probePath) >= 0) {
+                                error(errorNode, Diagnostics.Output_file_0_has_not_been_built_from_source_file_1, moduleReference, probePath);
+                                return undefined;
+                            }
+                        }
+                    }
+                }
+
                 if (resolutionDiagnostic) {
                     error(errorNode, resolutionDiagnostic, moduleReference, resolvedModule.resolvedFileName);
                 }

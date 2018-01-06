@@ -2481,6 +2481,12 @@ namespace ts {
         // Content of this field should never be used directly - use getResolvedModuleFileName/setResolvedModuleFileName functions instead
         /* @internal */ resolvedModules: Map<ResolvedModuleFull | undefined>;
         /* @internal */ resolvedTypeReferenceDirectiveNames: Map<ResolvedTypeReferenceDirective>;
+        /**
+         * When a file's references are redirected due to project reference directives,
+         * the original names of the references are stored in this array
+         */
+        /* @internal*/
+        redirectedReferences?: ReadonlyArray<string>;
         /* @internal */ imports: ReadonlyArray<StringLiteral>;
         // Identifier only if `declare global`
         /* @internal */ moduleAugmentations: ReadonlyArray<StringLiteral | Identifier>;

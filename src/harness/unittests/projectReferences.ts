@@ -233,6 +233,25 @@ namespace ts {
         });
     });
 
+    describe("project-references nice-behavior", () => {
+        it("issues a nice error when the input file is missing", () => {
+            const spec: TestSpecification = {
+                "/alpha": {
+                    files: { "/alpha/a.ts": "export const m: number = 3;" },
+                    references: []
+                },
+                "/beta": {
+                    files: { "/beta/b.ts": "import { m } from '../alpha/a'" },
+                    references: ["../alpha"]
+                }
+            };
+            debugger;
+            testProjectReferences(spec, "/beta/tsconfig.json", program => {
+                assertHasError("Issues a useful error", program.getSemanticDiagnostics(), Diagnostics.Output_file_0_has_not_been_built_from_source_file_1);
+            });
+        });
+    });
+
     /**
      * referenceTarget behavior
      */
