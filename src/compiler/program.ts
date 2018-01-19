@@ -2096,6 +2096,12 @@ namespace ts {
             return result;
         }
 
+        /*
+        function resolveProjectReferencePath(originatingConfigFileName: string, referencePath: string): string {
+            return combinePaths(originatingConfigFileName, combinePaths("..", referencePath));
+        }
+        */
+
         function checkProjectReferenceGraph() {
             // Checks the following conditions:
             //  * Any referenced project has project: true
@@ -2104,7 +2110,7 @@ namespace ts {
             const illegalRefs = createMap<true>();
             const cycleName: string[] = [options.configFilePath || host.getCurrentDirectory()];
 
-            walkProjectReferenceGraph(host, options, checkReference, createDiagnosticForOptionName);
+            walkProjectReferenceGraph(host, options, checkReference);
 
             function checkReference(fileName: string, opts: CompilerOptions) {
                 const normalizedPath = ts.normalizePath(fileName);
@@ -2121,7 +2127,7 @@ namespace ts {
                 }
                 illegalRefs.set(normalizedPath, true);
                 cycleName.push(normalizedPath);
-                walkProjectReferenceGraph(host, opts, checkReference, createDiagnosticForOptionName);
+                walkProjectReferenceGraph(host, opts, checkReference);
                 cycleName.pop();
                 illegalRefs.delete(normalizedPath);
             }
@@ -2452,25 +2458,37 @@ namespace ts {
         };
     }
 
-    export function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions,
-        callback: (resolvedFile: string, referencedProject: CompilerOptions) => void,
-        error?: (message: DiagnosticMessage | DiagnosticMessageChain | string, option1?: string) => void) {
-        if (rootOptions.references === undefined) return;
+    export function getProjectReferences(host: CompilerHost, rootOptions: CompilerOptions): string[] | undefined {
+        if (rootOptions.references === undefined) {
+            return [];
+        }
 
-        const configHost = parseConfigHostFromCompilerHost(host);
-        const rootPath = rootOptions.configFilePath ? getDirectoryPath(rootOptions.configFilePath) : host.getCurrentDirectory();
+        const result: string[] = [];
+        const rootPath = rootOptions.configFilePath ? getDirectoryPath(normalizeSlashes(rootOptions.configFilePath)) : host.getCurrentDirectory();
         for (const ref of rootOptions.references) {
             let refPath = combinePaths(rootPath, ref.path);
             if (!host.fileExists(refPath)) {
                 refPath = combinePaths(refPath, "tsconfig.json");
             }
             if (!host.fileExists(refPath)) {
-                if (error) {
-                    error(Diagnostics.File_0_not_found, refPath);
-                }
-                continue;
+                return undefined;
             }
+            result.push(refPath);
+        }
+        return result;
+    }
 
+    export function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions,
+        callback: (resolvedFile: string, referencedProject: CompilerOptions) => void) {
+        if (rootOptions.references === undefined) return;
+
+        const references = getProjectReferences(host, rootOptions);
+        if (references === undefined) {
+            return;
+        }
+
+        const configHost = parseConfigHostFromCompilerHost(host);
+        for (const refPath of references) {
             const referenceJsonSource = parseJsonText(refPath, host.readFile(refPath));
             const cmdLine = parseJsonSourceFileConfigFileContent(referenceJsonSource, configHost, getDirectoryPath(refPath), /*existingOptions*/ undefined, refPath);
             cmdLine.options.configFilePath = refPath;
