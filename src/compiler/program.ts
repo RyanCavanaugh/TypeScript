@@ -687,7 +687,7 @@ namespace ts {
                 const emittedFiles = filter(files, file => sourceFileMayBeEmitted(file, options, isSourceFileFromExternalLibrary));
                 if (options.referenceTarget) {
                     // Project compilations never infer their root from the input source paths
-                    commonSourceDirectory = getNormalizedAbsolutePath(options.rootDir || getDirectoryPath(options.configFilePath), currentDirectory);
+                    commonSourceDirectory = getNormalizedAbsolutePath(options.rootDir || getDirectoryPath(normalizeSlashes(options.configFilePath)), currentDirectory);
                 }
                 else if (options.rootDir && checkSourceFilesBelongToPath(emittedFiles, options.rootDir)) {
                     // If a rootDir is specified and is valid use it as the commonSourceDirectory
