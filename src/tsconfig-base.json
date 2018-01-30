@@ -13,6 +13,7 @@
         "sourceMap": true,
         "target": "es5",
         "newLine": "lf",
-        "types": []
+        "types": [],
+        "referenceTarget": true
     }
 }

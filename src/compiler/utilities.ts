@@ -1,5 +1,3 @@
-/// <reference path="sys.ts" />
-
 /* @internal */
 namespace ts {
     export const emptyArray: never[] = [] as never[];

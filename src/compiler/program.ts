@@ -616,10 +616,11 @@ namespace ts {
 
         Debug.assert(!!missingFilePaths);
 
-        // List of collected files is complete; validate exhautiveness if this is a project with a file list
+        // List of collected files is complete; validate exhaustiveness if this is a project with a file list
         if (options.referenceTarget && rootNames.length < files.length) {
-            const normalizedRootNames = rootNames.map(r => normalizePathAndRoot(r));
-            const sourceFiles = files.filter(f => !f.isDeclarationFile).map(f => normalizePathAndRoot(f.path));
+            // TODO: These are coming in lowercased, why?
+            const normalizedRootNames = rootNames.map(r => normalizePathAndRoot(r).toLowerCase());
+            const sourceFiles = files.filter(f => !f.isDeclarationFile).map(f => normalizePathAndRoot(f.path).toLowerCase());
             for (const file of sourceFiles) {
                 if (normalizedRootNames.every(r => r !== file)) {
                     programDiagnostics.add(createCompilerDiagnostic(Diagnostics.File_0_is_not_in_project_file_list_Projects_must_list_all_files_or_use_an_include_pattern, file));

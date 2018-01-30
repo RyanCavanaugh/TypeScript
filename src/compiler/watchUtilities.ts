@@ -1,5 +1,3 @@
-/// <reference path="core.ts" />
-
 /* @internal */
 namespace ts {
     export enum ConfigFileProgramReloadLevel {

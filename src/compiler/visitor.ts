@@ -1,7 +1,3 @@
-/// <reference path="checker.ts" />
-/// <reference path="factory.ts" />
-/// <reference path="utilities.ts" />
-
 namespace ts {
     /**
      * Visits a Node using the supplied visitor, possibly returning a new Node in its place.

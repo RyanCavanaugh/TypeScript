@@ -1,7 +1,3 @@
-/// <reference path="program.ts" />
-/// <reference path="builder.ts" />
-/// <reference path="resolutionCache.ts"/>
-
 /* @internal */
 namespace ts {
     export type DiagnosticReporter = (diagnostic: Diagnostic) => void;
