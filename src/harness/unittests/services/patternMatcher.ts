@@ -1,5 +1,3 @@
-/// <reference path="..\..\..\services\patternMatcher.ts" />
-
 describe("PatternMatcher", () => {
     describe("BreakIntoCharacterSpans", () => {
         it("EmptyIdentifier", () => {

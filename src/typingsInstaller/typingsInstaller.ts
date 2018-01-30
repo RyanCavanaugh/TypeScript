@@ -1,9 +1,3 @@
-/// <reference path="../../compiler/core.ts" />
-/// <reference path="../../compiler/moduleNameResolver.ts" />
-/// <reference path="../../services/jsTyping.ts"/>
-/// <reference path="../types.ts"/>
-/// <reference path="../shared.ts"/>
-
 namespace ts.server.typingsInstaller {
     interface NpmConfig {
         devDependencies: MapLike<any>;
@@ -34,7 +28,7 @@ namespace ts.server.typingsInstaller {
 
 
     export type RequestCompletedAction = (success: boolean) => void;
-    interface PendingRequest {
+    export interface PendingRequest {
         requestId: number;
         packageNames: string[];
         cwd: string;

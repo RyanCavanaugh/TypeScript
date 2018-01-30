@@ -1,8 +1,7 @@
-/// <reference path="..\..\src\compiler\sys.ts" />
-/// <reference path="..\..\src\harness\harness.ts" />
-/// <reference path="..\..\src\harness\harnessLanguageService.ts" />
-/// <reference path="..\..\src\harness\runnerbase.ts" />
-/// <reference path="..\..\src\harness\typeWriter.ts" />
+/// <reference path="harness.ts" />
+/// <reference path="harnessLanguageService.ts" />
+/// <reference path="runnerbase.ts" />
+/// <reference path="typeWriter.ts" />
 
 interface FileInformation {
     contents?: string;

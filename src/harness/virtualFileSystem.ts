@@ -1,5 +1,3 @@
-/// <reference path="harness.ts" />
-/// <reference path="..\compiler\commandLineParser.ts"/>
 namespace Utils {
     export class VirtualFileSystemEntry {
         fileSystem: VirtualFileSystem;

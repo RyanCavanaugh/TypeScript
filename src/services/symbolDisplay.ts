@@ -96,7 +96,7 @@ namespace ts.SymbolDisplay {
             : ScriptElementKindModifier.none;
     }
 
-    interface SymbolDisplayPartsDocumentationAndSymbolKind {
+    export interface SymbolDisplayPartsDocumentationAndSymbolKind {
         displayParts: SymbolDisplayPart[];
         documentation: SymbolDisplayPart[];
         symbolKind: ScriptElementKind;

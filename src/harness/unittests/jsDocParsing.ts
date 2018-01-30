@@ -1,4 +1,3 @@
-/// <reference path="..\..\compiler\parser.ts" />
 /// <reference path="..\harness.ts" />
 
 namespace ts {

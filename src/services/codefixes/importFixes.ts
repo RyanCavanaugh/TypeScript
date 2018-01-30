@@ -15,25 +15,25 @@ namespace ts.codefix {
         getAllCodeActions: notImplemented,
     });
 
-    type ImportCodeActionKind = "CodeChange" | "InsertingIntoExistingImport" | "NewImport";
+    export type ImportCodeActionKind = "CodeChange" | "InsertingIntoExistingImport" | "NewImport";
     // Map from module Id to an array of import declarations in that module.
-    type ImportDeclarationMap = AnyImportSyntax[][];
+    export type ImportDeclarationMap = AnyImportSyntax[][];
 
-    interface ImportCodeAction extends CodeFixAction {
+    export interface ImportCodeAction extends CodeFixAction {
         kind: ImportCodeActionKind;
         moduleSpecifier?: string;
     }
 
-    interface SymbolContext extends textChanges.TextChangesContext {
+    export interface SymbolContext extends textChanges.TextChangesContext {
         sourceFile: SourceFile;
         symbolName: string;
     }
 
-    interface SymbolAndTokenContext extends SymbolContext {
+    export interface SymbolAndTokenContext extends SymbolContext {
         symbolToken: Node | undefined;
     }
 
-    interface ImportCodeFixContext extends SymbolAndTokenContext {
+    export interface ImportCodeFixContext extends SymbolAndTokenContext {
         host: LanguageServiceHost;
         program: Program;
         checker: TypeChecker;

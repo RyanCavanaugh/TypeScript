@@ -1,5 +1,3 @@
-/// <reference path="..\..\compiler\emitter.ts" />
-/// <reference path="..\..\services\textChanges.ts" />
 /// <reference path="..\harness.ts" />
 
 // Some tests have trailing whitespace

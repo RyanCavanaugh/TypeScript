@@ -1,5 +1,4 @@
 /// <reference path="formatting.ts"/>
-/// <reference path="..\..\compiler\scanner.ts"/>
 
 /* @internal */
 namespace ts.formatting {

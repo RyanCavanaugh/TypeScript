@@ -2,9 +2,11 @@
     "extends": "../tsconfig-base",
     "compilerOptions": {
         "outFile": "../../built/local/tsc.js",
+        "referenceTarget": false,
+        "declaration": false,
         "references": [
             {
-                "path": "../typescript"
+                "path": "../compiler"
             }
         ]
     },

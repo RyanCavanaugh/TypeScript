@@ -1,6 +1,5 @@
 /// <reference path="..\harness.ts" />
 /// <reference path="..\virtualFileSystemWithWatch.ts" />
-/// <reference path="../../server/typingsInstaller/typingsInstaller.ts" />
 
 namespace ts.projectSystem {
     import TI = server.typingsInstaller;

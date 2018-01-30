@@ -1,5 +1,4 @@
 /// <reference path="..\harness.ts" />
-/// <reference path="..\..\compiler\parser.ts" />
 
 namespace ts {
     ts.disableIncrementalParsing = false;

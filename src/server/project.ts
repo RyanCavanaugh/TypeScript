@@ -1,9 +1,6 @@
-/// <reference path="..\services\services.ts" />
 /// <reference path="utilities.ts"/>
 /// <reference path="scriptInfo.ts"/>
-/// <reference path="..\compiler\resolutionCache.ts"/>
 /// <reference path="typingsCache.ts"/>
-/// <reference path="..\compiler\builder.ts"/>
 
 namespace ts.server {
 

@@ -13,8 +13,6 @@
 // limitations under the License.
 //
 
-/// <reference path="..\services\services.ts" />
-/// <reference path="..\services\shims.ts" />
 /// <reference path="harnessLanguageService.ts" />
 /// <reference path="harness.ts" />
 /// <reference path="fourslashRunner.ts" />

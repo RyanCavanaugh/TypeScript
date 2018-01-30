@@ -570,7 +570,7 @@ namespace ts {
         }
     }
 
-    interface RealizedDiagnostic {
+    export interface RealizedDiagnostic {
         message: string;
         start: number;
         length: number;

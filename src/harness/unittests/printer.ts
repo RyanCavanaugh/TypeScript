@@ -1,4 +1,3 @@
-/// <reference path="..\..\compiler\emitter.ts" />
 /// <reference path="..\harness.ts" />
 
 namespace ts {

@@ -1,5 +1,4 @@
 /// <reference path="..\harness.ts" />
-/// <reference path="..\..\compiler\watch.ts" />
 /// <reference path="..\virtualFileSystemWithWatch.ts" />
 
 namespace ts.tscWatch {

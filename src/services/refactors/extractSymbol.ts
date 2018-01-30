@@ -1,6 +1,3 @@
-/// <reference path="../refactorProvider.ts" />
-/// <reference path="../../compiler/checker.ts" />
-
 /* @internal */
 namespace ts.refactor.extractSymbol {
     const extractSymbol: Refactor = {
@@ -146,7 +143,7 @@ namespace ts.refactor.extractSymbol {
         export const cannotExtractToExpressionArrowFunction = createMessage("Cannot extract constant to an arrow function without a block");
     }
 
-    enum RangeFacts {
+    export enum RangeFacts {
         None = 0,
         HasReturn = 1 << 0,
         IsGenerator = 1 << 1,
@@ -161,7 +158,7 @@ namespace ts.refactor.extractSymbol {
     /**
      * Represents an expression or a list of statements that should be extracted with some extra information
      */
-    interface TargetRange {
+    export interface TargetRange {
         readonly range: Expression | Statement[];
         readonly facts: RangeFacts;
         /**
@@ -174,7 +171,7 @@ namespace ts.refactor.extractSymbol {
     /**
      * Result of 'getRangeToExtract' operation: contains either a range or a list of errors
      */
-    type RangeToExtract = {
+    export type RangeToExtract = {
         readonly targetRange?: never;
         readonly errors: ReadonlyArray<Diagnostic>;
     } | {

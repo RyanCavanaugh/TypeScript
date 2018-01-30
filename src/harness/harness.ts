@@ -13,19 +13,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 //
-
-/// <reference path="..\services\services.ts" />
-/// <reference path="..\services\shims.ts" />
-/// <reference path="..\server\session.ts" />
-/// <reference path="..\server\client.ts" />
-/// <reference path="sourceMapRecorder.ts"/>
-/// <reference path="runnerbase.ts"/>
-/// <reference path="virtualFileSystem.ts" />
-/// <reference types="node" />
-/// <reference types="mocha" />
-/// <reference types="chai" />
-
-
 // Block scoped definitions work poorly for global variables, temporarily enable var
 /* tslint:disable:no-var-keyword */
 

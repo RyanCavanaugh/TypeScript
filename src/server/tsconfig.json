@@ -6,11 +6,14 @@
         "preserveConstEnums": true,
         "types": [
             "node"
+        ],
+        "references": [
+            { "path": "../compiler" },
+            { "path": "../services" },
         ]
     },
     "files": [
-        "../services/shims.ts",
-        "../services/utilities.ts",
+        "types.ts",
         "shared.ts",
         "utilities.ts",
         "scriptVersionCache.ts",
@@ -20,6 +23,7 @@
         "editorServices.ts",
         "protocol.ts",
         "session.ts",
-        "server.ts"
+        "server.ts",
+        "client.ts"
     ]
 }

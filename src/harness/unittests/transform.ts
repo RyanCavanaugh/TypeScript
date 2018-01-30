@@ -1,4 +1,3 @@
-/// <reference path="..\..\services\transform.ts" />
 /// <reference path="..\harness.ts" />
 
 namespace ts {

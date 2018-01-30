@@ -1,12 +1,10 @@
-/// <reference path="..\compiler\commandLineParser.ts" />
-/// <reference path="..\services\services.ts" />
 /// <reference path="session.ts" />
 
 /*@internal*/
 namespace ts.server {
     const lineCollectionCapacity = 4;
 
-    interface LineCollection {
+    export interface LineCollection {
         charCount(): number;
         lineCount(): number;
         isLeaf(): this is LineLeaf;
@@ -18,7 +16,7 @@ namespace ts.server {
         lineText: string | undefined;
     }
 
-    const enum CharRangeSection {
+    export const enum CharRangeSection {
         PreStart,
         Start,
         Entire,
@@ -27,7 +25,7 @@ namespace ts.server {
         PostEnd
     }
 
-    interface LineIndexWalker {
+    export interface LineIndexWalker {
         goSubtree: boolean;
         done: boolean;
         leaf(relativeStart: number, relativeLength: number, lineCollection: LineLeaf): void;
@@ -559,7 +557,7 @@ namespace ts.server {
         }
     }
 
-    class LineNode implements LineCollection {
+    export class LineNode implements LineCollection {
         totalChars = 0;
         totalLines = 0;
 
@@ -806,7 +804,7 @@ namespace ts.server {
         }
     }
 
-    class LineLeaf implements LineCollection {
+    export class LineLeaf implements LineCollection {
         constructor(public text: string) {
         }
 
