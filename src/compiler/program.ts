@@ -2101,12 +2101,6 @@ namespace ts {
             return result;
         }
 
-        /*
-        function resolveProjectReferencePath(originatingConfigFileName: string, referencePath: string): string {
-            return combinePaths(originatingConfigFileName, combinePaths("..", referencePath));
-        }
-        */
-
         function checkProjectReferenceGraph() {
             // Checks the following conditions:
             //  * Any referenced project has project: true
