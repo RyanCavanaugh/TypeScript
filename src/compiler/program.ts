@@ -559,9 +559,6 @@ namespace ts {
             resolveTypeReferenceDirectiveNamesWorker = (typeReferenceDirectiveNames, containingFile) => loadWithLocalCache(checkAllDefined(typeReferenceDirectiveNames), containingFile, loader);
         }
 
-        const projectReferenceRedirects = createProjectReferenceRedirects(options);
-        checkProjectReferenceGraph();
-
         // Map from a stringified PackageId to the source file with that id.
         // Only one source file may have a given packageId. Others become redirects (see createRedirectSourceFile).
         // `packageIdToSourceFile` is only used while building the program, while `sourceFileToPackageName` and `isSourceFileTargetOfRedirect` are kept around.
@@ -576,6 +573,13 @@ namespace ts {
         // stores 'filename -> file association' ignoring case
         // used to track cases when two file names differ only in casing
         const filesByNameIgnoreCase = host.useCaseSensitiveFileNames() ? createMap<SourceFile>() : undefined;
+
+        const referencedProjectOutFiles: Path[] = [];
+        const projectReferenceRedirects = createProjectReferenceRedirects(options);
+        checkProjectReferenceGraph();
+        for (const referencedProjectFile of referencedProjectOutFiles) {
+            processSourceFile(referencedProjectFile, /*isDefaultLib*/ false, /*packageId*/ undefined);
+        }
 
         const shouldCreateNewSourceFile = shouldProgramCreateNewSourceFiles(oldProgram, options);
         const structuralIsReused = tryReuseStructureFromOldProgram();
@@ -2098,8 +2102,9 @@ namespace ts {
                 result.set(rootDir, referencedProject.outDir);
                 // If this project uses outFile, add the outFile to our compilation
                 if (referencedProject.outFile) {
-                    const outFile = combinePaths(referencedProject.outDir, referencedProject.outFile);
-                    processSourceFile(outFile, /*isDefaultLib*/ false, /*packageId*/ undefined);
+                    const outFile = combinePaths(referencedProject.outDir, changeExtension(referencedProject.outFile, ".d.ts"));
+                    sys.write(`outFile = ${outFile} @ ${referencedProject.outDir} | ${referencedProject.outFile}\r\n`);
+                    referencedProjectOutFiles.push(toPath(outFile));
                 }
             }
             return result;
