@@ -9,11 +9,12 @@
         "alwaysStrict": true,
         "pretty": true,
         "preserveConstEnums": true,
-        "stripInternal": true,
+        "stripInternal": false,
         "sourceMap": true,
         "target": "es5",
         "newLine": "lf",
         "types": [],
-        "referenceTarget": true
+        "referenceTarget": true,
+        "declaration": true
     }
 }

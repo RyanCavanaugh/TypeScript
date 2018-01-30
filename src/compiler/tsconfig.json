@@ -1,9 +1,7 @@
 {
     "extends": "../tsconfig-base",
     "compilerOptions": {
-        "removeComments": true,
-        "outFile": "../../built/local/tsc.js",
-        "declaration": true
+        "outFile": "../../built/local/typescript.js"
     },
     "files": [
         "core.ts",
@@ -43,7 +41,6 @@
         "resolutionCache.ts",
         "watch.ts",
         "diagnosticInformationMap.generated.ts",
-        "commandLineParser.ts",
-        "tsc.ts",
+        "commandLineParser.ts"
     ]
 }
