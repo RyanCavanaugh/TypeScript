@@ -3754,7 +3754,8 @@ declare namespace ts {
      * @returns A 'Program' object.
      */
     function createProgram(rootNames: ReadonlyArray<string>, options: CompilerOptions, host?: CompilerHost, oldProgram?: Program): Program;
-    function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions, callback: (resolvedFile: string, referencedProject: CompilerOptions) => void, error?: (message: DiagnosticMessage | DiagnosticMessageChain | string, option1?: string) => void): void;
+    function getProjectReferences(host: CompilerHost, rootOptions: CompilerOptions): string[] | undefined;
+    function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions, callback: (resolvedFile: string, referencedProject: CompilerOptions) => void): void;
 }
 declare namespace ts {
     function parseCommandLine(commandLine: ReadonlyArray<string>, readFile?: (path: string) => string | undefined): ParsedCommandLine;
