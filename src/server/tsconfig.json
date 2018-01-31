@@ -13,8 +13,6 @@
         ]
     },
     "files": [
-        "types.ts",
-        "shared.ts",
         "utilities.ts",
         "scriptVersionCache.ts",
         "scriptInfo.ts",

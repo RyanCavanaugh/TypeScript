@@ -1,0 +1,23 @@
+{
+    "extends": "../tsconfig-base",
+    "compilerOptions": {
+        "removeComments": true,
+        "outFile": "../../built/local/typingsInstaller.js",
+        "types": [
+            "node"
+        ],
+        "lib": [
+            "es6",
+            "scripthost"
+        ],
+        "references": [
+            { "path": "../compiler", "prepend": true },
+            { "path": "../services", "prepend": true },
+            { "path": "../serverShared", "prepend": true },
+            { "path": "../typingsInstaller", "prepend": true }
+        ]
+    },
+    "files": [
+        "nodeTypingsInstaller.ts"
+    ]
+}

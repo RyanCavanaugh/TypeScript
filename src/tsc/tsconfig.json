@@ -6,7 +6,8 @@
         "declaration": false,
         "references": [
             {
-                "path": "../compiler"
+                "path": "../compiler",
+                "prepend": true
             }
         ]
     },

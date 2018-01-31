@@ -1,0 +1,19 @@
+{
+    "extends": "../tsconfig-base",
+    "compilerOptions": {
+        "removeComments": true,
+        "outFile": "../../built/local/serverShared.js",
+        "preserveConstEnums": true,
+        "types": [
+            "node"
+        ],
+        "references": [
+            { "path": "../compiler" },
+            { "path": "../services" }
+        ]
+    },
+    "files": [
+        "types.ts",
+        "shared.ts"
+    ]
+}

@@ -84,7 +84,7 @@ function removeConstModifierFromEnumDeclarations(text) {
 var compilerSources = filesFromConfig("./src/compiler/tsconfig.json");
 var servicesSources = filesFromConfig("./src/services/tsconfig.json");
 var cancellationTokenSources = filesFromConfig(path.join(serverDirectory, "cancellationToken/tsconfig.json"));
-var typingsInstallerSources = filesFromConfig(path.join(serverDirectory, "typingsInstaller/tsconfig.json"));
+var typingsInstallerSources = filesFromConfig("src/nodeTypingsInstaller/tsconfig.json");
 var watchGuardSources = filesFromConfig(path.join(serverDirectory, "watchGuard/tsconfig.json"));
 var serverSources = filesFromConfig(path.join(serverDirectory, "tsconfig.json"))
 var languageServiceLibrarySources = filesFromConfig(path.join(serverDirectory, "tsconfig.library.json"));
