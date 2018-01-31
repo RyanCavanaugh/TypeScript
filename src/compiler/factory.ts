@@ -2481,7 +2481,7 @@ namespace ts {
             : node;
     }
 
-    export function createBundle(sourceFiles: ReadonlyArray<SourceFile>, prepends: ReadonlyArray<PrependNode>) {
+    export function createBundle(sourceFiles: ReadonlyArray<SourceFile>, prepends: ReadonlyArray<PrependNode> = emptyArray) {
         const node = <Bundle>createNode(SyntaxKind.Bundle);
         node.prepends = prepends;
         node.sourceFiles = sourceFiles;
