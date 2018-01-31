@@ -386,6 +386,7 @@ namespace ts {
         // Top-level nodes
         SourceFile,
         Bundle,
+        Prepend,
 
         // JSDoc nodes
         JSDocTypeExpression,
@@ -2581,7 +2582,13 @@ namespace ts {
 
     export interface Bundle extends Node {
         kind: SyntaxKind.Bundle;
+        prepends: ReadonlyArray<PrependNode>;
         sourceFiles: ReadonlyArray<SourceFile>;
+    }
+
+    export interface PrependNode extends Node {
+        kind: SyntaxKind.Prepend;
+        text: string;
     }
 
     export interface JsonSourceFile extends SourceFile {
@@ -4043,6 +4050,7 @@ namespace ts {
 
     export interface ProjectReference {
         path: string;
+        prepend?: boolean;
     }
 
     export type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | ProjectReference[] | null | undefined;
@@ -4759,6 +4767,7 @@ namespace ts {
         Expression,          // Emitting an Expression
         IdentifierName,      // Emitting an IdentifierName
         MappedTypeParameter, // Emitting a TypeParameterDeclaration inside of a MappedTypeNode
+        Prepend,             // Emitting a literal node from a prior emit output of a referenced project
         Unspecified,         // Emitting an otherwise unspecified node
     }
 
@@ -4774,6 +4783,8 @@ namespace ts {
         getNewLine(): string;
 
         isEmitBlocked(emitFileName: string): boolean;
+
+        getPrependNodes(): PrependNode[];
 
         writeFile: WriteFileCallback;
     }

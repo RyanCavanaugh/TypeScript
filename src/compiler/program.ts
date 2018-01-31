@@ -623,8 +623,11 @@ namespace ts {
 
         // List of collected files is complete; validate exhautiveness if this is a project with a file list
         if (options.referenceTarget && rootNames.length < files.length) {
-            const normalizedRootNames = rootNames.map(r => normalizePathAndRoot(r));
-            const sourceFiles = files.filter(f => !f.isDeclarationFile).map(f => normalizePathAndRoot(f.path));
+            // TODO: root names are coming in lower-cased which means they
+            // are being displayed to the user lower-cased; need to get their original
+            // names when displaying diagnostics
+            const normalizedRootNames = rootNames.map(r => normalizePathAndRoot(r).toLowerCase());
+            const sourceFiles = files.filter(f => !f.isDeclarationFile).map(f => normalizePathAndRoot(f.path).toLowerCase());
             for (const file of sourceFiles) {
                 if (normalizedRootNames.every(r => r !== file)) {
                     programDiagnostics.add(createCompilerDiagnostic(Diagnostics.File_0_is_not_in_project_file_list_Projects_must_list_all_files_or_use_an_include_pattern, file));
@@ -1094,6 +1097,7 @@ namespace ts {
 
         function getEmitHost(writeFileCallback?: WriteFileCallback): EmitHost {
             return {
+                getPrependNodes,
                 getCanonicalFileName,
                 getCommonSourceDirectory: program.getCommonSourceDirectory,
                 getCompilerOptions: program.getCompilerOptions,
@@ -1107,6 +1111,22 @@ namespace ts {
                     (fileName, data, writeByteOrderMark, onError, sourceFiles) => host.writeFile(fileName, data, writeByteOrderMark, onError, sourceFiles)),
                 isEmitBlocked,
             };
+        }
+
+        function getPrependNodes(): PrependNode[] {
+            if (!options.references) {
+                return emptyArray;
+            }
+            const nodes: PrependNode[] = [];
+            walkProjectReferenceGraph(host, options, (_file, proj, opts) => {
+                if (opts.prepend) {
+                    const text = host.readFile(proj.outFile) || `/* Input file ${proj.outFile} was missing */`;
+                    const node = createPrepend(text);
+                    nodes.push(node);
+                }
+
+            });
+            return nodes;
         }
 
         function isSourceFileFromExternalLibrary(file: SourceFile): boolean {
@@ -2100,7 +2120,9 @@ namespace ts {
             function createMapping(resolvedFile: string, referencedProject: CompilerOptions) {
                 const rootDir = normalizePath(referencedProject.rootDir || getDirectoryPath(resolvedFile));
                 result.set(rootDir, referencedProject.outDir);
-                // If this project uses outFile, add the outFile to our compilation
+                // If this project uses outFile, add the outFile .d.ts to our compilation
+                // Note: We don't enumerate the input files to try to find corresponding .d.ts
+                // files because we can't know from the outside whether they're modules or not
                 if (referencedProject.outFile) {
                     const outFile = combinePaths(referencedProject.outDir, changeExtension(referencedProject.outFile, ".d.ts"));
                     sys.write(`outFile = ${outFile} @ ${referencedProject.outDir} | ${referencedProject.outFile}\r\n`);
@@ -2513,19 +2535,15 @@ namespace ts {
         };
     }
 
-    export function getProjectReferences(host: CompilerHost, rootOptions: CompilerOptions): string[] | undefined {
+    export function getProjectReferenceFileNames(host: CompilerHost, rootOptions: CompilerOptions): string[] | undefined {
         if (rootOptions.references === undefined) {
             return [];
         }
 
         const result: string[] = [];
-        const rootPath = rootOptions.configFilePath ? getDirectoryPath(normalizeSlashes(rootOptions.configFilePath)) : host.getCurrentDirectory();
         for (const ref of rootOptions.references) {
-            let refPath = combinePaths(rootPath, ref.path);
-            if (!host.fileExists(refPath)) {
-                refPath = combinePaths(refPath, "tsconfig.json");
-            }
-            if (!host.fileExists(refPath)) {
+            const refPath = resolveProjectReferencePath(host, rootOptions.configFilePath, ref);
+            if (!refPath || !host.fileExists(refPath)) {
                 return undefined;
             }
             result.push(refPath);
@@ -2533,25 +2551,41 @@ namespace ts {
         return result;
     }
 
+    function resolveProjectReferencePath(host: CompilerHost, referencingConfigFilePath: string, ref: ProjectReference): string | undefined {
+        const rootPath = referencingConfigFilePath ? getDirectoryPath(normalizeSlashes(referencingConfigFilePath)) : host.getCurrentDirectory();
+        let refPath = combinePaths(rootPath, ref.path);
+        if (!host.fileExists(refPath)) {
+            refPath = combinePaths(refPath, "tsconfig.json");
+        }
+        return refPath;
+    }
+
     export function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions,
-        callback: (resolvedFile: string, referencedProject: CompilerOptions) => void) {
+        callback: (resolvedFile: string, referencedProject: CompilerOptions, settings: ProjectReference) => void) {
         if (rootOptions.references === undefined) return;
 
-        const references = getProjectReferences(host, rootOptions);
+        const references = getProjectReferenceFileNames(host, rootOptions);
         if (references === undefined) {
             return;
         }
 
         const configHost = parseConfigHostFromCompilerHost(host);
-        for (const refPath of references) {
-            const referenceJsonSource = parseJsonText(refPath, host.readFile(refPath));
+        for (const ref of rootOptions.references) {
+            const refPath = resolveProjectReferencePath(host, rootOptions.configFilePath, ref);
+            const text = host.readFile(refPath);
+            if (!text) {
+                // TODO: Error
+                sys.write(`ERROR DIDN'T READ ${refPath}`);
+                continue;
+            }
+            const referenceJsonSource = parseJsonText(refPath, text);
             const cmdLine = parseJsonSourceFileConfigFileContent(referenceJsonSource, configHost, getDirectoryPath(refPath), /*existingOptions*/ undefined, refPath);
             cmdLine.options.configFilePath = refPath;
             if (cmdLine.errors && cmdLine.errors.length) {
                 // TODO: Pass along errors
             }
             if (cmdLine.options) {
-                callback(refPath, cmdLine.options);
+                callback(refPath, cmdLine.options, ref);
             }
         }
     }
