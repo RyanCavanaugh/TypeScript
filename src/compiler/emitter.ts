@@ -28,7 +28,7 @@ namespace ts {
                 const jsFilePath = options.outFile || options.out;
                 const sourceMapFilePath = getSourceMapFilePath(jsFilePath, options);
                 const declarationFilePath = options.declaration ? removeFileExtension(jsFilePath) + Extension.Dts : "";
-                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, createBundle(sourceFiles), emitOnlyDtsFiles);
+                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, createBundle(sourceFiles, emptyArray), emitOnlyDtsFiles);
                 if (result) {
                     return result;
                 }
@@ -329,10 +329,14 @@ namespace ts {
                 case EmitHint.Expression:
                     Debug.assert(isExpression(node), "Expected an Expression node.");
                     break;
+                case EmitHint.Prepend:
+                    Debug.assert(node.kind === SyntaxKind.Prepend, "Expected an Prepend node.");
+                    break;
             }
             switch (node.kind) {
                 case SyntaxKind.SourceFile: return printFile(<SourceFile>node);
                 case SyntaxKind.Bundle: return printBundle(<Bundle>node);
+                case SyntaxKind.Prepend: return printPrepend(<PrependNode>node);
             }
             writeNode(hint, node, sourceFile, beginPrint());
             return endPrint();
@@ -350,6 +354,11 @@ namespace ts {
 
         function printFile(sourceFile: SourceFile): string {
             writeFile(sourceFile, beginPrint());
+            return endPrint();
+        }
+
+        function printPrepend(prepend: PrependNode): string {
+            writePrepend(prepend, beginPrint());
             return endPrint();
         }
 
@@ -382,10 +391,21 @@ namespace ts {
             setWriter(output);
             emitShebangIfNeeded(bundle);
             emitPrologueDirectivesIfNeeded(bundle);
+            for (const prepend of bundle.prepends) {
+                print(EmitHint.Prepend, prepend, /*sourceFile*/ undefined);
+            }
             emitHelpersIndirect(bundle);
             for (const sourceFile of bundle.sourceFiles) {
                 print(EmitHint.SourceFile, sourceFile, sourceFile);
             }
+            reset();
+            writer = previousWriter;
+        }
+
+        function writePrepend(prepend: PrependNode, output: EmitTextWriter) {
+            const previousWriter = writer;
+            setWriter(output);
+            print(EmitHint.Prepend, prepend, undefined);
             reset();
             writer = previousWriter;
         }
@@ -495,7 +515,10 @@ namespace ts {
                 case EmitHint.IdentifierName: return pipelineEmitIdentifierName(node);
                 case EmitHint.Expression: return pipelineEmitExpression(node);
                 case EmitHint.MappedTypeParameter: return emitMappedTypeParameter(cast(node, isTypeParameterDeclaration));
+                case EmitHint.Prepend:
                 case EmitHint.Unspecified: return pipelineEmitUnspecified(node);
+                default:
+                    assertTypeIsNever(hint);
             }
         }
 
@@ -534,6 +557,8 @@ namespace ts {
                 case SyntaxKind.TemplateMiddle:
                 case SyntaxKind.TemplateTail:
                     return emitLiteral(<LiteralExpression>node);
+                case SyntaxKind.Prepend:
+                    return emitPrepend(<PrependNode>node);
 
                 // Identifiers
                 case SyntaxKind.Identifier:
@@ -926,6 +951,11 @@ namespace ts {
                 // Quick info expects all literals to be called with writeStringLiteral, as there's no specific type for numberLiterals
                 writeStringLiteral(text);
             }
+        }
+
+        // SyntaxKind.Prepend
+        function emitPrepend(prepend: PrependNode) {
+            write(prepend.text);
         }
 
         //
