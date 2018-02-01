@@ -1497,7 +1497,7 @@ namespace ts {
         const parsedConfig = parseConfig(json, sourceFile, host, basePath, configFileName, resolutionStack, errors);
         const { raw } = parsedConfig;
         const options = extend(existingOptions, parsedConfig.options || {});
-        options.configFilePath = configFileName;
+        options.configFilePath = configFileName && normalizeSlashes(configFileName);
         setConfigFileInOptions(options, sourceFile);
         const { fileNames, wildcardDirectories, spec } = getFileNames();
         return {
