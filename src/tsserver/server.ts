@@ -1,5 +1,3 @@
-/// <reference path="session.ts" />
-
 namespace ts.server {
     interface IoSessionOptions {
         host: ServerHost;

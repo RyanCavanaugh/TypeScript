@@ -2,7 +2,7 @@
     "extends": "../tsconfig-base",
     "compilerOptions": {
         "removeComments": true,
-        "outFile": "../../built/local/tsserverlibrary.js",
+        "outFile": "../../built/local/tsserver.js",
         "preserveConstEnums": true,
         "types": [
             "node"
@@ -11,17 +11,10 @@
             { "path": "../compiler" },
             { "path": "../services" },
             { "path": "../serverShared" },
+            { "path": "../server", "prepend": true }
         ]
     },
     "files": [
-        "utilities.ts",
-        "scriptVersionCache.ts",
-        "scriptInfo.ts",
-        "typingsCache.ts",
-        "project.ts",
-        "editorServices.ts",
-        "protocol.ts",
-        "session.ts",
-        "client.ts"
+        "server.ts"
     ]
 }
