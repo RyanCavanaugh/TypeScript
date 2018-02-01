@@ -2,10 +2,12 @@
 
 import fs = require("fs");
 
-interface ServerCancellationToken {
-    isCancellationRequested(): boolean;
-    setRequest(requestId: number): void;
-    resetRequest(requestId: number): void;
+namespace createCancellationToken {
+    export interface ServerCancellationToken {
+        isCancellationRequested(): boolean;
+        setRequest(requestId: number): void;
+        resetRequest(requestId: number): void;
+    }
 }
 
 function pipeExists(name: string): boolean {
@@ -18,7 +20,7 @@ function pipeExists(name: string): boolean {
     }
 }
 
-function createCancellationToken(args: string[]): ServerCancellationToken {
+function createCancellationToken(args: string[]): createCancellationToken.ServerCancellationToken {
     let cancellationPipeName: string;
     for (let i = 0; i < args.length - 1; i++) {
         if (args[i] === "--cancellationPipeName") {
@@ -67,4 +69,5 @@ function createCancellationToken(args: string[]): ServerCancellationToken {
         };
     }
 }
+
 export = createCancellationToken;

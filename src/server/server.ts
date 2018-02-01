@@ -1,4 +1,3 @@
-/// <reference path="shared.ts" />
 /// <reference path="session.ts" />
 
 namespace ts.server {

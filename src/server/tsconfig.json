@@ -10,6 +10,7 @@
         "references": [
             { "path": "../compiler" },
             { "path": "../services" },
+            { "path": "../serverShared" },
         ]
     },
     "files": [

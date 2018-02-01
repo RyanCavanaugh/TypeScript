@@ -14,6 +14,7 @@
             { "path": "../compiler" },
             { "path": "../services" },
             { "path": "../server" },
+            { "path": "../serverShared" }
         ]
     },
     "files": [

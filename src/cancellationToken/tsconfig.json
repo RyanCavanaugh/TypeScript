@@ -1,5 +1,5 @@
 {
-    "extends": "../../tsconfig-base",
+    "extends": "../tsconfig-base",
     "compilerOptions": {
         "removeComments": true,
         "module": "commonjs",
@@ -8,7 +8,8 @@
         ],
         "lib": [
             "es6"
-        ]
+        ],
+        "outDir": "../../built/local"
     },
     "files": [
         "cancellationToken.ts"
