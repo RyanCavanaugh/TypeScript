@@ -28,18 +28,12 @@
         "harnessLanguageService.ts",
         "harness.ts",
         "fourslash.ts",
-        "compilerRunner.ts",
         "typeWriter.ts",
-        "fourslashRunner.ts",
-        "projectsRunner.ts",
         "loggedIO.ts",
-        "rwcRunner.ts",
-        "externalCompileRunner.ts",
         "test262Runner.ts",
         "./parallel/shared.ts",
         "./parallel/host.ts",
         "./parallel/worker.ts",
-        "runner.ts",
         "./unittests/incrementalParser.ts",
         "./unittests/jsDocParsing.ts",
         "./unittests/services/colorization.ts",
@@ -79,6 +73,12 @@
         "./unittests/languageService.ts",
         "./unittests/programMissingFiles.ts",
         "./unittests/publicApi.ts",
-        "./unittests/hostNewLineSupport.ts"
+        "./unittests/hostNewLineSupport.ts",
+        "compilerRunner.ts",
+        "fourslashRunner.ts",
+        "projectsRunner.ts",
+        "rwcRunner.ts",
+        "externalCompileRunner.ts",
+        "runner.ts"
     ]
 }

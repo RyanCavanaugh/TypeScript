@@ -36,11 +36,29 @@
         "textChanges.ts",
         "refactorProvider.ts",
         "codeFixProvider.ts",
-        "services.ts"
+        "services.ts",
+
+        "codefixes/helpers.ts",
+        "codefixes/addMissingInvocationForDecorator.ts",
+        "codefixes/correctQualifiedNameToIndexedAccessType.ts",
+        "codefixes/fixClassIncorrectlyImplementsInterface.ts",
+        "codefixes/fixAddMissingMember.ts",
+        "codefixes/fixSpelling.ts",
+        "codefixes/fixCannotFindModule.ts",
+        "codefixes/fixClassDoesntImplementInheritedAbstractMember.ts",
+        "codefixes/fixClassSuperMustPrecedeThisAccess.ts",
+        "codefixes/fixConstructorForDerivedNeedSuperCall.ts",
+        "codefixes/fixExtendsInterfaceBecomesImplements.ts",
+        "codefixes/fixForgottenThisPropertyAccess.ts",
+        "codefixes/fixUnusedIdentifier.ts",
+        "codefixes/fixJSDocTypes.ts",
+        "codefixes/importFixes.ts",
+        "codefixes/disableJsDiagnostics.ts",
+        "codefixes/inferFromUsage.ts"
     ],
     "include": [
         "formatting/*",
-        "codefixes/*",
         "refactors/*"
     ]
 }
+
