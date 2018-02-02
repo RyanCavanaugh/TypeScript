@@ -9,6 +9,7 @@
         "alwaysStrict": true,
         "pretty": true,
         "preserveConstEnums": true,
+        "skipLibCheck": true,
         "stripInternal": false,
         "sourceMap": true,
         "target": "es5",
