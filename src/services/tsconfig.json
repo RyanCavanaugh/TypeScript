@@ -5,7 +5,7 @@
         "outFile": "../../built/local/typescriptServices.js",
         "declaration": true,
         "references": [
-            { "path": "../compiler" }
+            { "path": "../compiler", "prepend": true }
         ]
     },
     "files": [

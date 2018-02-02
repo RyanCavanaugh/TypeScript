@@ -13,9 +13,6 @@
             "scripthost"
         ],
         "references": [
-            { "path": "../compiler", "prepend": true },
-            { "path": "../services", "prepend": true },
-            { "path": "../serverShared", "prepend": true },
             { "path": "../server", "prepend": true },
             { "path": "../typingsInstaller", "prepend": true }
         ]

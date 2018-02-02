@@ -1,9 +1,3 @@
-/// <reference path="utilities.ts" />
-/// <reference path="session.ts" />
-/// <reference path="scriptVersionCache.ts"/>
-/// <reference path="project.ts"/>
-/// <reference path="typingsCache.ts"/>
-
 namespace ts.server {
     export const maxProgramSizeForNonTsFiles = 20 * 1024 * 1024;
 

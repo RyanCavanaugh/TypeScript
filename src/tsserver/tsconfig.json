@@ -8,8 +8,6 @@
             "node"
         ],
         "references": [
-            { "path": "../compiler" },
-            { "path": "../services" },
             { "path": "../serverShared" },
             { "path": "../server", "prepend": true }
         ]
