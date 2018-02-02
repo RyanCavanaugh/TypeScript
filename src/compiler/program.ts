@@ -2125,9 +2125,9 @@ namespace ts {
                 // files because we can't know from the outside whether they're modules or not
                 if (referencedProject.outFile) {
                     const outFile = combinePaths(referencedProject.outDir, changeExtension(referencedProject.outFile, ".d.ts"));
-                    sys.write(`outFile = ${outFile} @ ${referencedProject.outDir} | ${referencedProject.outFile}\r\n`);
                     referencedProjectOutFiles.push(toPath(outFile));
                 }
+                walkProjectReferenceGraph(host, referencedProject, createMapping);
             }
             return result;
         }
