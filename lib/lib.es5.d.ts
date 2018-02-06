@@ -1005,19 +1005,19 @@ interface ReadonlyArray<T> {
       */
     toString(): string;
     /**
-      * Returns a string representation of an array. The elements are converted to string using their toLocalString methods.
+      * Returns a string representation of an array. The elements are converted to string using thier toLocalString methods.
       */
     toLocaleString(): string;
     /**
       * Combines two or more arrays.
       * @param items Additional items to add to the end of array1.
       */
-    concat(...items: ConcatArray<T>[]): T[];
+    concat(...items: (T[] | ReadonlyArray<T>)[]): T[];
     /**
       * Combines two or more arrays.
       * @param items Additional items to add to the end of array1.
       */
-    concat(...items: (T | ConcatArray<T>)[]): T[];
+    concat(...items: (T | T[] | ReadonlyArray<T>)[]): T[];
     /**
       * Adds all the elements of an array separated by the specified separator string.
       * @param separator A string used to separate one element of an array from the next in the resulting String. If omitted, the array elements are separated with a comma.
@@ -1107,13 +1107,6 @@ interface ReadonlyArray<T> {
     readonly [n: number]: T;
 }
 
-interface ConcatArray<T> {
-    readonly length: number;
-    readonly [n: number]: T;
-    join(separator?: string): string;
-    slice(start?: number, end?: number): T[];
-}
-
 interface Array<T> {
     /**
       * Gets or sets the length of the array. This is a number one higher than the highest element defined in an array.
@@ -1124,7 +1117,7 @@ interface Array<T> {
       */
     toString(): string;
     /**
-      * Returns a string representation of an array. The elements are converted to string using their toLocalString methods.
+      * Returns a string representation of an array. The elements are converted to string using thier toLocalString methods.
       */
     toLocaleString(): string;
     /**
@@ -1140,12 +1133,12 @@ interface Array<T> {
       * Combines two or more arrays.
       * @param items Additional items to add to the end of array1.
       */
-    concat(...items: ConcatArray<T>[]): T[];
+    concat(...items: (T[] | ReadonlyArray<T>)[]): T[];
     /**
       * Combines two or more arrays.
       * @param items Additional items to add to the end of array1.
       */
-    concat(...items: (T | ConcatArray<T>)[]): T[];
+    concat(...items: (T | T[] | ReadonlyArray<T>)[]): T[];
     /**
       * Adds all the elements of an array separated by the specified separator string.
       * @param separator A string used to separate one element of an array from the next in the resulting String. If omitted, the array elements are separated with a comma.
@@ -1338,13 +1331,6 @@ type Partial<T> = {
 };
 
 /**
- * Make all properties in T required
- */
-type Required<T> = {
-    [P in keyof T]-?: T[P];
-};
-
-/**
  * Make all properties in T readonly
  */
 type Readonly<T> = {
@@ -1364,31 +1350,6 @@ type Pick<T, K extends keyof T> = {
 type Record<K extends string, T> = {
     [P in K]: T;
 };
-
-/**
- * Exclude from T those types that are assignable to U
- */
-type Exclude<T, U> = T extends U ? never : T;
-
-/**
- * Extract from T those types that are assignable to U
- */
-type Extract<T, U> = T extends U ? T : never;
-
-/**
- * Exclude null and undefined from T
- */
-type NonNullable<T> = T extends null | undefined ? never : T;
-
-/**
- * Obtain the return type of a function type
- */
-type ReturnType<T extends (...args: any[]) => any> = T extends (...args: any[]) => infer R ? R : any;
-
-/**
- * Obtain the return type of a constructor function type
- */
-type InstanceType<T extends new (...args: any[]) => any> = T extends new (...args: any[]) => infer R ? R : any;
 
 /**
  * Marker for contextual 'this' type

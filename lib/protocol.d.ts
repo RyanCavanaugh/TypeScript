@@ -49,12 +49,10 @@ declare namespace ts.server.protocol {
         DocCommentTemplate = "docCommentTemplate",
         CompilerOptionsForInferredProjects = "compilerOptionsForInferredProjects",
         GetCodeFixes = "getCodeFixes",
-        GetCombinedCodeFix = "getCombinedCodeFix",
         ApplyCodeActionCommand = "applyCodeActionCommand",
         GetSupportedCodeFixes = "getSupportedCodeFixes",
         GetApplicableRefactors = "getApplicableRefactors",
         GetEditsForRefactor = "getEditsForRefactor",
-        OrganizeImports = "organizeImports",
     }
     /**
      * A TypeScript Server message
@@ -407,35 +405,11 @@ declare namespace ts.server.protocol {
         renameFilename?: string;
     }
     /**
-     * Organize imports by:
-     *   1) Removing unused imports
-     *   2) Coalescing imports from the same module
-     *   3) Sorting imports
-     */
-    interface OrganizeImportsRequest extends Request {
-        command: CommandTypes.OrganizeImports;
-        arguments: OrganizeImportsRequestArgs;
-    }
-    type OrganizeImportsScope = GetCombinedCodeFixScope;
-    interface OrganizeImportsRequestArgs {
-        scope: OrganizeImportsScope;
-    }
-    interface OrganizeImportsResponse extends Response {
-        edits: ReadonlyArray<FileCodeEdits>;
-    }
-    /**
      * Request for the available codefixes at a specific position.
      */
     interface CodeFixRequest extends Request {
         command: CommandTypes.GetCodeFixes;
         arguments: CodeFixRequestArgs;
-    }
-    interface GetCombinedCodeFixRequest extends Request {
-        command: CommandTypes.GetCombinedCodeFix;
-        arguments: GetCombinedCodeFixRequestArgs;
-    }
-    interface GetCombinedCodeFixResponse extends Response {
-        body: CombinedCodeActions;
     }
     interface ApplyCodeActionCommandRequest extends Request {
         command: CommandTypes.ApplyCodeActionCommand;
@@ -469,14 +443,6 @@ declare namespace ts.server.protocol {
          * Errorcodes we want to get the fixes for.
          */
         errorCodes?: ReadonlyArray<number>;
-    }
-    interface GetCombinedCodeFixRequestArgs {
-        scope: GetCombinedCodeFixScope;
-        fixId: {};
-    }
-    interface GetCombinedCodeFixScope {
-        type: "file";
-        args: FileRequestArgs;
     }
     interface ApplyCodeActionCommandRequestArgs {
         /** May also be an array of commands. */
@@ -1220,7 +1186,7 @@ declare namespace ts.server.protocol {
     }
     interface CodeFixResponse extends Response {
         /** The code actions that are available */
-        body?: CodeFixAction[];
+        body?: CodeAction[];
     }
     interface CodeAction {
         /** Description of the code action to display in the UI of the editor */
@@ -1229,17 +1195,6 @@ declare namespace ts.server.protocol {
         changes: FileCodeEdits[];
         /** A command is an opaque object that should be passed to `ApplyCodeActionCommandRequestArgs` without modification.  */
         commands?: {}[];
-    }
-    interface CombinedCodeActions {
-        changes: ReadonlyArray<FileCodeEdits>;
-        commands?: ReadonlyArray<{}>;
-    }
-    interface CodeFixAction extends CodeAction {
-        /**
-         * If present, one may call 'getCombinedCodeFix' with this fixId.
-         * This may be omitted to indicate that the code fix can't be applied in a group.
-         */
-        fixId?: {};
     }
     /**
      * Format and format on key response message.
@@ -1282,11 +1237,6 @@ declare namespace ts.server.protocol {
          * This affects lone identifier completions but not completions on the right hand side of `obj.`.
          */
         includeExternalModuleExports: boolean;
-        /**
-         * If enabled, the completion list will include completions with invalid identifier names.
-         * For those entries, The `insertText` and `replacementSpan` properties will be set to change from `.x` property access to `["x"]`.
-         */
-        includeInsertTextCompletions: boolean;
     }
     /**
      * Completions request; value of command field is "completions".
@@ -1355,12 +1305,6 @@ declare namespace ts.server.protocol {
          * is often the same as the name but may be different in certain circumstances.
          */
         sortText: string;
-        /**
-         * Text to insert instead of `name`.
-         * This is used to support bracketed completions; If `name` might be "a-b" but `insertText` would be `["a-b"]`,
-         * coupled with `replacementSpan` to replace a dotted access with a bracket access.
-         */
-        insertText?: string;
         /**
          * An optional span that indicates the text to be replaced by this completion item.
          * If present, this span should be used instead of the default one.
@@ -2034,7 +1978,6 @@ declare namespace ts.server.protocol {
         insertSpaceBeforeFunctionParenthesis?: boolean;
         placeOpenBraceOnNewLineForFunctions?: boolean;
         placeOpenBraceOnNewLineForControlBlocks?: boolean;
-        insertSpaceBeforeTypeAnnotation?: boolean;
     }
     interface CompilerOptions {
         allowJs?: boolean;
@@ -2088,6 +2031,7 @@ declare namespace ts.server.protocol {
         project?: string;
         reactNamespace?: string;
         removeComments?: boolean;
+        references?: ProjectReference[];
         rootDir?: string;
         rootDirs?: string[];
         skipLibCheck?: boolean;
@@ -2265,7 +2209,12 @@ declare namespace ts.server.protocol {
         name: string;
     }
 
-    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | null | undefined;
+    interface ProjectReference {
+        path: string;
+        prepend?: boolean;
+    }
+
+    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | ProjectReference[] | null | undefined;
 }
 declare namespace ts {
     // these types are empty stubs for types from services and should not be used directly
