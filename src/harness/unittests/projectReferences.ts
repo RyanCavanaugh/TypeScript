@@ -245,7 +245,6 @@ namespace ts {
                     references: ["../alpha"]
                 }
             };
-            debugger;
             testProjectReferences(spec, "/beta/tsconfig.json", program => {
                 assertHasError("Issues a useful error", program.getSemanticDiagnostics(), Diagnostics.Output_file_0_has_not_been_built_from_source_file_1);
             });

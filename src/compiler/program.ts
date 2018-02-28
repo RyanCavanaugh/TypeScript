@@ -335,7 +335,9 @@ namespace ts {
 
             const categoryColor = getCategoryFormat(diagnostic.category);
             const category = DiagnosticCategory[diagnostic.category].toLowerCase();
-            output += `${formatAndReset(category, categoryColor)} TS${diagnostic.code}: ${flattenDiagnosticMessageText(diagnostic.messageText, host.getNewLine())}`;
+            output += formatColorAndReset(category, categoryColor);
+            output += formatColorAndReset(` TS${ diagnostic.code }: `, ForegroundColorEscapeSequences.Grey);
+            output += flattenDiagnosticMessageText(diagnostic.messageText, host.getNewLine());
 
             if (diagnostic.file) {
                 output += host.getNewLine();
@@ -1848,11 +1850,13 @@ namespace ts {
                 return file;
             }
 
-            const redirect = getProjectReferenceRedirect(fileName);
-            if (redirect) {
-                ((refFile.redirectedReferences || (refFile.redirectedReferences = [])) as string[]).push(fileName);
+            if (refFile) {
+                const redirect = getProjectReferenceRedirect(fileName);
+                if (redirect) {
+                    ((refFile.redirectedReferences || (refFile.redirectedReferences = [])) as string[]).push(fileName);
+                }
+                fileName = redirect || fileName;
             }
-            fileName = redirect || fileName;
 
             // We haven't looked for this file, do so now and cache result
             const file = host.getSourceFile(fileName, options.target, hostErrorMessage => {
@@ -1935,7 +1939,6 @@ namespace ts {
                 }
                 if (normalized.indexOf(k) === 0) {
                     result = changeExtension(fileName.replace(k, v), ".d.ts");
-                    debugger;
                 }
             });
             return result;
@@ -2115,6 +2118,8 @@ namespace ts {
 
         function createProjectReferenceRedirects(rootOptions: CompilerOptions): Map<string> {
             const result = createMap<string>();
+            const handledProjects = createMap<true>();
+
             walkProjectReferenceGraph(host, rootOptions, createMapping);
 
             function createMapping(resolvedFile: string, referencedProject: CompilerOptions) {
@@ -2127,7 +2132,13 @@ namespace ts {
                     const outFile = combinePaths(referencedProject.outDir, changeExtension(referencedProject.outFile, ".d.ts"));
                     referencedProjectOutFiles.push(toPath(outFile));
                 }
-                walkProjectReferenceGraph(host, referencedProject, createMapping);
+
+                // Circularity check
+                resolvedFile = normalizePath(resolvedFile);
+                if (!handledProjects.has(resolvedFile)) {
+                    handledProjects.set(resolvedFile, true);
+                    walkProjectReferenceGraph(host, referencedProject, createMapping);
+                }
             }
             return result;
         }

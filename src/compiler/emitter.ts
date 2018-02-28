@@ -38,7 +38,7 @@ namespace ts {
             for (const sourceFile of sourceFiles) {
                 const jsFilePath = getOwnEmitOutputFilePath(sourceFile, host, getOutputExtension(sourceFile, options));
                 const sourceMapFilePath = getSourceMapFilePath(jsFilePath, options);
-                const declarationFilePath = !isSourceFileJavaScript(sourceFile) && (emitOnlyDtsFiles || options.declaration) ? getDeclarationEmitOutputFilePath(sourceFile, host) : undefined;
+                const declarationFilePath = !isSourceFileJavaScript(sourceFile) && (emitOnlyDtsFiles || options.declaration || options.referenceTarget) ? getDeclarationEmitOutputFilePath(sourceFile, host) : undefined;
                 const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, sourceFile, emitOnlyDtsFiles);
                 if (result) {
                     return result;
@@ -405,7 +405,7 @@ namespace ts {
         function writePrepend(prepend: PrependNode, output: EmitTextWriter) {
             const previousWriter = writer;
             setWriter(output);
-            print(EmitHint.Prepend, prepend, undefined);
+            print(EmitHint.Prepend, prepend, /*sourceFile*/ undefined);
             reset();
             writer = previousWriter;
         }

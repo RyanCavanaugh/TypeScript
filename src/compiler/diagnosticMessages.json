@@ -3456,31 +3456,13 @@
         "category": "Message",
         "code": 6186
     },
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "Enable strict checking of property initialization in classes.": {
-        "category": "Message",
-        "code": 6187
-    },
-    "Numeric separators are not allowed here.": {
-        "category": "Error",
-        "code": 6188
-    },
-    "Multiple consecutive numeric separators are not permitted.": {
-        "category": "Error",
-        "code": 6189
-    },
     "Found 'package.json' at '{0}'. Package ID is '{1}'.": {
         "category": "Message",
         "code": 6190
     },
-    "Project references may not form a circular graph. Cycle detected: {0}": {
-        "category": "Error",
-        "code": 6187
-    },
     "Projects to reference": {
         "category": "Message",
-        "code": 6188
+        "code": 6191
     },
     "Referenced project '{0}' must have 'declaration': true": {
         "category": "Error",
