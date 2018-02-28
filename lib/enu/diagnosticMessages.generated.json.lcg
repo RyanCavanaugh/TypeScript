@@ -1905,12 +1905,6 @@
               </Str>
               <Disp Icon="Str" />
             </Item>
-            <Item ItemId=";Enable_project_compilation_6302" ItemType="0" PsrId="306" Leaf="true">
-              <Str Cat="Text">
-                <Val><![CDATA[Enable project compilation]]></Val>
-              </Str>
-              <Disp Icon="Str" />
-            </Item>
             <Item ItemId=";Enable_strict_checking_of_function_types_6186" ItemType="0" PsrId="306" Leaf="true">
               <Str Cat="Text">
                 <Val><![CDATA[Enable strict checking of function types.]]></Val>
@@ -2274,12 +2268,6 @@
             <Item ItemId=";File_0_is_not_a_module_2306" ItemType="0" PsrId="306" Leaf="true">
               <Str Cat="Text">
                 <Val><![CDATA[File '{0}' is not a module.]]></Val>
-              </Str>
-              <Disp Icon="Str" />
-            </Item>
-            <Item ItemId=";File_0_is_not_in_project_file_list_Projects_must_list_all_files_or_use_an_include_pattern_6307" ItemType="0" PsrId="306" Leaf="true">
-              <Str Cat="Text">
-                <Val><![CDATA[File '{0}' is not in project file list. Projects must list all files or use an 'include' pattern.]]></Val>
               </Str>
               <Disp Icon="Str" />
             </Item>
@@ -3399,12 +3387,6 @@
               </Str>
               <Disp Icon="Str" />
             </Item>
-            <Item ItemId=";Output_file_0_has_not_been_built_from_source_file_1_6305" ItemType="0" PsrId="306" Leaf="true">
-              <Str Cat="Text">
-                <Val><![CDATA[Output file '{0}' has not been built from source file '{1}'.]]></Val>
-              </Str>
-              <Disp Icon="Str" />
-            </Item>
             <Item ItemId=";Overload_signature_is_not_compatible_with_function_implementation_2394" ItemType="0" PsrId="306" Leaf="true">
               <Str Cat="Text">
                 <Val><![CDATA[Overload signature is not compatible with function implementation.]]></Val>
@@ -3654,24 +3636,6 @@
             <Item ItemId=";Print_this_message_6017" ItemType="0" PsrId="306" Leaf="true">
               <Str Cat="Text">
                 <Val><![CDATA[Print this message.]]></Val>
-              </Str>
-              <Disp Icon="Str" />
-            </Item>
-            <Item ItemId=";Project_references_may_not_form_a_circular_graph_Cycle_detected_Colon_0_6303" ItemType="0" PsrId="306" Leaf="true">
-              <Str Cat="Text">
-                <Val><![CDATA[Project references may not form a circular graph. Cycle detected: {0}]]></Val>
-              </Str>
-              <Disp Icon="Str" />
-            </Item>
-            <Item ItemId=";Projects_may_not_disable_declaration_emit_6304" ItemType="0" PsrId="306" Leaf="true">
-              <Str Cat="Text">
-                <Val><![CDATA[Projects may not disable declaration emit.]]></Val>
-              </Str>
-              <Disp Icon="Str" />
-            </Item>
-            <Item ItemId=";Projects_to_reference_6301" ItemType="0" PsrId="306" Leaf="true">
-              <Str Cat="Text">
-                <Val><![CDATA[Projects to reference]]></Val>
               </Str>
               <Disp Icon="Str" />
             </Item>
@@ -3948,12 +3912,6 @@
             <Item ItemId=";Redirect_output_structure_to_the_directory_6006" ItemType="0" PsrId="306" Leaf="true">
               <Str Cat="Text">
                 <Val><![CDATA[Redirect output structure to the directory.]]></Val>
-              </Str>
-              <Disp Icon="Str" />
-            </Item>
-            <Item ItemId=";Referenced_project_0_must_have_setting_referenceTarget_Colon_true_6306" ItemType="0" PsrId="306" Leaf="true">
-              <Str Cat="Text">
-                <Val><![CDATA[Referenced project '{0}' must have setting "referenceTarget": true.]]></Val>
               </Str>
               <Disp Icon="Str" />
             </Item>
