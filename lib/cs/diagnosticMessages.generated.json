@@ -324,6 +324,7 @@
   "Enables_experimental_support_for_ES7_decorators_6065": "Povolí experimentální podporu pro dekorátory ES7.",
   "Enables_experimental_support_for_emitting_type_metadata_for_decorators_6066": "Povolí experimentální podporu pro generování metadat typu pro dekorátory.",
   "Enum_0_used_before_its_declaration_2450": "Výčet {0} se používá dříve, než se deklaruje.",
+  "Enum_declarations_can_only_merge_with_namespace_or_other_enum_declarations_2567": "Deklarace výčtu jdou sloučit jenom s oborem názvů nebo jinými deklaracemi výčtu.",
   "Enum_declarations_must_all_be_const_or_non_const_2473": "Všechny deklarace výčtu musí být konstantní nebo nekonstantní.",
   "Enum_member_expected_1132": "Očekává se člen výčtu.",
   "Enum_member_must_have_initializer_1061": "Člen výčtu musí mít inicializátor.",
