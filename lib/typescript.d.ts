@@ -335,32 +335,33 @@ declare namespace ts {
         EnumMember = 271,
         SourceFile = 272,
         Bundle = 273,
-        JSDocTypeExpression = 274,
-        JSDocAllType = 275,
-        JSDocUnknownType = 276,
-        JSDocNullableType = 277,
-        JSDocNonNullableType = 278,
-        JSDocOptionalType = 279,
-        JSDocFunctionType = 280,
-        JSDocVariadicType = 281,
-        JSDocComment = 282,
-        JSDocTypeLiteral = 283,
-        JSDocTag = 284,
-        JSDocAugmentsTag = 285,
-        JSDocClassTag = 286,
-        JSDocParameterTag = 287,
-        JSDocReturnTag = 288,
-        JSDocTypeTag = 289,
-        JSDocTemplateTag = 290,
-        JSDocTypedefTag = 291,
-        JSDocPropertyTag = 292,
-        SyntaxList = 293,
-        NotEmittedStatement = 294,
-        PartiallyEmittedExpression = 295,
-        CommaListExpression = 296,
-        MergeDeclarationMarker = 297,
-        EndOfDeclarationMarker = 298,
-        Count = 299,
+        Prepend = 274,
+        JSDocTypeExpression = 275,
+        JSDocAllType = 276,
+        JSDocUnknownType = 277,
+        JSDocNullableType = 278,
+        JSDocNonNullableType = 279,
+        JSDocOptionalType = 280,
+        JSDocFunctionType = 281,
+        JSDocVariadicType = 282,
+        JSDocComment = 283,
+        JSDocTypeLiteral = 284,
+        JSDocTag = 285,
+        JSDocAugmentsTag = 286,
+        JSDocClassTag = 287,
+        JSDocParameterTag = 288,
+        JSDocReturnTag = 289,
+        JSDocTypeTag = 290,
+        JSDocTemplateTag = 291,
+        JSDocTypedefTag = 292,
+        JSDocPropertyTag = 293,
+        SyntaxList = 294,
+        NotEmittedStatement = 295,
+        PartiallyEmittedExpression = 296,
+        CommaListExpression = 297,
+        MergeDeclarationMarker = 298,
+        EndOfDeclarationMarker = 299,
+        Count = 300,
         FirstAssignment = 58,
         LastAssignment = 70,
         FirstCompoundAssignment = 59,
@@ -386,10 +387,10 @@ declare namespace ts {
         FirstBinaryOperator = 27,
         LastBinaryOperator = 70,
         FirstNode = 145,
-        FirstJSDocNode = 274,
-        LastJSDocNode = 292,
-        FirstJSDocTagNode = 284,
-        LastJSDocTagNode = 292,
+        FirstJSDocNode = 275,
+        LastJSDocNode = 293,
+        FirstJSDocTagNode = 285,
+        LastJSDocTagNode = 293,
     }
     enum NodeFlags {
         None = 0,
@@ -1628,7 +1629,12 @@ declare namespace ts {
     }
     interface Bundle extends Node {
         kind: SyntaxKind.Bundle;
+        prepends: ReadonlyArray<PrependNode>;
         sourceFiles: ReadonlyArray<SourceFile>;
+    }
+    interface PrependNode extends Node {
+        kind: SyntaxKind.Prepend;
+        text: string;
     }
     interface JsonSourceFile extends SourceFile {
         jsonObject?: ObjectLiteralExpression;
@@ -2227,36 +2233,6 @@ declare namespace ts {
         NoConstraints = 8,
         AlwaysStrict = 16,
     }
-    interface InferenceInfo {
-        typeParameter: TypeParameter;
-        candidates: Type[];
-        contraCandidates: Type[];
-        inferredType: Type;
-        priority: InferencePriority;
-        topLevel: boolean;
-        isFixed: boolean;
-    }
-    enum InferenceFlags {
-        None = 0,
-        InferUnionTypes = 1,
-        NoDefault = 2,
-        AnyDefault = 4,
-    }
-    /**
-     * Ternary values are defined such that
-     * x & y is False if either x or y is False.
-     * x & y is Maybe if either x or y is Maybe, but neither x or y is False.
-     * x & y is True if both x and y are True.
-     * x | y is False if both x and y are False.
-     * x | y is Maybe if either x or y is Maybe, but neither x or y is True.
-     * x | y is True if either x or y is True.
-     */
-    enum Ternary {
-        False = 0,
-        Maybe = 1,
-        True = -1,
-    }
-    type TypeComparer = (s: Type, t: Type, reportErrors?: boolean) => Ternary;
     interface JsFileExtensionInfo {
         extension: string;
         isMixedContent: boolean;
@@ -2292,7 +2268,8 @@ declare namespace ts {
     enum DiagnosticCategory {
         Warning = 0,
         Error = 1,
-        Message = 2,
+        Suggestion = 2,
+        Message = 3,
     }
     enum ModuleResolutionKind {
         Classic = 1,
@@ -2301,7 +2278,11 @@ declare namespace ts {
     interface PluginImport {
         name: string;
     }
-    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | null | undefined;
+    interface ProjectReference {
+        path: string;
+        prepend?: boolean;
+    }
+    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | ProjectReference[] | null | undefined;
     interface CompilerOptions {
         allowJs?: boolean;
         allowSyntheticDefaultImports?: boolean;
@@ -2355,6 +2336,8 @@ declare namespace ts {
         project?: string;
         reactNamespace?: string;
         jsxFactory?: string;
+        references?: ProjectReference[];
+        referenceTarget?: boolean;
         removeComments?: boolean;
         rootDir?: string;
         rootDirs?: string[];
@@ -2595,7 +2578,8 @@ declare namespace ts {
         Expression = 1,
         IdentifierName = 2,
         MappedTypeParameter = 3,
-        Unspecified = 4,
+        Prepend = 4,
+        Unspecified = 5,
     }
     interface TransformationContext {
         /** Gets the compiler options supplied to the transformer. */
@@ -3684,8 +3668,9 @@ declare namespace ts {
     function updatePartiallyEmittedExpression(node: PartiallyEmittedExpression, expression: Expression): PartiallyEmittedExpression;
     function createCommaList(elements: ReadonlyArray<Expression>): CommaListExpression;
     function updateCommaList(node: CommaListExpression, elements: ReadonlyArray<Expression>): CommaListExpression;
-    function createBundle(sourceFiles: ReadonlyArray<SourceFile>): Bundle;
-    function updateBundle(node: Bundle, sourceFiles: ReadonlyArray<SourceFile>): Bundle;
+    function createBundle(sourceFiles: ReadonlyArray<SourceFile>, prepends?: ReadonlyArray<PrependNode>): Bundle;
+    function createPrepend(text: string): PrependNode;
+    function updateBundle(node: Bundle, sourceFiles: ReadonlyArray<SourceFile>, prepends?: ReadonlyArray<PrependNode>): Bundle;
     function createImmediatelyInvokedFunctionExpression(statements: Statement[]): CallExpression;
     function createImmediatelyInvokedFunctionExpression(statements: Statement[], param: ParameterDeclaration, paramValue: Expression): CallExpression;
     function createImmediatelyInvokedArrowFunction(statements: Statement[]): CallExpression;
@@ -3891,6 +3876,8 @@ declare namespace ts {
      * @returns A 'Program' object.
      */
     function createProgram(rootNames: ReadonlyArray<string>, options: CompilerOptions, host?: CompilerHost, oldProgram?: Program): Program;
+    function getProjectReferenceFileNames(host: CompilerHost, rootOptions: CompilerOptions): string[] | undefined;
+    function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions, callback: (resolvedFile: string, referencedProject: CompilerOptions, settings: ProjectReference) => void): void;
 }
 declare namespace ts {
     interface EmitOutput {
@@ -4336,6 +4323,7 @@ declare namespace ts {
         cleanupSemanticCache(): void;
         getSyntacticDiagnostics(fileName: string): Diagnostic[];
         getSemanticDiagnostics(fileName: string): Diagnostic[];
+        getSuggestionDiagnostics(fileName: string): Diagnostic[];
         getCompilerOptionsDiagnostics(): Diagnostic[];
         /**
          * @deprecated Use getEncodedSyntacticClassifications instead.
@@ -4746,7 +4734,7 @@ declare namespace ts {
         argumentCount: number;
     }
     interface CompletionInfo {
-        /** Not true for all glboal completions. This will be true if the enclosing scope matches a few syntax kinds. See `isGlobalCompletionScope`. */
+        /** Not true for all glboal completions. This will be true if the enclosing scope matches a few syntax kinds. See `isSnippetScope`. */
         isGlobalCompletion: boolean;
         isMemberCompletion: boolean;
         /**

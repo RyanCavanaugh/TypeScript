@@ -23,10 +23,12 @@ declare namespace ts.server.protocol {
         GeterrForProject = "geterrForProject",
         SemanticDiagnosticsSync = "semanticDiagnosticsSync",
         SyntacticDiagnosticsSync = "syntacticDiagnosticsSync",
+        SuggestionDiagnosticsSync = "suggestionDiagnosticsSync",
         NavBar = "navbar",
         Navto = "navto",
         NavTree = "navtree",
         NavTreeFull = "navtree-full",
+        /** @deprecated */
         Occurrences = "occurrences",
         DocumentHighlights = "documentHighlights",
         Open = "open",
@@ -627,6 +629,7 @@ declare namespace ts.server.protocol {
         openingBrace: string;
     }
     /**
+     * @deprecated
      * Get occurrences request; value of command field is
      * "occurrences". Return response giving spans that are relevant
      * in the file at a given line and column.
@@ -634,6 +637,7 @@ declare namespace ts.server.protocol {
     interface OccurrencesRequest extends FileLocationRequest {
         command: CommandTypes.Occurrences;
     }
+    /** @deprecated */
     interface OccurrencesResponseItem extends FileSpan {
         /**
          * True if the occurrence is a write location, false otherwise.
@@ -644,6 +648,7 @@ declare namespace ts.server.protocol {
          */
         isInString?: true;
     }
+    /** @deprecated */
     interface OccurrencesResponse extends Response {
         body?: OccurrencesResponseItem[];
     }
@@ -1541,6 +1546,12 @@ declare namespace ts.server.protocol {
     interface SemanticDiagnosticsSyncResponse extends Response {
         body?: Diagnostic[] | DiagnosticWithLinePosition[];
     }
+    interface SuggestionDiagnosticsSyncRequest extends FileRequest {
+        command: CommandTypes.SuggestionDiagnosticsSync;
+        arguments: SuggestionDiagnosticsSyncRequestArgs;
+    }
+    type SuggestionDiagnosticsSyncRequestArgs = SemanticDiagnosticsSyncRequestArgs;
+    type SuggestionDiagnosticsSyncResponse = SemanticDiagnosticsSyncResponse;
     /**
      * Synchronous request for syntactic diagnostics of one file.
      */
@@ -1637,7 +1648,7 @@ declare namespace ts.server.protocol {
          */
         text: string;
         /**
-         * The category of the diagnostic message, e.g. "error" vs. "warning"
+         * The category of the diagnostic message, e.g. "error", "warning", or "suggestion".
          */
         category: string;
         /**
@@ -1665,8 +1676,9 @@ declare namespace ts.server.protocol {
          */
         diagnostics: Diagnostic[];
     }
+    type DiagnosticEventKind = "semanticDiag" | "syntaxDiag" | "suggestionDiag";
     /**
-     * Event message for "syntaxDiag" and "semanticDiag" event types.
+     * Event message for DiagnosticEventKind event types.
      * These events provide syntactic and semantic errors for a file.
      */
     interface DiagnosticEvent extends Event {
@@ -2088,6 +2100,7 @@ declare namespace ts.server.protocol {
         project?: string;
         reactNamespace?: string;
         removeComments?: boolean;
+        references?: ProjectReference[];
         rootDir?: string;
         rootDirs?: string[];
         skipLibCheck?: boolean;
@@ -2265,7 +2278,12 @@ declare namespace ts.server.protocol {
         name: string;
     }
 
-    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | null | undefined;
+    interface ProjectReference {
+        path: string;
+        prepend?: boolean;
+    }
+
+    type CompilerOptionsValue = string | number | boolean | (string | number)[] | string[] | MapLike<string[]> | PluginImport[] | ProjectReference[] | null | undefined;
 }
 declare namespace ts {
     // these types are empty stubs for types from services and should not be used directly
