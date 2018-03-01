@@ -79,7 +79,7 @@ namespace Harness.LanguageService {
     }
 
     class ScriptSnapshotProxy implements ts.ScriptSnapshotShim {
-        constructor(public scriptSnapshot: ts.IScriptSnapshot) {
+        constructor(private readonly scriptSnapshot: ts.IScriptSnapshot) {
         }
 
         public getText(start: number, end: number): string {
@@ -91,14 +91,8 @@ namespace Harness.LanguageService {
         }
 
         public getChangeRange(oldScript: ts.ScriptSnapshotShim): string {
-            const oldShim = <ScriptSnapshotProxy>oldScript;
-
-            const range = this.scriptSnapshot.getChangeRange(oldShim.scriptSnapshot);
-            if (range === undefined) {
-                return undefined;
-            }
-
-            return JSON.stringify({ span: { start: range.span.start, length: range.span.length }, newLength: range.newLength });
+            const range = this.scriptSnapshot.getChangeRange((oldScript as ScriptSnapshotProxy).scriptSnapshot);
+            return range && JSON.stringify(range);
         }
     }
 
@@ -144,7 +138,7 @@ namespace Harness.LanguageService {
 
         public getScriptInfo(fileName: string): ScriptInfo {
             const fileEntry = this.virtualFileSystem.traversePath(fileName);
-            return fileEntry && fileEntry.isFile() ? (<Utils.VirtualFile>fileEntry).content : undefined;
+            return fileEntry && fileEntry.isFile() ? fileEntry.content : undefined;
         }
 
         public addScript(fileName: string, content: string, isRootFile: boolean): void {
@@ -190,10 +184,7 @@ namespace Harness.LanguageService {
         getCancellationToken() { return this.cancellationToken; }
         getDirectories(path: string): string[] {
             const dir = this.virtualFileSystem.traversePath(path);
-            if (dir && dir.isDirectory()) {
-                return ts.map((<Utils.VirtualDirectory>dir).getDirectories(), (d) => ts.combinePaths(path, d.name));
-            }
-            return [];
+            return dir && dir.isDirectory() ? dir.getDirectories().map(d => d.name) : [];
         }
         getCurrentDirectory(): string { return virtualFileSystemRoot; }
         getDefaultLibFileName(): string { return Harness.Compiler.defaultLibFileName; }
@@ -231,12 +222,7 @@ namespace Harness.LanguageService {
         }
         readFile(path: string): string | undefined {
             const target = this.symlinks.get(path);
-            if (target !== undefined) {
-                return this.readFile(target);
-            }
-
-            const snapshot = this.getScriptSnapshot(path);
-            return snapshot.getText(0, snapshot.getLength());
+            return target !== undefined ? this.readFile(target) : ts.getSnapshotText(this.getScriptSnapshot(path));
         }
         addSymlink(from: string, target: string) { this.symlinks.set(from, target); }
         realpath(path: string): string {
@@ -345,7 +331,7 @@ namespace Harness.LanguageService {
         fileExists(fileName: string) { return this.getScriptInfo(fileName) !== undefined; }
         readFile(fileName: string) {
             const snapshot = this.nativeHost.getScriptSnapshot(fileName);
-            return snapshot && snapshot.getText(0, snapshot.getLength());
+            return snapshot && ts.getSnapshotText(snapshot);
         }
         log(s: string): void { this.nativeHost.log(s); }
         trace(s: string): void { this.nativeHost.trace(s); }
@@ -410,6 +396,9 @@ namespace Harness.LanguageService {
         }
         getSemanticDiagnostics(fileName: string): ts.Diagnostic[] {
             return unwrapJSONCallResult(this.shim.getSemanticDiagnostics(fileName));
+        }
+        getSuggestionDiagnostics(fileName: string): ts.Diagnostic[] {
+            return unwrapJSONCallResult(this.shim.getSuggestionDiagnostics(fileName));
         }
         getCompilerOptionsDiagnostics(): ts.Diagnostic[] {
             return unwrapJSONCallResult(this.shim.getCompilerOptionsDiagnostics());
@@ -531,6 +520,9 @@ namespace Harness.LanguageService {
         getApplicableRefactors(): ts.ApplicableRefactorInfo[] {
             throw new Error("Not supported on the shim.");
         }
+        organizeImports(_scope: ts.OrganizeImportsScope, _formatOptions: ts.FormatCodeSettings): ReadonlyArray<ts.FileTextChanges> {
+            throw new Error("Not supported on the shim.");
+        }
         getEmitOutput(fileName: string): ts.EmitOutput {
             return unwrapJSONCallResult(this.shim.getEmitOutput(fileName));
         }
@@ -649,7 +641,7 @@ namespace Harness.LanguageService {
             }
 
             const snapshot = this.host.getScriptSnapshot(fileName);
-            return snapshot && snapshot.getText(0, snapshot.getLength());
+            return snapshot && ts.getSnapshotText(snapshot);
         }
 
         writeFile = ts.noop;

@@ -24,7 +24,7 @@ namespace ts.codefix {
             return undefined;
         }
 
-        const declaration = declarations[0] as Declaration;
+        const declaration = declarations[0];
         // Clone name to remove leading trivia.
         const name = getSynthesizedDeepClone(getNameOfDeclaration(declaration)) as PropertyName;
         const visibilityModifier = createVisibilityModifier(getModifierFlags(declaration));
@@ -121,7 +121,7 @@ namespace ts.codefix {
             createStubbedMethodBody());
     }
 
-    function createDummyParameters(argCount: number,  names: string[] | undefined, minArgumentCount: number | undefined, inJs: boolean): ParameterDeclaration[] {
+    function createDummyParameters(argCount: number, names: string[] | undefined, minArgumentCount: number | undefined, inJs: boolean): ParameterDeclaration[] {
         const parameters: ParameterDeclaration[] = [];
         for (let i = 0; i < argCount; i++) {
             const newParameter = createParameter(

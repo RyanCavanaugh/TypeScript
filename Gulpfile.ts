@@ -53,7 +53,6 @@ const cmdLineOptions = minimist(process.argv.slice(2), {
         "ru": "runners", "runner": "runners",
         "r": "reporter",
         "c": "colors", "color": "colors",
-        "f": "files", "file": "files",
         "w": "workers",
     },
     default: {
@@ -69,7 +68,6 @@ const cmdLineOptions = minimist(process.argv.slice(2), {
         light: process.env.light === undefined || process.env.light !== "false",
         reporter: process.env.reporter || process.env.r,
         lint: process.env.lint || true,
-        files: process.env.f || process.env.file || process.env.files || "",
         workers: process.env.workerCount || os.cpus().length,
     }
 });
@@ -150,7 +148,9 @@ const es2018LibrarySourceMap = es2018LibrarySource.map(source =>
     ({ target: "lib." + source, sources: ["header.d.ts", source] }));
 
 const esnextLibrarySource = [
-    "esnext.asynciterable.d.ts"
+    "esnext.asynciterable.d.ts",
+    "esnext.array.d.ts",
+    "esnext.promise.d.ts"
 ];
 
 const esnextLibrarySourceMap = esnextLibrarySource.map(source =>
@@ -526,7 +526,7 @@ gulp.task(tsserverLibraryFile, /*help*/ false, [servicesFile, typesMapJson], (do
     const serverLibraryProject = tsc.createProject("src/server/tsconfig.library.json", getCompilerSettings({ removeComments: false }, /*useBuiltCompiler*/ true));
     const {js, dts}: { js: NodeJS.ReadableStream, dts: NodeJS.ReadableStream } = serverLibraryProject.src()
         .pipe(sourcemaps.init())
-        .pipe(newer(tsserverLibraryFile))
+        .pipe(newer(<any>{ dest: tsserverLibraryFile, extra: ["src/compiler/**/*.ts", "src/services/**/*.ts"] }))
         .pipe(serverLibraryProject());
 
     return merge2([
@@ -679,12 +679,12 @@ function runConsoleTests(defaultReporter: string, runInParallel: boolean, done: 
             workerCount = cmdLineOptions.workers;
         }
 
-        if (tests || runners || light || taskConfigsFolder) {
-            writeTestConfigFile(tests, runners, light, taskConfigsFolder, workerCount, stackTraceLimit);
-        }
-
         if (tests && tests.toLocaleLowerCase() === "rwc") {
             testTimeout = 400000;
+        }
+
+        if (tests || runners || light || testTimeout || taskConfigsFolder) {
+            writeTestConfigFile(tests, runners, light, taskConfigsFolder, workerCount, stackTraceLimit, testTimeout);
         }
 
         const colors = cmdLineOptions.colors;
@@ -871,8 +871,17 @@ function cleanTestDirs(done: (e?: any) => void) {
 }
 
 // used to pass data from jake command line directly to run.js
-function writeTestConfigFile(tests: string, runners: string, light: boolean, taskConfigsFolder?: string, workerCount?: number, stackTraceLimit?: string) {
-    const testConfigContents = JSON.stringify({ test: tests ? [tests] : undefined, runner: runners ? runners.split(",") : undefined, light, workerCount, stackTraceLimit, taskConfigsFolder, noColor: !cmdLineOptions.colors });
+function writeTestConfigFile(tests: string, runners: string, light: boolean, taskConfigsFolder?: string, workerCount?: number, stackTraceLimit?: string, timeout?: number) {
+    const testConfigContents = JSON.stringify({
+        test: tests ? [tests] : undefined,
+        runner: runners ? runners.split(",") : undefined,
+        light,
+        workerCount,
+        stackTraceLimit,
+        taskConfigsFolder,
+        noColor: !cmdLineOptions.colors,
+        timeout,
+    });
     console.log("Running tests with config: " + testConfigContents);
     fs.writeFileSync("test.config", testConfigContents);
 }
@@ -1101,13 +1110,11 @@ function spawnLintWorker(files: {path: string}[], callback: (failures: number) =
 
 gulp.task("lint", "Runs tslint on the compiler sources. Optional arguments are: --f[iles]=regex", ["build-rules"], () => {
     if (fold.isTravis()) console.log(fold.start("lint"));
-    const fileMatcher = cmdLineOptions.files;
-    const files = fileMatcher
-        ? `src/**/${fileMatcher}`
-        : "Gulpfile.ts 'scripts/generateLocalizedDiagnosticMessages.ts' 'scripts/tslint/**/*.ts' 'src/**/*.ts' --exclude 'src/lib/*.d.ts'";
-    const cmd = `node node_modules/tslint/bin/tslint ${files} --formatters-dir ./built/local/tslint/formatters --format autolinkableStylish`;
-    console.log("Linting: " + cmd);
-    child_process.execSync(cmd, { stdio: [0, 1, 2] });
+    for (const project of ["scripts/tslint/tsconfig.json", "src/tsconfig-base.json"]) {
+        const cmd = `node node_modules/tslint/bin/tslint --project ${project} --formatters-dir ./built/local/tslint/formatters --format autolinkableStylish`;
+        console.log("Linting: " + cmd);
+        child_process.execSync(cmd, { stdio: [0, 1, 2] });
+    }
     if (fold.isTravis()) console.log(fold.end("lint"));
 });
 

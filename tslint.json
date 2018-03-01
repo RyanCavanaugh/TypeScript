@@ -2,6 +2,8 @@
     "extends": "tslint:latest",
     "rulesDirectory": "built/local/tslint/rules",
     "rules": {
+        "no-unnecessary-type-assertion-2": true,
+
         "array-type": [true, "array"],
         "ban-types": {
             "options": [
@@ -31,6 +33,7 @@
             "check-else"
         ],
         "no-bom": true,
+        "no-double-space": true,
         "no-in-operator": true,
         "no-increment-decrement": true,
         "no-inferrable-types": true,

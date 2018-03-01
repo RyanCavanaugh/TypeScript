@@ -262,8 +262,8 @@ namespace ts.BreakpointResolver {
                         }
 
                         // Set breakpoint on identifier element of destructuring pattern
-                        // a or ...c  or d: x from
-                        // [a, b, ...c] or { a, b } or { d: x } from destructuring pattern
+                        // `a` or `...c` or `d: x` from
+                        // `[a, b, ...c]` or `{ a, b }` or `{ d: x }` from destructuring pattern
                         if ((node.kind === SyntaxKind.Identifier ||
                             node.kind === SyntaxKind.SpreadElement ||
                             node.kind === SyntaxKind.PropertyAssignment ||
@@ -390,7 +390,7 @@ namespace ts.BreakpointResolver {
 
                 // If this is a destructuring pattern, set breakpoint in binding pattern
                 if (isBindingPattern(variableDeclaration.name)) {
-                    return spanInBindingPattern(<BindingPattern>variableDeclaration.name);
+                    return spanInBindingPattern(variableDeclaration.name);
                 }
 
                 // Breakpoint is possible in variableDeclaration only if there is initialization
@@ -420,15 +420,16 @@ namespace ts.BreakpointResolver {
             function spanInParameterDeclaration(parameter: ParameterDeclaration): TextSpan {
                 if (isBindingPattern(parameter.name)) {
                     // Set breakpoint in binding pattern
-                    return spanInBindingPattern(<BindingPattern>parameter.name);
+                    return spanInBindingPattern(parameter.name);
                 }
                 else if (canHaveSpanInParameterDeclaration(parameter)) {
                     return textSpan(parameter);
                 }
                 else {
                     const functionDeclaration = <FunctionLikeDeclaration>parameter.parent;
-                    const indexOfParameter = indexOf(functionDeclaration.parameters, parameter);
-                    if (indexOfParameter) {
+                    const indexOfParameter = functionDeclaration.parameters.indexOf(parameter);
+                    Debug.assert(indexOfParameter !== -1);
+                    if (indexOfParameter !== 0) {
                         // Not a first parameter, go to previous parameter
                         return spanInParameterDeclaration(functionDeclaration.parameters[indexOfParameter - 1]);
                     }
@@ -539,10 +540,7 @@ namespace ts.BreakpointResolver {
 
             function spanInArrayLiteralOrObjectLiteralDestructuringPattern(node: DestructuringPattern): TextSpan {
                 Debug.assert(node.kind !== SyntaxKind.ArrayBindingPattern && node.kind !== SyntaxKind.ObjectBindingPattern);
-                const elements: NodeArray<Expression | ObjectLiteralElement> =
-                    node.kind === SyntaxKind.ArrayLiteralExpression ?
-                        (<ArrayLiteralExpression>node).elements :
-                        (<ObjectLiteralExpression>node).properties;
+                const elements: NodeArray<Expression | ObjectLiteralElement> = node.kind === SyntaxKind.ArrayLiteralExpression ? node.elements : (node as ObjectLiteralExpression).properties;
 
                 const firstBindingElement = forEach(elements,
                     element => element.kind !== SyntaxKind.OmittedExpression ? element : undefined);

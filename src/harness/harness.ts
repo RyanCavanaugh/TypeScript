@@ -44,13 +44,13 @@ var assert: typeof _chai.assert = _chai.assert;
 }
 
 declare var __dirname: string; // Node-specific
-var global: NodeJS.Global = <any>Function("return this").call(undefined);
+var global: NodeJS.Global = Function("return this").call(undefined);
 
 declare var window: {};
 declare var XMLHttpRequest: {
     new(): XMLHttpRequest;
 };
-interface XMLHttpRequest  {
+interface XMLHttpRequest {
     readonly readyState: number;
     readonly responseText: string;
     readonly status: number;
@@ -229,7 +229,7 @@ namespace Utils {
             start: diagnostic.start,
             length: diagnostic.length,
             messageText: ts.flattenDiagnosticMessageText(diagnostic.messageText, Harness.IO.newLine()),
-            category: (<any>ts).DiagnosticCategory[diagnostic.category],
+            category: ts.diagnosticCategoryName(diagnostic, /*lowerCase*/ false),
             code: diagnostic.code
         };
     }
@@ -754,10 +754,9 @@ namespace Harness {
                 return ts.matchFiles(path, extension, exclude, include, useCaseSensitiveFileNames(), getCurrentDirectory(), depth, path => {
                     const entry = fs.traversePath(path);
                     if (entry && entry.isDirectory()) {
-                        const directory = <Utils.VirtualDirectory>entry;
                         return {
-                            files: ts.map(directory.getFiles(), f => f.name),
-                            directories: ts.map(directory.getDirectories(), d => d.name)
+                            files: ts.map(entry.getFiles(), f => f.name),
+                            directories: ts.map(entry.getDirectories(), d => d.name)
                         };
                     }
                     return { files: [], directories: [] };
@@ -861,7 +860,7 @@ namespace Harness {
         // Cache of lib files from "built/local"
         let libFileNameSourceFileMap: ts.Map<ts.SourceFile> | undefined;
 
-        // Cache of lib files from  "tests/lib/"
+        // Cache of lib files from "tests/lib/"
         const testLibFileNameSourceFileMap = ts.createMap<ts.SourceFile>();
         const es6TestLibFileNameSourceFileMap = ts.createMap<ts.SourceFile>();
 
@@ -1239,8 +1238,18 @@ namespace Harness {
             options: ts.CompilerOptions,
             // Current directory is needed for rwcRunner to be able to use currentDirectory defined in json file
             currentDirectory: string): DeclarationCompilationContext | undefined {
-            if (options.declaration && result.errors.length === 0 && result.declFilesCode.length !== result.files.length) {
-                throw new Error("There were no errors and declFiles generated did not match number of js files generated");
+
+            if (result.errors.length === 0) {
+                if (options.declaration) {
+                    if (options.emitDeclarationOnly) {
+                        if (result.files.length > 0 || result.declFilesCode.length === 0) {
+                            throw new Error("Only declaration files should be generated when emitDeclarationOnly:true");
+                        }
+                    }
+                    else if (result.declFilesCode.length !== result.files.length) {
+                        throw new Error("There were no errors and declFiles generated did not match number of js files generated");
+                    }
+                }
             }
 
             const declInputFiles: TestFile[] = [];
@@ -1354,7 +1363,7 @@ namespace Harness {
                     .split("\n")
                     .map(s => s.length > 0 && s.charAt(s.length - 1) === "\r" ? s.substr(0, s.length - 1) : s)
                     .filter(s => s.length > 0)
-                    .map(s => "!!! " + ts.DiagnosticCategory[error.category].toLowerCase() + " TS" + error.code + ": " + s);
+                    .map(s => "!!! " + ts.diagnosticCategoryName(error) + " TS" + error.code + ": " + s);
                 errLines.forEach(e => outputLines += (newLine() + e));
                 errorsReported++;
 
@@ -1510,7 +1519,7 @@ namespace Harness {
             }
 
             if (typesError && symbolsError) {
-                throw new Error(typesError.message + Harness.IO.newLine() + symbolsError.message);
+                throw new Error(typesError.stack + Harness.IO.newLine() + symbolsError.stack);
             }
 
             if (typesError) {
@@ -1641,7 +1650,7 @@ namespace Harness {
         }
 
         export function doJsEmitBaseline(baselinePath: string, header: string, options: ts.CompilerOptions, result: CompilerResult, tsConfigFiles: Harness.Compiler.TestFile[], toBeCompiled: Harness.Compiler.TestFile[], otherFiles: Harness.Compiler.TestFile[], harnessSettings: Harness.TestCaseParser.CompilerSettings) {
-            if (!options.noEmit && result.files.length === 0 && result.errors.length === 0) {
+            if (!options.noEmit && !options.emitDeclarationOnly && result.files.length === 0 && result.errors.length === 0) {
                 throw new Error("Expected at least one js file to be emitted or at least one error to be created.");
             }
 
@@ -1948,7 +1957,7 @@ namespace Harness {
             let tsConfigFileUnitData: TestUnitData;
             for (let i = 0; i < testUnitData.length; i++) {
                 const data = testUnitData[i];
-                if (ts.getBaseFileName(data.name).toLowerCase() === "tsconfig.json") {
+                if (getConfigNameFromFileName(data.name)) {
                     const configJson = ts.parseJsonText(data.name, data.content);
                     assert.isTrue(configJson.endOfFileToken !== undefined);
                     let baseDir = ts.normalizePath(ts.getDirectoryPath(data.name));
@@ -2157,6 +2166,11 @@ namespace Harness {
     export function getDefaultLibraryFile(filePath: string, io: Harness.Io): Harness.Compiler.TestFile {
         const libFile = Harness.userSpecifiedRoot + Harness.libFolder + ts.getBaseFileName(ts.normalizeSlashes(filePath));
         return { unitName: libFile, content: io.readFile(libFile) };
+    }
+
+    export function getConfigNameFromFileName(filename: string): "tsconfig.json" | "jsconfig.json" | undefined {
+        const flc = ts.getBaseFileName(filename).toLowerCase();
+        return ts.find(["tsconfig.json" as "tsconfig.json", "jsconfig.json" as "jsconfig.json"], x => x === flc);
     }
 
     if (Error) (<any>Error).stackTraceLimit = 100;

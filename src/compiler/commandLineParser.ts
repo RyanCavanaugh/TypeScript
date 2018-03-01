@@ -138,12 +138,14 @@ namespace ts {
                     "es2017.string": "lib.es2017.string.d.ts",
                     "es2017.intl": "lib.es2017.intl.d.ts",
                     "es2017.typedarrays": "lib.es2017.typedarrays.d.ts",
+                    "esnext.array": "lib.esnext.array.d.ts",
                     "esnext.asynciterable": "lib.esnext.asynciterable.d.ts",
+                    "esnext.promise": "lib.esnext.promise.d.ts",
                 }),
             },
             showInSimplifiedHelpView: true,
             category: Diagnostics.Basic_Options,
-            description: Diagnostics.Specify_library_files_to_be_included_in_the_compilation_Colon
+            description: Diagnostics.Specify_library_files_to_be_included_in_the_compilation
         },
         {
             name: "allowJs",
@@ -177,6 +179,12 @@ namespace ts {
             showInSimplifiedHelpView: true,
             category: Diagnostics.Basic_Options,
             description: Diagnostics.Generates_corresponding_d_ts_file,
+        },
+        {
+            name: "emitDeclarationOnly",
+            type: "boolean",
+            category: Diagnostics.Advanced_Options,
+            description: Diagnostics.Only_emit_d_ts_declaration_files,
         },
         {
             name: "sourceMap",
@@ -410,6 +418,13 @@ namespace ts {
             type: "boolean",
             category: Diagnostics.Module_Resolution_Options,
             description: Diagnostics.Allow_default_imports_from_modules_with_no_default_export_This_does_not_affect_code_emit_just_typechecking
+        },
+        {
+            name: "esModuleInterop",
+            type: "boolean",
+            showInSimplifiedHelpView: true,
+            category: Diagnostics.Module_Resolution_Options,
+            description: Diagnostics.Enables_emit_interoperability_between_CommonJS_and_ES_Modules_via_creation_of_namespace_objects_for_all_imports_Implies_allowSyntheticDefaultImports
         },
         {
             name: "preserveSymlinks",
@@ -713,7 +728,8 @@ namespace ts {
     export const defaultInitCompilerOptions: CompilerOptions = {
         module: ModuleKind.CommonJS,
         target: ScriptTarget.ES5,
-        strict: true
+        strict: true,
+        esModuleInterop: true
     };
 
     let optionNameMapCache: OptionNameMap;
@@ -1437,9 +1453,9 @@ namespace ts {
     }
 
     function directoryOfCombinedPath(fileName: string, basePath: string) {
-        // Use the `identity` function to avoid canonicalizing the path, as it must remain noncanonical
+        // Use the `getNormalizedAbsolutePath` function to avoid canonicalizing the path, as it must remain noncanonical
         // until consistient casing errors are reported
-        return getDirectoryPath(toPath(fileName, basePath, identity));
+        return getDirectoryPath(getNormalizedAbsolutePath(fileName, basePath));
     }
 
     /**
@@ -1464,11 +1480,10 @@ namespace ts {
         Debug.assert((json === undefined && sourceFile !== undefined) || (json !== undefined && sourceFile === undefined));
         const errors: Diagnostic[] = [];
 
-        const getCanonicalFileName = createGetCanonicalFileName(host.useCaseSensitiveFileNames);
-        const parsedConfig = parseConfig(json, sourceFile, host, basePath, configFileName, getCanonicalFileName, resolutionStack, errors);
+        const parsedConfig = parseConfig(json, sourceFile, host, basePath, configFileName, resolutionStack, errors);
         const { raw } = parsedConfig;
         const options = extend(existingOptions, parsedConfig.options || {});
-        options.configFilePath = configFileName;
+        options.configFilePath = configFileName && normalizeSlashes(configFileName);
         setConfigFileInOptions(options, sourceFile);
         const { fileNames, wildcardDirectories, spec } = getFileNames();
         return {
@@ -1559,7 +1574,10 @@ namespace ts {
         raw: any;
         options?: CompilerOptions;
         typeAcquisition?: TypeAcquisition;
-        extendedConfigPath?: Path;
+        /**
+         * Note that the case of the config path has not yet been normalized, as no files have been imported into the project yet
+         */
+        extendedConfigPath?: string;
     }
 
     function isSuccessfulParsedTsconfig(value: ParsedTsconfig) {
@@ -1576,12 +1594,11 @@ namespace ts {
             host: ParseConfigHost,
             basePath: string,
             configFileName: string,
-            getCanonicalFileName: GetCanonicalFileName,
-            resolutionStack: Path[],
+            resolutionStack: string[],
             errors: Push<Diagnostic>,
     ): ParsedTsconfig {
         basePath = normalizeSlashes(basePath);
-        const resolvedPath = toPath(configFileName || "", basePath, getCanonicalFileName);
+        const resolvedPath = getNormalizedAbsolutePath(configFileName || "", basePath);
 
         if (resolutionStack.indexOf(resolvedPath) >= 0) {
             errors.push(createCompilerDiagnostic(Diagnostics.Circularity_detected_while_resolving_configuration_Colon_0, [...resolutionStack, resolvedPath].join(" -> ")));
@@ -1589,14 +1606,13 @@ namespace ts {
         }
 
         const ownConfig = json ?
-            parseOwnConfigOfJson(json, host, basePath, getCanonicalFileName, configFileName, errors) :
-            parseOwnConfigOfJsonSourceFile(sourceFile, host, basePath, getCanonicalFileName, configFileName, errors);
+            parseOwnConfigOfJson(json, host, basePath, configFileName, errors) :
+            parseOwnConfigOfJsonSourceFile(sourceFile, host, basePath, configFileName, errors);
 
         if (ownConfig.extendedConfigPath) {
             // copy the resolution stack so it is never reused between branches in potential diamond-problem scenarios.
             resolutionStack = resolutionStack.concat([resolvedPath]);
-            const extendedConfig = getExtendedConfig(sourceFile, ownConfig.extendedConfigPath, host, basePath, getCanonicalFileName,
-                resolutionStack, errors);
+            const extendedConfig = getExtendedConfig(sourceFile, ownConfig.extendedConfigPath, host, basePath, resolutionStack, errors);
             if (extendedConfig && isSuccessfulParsedTsconfig(extendedConfig)) {
                 const baseRaw = extendedConfig.raw;
                 const raw = ownConfig.raw;
@@ -1624,7 +1640,6 @@ namespace ts {
         json: any,
         host: ParseConfigHost,
         basePath: string,
-        getCanonicalFileName: GetCanonicalFileName,
         configFileName: string | undefined,
         errors: Push<Diagnostic>
     ): ParsedTsconfig {
@@ -1637,7 +1652,7 @@ namespace ts {
         // It should be removed in future releases - use typeAcquisition instead.
         const typeAcquisition = convertTypeAcquisitionFromJsonWorker(json.typeAcquisition || json.typingOptions, basePath, errors, configFileName);
         json.compileOnSave = convertCompileOnSaveOptionFromJson(json, basePath, errors);
-        let extendedConfigPath: Path;
+        let extendedConfigPath: string;
 
         if (json.extends) {
             if (!isString(json.extends)) {
@@ -1645,7 +1660,7 @@ namespace ts {
             }
             else {
                 const newBase = configFileName ? directoryOfCombinedPath(configFileName, basePath) : basePath;
-                extendedConfigPath = getExtendsConfigPath(json.extends, host, newBase, getCanonicalFileName, errors, createCompilerDiagnostic);
+                extendedConfigPath = getExtendsConfigPath(json.extends, host, newBase, errors, createCompilerDiagnostic);
             }
         }
         return { raw: json, options, typeAcquisition, extendedConfigPath };
@@ -1655,13 +1670,12 @@ namespace ts {
         sourceFile: JsonSourceFile,
         host: ParseConfigHost,
         basePath: string,
-        getCanonicalFileName: GetCanonicalFileName,
         configFileName: string | undefined,
         errors: Push<Diagnostic>
     ): ParsedTsconfig {
         const options = getDefaultCompilerOptions(configFileName);
         let typeAcquisition: TypeAcquisition, typingOptionstypeAcquisition: TypeAcquisition;
-        let extendedConfigPath: Path;
+        let extendedConfigPath: string;
 
         const optionsIterator: JsonConversionNotifier = {
             onSetValidOptionKeyValueInParent(parentOption: string, option: CommandLineOption, value: CompilerOptionsValue) {
@@ -1682,7 +1696,6 @@ namespace ts {
                             <string>value,
                             host,
                             newBase,
-                            getCanonicalFileName,
                             errors,
                             (message, arg0) =>
                                 createDiagnosticForNodeInSourceFile(sourceFile, valueNode, message, arg0)
@@ -1724,7 +1737,6 @@ namespace ts {
         extendedConfig: string,
         host: ParseConfigHost,
         basePath: string,
-        getCanonicalFileName: GetCanonicalFileName,
         errors: Push<Diagnostic>,
         createDiagnostic: (message: DiagnosticMessage, arg1?: string) => Diagnostic) {
         extendedConfig = normalizeSlashes(extendedConfig);
@@ -1733,9 +1745,9 @@ namespace ts {
             errors.push(createDiagnostic(Diagnostics.A_path_in_an_extends_option_must_be_relative_or_rooted_but_0_is_not, extendedConfig));
             return undefined;
         }
-        let extendedConfigPath = toPath(extendedConfig, basePath, getCanonicalFileName);
+        let extendedConfigPath = getNormalizedAbsolutePath(extendedConfig, basePath);
         if (!host.fileExists(extendedConfigPath) && !endsWith(extendedConfigPath, Extension.Json)) {
-            extendedConfigPath = `${extendedConfigPath}.json` as Path;
+            extendedConfigPath = `${extendedConfigPath}.json`;
             if (!host.fileExists(extendedConfigPath)) {
                 errors.push(createDiagnostic(Diagnostics.File_0_does_not_exist, extendedConfig));
                 return undefined;
@@ -1746,11 +1758,10 @@ namespace ts {
 
     function getExtendedConfig(
         sourceFile: JsonSourceFile,
-        extendedConfigPath: Path,
+        extendedConfigPath: string,
         host: ts.ParseConfigHost,
         basePath: string,
-        getCanonicalFileName: GetCanonicalFileName,
-        resolutionStack: Path[],
+        resolutionStack: string[],
         errors: Push<Diagnostic>,
     ): ParsedTsconfig | undefined {
         const extendedResult = readJsonConfigFile(extendedConfigPath, path => host.readFile(path));
@@ -1764,14 +1775,14 @@ namespace ts {
 
         const extendedDirname = getDirectoryPath(extendedConfigPath);
         const extendedConfig = parseConfig(/*json*/ undefined, extendedResult, host, extendedDirname,
-            getBaseFileName(extendedConfigPath), getCanonicalFileName, resolutionStack, errors);
+            getBaseFileName(extendedConfigPath), resolutionStack, errors);
         if (sourceFile) {
             sourceFile.extendedSourceFiles.push(...extendedResult.extendedSourceFiles);
         }
 
         if (isSuccessfulParsedTsconfig(extendedConfig)) {
             // Update the paths to reflect base path
-            const relativeDifference = convertToRelativePath(extendedDirname, basePath, getCanonicalFileName);
+            const relativeDifference = convertToRelativePath(extendedDirname, basePath, identity);
             const updatePath = (path: string) => isRootedDiskPath(path) ? path : combinePaths(relativeDifference, path);
             const mapPropertiesInRawIfNotUndefined = (propertyName: string) => {
                 if (raw[propertyName]) {
@@ -1813,7 +1824,7 @@ namespace ts {
 
     function getDefaultCompilerOptions(configFileName?: string) {
         const options: CompilerOptions = getBaseFileName(configFileName) === "jsconfig.json"
-            ? { allowJs: true, maxNodeModuleJsDepth: 2, allowSyntheticDefaultImports: true, skipLibCheck: true }
+            ? { allowJs: true, maxNodeModuleJsDepth: 2, allowSyntheticDefaultImports: true, skipLibCheck: true, noEmit: true }
             : {};
         return options;
     }
@@ -1894,7 +1905,7 @@ namespace ts {
         return normalizeNonListOptionValue(option, basePath, value);
     }
 
-    function normalizeNonListOptionValue(option: CommandLineOption, basePath: string, value: any): CompilerOptionsValue  {
+    function normalizeNonListOptionValue(option: CommandLineOption, basePath: string, value: any): CompilerOptionsValue {
         if (option.isFilePath) {
             value = normalizePath(combinePaths(basePath, value));
             if (value === "") {

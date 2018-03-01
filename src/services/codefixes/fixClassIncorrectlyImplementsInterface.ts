@@ -1,6 +1,7 @@
 /* @internal */
 namespace ts.codefix {
-    const errorCodes = [Diagnostics.Class_0_incorrectly_implements_interface_1.code];
+    const errorCodes = [Diagnostics.Class_0_incorrectly_implements_interface_1.code,
+                        Diagnostics.Class_0_incorrectly_implements_class_1_Did_you_mean_to_extend_1_and_inherit_its_members_as_a_subclass.code];
     const fixId = "fixClassIncorrectlyImplementsInterface"; // TODO: share a group with fixClassDoesntImplementInheritedAbstractMember?
     registerCodeFix({
         errorCodes,
@@ -30,9 +31,7 @@ namespace ts.codefix {
     });
 
     function getClass(sourceFile: SourceFile, pos: number): ClassLikeDeclaration {
-        const classDeclaration = getContainingClass(getTokenAtPosition(sourceFile, pos, /*includeJsDocComment*/ false));
-        Debug.assert(!!classDeclaration);
-        return classDeclaration!;
+        return Debug.assertDefined(getContainingClass(getTokenAtPosition(sourceFile, pos, /*includeJsDocComment*/ false)));
     }
 
     function addMissingDeclarations(

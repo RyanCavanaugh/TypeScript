@@ -18,14 +18,14 @@ namespace ts {
 
     type GetSymbolAccessibilityDiagnostic = (symbolAccessibilityResult: SymbolAccessibilityResult) => SymbolAccessibilityDiagnostic;
 
-    interface EmitTextWriterWithSymbolWriter extends EmitTextWriter, SymbolWriter {
+    interface EmitTextWriterWithSymbolWriter extends EmitTextWriter {
         getSymbolAccessibilityDiagnostic: GetSymbolAccessibilityDiagnostic;
     }
 
     interface SymbolAccessibilityDiagnostic {
         errorNode: Node;
         diagnosticMessage: DiagnosticMessage;
-        typeName?: DeclarationName;
+        typeName?: DeclarationName | QualifiedName;
     }
 
     export function getDeclarationDiagnostics(host: EmitHost, resolver: EmitResolver, targetSourceFile: SourceFile): Diagnostic[] {
@@ -62,7 +62,7 @@ namespace ts {
         let currentIdentifiers: Map<string>;
         let isCurrentFileExternalModule: boolean;
         let reportedDeclarationError = false;
-        let errorNameNode: DeclarationName;
+        let errorNameNode: DeclarationName | QualifiedName;
         const emitJsDocComments = compilerOptions.removeComments ? noop : writeJsDocComments;
         const emit = compilerOptions.stripInternal ? stripInternal : emitNode;
         let needsDeclare = true;
@@ -146,8 +146,8 @@ namespace ts {
                 moduleElementDeclarationEmitInfo = [];
             }
 
-            if (!isBundledEmit && isExternalModule(sourceFile) && sourceFile.moduleAugmentations.length && !resultHasExternalModuleIndicator) {
-                // if file was external module with augmentations - this fact should be preserved in .d.ts as well.
+            if (!isBundledEmit && isExternalModule(sourceFile) && !resultHasExternalModuleIndicator) {
+                // if file was external module this fact should be preserved in .d.ts as well.
                 // in case if we didn't write any external module specifiers in .d.ts we need to emit something
                 // that will force compiler to think that this file is an external module - 'export {}' is a reasonable choice here.
                 write("export {};");
@@ -348,15 +348,15 @@ namespace ts {
             // and also for non-optional initialized parameters that aren't a parameter property
             // these types may need to add `undefined`.
             const shouldUseResolverType = declaration.kind === SyntaxKind.Parameter &&
-                (resolver.isRequiredInitializedParameter(declaration as ParameterDeclaration) ||
-                 resolver.isOptionalUninitializedParameterProperty(declaration as ParameterDeclaration));
+                (resolver.isRequiredInitializedParameter(declaration) ||
+                 resolver.isOptionalUninitializedParameterProperty(declaration));
             if (type && !shouldUseResolverType) {
                 // Write the type
                 emitType(type);
             }
             else {
                 errorNameNode = declaration.name;
-                const format = TypeFormatFlags.UseTypeOfFunction |
+                const format = TypeFormatFlags.UseTypeOfFunction | TypeFormatFlags.UseStructuralFallback |
                     TypeFormatFlags.WriteClassExpressionAsTypeLiteral |
                     (shouldUseResolverType ? TypeFormatFlags.AddUndefined : 0);
                 resolver.writeTypeOfDeclaration(declaration, enclosingDeclaration, format, writer);
@@ -376,7 +376,7 @@ namespace ts {
                 resolver.writeReturnTypeOfSignatureDeclaration(
                     signature,
                     enclosingDeclaration,
-                    TypeFormatFlags.UseTypeOfFunction | TypeFormatFlags.WriteClassExpressionAsTypeLiteral,
+                    TypeFormatFlags.UseTypeOfFunction | TypeFormatFlags.UseStructuralFallback | TypeFormatFlags.WriteClassExpressionAsTypeLiteral,
                     writer);
                 errorNameNode = undefined;
             }
@@ -448,6 +448,10 @@ namespace ts {
                     return emitUnionType(<UnionTypeNode>type);
                 case SyntaxKind.IntersectionType:
                     return emitIntersectionType(<IntersectionTypeNode>type);
+                case SyntaxKind.ConditionalType:
+                    return emitConditionalType(<ConditionalTypeNode>type);
+                case SyntaxKind.InferType:
+                    return emitInferType(<InferTypeNode>type);
                 case SyntaxKind.ParenthesizedType:
                     return emitParenType(<ParenthesizedTypeNode>type);
                 case SyntaxKind.TypeOperator:
@@ -543,6 +547,24 @@ namespace ts {
                 emitSeparatedList(type.types, " & ", emitType);
             }
 
+            function emitConditionalType(node: ConditionalTypeNode) {
+                emitType(node.checkType);
+                write(" extends ");
+                emitType(node.extendsType);
+                write(" ? ");
+                const prevEnclosingDeclaration = enclosingDeclaration;
+                enclosingDeclaration = node.trueType;
+                emitType(node.trueType);
+                enclosingDeclaration = prevEnclosingDeclaration;
+                write(" : ");
+                emitType(node.falseType);
+            }
+
+            function emitInferType(node: InferTypeNode) {
+                write("infer ");
+                writeTextOfNode(currentText, node.typeParameter.name);
+            }
+
             function emitParenType(type: ParenthesizedTypeNode) {
                 write("(");
                 emitType(type.type);
@@ -569,7 +591,9 @@ namespace ts {
                 writeLine();
                 increaseIndent();
                 if (node.readonlyToken) {
-                    write("readonly ");
+                    write(node.readonlyToken.kind === SyntaxKind.PlusToken ? "+readonly " :
+                        node.readonlyToken.kind === SyntaxKind.MinusToken ? "-readonly " :
+                        "readonly ");
                 }
                 write("[");
                 writeEntityName(node.typeParameter.name);
@@ -577,10 +601,17 @@ namespace ts {
                 emitType(node.typeParameter.constraint);
                 write("]");
                 if (node.questionToken) {
-                    write("?");
+                    write(node.questionToken.kind === SyntaxKind.PlusToken ? "+?" :
+                        node.questionToken.kind === SyntaxKind.MinusToken ? "-?" :
+                        "?");
                 }
                 write(": ");
-                emitType(node.type);
+                if (node.type) {
+                    emitType(node.type);
+                }
+                else {
+                    write("any");
+                }
                 write(";");
                 writeLine();
                 decreaseIndent();
@@ -641,7 +672,7 @@ namespace ts {
             resolver.writeTypeOfExpression(
                 expr,
                 enclosingDeclaration,
-                TypeFormatFlags.UseTypeOfFunction | TypeFormatFlags.WriteClassExpressionAsTypeLiteral,
+                TypeFormatFlags.UseTypeOfFunction | TypeFormatFlags.UseStructuralFallback | TypeFormatFlags.WriteClassExpressionAsTypeLiteral,
                 writer);
             write(";");
             writeLine();
@@ -649,6 +680,9 @@ namespace ts {
         }
 
         function emitExportAssignment(node: ExportAssignment) {
+            if (isSourceFile(node.parent)) {
+                resultHasExternalModuleIndicator = true; // Top-level exports are external module indicators
+            }
             if (node.expression.kind === SyntaxKind.Identifier) {
                 write(node.isExportEquals ? "export = " : "export default ");
                 writeTextOfNode(currentText, node.expression);
@@ -743,6 +777,7 @@ namespace ts {
                 const modifiers = getModifierFlags(node);
                 // If the node is exported
                 if (modifiers & ModifierFlags.Export) {
+                    resultHasExternalModuleIndicator = true; // Top-level exports are external module indicators
                     write("export ");
                 }
 
@@ -807,10 +842,10 @@ namespace ts {
         function isVisibleNamedBinding(namedBindings: NamespaceImport | NamedImports): boolean {
             if (namedBindings) {
                 if (namedBindings.kind === SyntaxKind.NamespaceImport) {
-                    return resolver.isDeclarationVisible(<NamespaceImport>namedBindings);
+                    return resolver.isDeclarationVisible(namedBindings);
                 }
                 else {
-                    return forEach((<NamedImports>namedBindings).elements, namedImport => resolver.isDeclarationVisible(namedImport));
+                    return namedBindings.elements.some(namedImport => resolver.isDeclarationVisible(namedImport));
                 }
             }
         }
@@ -833,11 +868,11 @@ namespace ts {
                     }
                     if (node.importClause.namedBindings.kind === SyntaxKind.NamespaceImport) {
                         write("* as ");
-                        writeTextOfNode(currentText, (<NamespaceImport>node.importClause.namedBindings).name);
+                        writeTextOfNode(currentText, node.importClause.namedBindings.name);
                     }
                     else {
                         write("{ ");
-                        emitCommaList((<NamedImports>node.importClause.namedBindings).elements, emitImportOrExportSpecifier, resolver.isDeclarationVisible);
+                        emitCommaList(node.importClause.namedBindings.elements, emitImportOrExportSpecifier, resolver.isDeclarationVisible);
                         write(" }");
                     }
                 }
@@ -854,18 +889,8 @@ namespace ts {
             // external modules since they are indistinguishable from script files with ambient modules. To fix this in such d.ts files we'll emit top level 'export {}'
             // so compiler will treat them as external modules.
             resultHasExternalModuleIndicator = resultHasExternalModuleIndicator || parent.kind !== SyntaxKind.ModuleDeclaration;
-            let moduleSpecifier: Node;
-            if (parent.kind === SyntaxKind.ImportEqualsDeclaration) {
-                const node = parent as ImportEqualsDeclaration;
-                moduleSpecifier = getExternalModuleImportEqualsDeclarationExpression(node);
-            }
-            else if (parent.kind === SyntaxKind.ModuleDeclaration) {
-                moduleSpecifier = (<ModuleDeclaration>parent).name;
-            }
-            else {
-                const node = parent as (ImportDeclaration | ExportDeclaration);
-                moduleSpecifier = node.moduleSpecifier;
-            }
+            const moduleSpecifier = parent.kind === SyntaxKind.ImportEqualsDeclaration ? getExternalModuleImportEqualsDeclarationExpression(parent) :
+                parent.kind === SyntaxKind.ModuleDeclaration ? parent.name : parent.moduleSpecifier;
 
             if (moduleSpecifier.kind === SyntaxKind.StringLiteral && isBundledEmit && (compilerOptions.out || compilerOptions.outFile)) {
                 const moduleName = getExternalModuleNameFromDeclaration(host, resolver, parent);
@@ -899,6 +924,7 @@ namespace ts {
         }
 
         function emitExportDeclaration(node: ExportDeclaration) {
+            resultHasExternalModuleIndicator = true; // Top-level exports are external module indicators
             emitJsDocComments(node);
             write("export ");
             if (node.exportClause) {
@@ -1197,7 +1223,7 @@ namespace ts {
                         write(">");
                     }
                 }
-                else  {
+                else {
                     emitHeritageClause([baseTypeNode], /*isImplementsList*/ false);
                 }
             }
@@ -1260,7 +1286,7 @@ namespace ts {
             // so there is no check needed to see if declaration is visible
             if (node.kind !== SyntaxKind.VariableDeclaration || isVariableDeclarationVisible(node)) {
                 if (isBindingPattern(node.name)) {
-                    emitBindingPattern(<BindingPattern>node.name);
+                    emitBindingPattern(node.name);
                 }
                 else {
                     writeNameOfDeclaration(node, getVariableDeclarationTypeVisibilityError);
@@ -1268,7 +1294,7 @@ namespace ts {
                     // If optional property emit ? but in the case of parameterProperty declaration with "?" indicating optional parameter for the constructor
                     // we don't want to emit property declaration with "?"
                     if ((node.kind === SyntaxKind.PropertyDeclaration || node.kind === SyntaxKind.PropertySignature ||
-                        (node.kind === SyntaxKind.Parameter && !isParameterPropertyDeclaration(<ParameterDeclaration>node))) && hasQuestionToken(node)) {
+                        (node.kind === SyntaxKind.Parameter && !isParameterPropertyDeclaration(node))) && hasQuestionToken(node)) {
                         write("?");
                     }
                     if ((node.kind === SyntaxKind.PropertyDeclaration || node.kind === SyntaxKind.PropertySignature) && node.parent.kind === SyntaxKind.TypeLiteral) {
@@ -1356,7 +1382,7 @@ namespace ts {
 
                 if (bindingElement.name) {
                     if (isBindingPattern(bindingElement.name)) {
-                        emitBindingPattern(<BindingPattern>bindingElement.name);
+                        emitBindingPattern(bindingElement.name);
                     }
                     else {
                         writeTextOfNode(currentText, bindingElement.name);
@@ -1370,7 +1396,7 @@ namespace ts {
             // if this is property of type literal,
             // or is parameter of method/call/construct/index signature of type literal
             // emit only if type is specified
-            if (node.type) {
+            if (hasType(node)) {
                 write(": ");
                 emitType(node.type);
             }
@@ -1749,7 +1775,7 @@ namespace ts {
                 // For bindingPattern, we can't simply writeTextOfNode from the source file
                 // because we want to omit the initializer and using writeTextOfNode will result in initializer get emitted.
                 // Therefore, we will have to recursively emit each element in the bindingPattern.
-                emitBindingPattern(<BindingPattern>node.name);
+                emitBindingPattern(node.name);
             }
             else {
                 writeTextOfNode(currentText, node.name);
@@ -1864,6 +1890,7 @@ namespace ts {
                     // it allows emitSeparatedList to write separator appropriately)
                     // Example:
                     //      original: function foo([, x, ,]) {}
+                    //      tslint:disable-next-line no-double-space
                     //      emit    : function foo([ , x,  , ]) {}
                     write(" ");
                 }
@@ -1887,7 +1914,7 @@ namespace ts {
                             //      emit    : declare function foo([a, [[b]], c]: [number, [[string]], number]): void;
                             //      original with rest: function foo([a, ...c]) {}
                             //      emit              : declare function foo([a, ...c]): void;
-                            emitBindingPattern(<BindingPattern>bindingElement.name);
+                            emitBindingPattern(bindingElement.name);
                         }
                         else {
                             Debug.assert(bindingElement.name.kind === SyntaxKind.Identifier);
@@ -1992,7 +2019,7 @@ namespace ts {
     export function writeDeclarationFile(declarationFilePath: string, sourceFileOrBundle: SourceFile | Bundle, host: EmitHost, resolver: EmitResolver, emitterDiagnostics: DiagnosticCollection, emitOnlyDtsFiles: boolean) {
         const emitDeclarationResult = emitDeclarations(host, resolver, emitterDiagnostics, declarationFilePath, sourceFileOrBundle, emitOnlyDtsFiles);
         const emitSkipped = emitDeclarationResult.reportedDeclarationError || host.isEmitBlocked(declarationFilePath) || host.getCompilerOptions().noEmit;
-        if (!emitSkipped) {
+        if (!emitSkipped || emitOnlyDtsFiles) {
             const sourceFiles = sourceFileOrBundle.kind === SyntaxKind.Bundle ? sourceFileOrBundle.sourceFiles : [sourceFileOrBundle];
             const declarationOutput = emitDeclarationResult.referencesOutput
                 + getDeclarationOutput(emitDeclarationResult.synchronousDeclarationOutput, emitDeclarationResult.moduleElementDeclarationEmitInfo);

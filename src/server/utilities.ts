@@ -31,19 +31,6 @@ namespace ts.server {
         export type Types = Msg;
     }
 
-    function getProjectRootPath(project: Project): Path {
-        switch (project.projectKind) {
-            case ProjectKind.Configured:
-                return <Path>getDirectoryPath(project.getProjectName());
-            case ProjectKind.Inferred:
-                // TODO: fixme
-                return <Path>"";
-            case ProjectKind.External:
-                const projectName = normalizeSlashes(project.getProjectName());
-                return <Path>getDirectoryPath(projectName);
-        }
-    }
-
     export function createInstallTypingsRequest(project: Project, typeAcquisition: TypeAcquisition, unresolvedImports: SortedReadonlyArray<string>, cachePath?: string): DiscoverTypings {
         return {
             projectName: project.getProjectName(),
@@ -51,7 +38,7 @@ namespace ts.server {
             compilerOptions: project.getCompilationSettings(),
             typeAcquisition,
             unresolvedImports,
-            projectRootPath: getProjectRootPath(project),
+            projectRootPath: project.getCurrentDirectory() as Path,
             cachePath,
             kind: "discover"
         };
@@ -240,18 +227,6 @@ namespace ts.server {
     export function getBaseConfigFileName(configFilePath: NormalizedPath): "tsconfig.json" | "jsconfig.json" | undefined {
         const base = getBaseFileName(configFilePath);
         return base === "tsconfig.json" || base === "jsconfig.json" ? base : undefined;
-    }
-
-    export function insertSorted<T>(array: SortedArray<T>, insert: T, compare: Comparer<T>): void {
-        if (array.length === 0) {
-            array.push(insert);
-            return;
-        }
-
-        const insertIndex = binarySearch(array, insert, identity, compare);
-        if (insertIndex < 0) {
-            array.splice(~insertIndex, 0, insert);
-        }
     }
 
     export function removeSorted<T>(array: SortedArray<T>, remove: T, compare: Comparer<T>): void {

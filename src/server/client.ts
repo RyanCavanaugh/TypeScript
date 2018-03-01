@@ -50,8 +50,7 @@ namespace ts.server {
         private getLineMap(fileName: string): number[] {
             let lineMap = this.lineMaps.get(fileName);
             if (!lineMap) {
-                const scriptSnapshot = this.host.getScriptSnapshot(fileName);
-                lineMap = computeLineStarts(scriptSnapshot.getText(0, scriptSnapshot.getLength()));
+                lineMap = computeLineStarts(getSnapshotText(this.host.getScriptSnapshot(fileName)));
                 this.lineMaps.set(fileName, lineMap);
             }
             return lineMap;
@@ -74,7 +73,7 @@ namespace ts.server {
             return { span: this.decodeSpan(codeEdit, fileName), newText: codeEdit.newText };
         }
 
-        private processRequest<T extends protocol.Request>(command: string, args?: any): T {
+        private processRequest<T extends protocol.Request>(command: string, args?: T["arguments"]): T {
             const request: protocol.Request = {
                 seq: this.sequence,
                 type: "request",
@@ -342,41 +341,31 @@ namespace ts.server {
         }
 
         getSyntacticDiagnostics(file: string): Diagnostic[] {
-            const args: protocol.SyntacticDiagnosticsSyncRequestArgs = { file, includeLinePosition: true };
-
-            const request = this.processRequest<protocol.SyntacticDiagnosticsSyncRequest>(CommandNames.SyntacticDiagnosticsSync, args);
-            const response = this.processResponse<protocol.SyntacticDiagnosticsSyncResponse>(request);
-
-            return (<protocol.DiagnosticWithLinePosition[]>response.body).map(entry => this.convertDiagnostic(entry, file));
+            return this.getDiagnostics(file, CommandNames.SyntacticDiagnosticsSync);
         }
-
         getSemanticDiagnostics(file: string): Diagnostic[] {
-            const args: protocol.SemanticDiagnosticsSyncRequestArgs = { file, includeLinePosition: true };
-
-            const request = this.processRequest<protocol.SemanticDiagnosticsSyncRequest>(CommandNames.SemanticDiagnosticsSync, args);
-            const response = this.processResponse<protocol.SemanticDiagnosticsSyncResponse>(request);
-
-            return (<protocol.DiagnosticWithLinePosition[]>response.body).map(entry => this.convertDiagnostic(entry, file));
+            return this.getDiagnostics(file, CommandNames.SemanticDiagnosticsSync);
+        }
+        getSuggestionDiagnostics(file: string): Diagnostic[] {
+            return this.getDiagnostics(file, CommandNames.SuggestionDiagnosticsSync);
         }
 
-        convertDiagnostic(entry: protocol.DiagnosticWithLinePosition, _fileName: string): Diagnostic {
-            let category: DiagnosticCategory;
-            for (const id in DiagnosticCategory) {
-                if (isString(id) && entry.category === id.toLowerCase()) {
-                    category = (<any>DiagnosticCategory)[id];
-                }
-            }
+        private getDiagnostics(file: string, command: CommandNames) {
+            const request = this.processRequest<protocol.SyntacticDiagnosticsSyncRequest | protocol.SemanticDiagnosticsSyncRequest | protocol.SuggestionDiagnosticsSyncRequest>(command, { file, includeLinePosition: true });
+            const response = this.processResponse<protocol.SyntacticDiagnosticsSyncResponse | protocol.SemanticDiagnosticsSyncResponse | protocol.SuggestionDiagnosticsSyncResponse>(request);
 
-            Debug.assert(category !== undefined, "convertDiagnostic: category should not be undefined");
-
-            return {
-                file: undefined,
-                start: entry.start,
-                length: entry.length,
-                messageText: entry.message,
-                category,
-                code: entry.code
-            };
+            return (<protocol.DiagnosticWithLinePosition[]>response.body).map(entry => {
+                const category = firstDefined(Object.keys(DiagnosticCategory), id =>
+                    isString(id) && entry.category === id.toLowerCase() ? (<any>DiagnosticCategory)[id] : undefined);
+                return {
+                    file: undefined,
+                    start: entry.start,
+                    length: entry.length,
+                    messageText: entry.message,
+                    category: Debug.assertDefined(category, "convertDiagnostic: category should not be undefined"),
+                    code: entry.code
+                };
+            });
         }
 
         getCompilerOptionsDiagnostics(): Diagnostic[] {
@@ -557,8 +546,7 @@ namespace ts.server {
             const request = this.processRequest<protocol.CodeFixRequest>(CommandNames.GetCodeFixes, args);
             const response = this.processResponse<protocol.CodeFixResponse>(request);
 
-            // TODO: GH#20538 shouldn't need cast
-            return (response.body as ReadonlyArray<protocol.CodeFixAction>).map(({ description, changes, fixId }) => ({ description, changes: this.convertChanges(changes, file), fixId }));
+            return response.body.map(({ description, changes, fixId }) => ({ description, changes: this.convertChanges(changes, file), fixId }));
         }
 
         getCombinedCodeFix = notImplemented;
@@ -627,6 +615,10 @@ namespace ts.server {
                 renameFilename,
                 renameLocation
             };
+        }
+
+        organizeImports(_scope: OrganizeImportsScope, _formatOptions: FormatCodeSettings): ReadonlyArray<FileTextChanges> {
+            return notImplemented();
         }
 
         private convertCodeEditsToTextChanges(edits: protocol.FileCodeEdits[]): FileTextChanges[] {
