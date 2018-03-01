@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es6",
+    "lib": ["es2017"],
+    "module": "commonjs",
+    "strict": true,
+    "types": ["node"]
+  },
+  "files": [
+    "processDiagnosticMessages.ts"
+  ]
+}

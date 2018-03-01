@@ -82,11 +82,11 @@ function removeConstModifierFromEnumDeclarations(text) {
 
 var compilerSources = filesFromConfig("./src/compiler/tsconfig.json");
 var servicesSources = filesFromConfig("./src/services/tsconfig.json");
-var cancellationTokenSources = filesFromConfig(path.join(serverDirectory, "cancellationToken/tsconfig.json"));
-var typingsInstallerSources = filesFromConfig("src/nodeTypingsInstaller/tsconfig.json");
-var watchGuardSources = filesFromConfig(path.join(serverDirectory, "watchGuard/tsconfig.json"));
-var serverSources = filesFromConfig(path.join(serverDirectory, "tsconfig.json"));
-var languageServiceLibrarySources = filesFromConfig(path.join(serverDirectory, "tsconfig.library.json"));
+var cancellationTokenSources = filesFromConfig("./src/cancellationToken/tsconfig.json");
+var typingsInstallerSources = filesFromConfig("./src/nodeTypingsInstaller/tsconfig.json");
+var watchGuardSources = filesFromConfig("./src/watchGuard/tsconfig.json");
+var serverSources = filesFromConfig("./src/server/tsconfig.json");
+var languageServiceLibrarySources = filesFromConfig("./src/server/tsconfig.json");
 
 var typesMapOutputPath = path.join(builtLocalDirectory, 'typesMap.json');
 
@@ -307,6 +307,28 @@ var compilerFilename = "tsc.js";
 var LKGCompiler = path.join(LKGDirectory, compilerFilename);
 var builtLocalCompiler = path.join(builtLocalDirectory, compilerFilename);
 
+function compileConfigFile(configFilePath, expectedOutput) {
+    file(expectedOutput, filesFromConfig(configFilePath), function() {
+        console.log("tsc -p " + configFilePath);
+        var ex = jake.createExec(["tsc -p " + configFilePath]);
+        // Add listeners for output and error
+        ex.addListener("stdout", function (output) {
+            process.stdout.write(output);
+        });
+        ex.addListener("stderr", function (error) {
+            process.stderr.write(error);
+        });
+        ex.addListener("cmdEnd", function () {
+            complete();
+        });
+        ex.addListener("error", function () {
+            fs.unlinkSync(expectedOutput);
+            fail("Compilation of " + expectedOutput + " unsuccessful");
+        });
+        ex.run();
+    }, {async: true});
+}
+
 /* Compiles a file from a list of sources
     * @param outFile: the target file name
     * @param sources: an array of the names of the source files
@@ -453,14 +475,8 @@ var diagnosticInfoMapTs = path.join(compilerDirectory, "diagnosticInformationMap
 var generatedDiagnosticMessagesJSON = path.join(compilerDirectory, "diagnosticMessages.generated.json");
 var builtGeneratedDiagnosticMessagesJSON = path.join(builtLocalDirectory, "diagnosticMessages.generated.json");
 
-file(processDiagnosticMessagesTs);
-
 // processDiagnosticMessages script
-compileFile(processDiagnosticMessagesJs,
-    [processDiagnosticMessagesTs],
-    [processDiagnosticMessagesTs],
-    [],
-    /*useBuiltCompiler*/ false);
+compileConfigFile(path.join(scriptsDirectory, "processDiagnosticMessages.json"), path.join(scriptsDirectory, "processDiagnosticMessages.js"))
 
 // Localize diagnostics script
 var generateLocalizedDiagnosticMessagesJs = path.join(scriptsDirectory, "generateLocalizedDiagnosticMessages.js");
