@@ -41,11 +41,11 @@ function filesFromConfig(configPath) {
     var configText = fs.readFileSync(configPath).toString();
     var config = ts.parseConfigFileTextToJson(configPath, configText);
     if (config.error) {
-        throw new Error(diagnosticsToString([config.error]));
+        throw new Error("Error loading " + configPath + ": " + diagnosticsToString([config.error]));
     }
     const configFileContent = ts.parseJsonConfigFileContent(config.config, ts.sys, path.dirname(configPath));
     if (configFileContent.errors && configFileContent.errors.length) {
-        throw new Error(diagnosticsToString(configFileContent.errors));
+        throw new Error("Error loading " + configPath + ": " + diagnosticsToString(configFileContent.errors));
     }
 
     return configFileContent.fileNames;
