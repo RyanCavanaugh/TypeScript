@@ -28,7 +28,7 @@ namespace ts {
                 const jsFilePath = options.outFile || options.out;
                 const sourceMapFilePath = getSourceMapFilePath(jsFilePath, options);
                 const declarationFilePath = options.declaration ? removeFileExtension(jsFilePath) + Extension.Dts : "";
-                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, createBundle(sourceFiles, emptyArray), emitOnlyDtsFiles);
+                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, createBundle(sourceFiles, host.getPrependNodes()), emitOnlyDtsFiles);
                 if (result) {
                     return result;
                 }
