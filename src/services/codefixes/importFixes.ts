@@ -17,7 +17,7 @@ namespace ts.codefix {
 
     export type ImportCodeActionKind = "CodeChange" | "InsertingIntoExistingImport" | "NewImport";
     // Map from module Id to an array of import declarations in that module.
-    export type ImportDeclarationMap = AnyImportSyntax[][];
+    export type ImportDeclarationMap = ExistingImportInfo[][];
 
     export interface ImportCodeAction extends CodeFixAction {
         kind: ImportCodeActionKind;
@@ -67,7 +67,7 @@ namespace ts.codefix {
         };
     }
 
-    const enum ImportKind {
+    export const enum ImportKind {
         Named,
         Default,
         Namespace,
@@ -81,7 +81,7 @@ namespace ts.codefix {
     }
 
     /** Information needed to augment an existing import declaration. */
-    interface ExistingImportInfo {
+    export interface ExistingImportInfo {
         readonly declaration: AnyImportSyntax;
         readonly importKind: ImportKind;
     }

@@ -3456,6 +3456,10 @@
         "category": "Message",
         "code": 6186
     },
+    "Found 'package.json' at '{0}'. Package ID is '{1}'": {
+        "category": "Message",
+        "code": 6190
+    },
     
     "Projects to reference": {
         "category": "Message",

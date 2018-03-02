@@ -15,7 +15,7 @@ namespace ts {
         writeFile?(path: string, data: string, writeByteOrderMark?: boolean): void;
     }
 
-    interface FileAndDirectoryExistence {
+    export interface FileAndDirectoryExistence {
         fileExists: boolean;
         directoryExists: boolean;
     }

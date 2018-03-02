@@ -1126,7 +1126,6 @@ namespace ts {
                     const node = createPrepend(text);
                     nodes.push(node);
                 }
-
             });
             return nodes;
         }
@@ -1939,10 +1938,6 @@ namespace ts {
                 }
                 if (normalized.indexOf(k) === 0) {
                     result = changeExtension(fileName.replace(k, v), ".d.ts");
-<<<<<<< HEAD
-                    debugger;
-=======
->>>>>>> projectReferences
                 }
             });
             return result;
@@ -2605,15 +2600,6 @@ namespace ts {
         }
     }
 
-    function parseConfigHostFromCompilerHost(host: CompilerHost): ParseConfigHost {
-        return {
-            fileExists: host.fileExists,
-            readDirectory: () => [],
-            readFile: host.readFile,
-            useCaseSensitiveFileNames: host.useCaseSensitiveFileNames()
-        };
-    }
-
     export function getProjectReferences(host: CompilerHost, rootOptions: CompilerOptions): string[] | undefined {
         if (rootOptions.references === undefined) {
             return [];
@@ -2632,29 +2618,6 @@ namespace ts {
             result.push(refPath);
         }
         return result;
-    }
-
-    export function walkProjectReferenceGraph(host: CompilerHost, rootOptions: CompilerOptions,
-        callback: (resolvedFile: string, referencedProject: CompilerOptions) => void) {
-        if (rootOptions.references === undefined) return;
-
-        const references = getProjectReferences(host, rootOptions);
-        if (references === undefined) {
-            return;
-        }
-
-        const configHost = parseConfigHostFromCompilerHost(host);
-        for (const refPath of references) {
-            const referenceJsonSource = parseJsonText(refPath, host.readFile(refPath));
-            const cmdLine = parseJsonSourceFileConfigFileContent(referenceJsonSource, configHost, getDirectoryPath(refPath), /*existingOptions*/ undefined, refPath);
-            cmdLine.options.configFilePath = refPath;
-            if (cmdLine.errors && cmdLine.errors.length) {
-                // TODO: Pass along errors
-            }
-            if (cmdLine.options) {
-                callback(refPath, cmdLine.options);
-            }
-        }
     }
 
     /* @internal */

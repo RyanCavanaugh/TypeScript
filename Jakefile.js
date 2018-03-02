@@ -842,7 +842,7 @@ var localTest262Baseline = path.join(internalTests, "baselines/test262/local");
 var refTest262Baseline = path.join(internalTests, "baselines/test262/reference");
 
 desc("Builds the test infrastructure using the built compiler");
-task("tests", ["local", run].concat(libraryTargets));
+task("tests", []);
 
 function exec(cmd, completeHandler, errorHandler) {
     var ex = jake.createExec([cmd], { windowsVerbatimArguments: true, interactive: true });
@@ -1042,12 +1042,12 @@ function runConsoleTests(defaultReporter, runInParallel) {
 }
 
 desc("Runs all the tests in parallel using the built run.js file. Optional arguments are: t[ests]=category1|category2|... d[ebug]=true.");
-task("runtests-parallel", ["build-rules", "tests", builtLocalDirectory], function () {
+task("runtests-parallel", ["build-rules", "tests"], function () {
     runConsoleTests('min', /*runInParallel*/ true);
 }, { async: true });
 
 desc("Runs the tests using the built run.js file. Optional arguments are: t[ests]=regex r[eporter]=[list|spec|json|<more>] d[ebug]=true color[s]=false lint=true bail=false dirty=false.");
-task("runtests", ["build-rules", "tests", builtLocalDirectory], function() {
+task("runtests", ["build-rules", "tests"], function() {
     runConsoleTests('mocha-fivemat-progress-reporter', /*runInParallel*/ false);
 }, { async: true });
 

@@ -5185,7 +5185,7 @@ namespace ts {
     }
 
     /* @internal */
-    interface PragmaArgumentSpecification<TName extends string> {
+    export interface PragmaArgumentSpecification<TName extends string> {
         name: TName; // Determines the name of the key in the resulting parsed type, type parameter to cause literal type inference
         optional?: boolean;
         captureSpan?: boolean;
@@ -5239,10 +5239,10 @@ namespace ts {
     });
 
     /* @internal */
-    type PragmaArgTypeMaybeCapture<TDesc> = TDesc extends {captureSpan: true} ? {value: string, pos: number, end: number} : string;
+    export type PragmaArgTypeMaybeCapture<TDesc> = TDesc extends {captureSpan: true} ? {value: string, pos: number, end: number} : string;
 
     /* @internal */
-    type PragmaArgTypeOptional<TDesc, TName extends string> =
+    export type PragmaArgTypeOptional<TDesc, TName extends string> =
         TDesc extends {optional: true}
             ? {[K in TName]?: PragmaArgTypeMaybeCapture<TDesc>}
             : {[K in TName]: PragmaArgTypeMaybeCapture<TDesc>};
@@ -5252,7 +5252,7 @@ namespace ts {
      * Maybe the below is a good argument for types being iterable on struture in some way.
      */
     /* @internal */
-    type PragmaArgumentType<T extends PragmaDefinition> =
+    export type PragmaArgumentType<T extends PragmaDefinition> =
         T extends { args: [PragmaArgumentSpecification<infer TName1>, PragmaArgumentSpecification<infer TName2>, PragmaArgumentSpecification<infer TName3>] }
         ? PragmaArgTypeOptional<T["args"][0], TName1> & PragmaArgTypeOptional<T["args"][1], TName2> & PragmaArgTypeOptional<T["args"][2], TName3>
         : T extends { args: [PragmaArgumentSpecification<infer TName1>, PragmaArgumentSpecification<infer TName2>] }
@@ -5263,7 +5263,7 @@ namespace ts {
     // The above fallback to `object` when there's no args to allow `{}` (as intended), but not the number 2, for example
     // TODO: Swap to `undefined` for a cleaner API once strictNullChecks is enabled
 
-    type ConcretePragmaSpecs = typeof commentPragmas;
+    export type ConcretePragmaSpecs = typeof commentPragmas;
 
     /* @internal */
     export type PragmaPsuedoMap = {[K in keyof ConcretePragmaSpecs]?: {arguments: PragmaArgumentType<ConcretePragmaSpecs[K]>, range: CommentRange}};

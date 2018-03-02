@@ -42,7 +42,9 @@
         "services.ts",
 
         "codefixes/helpers.ts",
+        
         "codefixes/addMissingInvocationForDecorator.ts",
+        "codefixes/convertToEs6Module.ts",
         "codefixes/correctQualifiedNameToIndexedAccessType.ts",
         "codefixes/fixClassIncorrectlyImplementsInterface.ts",
         "codefixes/fixAddMissingMember.ts",
@@ -55,9 +57,12 @@
         "codefixes/fixForgottenThisPropertyAccess.ts",
         "codefixes/fixUnusedIdentifier.ts",
         "codefixes/fixJSDocTypes.ts",
+        "codefixes/fixAwaitInSyncFunction.ts",        
         "codefixes/importFixes.ts",
         "codefixes/disableJsDiagnostics.ts",
-        "codefixes/inferFromUsage.ts"
+        "codefixes/inferFromUsage.ts",
+        "codefixes/fixInvalidImportSyntax.ts",
+        "codefixes/fixStrictClassInitialization.ts"
     ],
     "include": [
         "formatting/*",
