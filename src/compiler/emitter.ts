@@ -22,7 +22,7 @@ namespace ts {
                 const jsFilePath = options.outFile || options.out;
                 const sourceMapFilePath = getSourceMapFilePath(jsFilePath, options);
                 const declarationFilePath = options.declaration ? removeFileExtension(jsFilePath) + Extension.Dts : "";
-                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, createBundle(sourceFiles, emptyArray), emitOnlyDtsFiles);
+                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, createBundle(sourceFiles, host.getPrependNodes()), emitOnlyDtsFiles);
                 if (result) {
                     return result;
                 }
@@ -32,7 +32,7 @@ namespace ts {
             for (const sourceFile of sourceFiles) {
                 const jsFilePath = getOwnEmitOutputFilePath(sourceFile, host, getOutputExtension(sourceFile, options));
                 const sourceMapFilePath = getSourceMapFilePath(jsFilePath, options);
-                const declarationFilePath = !isSourceFileJavaScript(sourceFile) && (emitOnlyDtsFiles || options.declaration || options.referenceTarget) ? getDeclarationEmitOutputFilePath(sourceFile, host) : undefined;
+                const declarationFilePath = !isSourceFileJavaScript(sourceFile) && (emitOnlyDtsFiles || options.declaration || options.composable) ? getDeclarationEmitOutputFilePath(sourceFile, host) : undefined;
                 const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, sourceFile, emitOnlyDtsFiles);
                 if (result) {
                     return result;
@@ -65,7 +65,7 @@ namespace ts {
 
     function getOriginalSourceFileOrBundle(sourceFileOrBundle: SourceFile | Bundle) {
         if (sourceFileOrBundle.kind === SyntaxKind.Bundle) {
-            return updateBundle(sourceFileOrBundle, sameMap(sourceFileOrBundle.sourceFiles, getOriginalSourceFile));
+            return updateBundle(sourceFileOrBundle, sameMap(sourceFileOrBundle.sourceFiles, getOriginalSourceFile), sourceFileOrBundle.prepends);
         }
         return getOriginalSourceFile(sourceFileOrBundle);
     }
@@ -949,7 +949,7 @@ namespace ts {
 
         // SyntaxKind.Prepend
         function emitPrepend(prepend: PrependNode) {
-            write(prepend.text);
+            write(prepend.javascriptText);
         }
 
         //

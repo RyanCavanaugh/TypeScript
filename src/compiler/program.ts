@@ -624,7 +624,7 @@ namespace ts {
         Debug.assert(!!missingFilePaths);
 
         // List of collected files is complete; validate exhautiveness if this is a project with a file list
-        if (options.referenceTarget && rootNames.length < files.length) {
+        if (options.composable && rootNames.length < files.length) {
             // TODO: root names are coming in lower-cased which means they
             // are being displayed to the user lower-cased; need to get their original
             // names when displaying diagnostics
@@ -700,7 +700,7 @@ namespace ts {
         function getCommonSourceDirectory() {
             if (commonSourceDirectory === undefined) {
                 const emittedFiles = filter(files, file => sourceFileMayBeEmitted(file, options, isSourceFileFromExternalLibrary));
-                if (options.referenceTarget) {
+                if (options.composable) {
                     // Project compilations never infer their root from the input source paths
                     commonSourceDirectory = getNormalizedAbsolutePath(options.rootDir || getDirectoryPath(normalizeSlashes(options.configFilePath)), currentDirectory);
                 }
@@ -1119,11 +1119,14 @@ namespace ts {
             if (!options.references) {
                 return emptyArray;
             }
+
             const nodes: PrependNode[] = [];
             walkProjectReferenceGraph(host, options, (_file, proj, opts) => {
                 if (opts.prepend) {
-                    const text = host.readFile(proj.outFile) || `/* Input file ${proj.outFile} was missing */`;
-                    const node = createPrepend(text);
+                    const dtsFilename = changeExtension(proj.outFile, ".d.ts");
+                    const js = host.readFile(proj.outFile) || `/* Input file ${proj.outFile} was missing */\r\n`;
+                    const dts = host.readFile(dtsFilename) || `/* Input file ${proj.dtsFilename} was missing */\r\n`;
+                    const node = createPrepend(js, dts);
                     nodes.push(node);
                 }
             });
@@ -2121,7 +2124,7 @@ namespace ts {
 
             walkProjectReferenceGraph(host, rootOptions, createMapping);
 
-            function createMapping(resolvedFile: string, referencedProject: CompilerOptions) {
+            function createMapping(resolvedFile: string, referencedProject: CompilerOptions, reference: ProjectReference) {
                 const rootDir = normalizePath(referencedProject.rootDir || getDirectoryPath(resolvedFile));
                 result.set(rootDir, referencedProject.outDir);
                 // If this project uses outFile, add the outFile .d.ts to our compilation
@@ -2130,6 +2133,11 @@ namespace ts {
                 if (referencedProject.outFile) {
                     const outFile = combinePaths(referencedProject.outDir, changeExtension(referencedProject.outFile, ".d.ts"));
                     referencedProjectOutFiles.push(toPath(outFile));
+                    if (reference.prepend) {
+                        // Don't recurse - it'll cause multi-level outfile compilations
+                        // to get duplicate definitions from the up-up-stream .d.ts!
+                        return;
+                    }
                 }
 
                 // Circularity check
@@ -2162,8 +2170,8 @@ namespace ts {
                     Debug.fail("Options cannot be undefined");
                     return;
                 }
-                if (!opts.referenceTarget) {
-                    createDiagnosticForOptionName(Diagnostics.Referenced_project_0_must_have_setting_referenceTarget_Colon_true, fileName);
+                if (!opts.composable) {
+                    createDiagnosticForOptionName(Diagnostics.Referenced_project_0_must_have_setting_composable_Colon_true, fileName);
                 }
                 illegalRefs.set(normalizedPath, true);
                 cycleName.push(normalizedPath);
@@ -2205,7 +2213,7 @@ namespace ts {
                 createDiagnosticForOptionName(Diagnostics.Option_paths_cannot_be_used_without_specifying_baseUrl_option, "paths");
             }
 
-            if (options.referenceTarget) {
+            if (options.composable) {
                 if (options.declaration === false) {
                     createDiagnosticForOptionName(Diagnostics.Projects_may_not_disable_declaration_emit, "declaration");
                 }

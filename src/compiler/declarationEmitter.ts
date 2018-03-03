@@ -40,7 +40,7 @@ namespace ts {
 
     function emitDeclarations(host: EmitHost, resolver: EmitResolver, emitterDiagnostics: DiagnosticCollection, declarationFilePath: string,
         sourceFileOrBundle: SourceFile | Bundle, emitOnlyDtsFiles: boolean): DeclarationEmit {
-        const sourceFiles = sourceFileOrBundle.kind === SyntaxKind.Bundle ? sourceFileOrBundle.sourceFiles : [sourceFileOrBundle];
+        const sourceFiles = sourceFileOrBundle.kind === SyntaxKind.Bundle ? [...sourceFileOrBundle.prepends, ...sourceFileOrBundle.sourceFiles] : [sourceFileOrBundle];
         const isBundledEmit = sourceFileOrBundle.kind === SyntaxKind.Bundle;
         const newLine = host.getNewLine();
         const compilerOptions = host.getCompilerOptions();
@@ -82,6 +82,11 @@ namespace ts {
         let addedGlobalFileReference = false;
         let allSourcesModuleElementDeclarationEmitInfo: ModuleElementDeclarationEmitInfo[] = [];
         forEach(sourceFiles, sourceFile => {
+            if (sourceFile.kind === SyntaxKind.Prepend) {
+                emitPrepend(sourceFile);
+                return;
+            }
+
             // Dont emit for javascript file
             if (isSourceFileJavaScript(sourceFile)) {
                 return;
@@ -630,6 +635,10 @@ namespace ts {
                 }
                 write("}");
             }
+        }
+
+        function emitPrepend(node: PrependNode) {
+            write(node.declarationText);
         }
 
         function emitSourceFile(node: SourceFile) {
@@ -1969,6 +1978,8 @@ namespace ts {
                     return emitExportAssignment(<ExportAssignment>node);
                 case SyntaxKind.SourceFile:
                     return emitSourceFile(<SourceFile>node);
+                case SyntaxKind.Prepend:
+                    return emitPrepend(<PrependNode>node);
             }
         }
 

@@ -3481,7 +3481,7 @@
         "category": "Error",
         "code": 6305
     },
-    "Referenced project '{0}' must have setting \"referenceTarget\": true.": {
+    "Referenced project '{0}' must have setting \"composable\": true.": {
         "category": "Error",
         "code": 6306
     },

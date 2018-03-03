@@ -2588,7 +2588,8 @@ namespace ts {
 
     export interface PrependNode extends Node {
         kind: SyntaxKind.Prepend;
-        text: string;
+        javascriptText: string;
+        declarationText: string;
     }
 
     export interface JsonSourceFile extends SourceFile {
@@ -4123,7 +4124,7 @@ namespace ts {
         reactNamespace?: string;
         jsxFactory?: string;
         references?: ProjectReference[];
-        referenceTarget?: boolean;
+        composable?: boolean;
         removeComments?: boolean;
         rootDir?: string;
         rootDirs?: string[];
