@@ -1119,14 +1119,16 @@ namespace ts {
             if (!options.references) {
                 return emptyArray;
             }
+
             const nodes: PrependNode[] = [];
             walkProjectReferenceGraph(host, options, (_file, proj, opts) => {
                 if (opts.prepend) {
-                    const text = host.readFile(proj.outFile) || `/* Input file ${proj.outFile} was missing */`;
-                    const node = createPrepend(text);
+                    const dtsFilename = changeExtension(proj.outFile, ".d.ts");
+                    const js = host.readFile(proj.outFile) || `/* Input file ${proj.outFile} was missing */\r\n`;
+                    const dts = host.readFile(dtsFilename) || `/* Input file ${proj.dtsFilename} was missing */\r\n`;
+                    const node = createPrepend(js, dts);
                     nodes.push(node);
                 }
-
             });
             return nodes;
         }
@@ -2122,7 +2124,7 @@ namespace ts {
 
             walkProjectReferenceGraph(host, rootOptions, createMapping);
 
-            function createMapping(resolvedFile: string, referencedProject: CompilerOptions) {
+            function createMapping(resolvedFile: string, referencedProject: CompilerOptions, reference: ProjectReference) {
                 const rootDir = normalizePath(referencedProject.rootDir || getDirectoryPath(resolvedFile));
                 result.set(rootDir, referencedProject.outDir);
                 // If this project uses outFile, add the outFile .d.ts to our compilation
@@ -2131,6 +2133,11 @@ namespace ts {
                 if (referencedProject.outFile) {
                     const outFile = combinePaths(referencedProject.outDir, changeExtension(referencedProject.outFile, ".d.ts"));
                     referencedProjectOutFiles.push(toPath(outFile));
+                    if (reference.prepend) {
+                        // Don't recurse - it'll cause multi-level outfile compilations
+                        // to get duplicate definitions from the up-up-stream .d.ts!
+                        return;
+                    }
                 }
 
                 // Circularity check

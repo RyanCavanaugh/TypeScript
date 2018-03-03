@@ -71,7 +71,7 @@ namespace ts {
 
     function getOriginalSourceFileOrBundle(sourceFileOrBundle: SourceFile | Bundle) {
         if (sourceFileOrBundle.kind === SyntaxKind.Bundle) {
-            return updateBundle(sourceFileOrBundle, sameMap(sourceFileOrBundle.sourceFiles, getOriginalSourceFile));
+            return updateBundle(sourceFileOrBundle, sameMap(sourceFileOrBundle.sourceFiles, getOriginalSourceFile), sourceFileOrBundle.prepends);
         }
         return getOriginalSourceFile(sourceFileOrBundle);
     }
@@ -955,7 +955,7 @@ namespace ts {
 
         // SyntaxKind.Prepend
         function emitPrepend(prepend: PrependNode) {
-            write(prepend.text);
+            write(prepend.javascriptText);
         }
 
         //
