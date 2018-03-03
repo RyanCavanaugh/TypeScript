@@ -2081,7 +2081,7 @@ namespace ts {
     }
 
     export function getEmitDeclarations(compilerOptions: CompilerOptions) {
-        if (compilerOptions.referenceTarget) {
+        if (compilerOptions.composable) {
             return true;
         }
         return compilerOptions.declaration;

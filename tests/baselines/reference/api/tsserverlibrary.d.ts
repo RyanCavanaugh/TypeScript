@@ -1634,7 +1634,8 @@ declare namespace ts {
     }
     interface PrependNode extends Node {
         kind: SyntaxKind.Prepend;
-        text: string;
+        javascriptText: string;
+        declarationText: string;
     }
     interface JsonSourceFile extends SourceFile {
         jsonObject?: ObjectLiteralExpression;
@@ -2337,7 +2338,7 @@ declare namespace ts {
         reactNamespace?: string;
         jsxFactory?: string;
         references?: ProjectReference[];
-        referenceTarget?: boolean;
+        composable?: boolean;
         removeComments?: boolean;
         rootDir?: string;
         rootDirs?: string[];
@@ -3722,7 +3723,7 @@ declare namespace ts {
     function createCommaList(elements: ReadonlyArray<Expression>): CommaListExpression;
     function updateCommaList(node: CommaListExpression, elements: ReadonlyArray<Expression>): CommaListExpression;
     function createBundle(sourceFiles: ReadonlyArray<SourceFile>, prepends?: ReadonlyArray<PrependNode>): Bundle;
-    function createPrepend(text: string): PrependNode;
+    function createPrepend(javascript: string, declaration: string): PrependNode;
     function updateBundle(node: Bundle, sourceFiles: ReadonlyArray<SourceFile>, prepends?: ReadonlyArray<PrependNode>): Bundle;
     function createImmediatelyInvokedFunctionExpression(statements: Statement[]): CallExpression;
     function createImmediatelyInvokedFunctionExpression(statements: Statement[], param: ParameterDeclaration, paramValue: Expression): CallExpression;
