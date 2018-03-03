@@ -2488,9 +2488,10 @@ namespace ts {
         return node;
     }
 
-    export function createPrepend(text: string): PrependNode {
+    export function createPrepend(javascript: string, declaration: string): PrependNode {
         const node = <PrependNode>createNode(SyntaxKind.Prepend);
-        node.text = text;
+        node.javascriptText = javascript;
+        node.declarationText = declaration;
         return node;
     }
 

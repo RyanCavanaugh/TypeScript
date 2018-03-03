@@ -2588,7 +2588,8 @@ namespace ts {
 
     export interface PrependNode extends Node {
         kind: SyntaxKind.Prepend;
-        text: string;
+        javascriptText: string;
+        declarationText: string;
     }
 
     export interface JsonSourceFile extends SourceFile {
