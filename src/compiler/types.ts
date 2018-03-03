@@ -4152,7 +4152,7 @@ namespace ts {
         reactNamespace?: string;
         jsxFactory?: string;
         references?: ProjectReference[];
-        referenceTarget?: boolean;
+        composable?: boolean;
         removeComments?: boolean;
         rootDir?: string;
         rootDirs?: string[];
