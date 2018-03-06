@@ -2677,6 +2677,7 @@ namespace ts {
         jsFilePath: string;
         sourceMapFilePath: string;
         declarationFilePath: string;
+        bundleInfoPath: string;
     }
 
     /**

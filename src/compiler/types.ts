@@ -4936,7 +4936,23 @@ namespace ts {
         /*@internal*/ writeNode(hint: EmitHint, node: Node, sourceFile: SourceFile | undefined, writer: EmitTextWriter): void;
         /*@internal*/ writeList<T extends Node>(format: ListFormat, list: NodeArray<T>, sourceFile: SourceFile | undefined, writer: EmitTextWriter): void;
         /*@internal*/ writeFile(sourceFile: SourceFile, writer: EmitTextWriter): void;
-        /*@internal*/ writeBundle(bundle: Bundle, writer: EmitTextWriter): void;
+        /*@internal*/ writeBundle(bundle: Bundle, writer: EmitTextWriter, info?: BundleInfo): void;
+    }
+
+    /**
+     * When a bundle contains prepended content, we store a file on disk indicating where the non-prepended
+     * content of that file starts. On a subsequent build where there are no upstream .d.ts changes, we
+     * read the bundle info file and the original .js file to quickly re-use portion of the file
+     * that didn't originate in prepended content.
+     */
+    /* @internal */
+    export interface BundleInfo {
+        // The offset (in characters, i.e. suitable for .substr) at which the
+        // non-prepended portion of the emitted file starts.
+        originalOffset: number;
+        // The total length of this bundle. Used to ensure we're pulling from
+        // the same source as we originally wrote.
+        totalLength: number;
     }
 
     export interface PrintHandlers {
