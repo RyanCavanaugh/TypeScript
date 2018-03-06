@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "references": [
+            /* List leaf-node projects here */
+            { "path": "./src/tsc" },
+            { "path": "./src/harness" },
+            { "path": "./src/tsserver" },
+            { "path": "./src/cancellationToken" },
+            { "path": "./src/watchGuard" },
+            { "path": "./src/nodeTypingsInstaller" }
+        ]
+    },
+    "files": []
+}

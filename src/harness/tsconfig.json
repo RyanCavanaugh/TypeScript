@@ -3,34 +3,48 @@
     "compilerOptions": {
         "removeComments": false,
         "outFile": "../../built/local/run.js",
-        "referenceTarget": false,
+        "composable": false,
         "declaration": false,
         "types": [
-            "node", "mocha", "chai"
+            "node",
+            "mocha",
+            "chai"
         ],
         "lib": [
             "es6",
             "scripthost"
         ],
         "references": [
-            { "path": "../server", "prepend": true },
-            { "path": "../typingsInstaller", "prepend": true }
+            {
+                "path": "../server",
+                "prepend": true
+            },
+            {
+                "path": "../typingsInstaller",
+                "prepend": true
+            }
         ]
     },
     "files": [
+        "harness.ts",
         "virtualFileSystem.ts",
         "virtualFileSystemWithWatch.ts",
         "runnerbase.ts",
         "sourceMapRecorder.ts",
         "harnessLanguageService.ts",
-        "harness.ts",
         "fourslash.ts",
         "typeWriter.ts",
         "loggedIO.ts",
         "test262Runner.ts",
-        "./parallel/shared.ts",
+        "compilerRunner.ts",
+        "fourslashRunner.ts",
+        "projectsRunner.ts",
+        "rwcRunner.ts",
+        "externalCompileRunner.ts",
         "./parallel/host.ts",
         "./parallel/worker.ts",
+        "./parallel/shared.ts",
+        "runner.ts",
         "./unittests/incrementalParser.ts",
         "./unittests/jsDocParsing.ts",
         "./unittests/services/colorization.ts",
@@ -71,12 +85,6 @@
         "./unittests/languageService.ts",
         "./unittests/programMissingFiles.ts",
         "./unittests/publicApi.ts",
-        "./unittests/hostNewLineSupport.ts",
-        "compilerRunner.ts",
-        "fourslashRunner.ts",
-        "projectsRunner.ts",
-        "rwcRunner.ts",
-        "externalCompileRunner.ts",
-        "runner.ts"
+        "./unittests/hostNewLineSupport.ts"
     ]
 }
