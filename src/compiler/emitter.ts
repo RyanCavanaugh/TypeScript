@@ -28,7 +28,8 @@ namespace ts {
                 const jsFilePath = options.outFile || options.out;
                 const sourceMapFilePath = getSourceMapFilePath(jsFilePath, options);
                 const declarationFilePath = options.declaration ? removeFileExtension(jsFilePath) + Extension.Dts : "";
-                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, createBundle(sourceFiles, host.getPrependNodes()), emitOnlyDtsFiles);
+                const bundleInfoPath = options.references && jsFilePath && (removeFileExtension(jsFilePath) + ".bundle_info");
+                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath, bundleInfoPath }, createBundle(sourceFiles, host.getPrependNodes()), emitOnlyDtsFiles);
                 if (result) {
                     return result;
                 }
@@ -39,7 +40,7 @@ namespace ts {
                 const jsFilePath = getOwnEmitOutputFilePath(sourceFile, host, getOutputExtension(sourceFile, options));
                 const sourceMapFilePath = getSourceMapFilePath(jsFilePath, options);
                 const declarationFilePath = !isSourceFileJavaScript(sourceFile) && (emitOnlyDtsFiles || options.declaration || options.composable) ? getDeclarationEmitOutputFilePath(sourceFile, host) : undefined;
-                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath }, sourceFile, emitOnlyDtsFiles);
+                const result = action({ jsFilePath, sourceMapFilePath, declarationFilePath, bundleInfoPath: undefined }, sourceFile, emitOnlyDtsFiles);
                 if (result) {
                     return result;
                 }
@@ -49,6 +50,13 @@ namespace ts {
 
     function getSourceMapFilePath(jsFilePath: string, options: CompilerOptions) {
         return options.sourceMap ? jsFilePath + ".map" : undefined;
+    }
+
+    function createDefaultBundleInfo(): BundleInfo {
+        return {
+            originalOffset: -1,
+            totalLength: -1
+        };
     }
 
     // JavaScript files are always LanguageVariant.JSX, as JSX syntax is allowed in .js files also.
@@ -88,6 +96,7 @@ namespace ts {
         const writer = createTextWriter(newLine);
         const sourceMap = createSourceMapWriter(host, writer);
 
+        let bundleInfo: BundleInfo = createDefaultBundleInfo();
         let currentSourceFile: SourceFile;
         let bundledHelpers: Map<boolean>;
         let isOwnFileEmit: boolean;
@@ -132,11 +141,11 @@ namespace ts {
             sourceMaps: sourceMapDataList
         };
 
-        function emitSourceFileOrBundle({ jsFilePath, sourceMapFilePath, declarationFilePath }: EmitFileNames, sourceFileOrBundle: SourceFile | Bundle) {
+        function emitSourceFileOrBundle({ jsFilePath, sourceMapFilePath, declarationFilePath, bundleInfoPath }: EmitFileNames, sourceFileOrBundle: SourceFile | Bundle) {
             // Make sure not to write js file and source map file if any of them cannot be written
             if (!host.isEmitBlocked(jsFilePath) && !compilerOptions.noEmit && !compilerOptions.emitDeclarationOnly) {
                 if (!emitOnlyDtsFiles) {
-                    printSourceFileOrBundle(jsFilePath, sourceMapFilePath, sourceFileOrBundle);
+                    printSourceFileOrBundle(jsFilePath, sourceMapFilePath, bundleInfoPath, sourceFileOrBundle);
                 }
             }
             else {
@@ -157,10 +166,13 @@ namespace ts {
                 if (declarationFilePath) {
                     emittedFilesList.push(declarationFilePath);
                 }
+                if (bundleInfoPath) {
+                    emittedFilesList.push(bundleInfoPath);
+                }
             }
         }
 
-        function printSourceFileOrBundle(jsFilePath: string, sourceMapFilePath: string, sourceFileOrBundle: SourceFile | Bundle) {
+        function printSourceFileOrBundle(jsFilePath: string, sourceMapFilePath: string, bundleInfoPath: string | undefined, sourceFileOrBundle: SourceFile | Bundle) {
             const bundle = sourceFileOrBundle.kind === SyntaxKind.Bundle ? sourceFileOrBundle : undefined;
             const sourceFile = sourceFileOrBundle.kind === SyntaxKind.SourceFile ? sourceFileOrBundle : undefined;
             const sourceFiles = bundle ? bundle.sourceFiles : [sourceFile];
@@ -169,7 +181,7 @@ namespace ts {
             if (bundle) {
                 bundledHelpers = createMap<boolean>();
                 isOwnFileEmit = false;
-                printer.writeBundle(bundle, writer);
+                printer.writeBundle(bundle, writer, bundleInfo);
             }
             else {
                 isOwnFileEmit = true;
@@ -196,6 +208,12 @@ namespace ts {
             // Write the output file
             writeFile(host, emitterDiagnostics, jsFilePath, writer.getText(), compilerOptions.emitBOM, sourceFiles);
 
+            // Write bundled offset information if applicable
+            if (bundleInfoPath) {
+                bundleInfo.totalLength = writer.getTextPos();
+                writeFile(host, emitterDiagnostics, bundleInfoPath, JSON.stringify(bundleInfo, undefined, 2), /*writeByteOrderMark*/ false);
+            }
+
             // Reset state
             sourceMap.reset();
             writer.clear();
@@ -203,6 +221,7 @@ namespace ts {
             currentSourceFile = undefined;
             bundledHelpers = undefined;
             isOwnFileEmit = false;
+            bundleInfo = createDefaultBundleInfo();
         }
 
         function setSourceFile(node: SourceFile) {
@@ -386,7 +405,7 @@ namespace ts {
             writer = previousWriter;
         }
 
-        function writeBundle(bundle: Bundle, output: EmitTextWriter) {
+        function writeBundle(bundle: Bundle, output: EmitTextWriter, bundleInfo?: BundleInfo) {
             const previousWriter = writer;
             setWriter(output);
             emitShebangIfNeeded(bundle);
@@ -394,7 +413,12 @@ namespace ts {
             for (const prepend of bundle.prepends) {
                 print(EmitHint.Prepend, prepend, /*sourceFile*/ undefined);
             }
+
+            if (bundleInfo) {
+                bundleInfo.originalOffset = writer.getTextPos();
+            }
             emitHelpersIndirect(bundle);
+
             for (const sourceFile of bundle.sourceFiles) {
                 print(EmitHint.SourceFile, sourceFile, sourceFile);
             }
