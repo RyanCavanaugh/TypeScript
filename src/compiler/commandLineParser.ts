@@ -1556,7 +1556,7 @@ namespace ts {
             }
 
             const result = matchFileNames(filesSpecs, includeSpecs, excludeSpecs, configFileName ? directoryOfCombinedPath(configFileName, basePath) : basePath, options, host, errors, extraFileExtensions, sourceFile);
-            if (result.fileNames.length === 0 && !hasProperty(raw, "files") && resolutionStack.length === 0) {
+            if (result.fileNames.length === 0 && !hasProperty(raw, "files") && resolutionStack.length === 0 && !options.references) {
                 errors.push(getErrorForNoInputFiles(result.spec, configFileName));
             }
 
