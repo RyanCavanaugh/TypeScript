@@ -3987,9 +3987,9 @@
               </Str>
               <Disp Icon="Str" />
             </Item>
-            <Item ItemId=";Referenced_project_0_must_have_setting_composable_Colon_true_6306" ItemType="0" PsrId="306" Leaf="true">
+            <Item ItemId=";Referenced_project_0_must_have_setting_composite_Colon_true_6306" ItemType="0" PsrId="306" Leaf="true">
               <Str Cat="Text">
-                <Val><![CDATA[Referenced project '{0}' must have setting "composable": true.]]></Val>
+                <Val><![CDATA[Referenced project '{0}' must have setting "composite": true.]]></Val>
               </Str>
               <Disp Icon="Str" />
             </Item>
