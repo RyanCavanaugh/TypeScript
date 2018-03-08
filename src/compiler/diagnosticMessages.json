@@ -3466,7 +3466,7 @@
     },
     "Projects to reference": {
         "category": "Message",
-        "code": 6191
+        "code": 6300
     },
     "Referenced project '{0}' must have 'declaration': true": {
         "category": "Error",

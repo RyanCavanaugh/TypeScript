@@ -1934,7 +1934,7 @@ namespace ts {
             // If this file is produced by a referenced project, we need to rewrite it to
             // look in the output folder of the referenced project rather than the input
             const normalized = getNormalizedAbsolutePath(fileName, path);
-            let result: string | undefined = undefined;
+            let result: string | undefined;
             projectReferenceRedirects.forEach((v, k) => {
                 if (result !== undefined) {
                     return undefined;
@@ -2161,7 +2161,7 @@ namespace ts {
             walkProjectReferenceGraph(host, options, checkReference);
 
             function checkReference(fileName: string, opts: CompilerOptions) {
-                const normalizedPath = ts.normalizePath(fileName);
+                const normalizedPath = normalizePath(fileName);
                 if (illegalRefs.has(normalizedPath)) {
                     createDiagnosticForOptionName(Diagnostics.Project_references_may_not_form_a_circular_graph_Cycle_detected_Colon_0, cycleName.map(normalizePath).map(s => host.getNewLine() + "    " + s).join(" -> "));
                     return;

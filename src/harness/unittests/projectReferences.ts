@@ -74,13 +74,13 @@ namespace ts {
 
         const host = new Utils.MockProjectReferenceCompilerHost("/", /*useCaseSensitiveFileNames*/ true, files);
 
-        const { config, error } = ts.readConfigFile(entryPointConfigFileName, name => host.readFile(name));
+        const { config, error } = readConfigFile(entryPointConfigFileName, name => host.readFile(name));
 
         // We shouldn't have any errors about invalid tsconfig files in these tests
         assert(config && !error, flattenDiagnosticMessageText(error && error.messageText, "\n"));
-        const file = ts.parseJsonConfigFileContent(config, host.configHost, getDirectoryPath(entryPointConfigFileName), {}, entryPointConfigFileName);
+        const file = parseJsonConfigFileContent(config, host.configHost, getDirectoryPath(entryPointConfigFileName), {}, entryPointConfigFileName);
         file.options.configFilePath = entryPointConfigFileName;
-        const prog = ts.createProgram(file.fileNames, file.options, host);
+        const prog = createProgram(file.fileNames, file.options, host);
         checkResult(prog, host);
     }
 
