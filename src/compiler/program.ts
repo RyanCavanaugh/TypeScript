@@ -624,7 +624,7 @@ namespace ts {
         Debug.assert(!!missingFilePaths);
 
         // List of collected files is complete; validate exhautiveness if this is a project with a file list
-        if (options.composable && rootNames.length < files.length) {
+        if (options.composite && rootNames.length < files.length) {
             // TODO: root names are coming in lower-cased which means they
             // are being displayed to the user lower-cased; need to get their original
             // names when displaying diagnostics
@@ -700,7 +700,7 @@ namespace ts {
         function getCommonSourceDirectory() {
             if (commonSourceDirectory === undefined) {
                 const emittedFiles = filter(files, file => sourceFileMayBeEmitted(file, options, isSourceFileFromExternalLibrary));
-                if (options.composable) {
+                if (options.composite) {
                     // Project compilations never infer their root from the input source paths
                     commonSourceDirectory = getNormalizedAbsolutePath(options.rootDir || getDirectoryPath(normalizeSlashes(options.configFilePath)), currentDirectory);
                 }
@@ -2170,8 +2170,8 @@ namespace ts {
                     Debug.fail("Options cannot be undefined");
                     return;
                 }
-                if (!opts.composable) {
-                    createDiagnosticForOptionName(Diagnostics.Referenced_project_0_must_have_setting_composable_Colon_true, fileName);
+                if (!opts.composite) {
+                    createDiagnosticForOptionName(Diagnostics.Referenced_project_0_must_have_setting_composite_Colon_true, fileName);
                 }
                 illegalRefs.set(normalizedPath, true);
                 cycleName.push(normalizedPath);
@@ -2213,7 +2213,7 @@ namespace ts {
                 createDiagnosticForOptionName(Diagnostics.Option_paths_cannot_be_used_without_specifying_baseUrl_option, "paths");
             }
 
-            if (options.composable) {
+            if (options.composite) {
                 if (options.declaration === false) {
                     createDiagnosticForOptionName(Diagnostics.Projects_may_not_disable_declaration_emit, "declaration");
                 }
