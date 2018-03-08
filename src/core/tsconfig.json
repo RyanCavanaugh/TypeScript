@@ -1,0 +1,20 @@
+{
+    "extends": "../tsconfig-base",
+    "compilerOptions": {
+        "removeComments": true,
+        "outFile": "../../built/local/core.js",
+        "preserveConstEnums": true,
+        "types": [
+            "node"
+        ],
+        "references": []
+    },
+    "files": [
+        "performance.ts",
+        "core.ts",
+        "types.ts",
+        "sys.ts",
+        "utilities.ts",
+        "configFile.ts"
+    ]
+}

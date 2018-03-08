@@ -3,7 +3,6 @@
 
 /* @internal */
 namespace ts.JsTyping {
-
     export interface TypingResolutionHost {
         directoryExists(path: string): boolean;
         fileExists(fileName: string): boolean;

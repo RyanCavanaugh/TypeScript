@@ -5,7 +5,8 @@
         "outFile": "../../built/local/typescriptServices.js",
         "declaration": true,
         "references": [
-            { "path": "../compiler", "prepend": true }
+            { "path": "../compiler", "prepend": true },
+            { "path": "../jstyping", "prepend": true }
         ]
     },
     "files": [
@@ -20,7 +21,6 @@
         "importTracker.ts",
         "goToDefinition.ts",
         "jsDoc.ts",
-        "jsTyping.ts",
         "navigateTo.ts",
         "navigationBar.ts",
         "organizeImports.ts",

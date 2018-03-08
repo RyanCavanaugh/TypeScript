@@ -1,0 +1,15 @@
+{
+    "extends": "../tsconfig-base",
+    "compilerOptions": {
+        "removeComments": false,
+        "outFile": "../../built/local/jstyping.js",
+        "declaration": true,
+        "references": [
+            { "path": "../core" }
+        ]
+    },
+    "files": [
+        "semver.ts",
+        "jstyping.ts"
+    ]
+}

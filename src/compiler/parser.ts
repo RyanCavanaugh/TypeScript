@@ -509,7 +509,6 @@ namespace ts {
         return Parser.parseJsonText(fileName, sourceText);
     }
 
-    // See also `isExternalOrCommonJsModule` in utilities.ts
     export function isExternalModule(file: SourceFile): boolean {
         return file.externalModuleIndicator !== undefined;
     }

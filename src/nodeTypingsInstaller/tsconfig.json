@@ -11,10 +11,10 @@
             "scripthost"
         ],
         "references": [
-            { "path": "../compiler" },
-            { "path": "../services", "prepend": true },
+            { "path": "../core", "prepend": true },
             { "path": "../serverShared", "prepend": true },
-            { "path": "../typingsInstaller", "prepend": true }
+            { "path": "../typingsInstaller", "prepend": true },
+            { "path": "../jstyping", "prepend": true }
         ]
     },
     "files": [

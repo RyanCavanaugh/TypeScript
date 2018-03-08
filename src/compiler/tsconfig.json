@@ -1,16 +1,14 @@
 {
     "extends": "../tsconfig-base",
     "compilerOptions": {
-        "outFile": "../../built/local/typescript.js"
+        "outFile": "../../built/local/typescript.js",
+        "references": [
+            { "path": "../core", "prepend": true }
+        ]
     },
     "files": [
-        "types.ts",
-        "performance.ts",
-        "core.ts",
-        "sys.ts",
         "diagnosticInformationMap.generated.ts",
         "moduleNameResolver.ts",
-        "utilities.ts",
         "scanner.ts",
         "parser.ts",
         "binder.ts",
@@ -18,6 +16,7 @@
         "checker.ts",
         "factory.ts",
         "visitor.ts",
+        "nodeUtilities.ts",
         "transformers/utilities.ts",
         "transformers/ts.ts",
         "transformers/jsx.ts",
