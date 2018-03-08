@@ -2,7 +2,7 @@
     "extends": "../tsconfig-base",
     "compilerOptions": {
         "outFile": "../../built/local/tsc.js",
-        "composable": false,
+        "composite": false,
         "declaration": false,
         "references": [
             {

@@ -50,7 +50,7 @@ namespace ts {
             const options = {
                 compilerOptions: {
                     references: (sp.references || []).map(r => ({ path: r })),
-                    composable: true,
+                    composite: true,
                     outDir: "bin",
                     ...sp.options
                 },
@@ -138,13 +138,13 @@ namespace ts {
             });
         });
 
-        it("errors when the referenced project doesn't have composable:true", () => {
+        it("errors when the referenced project doesn't have composite:true", () => {
             const spec: TestSpecification = {
                 "/primary": {
                     files: { "/primary/a.ts": emptyModule },
                     references: [],
                     options: {
-                        composable: false
+                        composite: false
                     }
                 },
                 "/reference": {
@@ -154,7 +154,7 @@ namespace ts {
             };
             testProjectReferences(spec, "/reference/tsconfig.json", program => {
                 const errs = program.getOptionsDiagnostics();
-                assertHasError("Reports an error about 'composable' not being set", errs, Diagnostics.Referenced_project_0_must_have_setting_composable_Colon_true);
+                assertHasError("Reports an error about 'composite' not being set", errs, Diagnostics.Referenced_project_0_must_have_setting_composite_Colon_true);
             });
         });
 
@@ -249,9 +249,9 @@ namespace ts {
     });
 
     /**
-     * 'composable' behavior
+     * 'composite' behavior
      */
-    describe("project-references behavior changes under composable: true", () => {
+    describe("project-references behavior changes under composite: true", () => {
         it("doesn't infer the rootDir from source paths", () => {
             const spec: TestSpecification = {
                 "/alpha": {

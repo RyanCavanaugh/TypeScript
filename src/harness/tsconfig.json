@@ -3,7 +3,7 @@
     "compilerOptions": {
         "removeComments": false,
         "outFile": "../../built/local/run.js",
-        "composable": false,
+        "composite": false,
         "declaration": false,
         "types": [
             "node",

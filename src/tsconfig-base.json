@@ -15,7 +15,7 @@
         "target": "es5",
         "newLine": "lf",
         "types": [],
-        "composable": true,
+        "composite": true,
         "declaration": true
     }
 }
