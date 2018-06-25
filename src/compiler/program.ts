@@ -1259,22 +1259,40 @@ namespace ts {
             for (let i = 0; i < projectReferences.length; i++) {
                 const ref = projectReferences[i];
                 const resolvedRefOpts = resolvedProjectReferences![i]!.commandLine;
+                // Can skip prepended
                 if (ref.prepend && resolvedRefOpts && resolvedRefOpts.options) {
-                    // Upstream project didn't have outFile set -- skip (error will have been issued earlier)
-                    if (!resolvedRefOpts.options.outFile) continue;
+                    // Recurse into the non-prepend references of this project;
+                    // count the prepended ones so we can make sure they only appear once in the output
 
-                    const dtsFilename = changeExtension(resolvedRefOpts.options.outFile, ".d.ts");
-                    const js = host.readFile(resolvedRefOpts.options.outFile) || `/* Input file ${resolvedRefOpts.options.outFile} was missing */\r\n`;
-                    const jsMapPath = resolvedRefOpts.options.outFile + ".map"; // TODO: try to read sourceMappingUrl comment from the file
-                    const jsMap = host.readFile(jsMapPath);
-                    const dts = host.readFile(dtsFilename) || `/* Input file ${dtsFilename} was missing */\r\n`;
-                    const dtsMapPath = dtsFilename + ".map";
-                    const dtsMap = host.readFile(dtsMapPath);
-                    const node = createInputFiles(js, dts, jsMap && jsMapPath, jsMap, dtsMap && dtsMapPath, dtsMap);
-                    nodes.push(node);
+                    const node = createInputFilesForProject(resolvedRefOpts);
+                    if (node) {
+                        nodes.push(node);
+                    }
                 }
             }
+
+            function visitReferencesOf(references: ProjectReference[]) {
+
+            }
+
             return nodes;
+        }
+
+        function createInputFilesForProject(resolvedRefOpts: ParsedCommandLine) {
+            // Upstream project didn't have outFile set -- skip (error will have been issued earlier)
+            if (!resolvedRefOpts.options.outFile) {
+                return undefined;
+            }
+
+            const dtsFilename = changeExtension(resolvedRefOpts.options.outFile, ".d.ts");
+            const js = host.readFile(resolvedRefOpts.options.outFile) || `/* Input file ${resolvedRefOpts.options.outFile} was missing */\r\n`;
+            const jsMapPath = resolvedRefOpts.options.outFile + ".map"; // TODO: try to read sourceMappingUrl comment from the file
+            const jsMap = host.readFile(jsMapPath);
+            const dts = host.readFile(dtsFilename) || `/* Input file ${dtsFilename} was missing */\r\n`;
+            const dtsMapPath = dtsFilename + ".map";
+            const dtsMap = host.readFile(dtsMapPath);
+            const node = createInputFiles(js, dts, jsMap && jsMapPath, jsMap, dtsMap && dtsMapPath, dtsMap);
+            return node;
         }
 
         function isSourceFileFromExternalLibrary(file: SourceFile): boolean {

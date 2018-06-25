@@ -3709,6 +3709,14 @@
         "category": "Error",
         "code": 6371
     },
+    "Prepending of project '{0}' would appear more than once the resulting output.": {
+        "category": "Error",
+        "code": 6372
+    },
+    "References may not combine '{0}' and '{1}'.": {
+        "category": "Error",
+        "code": 6373
+    },
 
     "Variable '{0}' implicitly has an '{1}' type.": {
         "category": "Error",
