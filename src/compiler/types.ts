@@ -303,6 +303,7 @@ namespace ts {
         TypeReference,
         FunctionType,
         ConstructorType,
+        SuperType,
         TypeQuery,
         TypeLiteral,
         ArrayType,
@@ -1242,7 +1243,7 @@ namespace ts {
 
     export interface TypeOperatorNode extends TypeNode {
         kind: SyntaxKind.TypeOperator;
-        operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword | SyntaxKind.ReadonlyKeyword;
+        operator: SyntaxKind.KeyOfKeyword | SyntaxKind.UniqueKeyword | SyntaxKind.ReadonlyKeyword | SyntaxKind.SuperKeyword;
         type: TypeNode;
     }
 
@@ -3938,6 +3939,7 @@ namespace ts {
         Conditional     = 1 << 24,  // T extends U ? X : Y
         Substitution    = 1 << 25,  // Type parameter substitution
         NonPrimitive    = 1 << 26,  // intrinsic object type
+        Super           = 1 << 27,  // Supertype
 
         /* @internal */
         AnyOrUnknown = Any | Unknown,
@@ -4370,6 +4372,10 @@ namespace ts {
     export interface SubstitutionType extends InstantiableType {
         typeVariable: TypeVariable;  // Target type variable
         substitute: Type;            // Type to substitute for type parameter
+    }
+
+    export interface SuperType extends InstantiableType {
+        type: Type;
     }
 
     /* @internal */

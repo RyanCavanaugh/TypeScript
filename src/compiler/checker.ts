@@ -3543,6 +3543,9 @@ namespace ts {
                     context.approximateLength += 13;
                     return createTypeOperatorNode(SyntaxKind.UniqueKeyword, createKeywordTypeNode(SyntaxKind.SymbolKeyword));
                 }
+                if (type.flags & TypeFlags.Super) {
+                    return createTypeOperatorNode(SyntaxKind.SuperKeyword, typeToTypeNodeHelper((type as SuperType).type, context));
+                }
                 if (type.flags & TypeFlags.Void) {
                     context.approximateLength += 4;
                     return createKeywordTypeNode(SyntaxKind.VoidKeyword);
@@ -3567,6 +3570,7 @@ namespace ts {
                     context.approximateLength += 6;
                     return createKeywordTypeNode(SyntaxKind.ObjectKeyword);
                 }
+
                 if (isThisTypeParameter(type)) {
                     if (context.flags & NodeBuilderFlags.InObjectTypeLiteral) {
                         if (!context.encounteredError && !(context.flags & NodeBuilderFlags.AllowThisInObjectLiteral)) {
@@ -9220,6 +9224,12 @@ namespace ts {
             return map(node.typeArguments, getTypeFromTypeNode);
         }
 
+        function getSuperType(type: Type) {
+            const superType = <SuperType>createType(TypeFlags.Super);
+            superType.type = type;
+            return superType;
+        }
+
         function getTypeFromTypeQueryNode(node: TypeQueryNode): Type {
             const links = getNodeLinks(node);
             if (!links.resolvedType) {
@@ -10056,6 +10066,9 @@ namespace ts {
                         break;
                     case SyntaxKind.ReadonlyKeyword:
                         links.resolvedType = getTypeFromTypeNode(node.type);
+                        break;
+                    case SyntaxKind.SuperKeyword:
+                        links.resolvedType = getSuperType(getTypeFromTypeNode(node.type));
                         break;
                 }
             }
@@ -11426,6 +11439,9 @@ namespace ts {
             if (flags & TypeFlags.TypeParameter) {
                 return mapper(type);
             }
+            if (flags & TypeFlags.Super) {
+                return getSuperType(mapper((type as SuperType).type));
+            }
             if (flags & TypeFlags.Object) {
                 const objectFlags = (<ObjectType>type).objectFlags;
                 if (objectFlags & ObjectFlags.Anonymous) {
@@ -12506,6 +12522,12 @@ namespace ts {
              * * Ternary.False if they are not related.
              */
             function isRelatedTo(source: Type, target: Type, reportErrors = false, headMessage?: DiagnosticMessage, isApparentIntersectionConstituent?: boolean): Ternary {
+                if (source.flags & TypeFlags.Super) {
+                    const tmp = target;
+                    target = (source as SuperType).type;
+                    source = tmp;
+                }
+                
                 if (isFreshLiteralType(source)) {
                     source = (<FreshableType>source).regularType;
                 }
@@ -15188,6 +15210,10 @@ namespace ts {
                     propagationType = source;
                     inferFromTypes(target, target);
                     propagationType = savePropagationType;
+                    return;
+                }
+                if (target.flags & TypeFlags.Super) {
+                    inferFromTypes(source, (target as SuperType).type);
                     return;
                 }
                 if (source.aliasSymbol && source.aliasTypeArguments && source.aliasSymbol === target.aliasSymbol) {
