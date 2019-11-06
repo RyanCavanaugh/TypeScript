@@ -1,49 +1,41 @@
-# Instructions for Logging Issues
+# Contributing to TypeScript
 
-## 1. Read the FAQ
+There are a variety of ways you can contribute to the TypeScript project.
 
-Please [read the FAQ](https://github.com/Microsoft/TypeScript/wiki/FAQ) before logging new issues, even if you think you have found a bug.
+## Code
 
-Issues that ask questions answered in the FAQ will be closed without elaboration.
+We always welcome bug fixes and enhancements! Look for [issues in the `Backlog` milestone](https://github.com/microsoft/TypeScript/issues?utf8=✓&q=is%3Aissue+is%3Aopen+milestone%3ABacklog) to see what kinds of changes and improvements are needed.
 
-## 2. Search for Duplicates
+**Important**: We are only able to review pull requests which have an associated issue in the `Backlog` milestone. Please make sure you've identified an issue in the `Backlog` milestone before starting work on any code changes. Pull requests that don't reference an issue in the `Backlog` milestone may be closed automatically.
 
-[Search the existing issues](https://github.com/Microsoft/TypeScript/search?type=Issues) before logging a new one.
+## Bug Reports
 
-Some search tips:
- * *Don't* restrict your search to only open issues. An issue with a title similar to yours may have been closed as a duplicate of one with a less-findable title.
- * Check for synonyms. For example, if your bug involves an interface, it likely also occurs with type aliases or classes.
- * Search for the title of the issue you're about to log. This sounds obvious but 80% of the time this is sufficient to find a duplicate when one exists.
- * Read more than the first page of results. Many bugs here use the same words so relevancy sorting is not particularly strong.
- * If you have a crash, search for the first few topmost function names shown in the call stack.
+If you've encountered a problem in TypeScript, please read the [FAQ for Bug Reports] first!
 
-## 3. Do you have a question?
+We accept bug reports through the [new issue report form](https://github.com/microsoft/TypeScript/issues/new/choose). It's important to follow one of the provided templates to ensure that your report has the information we need in it.
 
-The issue tracker is for **issues**, in other words, bugs and suggestions.
-If you have a *question*, please use [Stack Overflow](http://stackoverflow.com/questions/tagged/typescript), [Gitter](https://gitter.im/Microsoft/TypeScript), your favorite search engine, or other resources.
-Due to increased traffic, we can no longer answer questions in the issue tracker.
+## Documentation
 
-## 4. Did you find a bug?
+Like any project, TypeScript can always use more and better documentation.
 
-When logging a bug, please be sure to include the following:
- * What version of TypeScript you're using (run `tsc --v`)
- * If at all possible, an *isolated* way to reproduce the behavior
- * The behavior you expect to see, and the actual behavior
+The primary documentation artifact is the [TypeScript Handbook](https://github.com/Microsoft/typescript-new-handbook). Please read its `CONTRIBUTING.md` for more information.
 
-You can try out the nightly build of TypeScript (`npm install typescript@next`) to see if the bug has already been fixed.
+## Feedback and Suggestions
 
-## 5. Do you have a suggestion?
+Feedback from TypeScript developers like you drives our planning decisions around new features and behavior changes. Specific, actionable feedback on features and changes you'd like to see is a valuable way to help us prioritize and design the TypeScript of the future.
 
-We also accept suggestions in the issue tracker.
-Be sure to [check the FAQ](https://github.com/Microsoft/TypeScript/wiki/FAQ) and [search](https://github.com/Microsoft/TypeScript/issues?utf8=%E2%9C%93&q=is%3Aissue) first.
+Examples of things we love to see in bug reports or feature requests:
+ * Real code you wrote that you felt should have been analyzed differently
+ * Workarounds you're using today that seem less than ideal
+ * Libraries you have a hard time working with because of how TypeScript works
+ * Features in other languages you find yourself missing
+ * Bugs that slipped through your code because TypeScript didn't check it the way you expected
 
-In general, things we find useful when reviewing suggestions are:
-* A description of the problem you're trying to solve
-* An overview of the suggested solution
-* Examples of how the suggestion would work in various places
-  * Code examples showing e.g. "this would be an error, this wouldn't"
-  * Code examples showing the generated JavaScript (if applicable)
-* If relevant, precedent in other languages can be useful for establishing context and expected behavior
+## Community Support
+
+The [issue tracker](https://github.com/microsoft/TypeScript/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) is an active place with lots of discussion around TypeScript features and issues. Helping out another user to understand some TypeScript behavior or providing them with better workarounds is a great way to help your fellow developer.
+
+The [TypeScript tag on Stack Overflow](https://stackoverflow.com/questions/tagged/typescript) is another place to share knowledge with other developers.
 
 # Instructions for Contributing Code
 
