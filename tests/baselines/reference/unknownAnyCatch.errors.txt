@@ -1,0 +1,36 @@
+tests/cases/compiler/unknownAnyCatch.ts(19,5): error TS2339: Property 'isAny' does not exist on type 'unknown'.
+tests/cases/compiler/unknownAnyCatch.ts(24,13): error TS1196: Catch clause variable type annotation must be 'any' or 'unknown' if specified.
+
+
+==== tests/cases/compiler/unknownAnyCatch.ts (2 errors) ====
+    try {
+    
+    } catch (a) {
+      // should be OK
+      a.isAny;
+    }
+    
+    try {
+    
+    } catch (a: any) {
+      // should be OK
+      a.isAny;
+    }
+    
+    try {
+    
+    } catch (a: unknown) {
+      // Should be error
+      a.isAny;
+        ~~~~~
+!!! error TS2339: Property 'isAny' does not exist on type 'unknown'.
+    }
+    
+    try {
+    
+    } catch (a: object) {
+                ~~~~~~
+!!! error TS1196: Catch clause variable type annotation must be 'any' or 'unknown' if specified.
+             // Should be error
+    }
+    

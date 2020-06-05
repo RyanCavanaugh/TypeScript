@@ -1,0 +1,39 @@
+=== tests/cases/compiler/unknownAnyCatch.ts ===
+try {
+
+} catch (a) {
+>a : Symbol(a, Decl(unknownAnyCatch.ts, 2, 9))
+
+  // should be OK
+  a.isAny;
+>a : Symbol(a, Decl(unknownAnyCatch.ts, 2, 9))
+}
+
+try {
+
+} catch (a: any) {
+>a : Symbol(a, Decl(unknownAnyCatch.ts, 9, 9))
+
+  // should be OK
+  a.isAny;
+>a : Symbol(a, Decl(unknownAnyCatch.ts, 9, 9))
+}
+
+try {
+
+} catch (a: unknown) {
+>a : Symbol(a, Decl(unknownAnyCatch.ts, 16, 9))
+
+  // Should be error
+  a.isAny;
+>a : Symbol(a, Decl(unknownAnyCatch.ts, 16, 9))
+}
+
+try {
+
+} catch (a: object) {
+>a : Symbol(a, Decl(unknownAnyCatch.ts, 23, 9))
+
+         // Should be error
+}
+

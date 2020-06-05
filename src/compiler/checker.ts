@@ -8121,6 +8121,9 @@ namespace ts {
             // Handle catch clause variables
             const declaration = symbol.valueDeclaration;
             if (isCatchClauseVariableDeclarationOrBindingElement(declaration)) {
+                if ((declaration as VariableDeclaration).type) {
+                    return getTypeOfNode((declaration as VariableDeclaration).type!);
+                }
                 return anyType;
             }
             // Handle export default expressions
@@ -24871,11 +24874,20 @@ namespace ts {
             }
 
             const effectiveIndexType = isForInVariableForNumericPropertyNames(indexExpression) ? numberType : indexType;
-            const accessFlags = isAssignmentTarget(node) ?
+            const isAssignment = isAssignmentTarget(node);
+            const accessFlags = isAssignment ?
                 AccessFlags.Writing | (isGenericObjectType(objectType) && !isThisTypeParameter(objectType) ? AccessFlags.NoIndexSignatures : 0) :
                 AccessFlags.None;
             const indexedAccessType = getIndexedAccessTypeOrUndefined(objectType, effectiveIndexType, node, accessFlags) || errorType;
-            return checkIndexedAccessIndexType(getFlowTypeOfAccessExpression(node, indexedAccessType.symbol, indexedAccessType, indexExpression), node);
+            const lookupType = checkIndexedAccessIndexType(getFlowTypeOfAccessExpression(node, indexedAccessType.symbol, indexedAccessType, indexExpression), node);
+
+            // For non-literal  reads on index signatures, include 'undefined' if the corresponding unsafe option is set
+            if (!isAssignment &&
+                ((compilerOptions.noUnsafeArrayReads && effectiveIndexType.flags & TypeFlags.NumberLike && !(effectiveIndexType.flags & TypeFlags.Literal)) ||
+                (compilerOptions.noUnsafeMaplikeReads && effectiveIndexType.flags & TypeFlags.StringLike && !(effectiveIndexType.flags & TypeFlags.Literal)))) {
+                return getUnionType([lookupType, undefinedType]);
+            }
+            return lookupType;
         }
 
         function checkThatExpressionIsProperSymbolReference(expression: Expression, expressionType: Type, reportError: boolean): boolean {
@@ -33314,8 +33326,9 @@ namespace ts {
             if (catchClause) {
                 // Grammar checking
                 if (catchClause.variableDeclaration) {
-                    if (catchClause.variableDeclaration.type) {
-                        grammarErrorOnFirstToken(catchClause.variableDeclaration.type, Diagnostics.Catch_clause_variable_cannot_have_a_type_annotation);
+                    const typeKind = catchClause.variableDeclaration.type?.kind;
+                    if (typeKind && (typeKind !== SyntaxKind.UnknownKeyword) && (typeKind !== SyntaxKind.AnyKeyword)) {
+                        grammarErrorOnFirstToken(catchClause.variableDeclaration.type!, Diagnostics.Catch_clause_variable_type_annotation_must_be_any_or_unknown_if_specified);
                     }
                     else if (catchClause.variableDeclaration.initializer) {
                         grammarErrorOnFirstToken(catchClause.variableDeclaration.initializer, Diagnostics.Catch_clause_variable_cannot_have_an_initializer);

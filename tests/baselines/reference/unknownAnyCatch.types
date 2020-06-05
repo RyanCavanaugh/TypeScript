@@ -1,0 +1,45 @@
+=== tests/cases/compiler/unknownAnyCatch.ts ===
+try {
+
+} catch (a) {
+>a : any
+
+  // should be OK
+  a.isAny;
+>a.isAny : any
+>a : any
+>isAny : any
+}
+
+try {
+
+} catch (a: any) {
+>a : any
+
+  // should be OK
+  a.isAny;
+>a.isAny : any
+>a : any
+>isAny : any
+}
+
+try {
+
+} catch (a: unknown) {
+>a : unknown
+
+  // Should be error
+  a.isAny;
+>a.isAny : any
+>a : unknown
+>isAny : any
+}
+
+try {
+
+} catch (a: object) {
+>a : object
+
+         // Should be error
+}
+

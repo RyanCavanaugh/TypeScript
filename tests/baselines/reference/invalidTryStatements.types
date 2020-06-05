@@ -15,10 +15,10 @@ function fn() {
 >z : any
 
     try { } catch (a: number) { }
->a : any
+>a : number
 
     try { } catch (y: string) { }
->y : any
+>y : string
 }
 
 
