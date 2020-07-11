@@ -2802,6 +2802,7 @@ declare namespace ts {
         outDir?: string;
         outFile?: string;
         paths?: MapLike<string[]>;
+        pedanticIndexSignatures?: boolean;
         preserveConstEnums?: boolean;
         preserveSymlinks?: boolean;
         project?: string;
