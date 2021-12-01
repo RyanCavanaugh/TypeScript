@@ -1,3 +1,4 @@
+declare var __codecov: any;
 namespace Harness {
     /* eslint-disable prefer-const */
     export let runners: RunnerBase[] = [];
@@ -270,6 +271,7 @@ ${JSON.stringify(dupes, undefined, 2)}`);
 
     export let isWorker: boolean;
     function startTestEnvironment() {
+        let ccovData: Record<string, { bestTime: number, name: string }> = {};
         isWorker = handleTestConfig();
         if (isWorker) {
             return Parallel.Worker.start();
@@ -277,6 +279,25 @@ ${JSON.stringify(dupes, undefined, 2)}`);
         else if (taskConfigsFolder && workerCount && workerCount > 1) {
             return Parallel.Host.start();
         }
+        let start: bigint;
+        beforeEach(function (done) {
+            start = process.hrtime.bigint();
+            done();
+        });
+        afterEach(function (done) {
+            const time = Number(process.hrtime.bigint() - start);
+            Object.keys(__codecov).forEach(pt => {
+                if (!(pt in ccovData) || time < ccovData[pt].bestTime) {
+                    ccovData[pt] = { name: this.currentTest!.title, bestTime: time };
+                }
+            });
+            __codecov = {};
+            done();
+        });
+        after(function(done) {
+            IO.writeFile(IO.joinPath(__dirname, "codecov.json"), JSON.stringify(ccovData, undefined, 2));
+            done();
+        })
         beginTests();
     }
 

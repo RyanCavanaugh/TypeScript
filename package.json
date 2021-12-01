@@ -40,6 +40,7 @@
         "@types/gulp-rename": "0.0.33",
         "@types/gulp-sourcemaps": "0.0.32",
         "@types/jake": "latest",
+        "@types/lodash": "latest",
         "@types/merge2": "latest",
         "@types/microsoft__typescript-etw": "latest",
         "@types/minimatch": "latest",
