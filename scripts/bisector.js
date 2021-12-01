@@ -7,11 +7,20 @@ const { argv, cwd, exit } = require("process");
 
 const home = cwd();
 
-const tscArgs = argv.slice(2);
-console.log(`Testing commandline: tsc ${tscArgs.join(" ")}`);
-run();
+if (argv.length === 2) {
+    console.log(`Example Usage:`);
+    console.log(`  copy scripts/bisector.js ..`);
+    console.log(`  git bisect start`);
+    console.log(`  git bisect good [rev]`);
+    console.log(`  git bisect bad [rev]`);
+    console.log(`  git bisect run node ../bisector.js --noEmit --types --skipLibcheck --strict sample.ts`);
+} else {
+    const tscArgs = argv.slice(2);
+    console.log(`Testing commandline: tsc ${tscArgs.join(" ")}`);
+    run(tscArgs);
+}
 
-function run() {
+function run(tscArgs) {
     // Build
     console.log("Building tsc...");
     const gulp = spawn("node", [join(home, "node_modules/gulp/bin/gulp.js"), "tsc"]);
