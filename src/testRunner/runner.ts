@@ -279,25 +279,27 @@ ${JSON.stringify(dupes, undefined, 2)}`);
         else if (taskConfigsFolder && workerCount && workerCount > 1) {
             return Parallel.Host.start();
         }
-        let start: bigint;
-        beforeEach(function (done) {
-            start = process.hrtime.bigint();
-            done();
-        });
-        afterEach(function (done) {
-            const time = Number(process.hrtime.bigint() - start);
-            Object.keys(__codecov).forEach(pt => {
-                if (!(pt in ccovData) || time < ccovData[pt].bestTime) {
-                    ccovData[pt] = { name: this.currentTest!.title, bestTime: time };
-                }
+        if (typeof __codecov !== 'undefined') {
+            let start: bigint;
+            beforeEach(function (done) {
+                start = process.hrtime.bigint();
+                done();
             });
-            __codecov = {};
-            done();
-        });
-        after(function(done) {
-            IO.writeFile(IO.joinPath(__dirname, "codecov.json"), JSON.stringify(ccovData, undefined, 2));
-            done();
-        })
+            afterEach(function (done) {
+                const time = Number(process.hrtime.bigint() - start);
+                Object.keys(__codecov).forEach(pt => {
+                    if (!(pt in ccovData) || time < ccovData[pt].bestTime) {
+                        ccovData[pt] = { name: this.currentTest!.title, bestTime: time };
+                    }
+                });
+                __codecov = {};
+                done();
+            });
+            after(function (done) {
+                IO.writeFile(IO.joinPath(__dirname, "codecov.json"), JSON.stringify(ccovData, undefined, 2));
+                done();
+            })
+        }
         beginTests();
     }
 
