@@ -2,6 +2,8 @@ import {
     __String, CharacterCodes, Comparer, Comparison, Debug, EqualityComparer, ESMap, isWhiteSpaceLike, Iterator, Map,
     MapLike, Push, Queue, ReadonlyESMap, ReadonlySet, Set, SortedArray, SortedReadonlyArray, TextSpan,
     UnderscoreEscapedMap,
+    SourceFile,
+    BinarySourceFile,
 } from "./_namespaces/ts";
 
 /** @internal */
@@ -2760,6 +2762,25 @@ export function not<T extends unknown[]>(fn: (...args: T) => boolean): (...args:
 
 /** @internal */
 export function assertType<T>(_: T): void { }
+
+export function assertIsSourceFile(arg: SourceFile | BinarySourceFile | undefined): asserts arg is SourceFile | undefined {
+    if (arg && "strings" in arg) throw new Error("Got a binary source file");
+}
+
+export function checkIsSourceFile<T extends SourceFile | BinarySourceFile | false>(arg: T): Exclude<T, BinarySourceFile> {
+    if (arg instanceof Object && "strings" in (arg as any)) {
+        throw new Error("Got a binary source file");
+    } else {
+        return arg as any;
+    }
+}
+
+export function isBinarySourceFile(arg: unknown): arg is BinarySourceFile {
+    return (typeof arg === "object") && (arg !== null) && ("strings" in arg);
+}
+
+/** @internal */
+export function coerceType<T>(_: unknown): asserts _ is T { }
 
 /** @internal */
 export function singleElementArray<T>(t: T | undefined): T[] | undefined {

@@ -3,10 +3,11 @@ import {
     AccessorDeclaration, addRange, addRelatedInfo, AmdDependency, append, ArrayBindingElement, ArrayBindingPattern,
     ArrayLiteralExpression, ArrayTypeNode, ArrowFunction, AsExpression, AssertClause, AssertEntry, AssertionLevel,
     AsteriskToken, attachFileToDiagnostics, AwaitExpression, BaseNodeFactory, BinaryExpression, BinaryOperatorToken,
+    BinarySourceFile,
     BindingElement, BindingName, BindingPattern, Block, BooleanLiteral, BreakOrContinueStatement, BreakStatement,
     CallExpression, CallSignatureDeclaration, canHaveModifiers, CaseBlock, CaseClause, CaseOrDefaultClause, CatchClause,
     CharacterCodes, CheckJsDirective, ClassDeclaration, ClassElement, ClassExpression, ClassLikeDeclaration,
-    ClassStaticBlockDeclaration, CommaListExpression, CommentDirective, commentPragmas, CommentRange,
+    ClassStaticBlockDeclaration, coerceType, CommaListExpression, CommentDirective, commentPragmas, CommentRange,
     ComputedPropertyName, concatenate, ConditionalExpression, ConditionalTypeNode, ConstructorDeclaration,
     ConstructorTypeNode, ConstructSignatureDeclaration, containsParseError, ContinueStatement, convertToObjectWorker,
     createDetachedDiagnostic, createNodeFactory, createScanner, createTextChangeRange, createTextSpanFromBounds, Debug,
@@ -120,6 +121,100 @@ function visitNodes<T>(cbNode: (node: Node) => T, cbNodes: ((node: NodeArray<Nod
             }
         }
     }
+}
+
+export function sourceFileToBinary(sourceFile: SourceFile): BinarySourceFile {
+    const nodeKindsAndDataOffsets = new Uint32Array(80000);
+    const nodeData: Uint32Array = new Uint32Array(80000);
+    const strings: string[] = [];
+
+    let nodeKindPointer = 0;
+    let nodeDataPointer = 0;
+    let stringPointer = 0;
+
+    const result: BinarySourceFile = {
+        strings,
+        nodeData,
+        nodeKindsAndDataOffsets,
+        fileName: sourceFile.fileName,
+        impliedNodeFormat: sourceFile.impliedNodeFormat,
+        path: sourceFile.path,
+        referencedFiles: sourceFile.referencedFiles,
+        text: sourceFile.text,
+        resolvedPath: sourceFile.resolvedPath,
+        hasNoDefaultLib: sourceFile.hasNoDefaultLib,
+        originalFileName: sourceFile.originalFileName,
+        packageJsonLocations: sourceFile.packageJsonLocations,
+        packageJsonScope: sourceFile.packageJsonScope,
+        isDeclarationFile: sourceFile.isDeclarationFile
+    };
+    recur(sourceFile);
+
+    function recur(node: Node): number {
+        const myId = nodeKindPointer;
+        const myDataOffset = nodeDataPointer;
+
+        nodeKindsAndDataOffsets[nodeKindPointer++] = node.kind;
+        nodeKindsAndDataOffsets[nodeKindPointer++] = myDataOffset;
+
+        switch (node.kind) {
+            case SyntaxKind.SourceFile: {
+                coerceType<SourceFile>(node);
+                // SourceFile is
+                // 0: children count (k)
+                // ...
+                // n - n+k: children ids
+                nodeDataPointer += (1 + node.statements.length);
+                nodeData[myDataOffset + 0] = node.statements.length;
+                for (let i = 0; i < node.statements.length; i++) {
+                    nodeData[myDataOffset + i + 1] = recur(node.statements[i]);
+                }
+            }
+            break;
+            case SyntaxKind.InterfaceDeclaration: {
+                coerceType<InterfaceDeclaration>(node);
+                nodeDataPointer += (2 + node.members.length);
+                nodeData[myDataOffset + 0] = recur(node.name);
+                nodeData[myDataOffset + 1] = node.members.length;
+                for (let i = 0; i < node.members.length; i++) {
+                    nodeData[myDataOffset + i + 2] = recur(node.members[i]);
+                }
+            }
+            break;
+            case SyntaxKind.VariableStatement: {
+                coerceType<VariableStatement>(node);
+                nodeDataPointer += (1 + node.declarationList.declarations.length);
+                nodeData[myDataOffset + 0] = node.declarationList.declarations.length;
+                for (let i = 0; i < node.declarationList.declarations.length; i++) {
+                    nodeData[myDataOffset + i + 1] = recur(node.declarationList.declarations[i]);
+                }
+            }
+            break;
+            case SyntaxKind.VariableDeclaration: {
+                coerceType<VariableDeclaration>(node);
+                nodeData[myDataOffset] = stringPointer;
+                strings[stringPointer++] = node.name.toString();
+            }
+            break;
+            case SyntaxKind.Identifier: {
+                coerceType<Identifier>(node);
+                strings[stringPointer++] = node.escapedText as string;
+            }
+            break;
+            case SyntaxKind.ModuleDeclaration: {
+                coerceType<ModuleDeclaration>(node);
+                console.log(node.name);
+            }
+            break;
+                
+            default:
+                // @ts-ignore
+                throw new Error(`Unimplemented binary translation: ${ts.SyntaxKind[node.kind]}`);
+        }
+        return myId;
+    }
+
+    return result;
 }
 
 /** @internal */
@@ -1047,7 +1142,7 @@ export function parseJsonText(fileName: string, sourceText: string): JsonSourceF
 }
 
 // See also `isExternalOrCommonJsModule` in utilities.ts
-export function isExternalModule(file: SourceFile): boolean {
+export function isExternalModule(file: BinarySourceFile | SourceFile): boolean {
     return file.externalModuleIndicator !== undefined;
 }
 

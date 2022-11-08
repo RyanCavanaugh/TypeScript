@@ -90,7 +90,7 @@ import {
     TypePredicate, TypePredicateKind, TypeReferenceNode, unescapeLeadingUnderscores, UnionOrIntersectionTypeNode,
     ValidImportTypeNode, VariableDeclaration, VariableDeclarationInitializedTo, VariableDeclarationList,
     VariableLikeDeclaration, VariableStatement, version, WhileStatement, WithStatement, WriteFileCallback,
-    WriteFileCallbackData, YieldExpression,
+    WriteFileCallbackData, YieldExpression, isBinarySourceFile, BinarySourceFile, assertIsSourceFile,
 } from "./_namespaces/ts";
 
 /** @internal */
@@ -1274,7 +1274,7 @@ export function createDiagnosticForNodeFromMessageChain(node: Node, messageChain
     return createFileDiagnosticFromMessageChain(sourceFile, span.start, span.length, messageChain, relatedInformation);
 }
 
-function assertDiagnosticLocation(file: SourceFile | undefined, start: number, length: number) {
+function assertDiagnosticLocation(file: SourceFile | BinarySourceFile | undefined, start: number, length: number) {
     Debug.assertGreaterThanOrEqual(start, 0);
     Debug.assertGreaterThanOrEqual(length, 0);
 
@@ -1356,7 +1356,9 @@ function getErrorSpanForArrowFunction(sourceFile: SourceFile, node: ArrowFunctio
 }
 
 /** @internal */
-export function getErrorSpanForNode(sourceFile: SourceFile, node: Node): TextSpan {
+export function getErrorSpanForNode(sourceFile: SourceFile | BinarySourceFile, node: Node): TextSpan {
+    assertIsSourceFile(sourceFile);
+
     let errorNode: Node | undefined = node;
     switch (node.kind) {
         case SyntaxKind.SourceFile:
@@ -4981,8 +4983,10 @@ export function getSourceFilesToEmit(host: EmitHost, targetSourceFile?: SourceFi
  *
  * @internal
  */
-export function sourceFileMayBeEmitted(sourceFile: SourceFile, host: SourceFileMayBeEmittedHost, forceDtsEmit?: boolean) {
+export function sourceFileMayBeEmitted(sourceFile: SourceFile | BinarySourceFile, host: SourceFileMayBeEmittedHost, forceDtsEmit?: boolean) {
     const options = host.getCompilerOptions();
+    if (isBinarySourceFile(sourceFile)) return false;
+
     return !(options.noEmitForJsFiles && isSourceFileJS(sourceFile)) &&
         !sourceFile.isDeclarationFile &&
         !host.isSourceFileFromExternalLibrary(sourceFile) &&
@@ -6839,9 +6843,9 @@ export function attachFileToDiagnostics(diagnostics: DiagnosticWithDetachedLocat
 }
 
 /** @internal */
-export function createFileDiagnostic(file: SourceFile, start: number, length: number, message: DiagnosticMessage, ...args: (string | number | undefined)[]): DiagnosticWithLocation;
+export function createFileDiagnostic(file: SourceFile | BinarySourceFile, start: number, length: number, message: DiagnosticMessage, ...args: (string | number | undefined)[]): DiagnosticWithLocation;
 /** @internal */
-export function createFileDiagnostic(file: SourceFile, start: number, length: number, message: DiagnosticMessage): DiagnosticWithLocation {
+export function createFileDiagnostic(file: SourceFile | BinarySourceFile, start: number, length: number, message: DiagnosticMessage): DiagnosticWithLocation {
     assertDiagnosticLocation(file, start, length);
 
     let text = getLocaleSpecificMessage(message);
@@ -7299,7 +7303,7 @@ export interface SymlinkCache {
      * don't include automatic type reference directives. Must be called only when
      * `hasProcessedResolutions` returns false (once per cache instance).
      */
-    setSymlinksFromResolutions(files: readonly SourceFile[], typeReferenceDirectives: ModeAwareCache<ResolvedTypeReferenceDirective | undefined> | undefined): void;
+    setSymlinksFromResolutions(files: readonly (BinarySourceFile | SourceFile)[], typeReferenceDirectives: ModeAwareCache<ResolvedTypeReferenceDirective | undefined> | undefined): void;
     /**
      * @internal
      * Whether `setSymlinksFromResolutions` has already been called.

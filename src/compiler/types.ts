@@ -3945,6 +3945,29 @@ export interface AmdDependency {
     name?: string;
 }
 
+export interface BinarySourceFile {
+    nodeKindsAndDataOffsets: Uint32Array;
+    nodeData: Uint32Array;
+    strings: string[];
+    path: Path;
+    text: string;
+    impliedNodeFormat: SourceFile["impliedNodeFormat"];
+    fileName: string;
+    referencedFiles: readonly FileReference[];
+    resolvedPath: SourceFile["resolvedPath"];
+
+    originalFileName: SourceFile["originalFileName"];
+    packageJsonLocations: SourceFile["packageJsonLocations"];
+    packageJsonScope: SourceFile["packageJsonScope"];
+    hasNoDefaultLib: SourceFile["hasNoDefaultLib"];
+    isDeclarationFile: SourceFile["isDeclarationFile"];
+    typeReferenceDirectives?: undefined;
+    libReferenceDirectives?: undefined;
+    classifiableNames?: undefined;
+    externalModuleIndicator?: undefined;
+    resolvedModules?: undefined;
+}
+
 /**
  * Subset of properties from SourceFile that are used in multiple utility functions
  */
@@ -4254,8 +4277,8 @@ export interface JsonObjectExpressionStatement extends ExpressionStatement {
 
 export interface ScriptReferenceHost {
     getCompilerOptions(): CompilerOptions;
-    getSourceFile(fileName: string): SourceFile | undefined;
-    getSourceFileByPath(path: Path): SourceFile | undefined;
+    getSourceFile(fileName: string): SourceFile | BinarySourceFile | undefined;
+    getSourceFileByPath(path: Path): SourceFile | BinarySourceFile | undefined;
     getCurrentDirectory(): string;
 }
 
@@ -4409,7 +4432,7 @@ export interface Program extends ScriptReferenceHost {
     /**
      * Get a list of files in the program
      */
-    getSourceFiles(): readonly SourceFile[];
+    getSourceFiles(): readonly (SourceFile | BinarySourceFile)[];
 
     /**
      * Get a list of file names that were passed to 'createProgram' or referenced in a
@@ -4421,7 +4444,7 @@ export interface Program extends ScriptReferenceHost {
     /** @internal */
     getModuleResolutionCache(): ModuleResolutionCache | undefined;
     /** @internal */
-    getFilesByNameMap(): ESMap<string, SourceFile | false | undefined>;
+    getFilesByNameMap(): ESMap<string, SourceFile | BinarySourceFile | false | undefined>;
 
     /**
      * Emits the JavaScript and declaration files.  If targetSourceFile is not specified, then
@@ -4476,8 +4499,8 @@ export interface Program extends ScriptReferenceHost {
     // This is set on created program to let us know how the program was created using old program
     /** @internal */ readonly structureIsReused: StructureIsReused;
 
-    /** @internal */ getSourceFileFromReference(referencingFile: SourceFile | UnparsedSource, ref: FileReference): SourceFile | undefined;
-    /** @internal */ getLibFileFromReference(ref: FileReference): SourceFile | undefined;
+    /** @internal */ getSourceFileFromReference(referencingFile: SourceFile | UnparsedSource, ref: FileReference): SourceFile | BinarySourceFile | undefined;
+    /** @internal */ getLibFileFromReference(ref: FileReference): SourceFile | BinarySourceFile | undefined;
 
     /**
      * Given a source file, get the name of the package it was imported from.
@@ -4629,8 +4652,8 @@ export interface EmitResult {
 export interface TypeCheckerHost extends ModuleSpecifierResolutionHost {
     getCompilerOptions(): CompilerOptions;
 
-    getSourceFiles(): readonly SourceFile[];
-    getSourceFile(fileName: string): SourceFile | undefined;
+    getSourceFiles(): readonly (SourceFile | BinarySourceFile)[];
+    getSourceFile(fileName: string): SourceFile | BinarySourceFile | undefined;
     getResolvedTypeReferenceDirectives(): ModeAwareCache<ResolvedTypeReferenceDirective | undefined>;
     getProjectReferenceRedirect(fileName: string): string | undefined;
     isSourceOfProjectReferenceRedirect(fileName: string): boolean;
@@ -6539,14 +6562,14 @@ export interface Diagnostic extends DiagnosticRelatedInformation {
 export interface DiagnosticRelatedInformation {
     category: DiagnosticCategory;
     code: number;
-    file: SourceFile | undefined;
+    file: SourceFile | BinarySourceFile | undefined;
     start: number | undefined;
     length: number | undefined;
     messageText: string | DiagnosticMessageChain;
 }
 
 export interface DiagnosticWithLocation extends Diagnostic {
-    file: SourceFile;
+    file: SourceFile | BinarySourceFile;
     start: number;
     length: number;
 }
@@ -7299,7 +7322,7 @@ export type ModuleResolutionInfo = ResolutionInfo<StringLiteralLike>;
 export type TypeReferenceDirectiveResolutionInfo = ResolutionInfo<string | FileReference>;
 
 export interface CompilerHost extends ModuleResolutionHost {
-    getSourceFile(fileName: string, languageVersionOrOptions: ScriptTarget | CreateSourceFileOptions, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean): SourceFile | undefined;
+    getSourceFile(fileName: string, languageVersionOrOptions: ScriptTarget | CreateSourceFileOptions, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean): SourceFile | BinarySourceFile | undefined;
     getSourceFileByPath?(fileName: string, path: Path, languageVersionOrOptions: ScriptTarget | CreateSourceFileOptions, onError?: (message: string) => void, shouldCreateNewSourceFile?: boolean): SourceFile | undefined;
     getCancellationToken?(): CancellationToken;
     getDefaultLibFileName(options: CompilerOptions): string;
@@ -7635,7 +7658,7 @@ export interface EmitHost extends ScriptReferenceHost, ModuleSpecifierResolution
     useCaseSensitiveFileNames(): boolean;
     getCurrentDirectory(): string;
 
-    getLibFileFromReference(ref: FileReference): SourceFile | undefined;
+    getLibFileFromReference(ref: FileReference): SourceFile | BinarySourceFile | undefined;
 
     getCommonSourceDirectory(): string;
     getCanonicalFileName(fileName: string): string;

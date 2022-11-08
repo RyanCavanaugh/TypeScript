@@ -1,5 +1,5 @@
 import {
-    addRange, BuilderProgram, CancellationToken, chainDiagnosticMessages, CharacterCodes, combinePaths, CompilerHost,
+    addRange, assertIsSourceFile, BinarySourceFile, BuilderProgram, CancellationToken, chainDiagnosticMessages, CharacterCodes, combinePaths, CompilerHost,
     CompilerOptions, contains, convertToRelativePath, copyProperties, countWhere, createCompilerDiagnostic,
     createEmitAndSemanticDiagnosticsBuilderProgram, createGetCanonicalFileName, createGetSourceFile,
     createIncrementalCompilerHost, createIncrementalProgram, CreateProgram, createWriteFileMeasuringIO,
@@ -268,9 +268,10 @@ export function explainFiles(program: Program, write: (s: string) => void) {
 
 /** @internal */
 export function explainIfFileIsRedirectAndImpliedFormat(
-    file: SourceFile,
+    file: SourceFile | BinarySourceFile,
     fileNameConvertor?: (fileName: string) => string,
 ): DiagnosticMessageChain[] | undefined {
+    assertIsSourceFile(file);
     let result: DiagnosticMessageChain[] | undefined;
     if (file.path !== file.resolvedPath) {
         (result ??= []).push(chainDiagnosticMessages(
@@ -461,7 +462,7 @@ export function fileIncludeReasonToDiagnostics(program: Program, reason: FileInc
     }
 }
 
-function toFileName(file: SourceFile | string, fileNameConvertor?: (fileName: string) => string) {
+function toFileName(file: SourceFile | BinarySourceFile | string, fileNameConvertor?: (fileName: string) => string) {
     const fileName = isString(file) ? file : file.fileName;
     return fileNameConvertor ? fileNameConvertor(fileName) : fileName;
 }
