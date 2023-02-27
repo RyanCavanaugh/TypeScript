@@ -1,7 +1,10 @@
+tests/cases/compiler/infinitelyExpandingTypes1.ts(17,1): error TS2321: Excessive stack depth comparing types 'List<number>' and 'MyList<number>'.
+tests/cases/compiler/infinitelyExpandingTypes1.ts(17,1): error TS2321: Excessive stack depth comparing types 'MyList<number>' and 'List<number>'.
+tests/cases/compiler/infinitelyExpandingTypes1.ts(17,1): error TS2367: This comparison appears to be unintentional because the types 'List<number>' and 'MyList<number>' have no overlap.
 tests/cases/compiler/infinitelyExpandingTypes1.ts(21,1): error TS2367: This comparison appears to be unintentional because the types 'List<number>' and 'List<string>' have no overlap.
 
 
-==== tests/cases/compiler/infinitelyExpandingTypes1.ts (1 errors) ====
+==== tests/cases/compiler/infinitelyExpandingTypes1.ts (4 errors) ====
     interface List<T> {
         data: T;
         next: List<T>;
@@ -19,6 +22,12 @@ tests/cases/compiler/infinitelyExpandingTypes1.ts(21,1): error TS2367: This comp
     var m: MyList<number>;
     
     l == m; // should error
+    ~~~~~~
+!!! error TS2321: Excessive stack depth comparing types 'List<number>' and 'MyList<number>'.
+    ~~~~~~
+!!! error TS2321: Excessive stack depth comparing types 'MyList<number>' and 'List<number>'.
+    ~~~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'List<number>' and 'MyList<number>' have no overlap.
     
     var l2: List<string>;
     

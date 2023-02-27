@@ -1,0 +1,56 @@
+tests/cases/conformance/types/typeRelationships/recursiveTypes/recursiveTypesUsedAsFunctionParameters.ts(24,14): error TS2321: Excessive stack depth comparing types 'T' and 'MyList<any>'.
+tests/cases/conformance/types/typeRelationships/recursiveTypes/recursiveTypesUsedAsFunctionParameters.ts(24,14): error TS2394: This overload signature is not compatible with its implementation signature.
+tests/cases/conformance/types/typeRelationships/recursiveTypes/recursiveTypesUsedAsFunctionParameters.ts(42,14): error TS2321: Excessive stack depth comparing types 'MyList<string>' and 'List<string>'.
+
+
+==== tests/cases/conformance/types/typeRelationships/recursiveTypes/recursiveTypesUsedAsFunctionParameters.ts (3 errors) ====
+    class List<T> {
+        data: T;
+        next: List<List<T>>;
+    }
+    
+    class MyList<T> {
+        data: T;
+        next: MyList<MyList<T>>;
+    }
+    
+    function foo<T>(x: List<T>);
+    function foo<U>(x: List<U>); // error, duplicate
+    function foo<T>(x: List<T>) {
+    }
+    
+    function foo2<T>(x: List<T>);
+    function foo2<U>(x: MyList<U>); // ok, nominally compared with first overload
+    function foo2<T>(x: any) {
+    }
+    
+    function other<T extends List<U>, U>() {
+        // error but wrong error
+        // BUG 838247
+        function foo3<V>(x: T);
+                 ~~~~
+!!! error TS2321: Excessive stack depth comparing types 'T' and 'MyList<any>'.
+                 ~~~~
+!!! error TS2394: This overload signature is not compatible with its implementation signature.
+!!! related TS2750 tests/cases/conformance/types/typeRelationships/recursiveTypes/recursiveTypesUsedAsFunctionParameters.ts:25:14: The implementation signature is declared here.
+        function foo3<V>(x: MyList<V>) { }
+    
+        // should be error
+        // BUG 838247
+        function foo4<V>(x: T);
+        function foo4<V>(x: List<V>) { }
+    
+        // ok
+        function foo5<V>(x: T): string;
+        function foo5<V>(x: List<V>): number;
+        function foo5<V>(x: MyList<V>): boolean;
+        function foo5<V>(x: any): any { return null; }
+    
+        var list: List<string>;
+        var myList: MyList<string>;
+    
+        var r = foo5(list);
+        var r2 = foo5(myList);
+                 ~~~~~~~~~~~~
+!!! error TS2321: Excessive stack depth comparing types 'MyList<string>' and 'List<string>'.
+    }

@@ -1,0 +1,25 @@
+tests/cases/compiler/infinitelyExpandingBaseTypes1.ts(11,11): error TS2320: Interface 'C<T>' cannot simultaneously extend types 'A<T>' and 'B<T>'.
+  Named property 'x' of types 'A<T>' and 'B<T>' are not identical.
+tests/cases/compiler/infinitelyExpandingBaseTypes1.ts(11,11): error TS2321: Excessive stack depth comparing types 'A<A<T>>' and 'B<T>'.
+
+
+==== tests/cases/compiler/infinitelyExpandingBaseTypes1.ts (2 errors) ====
+    interface A<T>
+    {
+        x : A<A<T>>
+    }
+     
+    interface B<T>
+    {
+        x : B<T>
+    }
+     
+    interface C<T> extends A<T>, B<T> { }
+              ~
+!!! error TS2320: Interface 'C<T>' cannot simultaneously extend types 'A<T>' and 'B<T>'.
+!!! error TS2320:   Named property 'x' of types 'A<T>' and 'B<T>' are not identical.
+              ~
+!!! error TS2321: Excessive stack depth comparing types 'A<A<T>>' and 'B<T>'.
+    
+     
+    

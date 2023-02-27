@@ -22651,6 +22651,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     // has expanded into `[A<NonNullable<NonNullable<NonNullable<NonNullable<NonNullable<T>>>>>>]`. In such cases we need
     // to terminate the expansion, and we do so here.
     function isDeeplyNestedType(type: Type, stack: Type[], depth: number, maxDepth = 3): boolean {
+        return false;
         if (depth >= maxDepth) {
             if (type.flags & TypeFlags.Intersection) {
                 return some((type as IntersectionType).types, t => isDeeplyNestedType(t, stack, depth, maxDepth));

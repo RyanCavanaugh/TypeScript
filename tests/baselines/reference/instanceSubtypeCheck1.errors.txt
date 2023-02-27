@@ -1,0 +1,15 @@
+tests/cases/compiler/instanceSubtypeCheck1.ts(6,11): error TS2321: Excessive stack depth comparing types 'B<T>' and 'A<T>'.
+
+
+==== tests/cases/compiler/instanceSubtypeCheck1.ts (1 errors) ====
+    interface A<T>
+    {
+       x: A<B<T>>
+    }
+     
+    interface B<T> extends A<T>
+              ~
+!!! error TS2321: Excessive stack depth comparing types 'B<T>' and 'A<T>'.
+    {
+       x: B<A<T>>
+    }

@@ -1,0 +1,17 @@
+tests/cases/compiler/infinitelyExpandingTypeAssignability.ts(10,5): error TS2321: Excessive stack depth comparing types 'B<string>' and 'C<string>'.
+
+
+==== tests/cases/compiler/infinitelyExpandingTypeAssignability.ts (1 errors) ====
+    interface A<T> {
+       x : T
+    }
+     
+    interface B<T> extends A<B<B<B<T>>>> { }
+    
+    interface C<T> extends A<C<C<C<T>>>> { }
+     
+    var x : B<string>
+    var y : C<string> = x
+        ~
+!!! error TS2321: Excessive stack depth comparing types 'B<string>' and 'C<string>'.
+    

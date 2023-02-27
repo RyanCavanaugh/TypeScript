@@ -1,0 +1,19 @@
+tests/cases/compiler/infinitelyExpandingBaseTypes2.ts(12,5): error TS2321: Excessive stack depth comparing types 'A<string>' and 'B<string>'.
+
+
+==== tests/cases/compiler/infinitelyExpandingBaseTypes2.ts (1 errors) ====
+    interface A<T>
+    {
+       x : A<()=>T>
+    }
+     
+    interface B<T>
+    {
+       x : B<()=>T>
+    }
+     
+    var a: A<string>
+    var b: B<string> = a
+        ~
+!!! error TS2321: Excessive stack depth comparing types 'A<string>' and 'B<string>'.
+    

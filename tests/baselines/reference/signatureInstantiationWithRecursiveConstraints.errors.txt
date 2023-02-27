@@ -1,0 +1,18 @@
+tests/cases/compiler/signatureInstantiationWithRecursiveConstraints.ts(11,7): error TS2321: Excessive stack depth comparing types 'Bar' and 'Foo'.
+
+
+==== tests/cases/compiler/signatureInstantiationWithRecursiveConstraints.ts (1 errors) ====
+    // Repro from #17148
+    
+    class Foo {
+      myFunc<T extends Foo>(arg: T) {}
+    }
+    
+    class Bar {
+      myFunc<T extends Bar>(arg: T) {}
+    }
+    
+    const myVar: Foo = new Bar();
+          ~~~~~
+!!! error TS2321: Excessive stack depth comparing types 'Bar' and 'Foo'.
+    

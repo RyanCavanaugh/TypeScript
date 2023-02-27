@@ -11,6 +11,7 @@ tests/cases/compiler/recursiveConditionalTypes.ts(50,5): error TS2322: Type 'Tup
   Type 'number extends M ? number[] : _TupleOf<number, M, []>' is not assignable to type 'TupleOf<number, N>'.
     Type 'number[] | _TupleOf<number, M, []>' is not assignable to type 'TupleOf<number, N>'.
       Type 'number[]' is not assignable to type 'TupleOf<number, N>'.
+tests/cases/compiler/recursiveConditionalTypes.ts(50,5): error TS2321: Excessive stack depth comparing types 'TupleOf<?, N>' and 'TupleOf<?, N>'.
 tests/cases/compiler/recursiveConditionalTypes.ts(51,5): error TS2322: Type 'TupleOf<number, N>' is not assignable to type 'TupleOf<number, M>'.
   Type 'number extends N ? number[] : _TupleOf<number, N, []>' is not assignable to type 'TupleOf<number, M>'.
     Type 'number[] | _TupleOf<number, N, []>' is not assignable to type 'TupleOf<number, M>'.
@@ -23,10 +24,12 @@ tests/cases/compiler/recursiveConditionalTypes.ts(117,9): error TS2345: Argument
           Type '[string]' is not assignable to type 'Grow1<[number], T>'.
             Type '[string]' is not assignable to type '[number]'.
               Type 'string' is not assignable to type 'number'.
+tests/cases/compiler/recursiveConditionalTypes.ts(146,5): error TS2321: Excessive stack depth comparing types 'NTuple<A, []>' and 'readonly any[]'.
+tests/cases/compiler/recursiveConditionalTypes.ts(146,6): error TS2574: A rest element type must be an array type.
 tests/cases/compiler/recursiveConditionalTypes.ts(169,5): error TS2322: Type 'number' is not assignable to type 'Enumerate<T["length"]>'.
 
 
-==== tests/cases/compiler/recursiveConditionalTypes.ts (10 errors) ====
+==== tests/cases/compiler/recursiveConditionalTypes.ts (13 errors) ====
     // Awaiting promises
     
     type __Awaited<T> =
@@ -98,6 +101,8 @@ tests/cases/compiler/recursiveConditionalTypes.ts(169,5): error TS2322: Type 'nu
 !!! error TS2322:   Type 'number extends M ? number[] : _TupleOf<number, M, []>' is not assignable to type 'TupleOf<number, N>'.
 !!! error TS2322:     Type 'number[] | _TupleOf<number, M, []>' is not assignable to type 'TupleOf<number, N>'.
 !!! error TS2322:       Type 'number[]' is not assignable to type 'TupleOf<number, N>'.
+        ~~~~~~~
+!!! error TS2321: Excessive stack depth comparing types 'TupleOf<?, N>' and 'TupleOf<?, N>'.
         tm = tn;
         ~~
 !!! error TS2322: Type 'TupleOf<number, N>' is not assignable to type 'TupleOf<number, M>'.
@@ -208,6 +213,10 @@ tests/cases/compiler/recursiveConditionalTypes.ts(169,5): error TS2322: Type 'nu
     
     type Add<A extends number, B extends number> =
         [...NTuple<A>, ...NTuple<B>]['length'];
+        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2321: Excessive stack depth comparing types 'NTuple<A, []>' and 'readonly any[]'.
+         ~~~~~~~~~~~~
+!!! error TS2574: A rest element type must be an array type.
     
     let five: Add<2, 3>;
     

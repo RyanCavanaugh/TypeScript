@@ -1,14 +1,17 @@
+tests/cases/compiler/index.tsx(6,15): error TS2321: Excessive stack depth comparing types 'FlatArray<Arr, ?>' and 'FlatArray<Arr, ?>'.
 tests/cases/compiler/index.tsx(35,13): error TS2322: Type '{ key: string; }' is not assignable to type 'HTMLAttributes<HTMLLIElement>'.
   Property 'key' does not exist on type 'HTMLAttributes<HTMLLIElement>'.
 
 
-==== tests/cases/compiler/index.tsx (1 errors) ====
+==== tests/cases/compiler/index.tsx (2 errors) ====
     interface MiddlewareArray<T> extends Array<T> {}
     declare function configureStore(options: { middleware: MiddlewareArray<any> }): void;
     
     declare const defaultMiddleware: MiddlewareArray<any>;
     configureStore({
       middleware: [...defaultMiddleware], // Should not error
+                  ~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2321: Excessive stack depth comparing types 'FlatArray<Arr, ?>' and 'FlatArray<Arr, ?>'.
     });
     
     declare namespace React {

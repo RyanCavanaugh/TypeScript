@@ -1,0 +1,16 @@
+tests/cases/compiler/typeParameterConstrainedToOuterTypeParameter2.ts(10,5): error TS2321: Excessive stack depth comparing types 'A<string>' and 'B<string>'.
+
+
+==== tests/cases/compiler/typeParameterConstrainedToOuterTypeParameter2.ts (1 errors) ====
+    interface A<T> {
+        foo<U extends T>(x: A<A<U>>)
+    }
+    
+    interface B<T> {
+        foo<U extends T>(x: B<B<U>>)
+    }
+    
+    var a: A<string>
+    var b: B<string> = a;
+        ~
+!!! error TS2321: Excessive stack depth comparing types 'A<string>' and 'B<string>'.

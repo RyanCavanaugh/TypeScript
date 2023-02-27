@@ -1,7 +1,4 @@
-tests/cases/compiler/invariantGenericErrorElaboration.ts(3,7): error TS2322: Type 'Num' is not assignable to type 'Runtype<any>'.
-  The types of 'constraint.constraint' are incompatible between these types.
-    Type 'Constraint<Constraint<Num>>' is not assignable to type 'Constraint<Constraint<Runtype<any>>>'.
-      Type 'Runtype<any>' is not assignable to type 'Num'.
+tests/cases/compiler/invariantGenericErrorElaboration.ts(3,7): error TS2321: Excessive stack depth comparing types 'Num' and 'Runtype<any>'.
 tests/cases/compiler/invariantGenericErrorElaboration.ts(4,19): error TS2322: Type 'Num' is not assignable to type 'Runtype<any>'.
 
 
@@ -10,10 +7,7 @@ tests/cases/compiler/invariantGenericErrorElaboration.ts(4,19): error TS2322: Ty
     
     const wat: Runtype<any> = Num;
           ~~~
-!!! error TS2322: Type 'Num' is not assignable to type 'Runtype<any>'.
-!!! error TS2322:   The types of 'constraint.constraint' are incompatible between these types.
-!!! error TS2322:     Type 'Constraint<Constraint<Num>>' is not assignable to type 'Constraint<Constraint<Runtype<any>>>'.
-!!! error TS2322:       Type 'Runtype<any>' is not assignable to type 'Num'.
+!!! error TS2321: Excessive stack depth comparing types 'Num' and 'Runtype<any>'.
     const Foo = Obj({ foo: Num })
                       ~~~
 !!! error TS2322: Type 'Num' is not assignable to type 'Runtype<any>'.

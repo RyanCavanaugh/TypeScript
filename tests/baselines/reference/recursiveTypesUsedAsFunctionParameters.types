@@ -99,8 +99,8 @@ function other<T extends List<U>, U>() {
 >list : List<string>
 
     var r2 = foo5(myList);
->r2 : number
->foo5(myList) : number
+>r2 : boolean
+>foo5(myList) : boolean
 >foo5 : { <V>(x: T): string; <V>(x: List<V>): number; <V>(x: MyList<V>): boolean; }
 >myList : MyList<string>
 }
