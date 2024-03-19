@@ -7160,6 +7160,7 @@ export interface CompilerOptions {
     sourceRoot?: string;
     strict?: boolean;
     strictFunctionTypes?: boolean; // Always combine with strict property
+    demoStrictMethodTypes?: boolean;
     strictBindCallApply?: boolean; // Always combine with strict property
     strictNullChecks?: boolean; // Always combine with strict property
     strictPropertyInitialization?: boolean; // Always combine with strict property

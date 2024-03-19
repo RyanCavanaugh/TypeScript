@@ -1451,7 +1451,6 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     var isInferencePartiallyBlocked = false;
 
     var emptySymbols = createSymbolTable();
-    var arrayVariances = [VarianceFlags.Covariant];
 
     var compilerOptions = host.getCompilerOptions();
     var languageVersion = getEmitScriptTarget(compilerOptions);
@@ -1462,12 +1461,15 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     var allowSyntheticDefaultImports = getAllowSyntheticDefaultImports(compilerOptions);
     var strictNullChecks = getStrictOptionValue(compilerOptions, "strictNullChecks");
     var strictFunctionTypes = getStrictOptionValue(compilerOptions, "strictFunctionTypes");
+    var strictMethodTypes = !!compilerOptions.demoStrictMethodTypes;
     var strictBindCallApply = getStrictOptionValue(compilerOptions, "strictBindCallApply");
     var strictPropertyInitialization = getStrictOptionValue(compilerOptions, "strictPropertyInitialization");
     var noImplicitAny = getStrictOptionValue(compilerOptions, "noImplicitAny");
     var noImplicitThis = getStrictOptionValue(compilerOptions, "noImplicitThis");
     var useUnknownInCatchVariables = getStrictOptionValue(compilerOptions, "useUnknownInCatchVariables");
     var exactOptionalPropertyTypes = compilerOptions.exactOptionalPropertyTypes;
+
+    var arrayVariances = (strictMethodTypes && strictFunctionTypes) ? [VarianceFlags.Invariant] : [VarianceFlags.Covariant];
 
     var checkBinaryExpression = createCheckBinaryExpression();
     var emitResolver = createResolver();
@@ -20926,8 +20928,14 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         }
 
         const kind = target.declaration ? target.declaration.kind : SyntaxKind.Unknown;
-        const strictVariance = !(checkMode & SignatureCheckMode.Callback) && strictFunctionTypes && kind !== SyntaxKind.MethodDeclaration &&
-            kind !== SyntaxKind.MethodSignature && kind !== SyntaxKind.Constructor;
+        let strictVariance: boolean = !(checkMode & SignatureCheckMode.Callback);
+        if (strictVariance) {
+            if (kind === SyntaxKind.MethodDeclaration || kind === SyntaxKind.MethodSignature || kind === SyntaxKind.Constructor) {
+                strictVariance = strictMethodTypes;
+            } else {
+                strictVariance = strictFunctionTypes;
+            }
+        }
         let result = Ternary.True;
 
         const sourceThisType = getThisTypeOfSignature(source);
@@ -23920,7 +23928,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
 
     function getVariances(type: GenericType): VarianceFlags[] {
         // Arrays and tuples are known to be covariant, no need to spend time computing this.
-        return type === globalArrayType || type === globalReadonlyArrayType || type.objectFlags & ObjectFlags.Tuple ?
+        return strictFunctionTypes && type === globalArrayType || type === globalReadonlyArrayType || type.objectFlags & ObjectFlags.Tuple ?
             arrayVariances :
             getVariancesWorker(type.symbol, type.typeParameters);
     }
@@ -26356,7 +26364,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                 const saveBivariant = bivariant;
                 const kind = target.declaration ? target.declaration.kind : SyntaxKind.Unknown;
                 // Once we descend into a bivariant signature we remain bivariant for all nested inferences
-                bivariant = bivariant || kind === SyntaxKind.MethodDeclaration || kind === SyntaxKind.MethodSignature || kind === SyntaxKind.Constructor;
+                bivariant = bivariant || (!strictMethodTypes && (kind === SyntaxKind.MethodDeclaration || kind === SyntaxKind.MethodSignature || kind === SyntaxKind.Constructor));
                 applyToParameterTypes(source, target, inferFromContravariantTypesIfStrictFunctionTypes);
                 bivariant = saveBivariant;
             }

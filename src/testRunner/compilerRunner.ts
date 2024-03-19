@@ -159,6 +159,7 @@ class CompilerTest {
         "strict",
         "strictBindCallApply",
         "strictFunctionTypes",
+        "demoStrictMethodTypes",
         "strictNullChecks",
         "strictPropertyInitialization",
         "target",

@@ -872,6 +872,15 @@ const commandOptionsWithoutBuild: CommandLineOption[] = [
         defaultValueDescription: Diagnostics.false_unless_strict_is_set,
     },
     {
+        name: "demoStrictMethodTypes",
+        type: "boolean",
+        affectsSemanticDiagnostics: true,
+        affectsBuildInfo: true,
+        category: Diagnostics.Type_Checking,
+        description: Diagnostics.When_assigning_functions_check_to_ensure_parameters_and_the_return_values_are_subtype_compatible,
+        defaultValueDescription: false,
+    },
+    {
         name: "strictBindCallApply",
         type: "boolean",
         affectsSemanticDiagnostics: true,
