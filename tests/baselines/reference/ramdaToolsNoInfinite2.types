@@ -2,7 +2,7 @@
 
 === Performance Stats ===
 Assignability cache: 4,800 / 4,800 (nearest 100)
-Type Count: 7,600 / 7,800 (nearest 100)
+Type Count: 7,600 / 7,900 (nearest 100)
 Instantiation count: 34,500 / 34,500 (nearest 500)
 Symbol count: 31,000 / 31,500 (nearest 500)
 

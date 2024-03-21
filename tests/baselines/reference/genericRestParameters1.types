@@ -1,5 +1,11 @@
 //// [tests/cases/conformance/types/rest/genericRestParameters1.ts] ////
 
+=== Performance Stats ===
+Assignability cache: 100 / 100 (nearest 100)
+Type Count: 1,000 / 1,000 (nearest 100)
+Instantiation count: 1,000 / 1,000 (nearest 500)
+Symbol count: 27,500 / 28,000 (nearest 500)
+
 === genericRestParameters1.ts ===
 declare let f1: (...x: [number, string, boolean]) => void;
 >f1 : (x_0: number, x_1: string, x_2: boolean) => void
