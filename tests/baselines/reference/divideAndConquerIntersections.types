@@ -2,7 +2,7 @@
 
 === Performance Stats ===
 Assignability cache: 100 / 100 (nearest 100)
-Type Count: 2,800 / 2,900 (nearest 100)
+Type Count: 2,700 / 2,800 (nearest 100)
 Instantiation count: 7,500 / 7,500 (nearest 500)
 Symbol count: 26,000 / 26,000 (nearest 500)
 
@@ -14,11 +14,6 @@ type QQ<T extends string[]> =
     & ("b" | T[1])
     & ("c" | T[2])
     & ("d" | T[3])
-    & ("e" | T[4])
-    & ("f" | T[5])
-    & ("g" | T[6])
-    & ("h" | T[7])
-    & ("i" | T[8])
     & ("j" | T[9])
     & ("k" | T[10])
     & ("l" | T[11])
