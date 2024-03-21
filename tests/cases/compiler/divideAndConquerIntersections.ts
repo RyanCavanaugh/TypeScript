@@ -3,6 +3,12 @@
 
 type QQ<T extends string[]> =
     & ("a" | T[0])
+    & ("b" | T[1])
+    & ("c" | T[2])
+    & ("d" | T[3])
+    & ("e" | T[4])
+    & ("h" | T[7])
+    & ("i" | T[8])
     & ("l" | T[11])
     & ("m" | T[12])
     & ("n" | T[13])
@@ -26,6 +32,8 @@ export interface Update {
     message_reaction_count?: { message_reaction_count: string };
     inline_query?: { inline_query: string };
     chosen_inline_result?: { chosen_inline_result: string };
+    callback_query?: { callback_query: string };
+    poll_answer?: { poll_answer: string };
     my_chat_member?: { my_chat_member: string };
     chat_member?: { chat_member: string };
     chat_join_request?: { chat_join_request: string };
