@@ -2,8 +2,8 @@
 
 === Performance Stats ===
 Assignability cache: 100 / 100 (nearest 100)
-Type Count: 1,700 / 1,800 (nearest 100)
-Instantiation count: 4,500 / 4,500 (nearest 500)
+Type Count: 2,200 / 2,200 (nearest 100)
+Instantiation count: 5,500 / 5,500 (nearest 500)
 Symbol count: 26,000 / 26,000 (nearest 500)
 
 === divideAndConquerIntersections.ts ===
@@ -11,6 +11,12 @@ type QQ<T extends string[]> =
 >QQ : QQ<T>
 
     & ("a" | T[0])
+    & ("b" | T[1])
+    & ("c" | T[2])
+    & ("d" | T[3])
+    & ("e" | T[4])
+    & ("h" | T[7])
+    & ("i" | T[8])
     & ("l" | T[11])
     & ("m" | T[12])
     & ("n" | T[13])
@@ -59,6 +65,14 @@ export interface Update {
 >chosen_inline_result : { chosen_inline_result: string; } | undefined
 >chosen_inline_result : string
 
+    callback_query?: { callback_query: string };
+>callback_query : { callback_query: string; } | undefined
+>callback_query : string
+
+    poll_answer?: { poll_answer: string };
+>poll_answer : { poll_answer: string; } | undefined
+>poll_answer : string
+
     my_chat_member?: { my_chat_member: string };
 >my_chat_member : { my_chat_member: string; } | undefined
 >my_chat_member : string
@@ -85,7 +99,7 @@ type FilterFunction<U extends Update, V extends U> = (up: U) => up is V;
 >up : U
 
 export function matchFilter<U extends Update, Q extends FilterQuery>(
->matchFilter : <U extends Update, Q extends "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost">(filter: Q | Q[]) => FilterFunction<U, Filter<U, Q>>
+>matchFilter : <U extends Update, Q extends "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "callback_query" | "poll_answer" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost">(filter: Q | Q[]) => FilterFunction<U, Filter<U, Q>>
 
     filter: Q | Q[],
 >filter : Q | Q[]
@@ -98,7 +112,7 @@ export function matchFilter<U extends Update, Q extends FilterQuery>(
 >console : Console
 >log : (...data: any[]) => void
 >"Matching" : "Matching"
->filter : "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost" | Q[]
+>filter : "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "callback_query" | "poll_answer" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost" | Q[]
 
     return (up: U): up is Filter<U, Q> => !!up;
 >(up: U): up is Filter<U, Q> => !!up : (up: U) => up is PerformQuery<U, Combine<L1Fragment<Q>, Q>>
@@ -110,7 +124,7 @@ export function matchFilter<U extends Update, Q extends FilterQuery>(
 
 /** All valid filter queries (every update key except update_id) */
 export type FilterQuery = keyof Omit<Update, "update_id">;
->FilterQuery : "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost"
+>FilterQuery : "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "callback_query" | "poll_answer" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost"
 
 /** Narrow down an update object based on a filter query */
 export type Filter<U extends Update, Q extends FilterQuery> = PerformQuery<
@@ -177,7 +191,7 @@ class EventHub<U extends Update> {
 >this : this
     }
     on<Q extends FilterQuery>(
->on : <Q extends "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost">(filter: Q | Q[], ...middleware: Array<Middleware<Filter<U, Q>>>) => EventHub<Filter<U, Q>>
+>on : <Q extends "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "callback_query" | "poll_answer" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost">(filter: Q | Q[], ...middleware: Array<Middleware<Filter<U, Q>>>) => EventHub<Filter<U, Q>>
 
         filter: Q | Q[],
 >filter : Q | Q[]
@@ -197,7 +211,7 @@ class EventHub<U extends Update> {
 >middleware : Middleware<PerformQuery<U, Combine<L1Fragment<Q>, Q>>>[]
 >length : number
 >"handlers for" : "handlers for"
->filter : "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost" | Q[]
+>filter : "message" | "edited_message" | "channel_post" | "edited_channel_post" | "message_reaction" | "message_reaction_count" | "inline_query" | "chosen_inline_result" | "callback_query" | "poll_answer" | "my_chat_member" | "chat_member" | "chat_join_request" | "chat_boost" | "removed_chat_boost" | Q[]
 
         return new EventHub<Filter<U, Q>>();
 >new EventHub<Filter<U, Q>>() : EventHub<PerformQuery<U, Combine<L1Fragment<Q>, Q>>>

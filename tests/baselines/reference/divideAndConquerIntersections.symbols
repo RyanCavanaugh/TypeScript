@@ -8,6 +8,24 @@ type QQ<T extends string[]> =
     & ("a" | T[0])
 >T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
 
+    & ("b" | T[1])
+>T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
+
+    & ("c" | T[2])
+>T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
+
+    & ("d" | T[3])
+>T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
+
+    & ("e" | T[4])
+>T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
+
+    & ("h" | T[7])
+>T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
+
+    & ("i" | T[8])
+>T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
+
     & ("l" | T[11])
 >T : Symbol(T, Decl(divideAndConquerIntersections.ts, 0, 8))
 
@@ -38,274 +56,282 @@ type QQ<T extends string[]> =
 // Repro from #57863
 
 export interface Update {
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
 
     update_id: number;
->update_id : Symbol(Update.update_id, Decl(divideAndConquerIntersections.ts, 14, 25))
+>update_id : Symbol(Update.update_id, Decl(divideAndConquerIntersections.ts, 20, 25))
 
     message?: { message: string };
->message : Symbol(Update.message, Decl(divideAndConquerIntersections.ts, 15, 22))
->message : Symbol(message, Decl(divideAndConquerIntersections.ts, 17, 15))
+>message : Symbol(Update.message, Decl(divideAndConquerIntersections.ts, 21, 22))
+>message : Symbol(message, Decl(divideAndConquerIntersections.ts, 23, 15))
 
     edited_message?: { edited_message: string };
->edited_message : Symbol(Update.edited_message, Decl(divideAndConquerIntersections.ts, 17, 34))
->edited_message : Symbol(edited_message, Decl(divideAndConquerIntersections.ts, 18, 22))
+>edited_message : Symbol(Update.edited_message, Decl(divideAndConquerIntersections.ts, 23, 34))
+>edited_message : Symbol(edited_message, Decl(divideAndConquerIntersections.ts, 24, 22))
 
     channel_post?: { channel_post: string };
->channel_post : Symbol(Update.channel_post, Decl(divideAndConquerIntersections.ts, 18, 48))
->channel_post : Symbol(channel_post, Decl(divideAndConquerIntersections.ts, 19, 20))
+>channel_post : Symbol(Update.channel_post, Decl(divideAndConquerIntersections.ts, 24, 48))
+>channel_post : Symbol(channel_post, Decl(divideAndConquerIntersections.ts, 25, 20))
 
     edited_channel_post?: { edited_channel_post: string };
->edited_channel_post : Symbol(Update.edited_channel_post, Decl(divideAndConquerIntersections.ts, 19, 44))
->edited_channel_post : Symbol(edited_channel_post, Decl(divideAndConquerIntersections.ts, 20, 27))
+>edited_channel_post : Symbol(Update.edited_channel_post, Decl(divideAndConquerIntersections.ts, 25, 44))
+>edited_channel_post : Symbol(edited_channel_post, Decl(divideAndConquerIntersections.ts, 26, 27))
 
     message_reaction?: { message_reaction: string };
->message_reaction : Symbol(Update.message_reaction, Decl(divideAndConquerIntersections.ts, 20, 58))
->message_reaction : Symbol(message_reaction, Decl(divideAndConquerIntersections.ts, 21, 24))
+>message_reaction : Symbol(Update.message_reaction, Decl(divideAndConquerIntersections.ts, 26, 58))
+>message_reaction : Symbol(message_reaction, Decl(divideAndConquerIntersections.ts, 27, 24))
 
     message_reaction_count?: { message_reaction_count: string };
->message_reaction_count : Symbol(Update.message_reaction_count, Decl(divideAndConquerIntersections.ts, 21, 52))
->message_reaction_count : Symbol(message_reaction_count, Decl(divideAndConquerIntersections.ts, 22, 30))
+>message_reaction_count : Symbol(Update.message_reaction_count, Decl(divideAndConquerIntersections.ts, 27, 52))
+>message_reaction_count : Symbol(message_reaction_count, Decl(divideAndConquerIntersections.ts, 28, 30))
 
     inline_query?: { inline_query: string };
->inline_query : Symbol(Update.inline_query, Decl(divideAndConquerIntersections.ts, 22, 64))
->inline_query : Symbol(inline_query, Decl(divideAndConquerIntersections.ts, 23, 20))
+>inline_query : Symbol(Update.inline_query, Decl(divideAndConquerIntersections.ts, 28, 64))
+>inline_query : Symbol(inline_query, Decl(divideAndConquerIntersections.ts, 29, 20))
 
     chosen_inline_result?: { chosen_inline_result: string };
->chosen_inline_result : Symbol(Update.chosen_inline_result, Decl(divideAndConquerIntersections.ts, 23, 44))
->chosen_inline_result : Symbol(chosen_inline_result, Decl(divideAndConquerIntersections.ts, 24, 28))
+>chosen_inline_result : Symbol(Update.chosen_inline_result, Decl(divideAndConquerIntersections.ts, 29, 44))
+>chosen_inline_result : Symbol(chosen_inline_result, Decl(divideAndConquerIntersections.ts, 30, 28))
+
+    callback_query?: { callback_query: string };
+>callback_query : Symbol(Update.callback_query, Decl(divideAndConquerIntersections.ts, 30, 60))
+>callback_query : Symbol(callback_query, Decl(divideAndConquerIntersections.ts, 31, 22))
+
+    poll_answer?: { poll_answer: string };
+>poll_answer : Symbol(Update.poll_answer, Decl(divideAndConquerIntersections.ts, 31, 48))
+>poll_answer : Symbol(poll_answer, Decl(divideAndConquerIntersections.ts, 32, 19))
 
     my_chat_member?: { my_chat_member: string };
->my_chat_member : Symbol(Update.my_chat_member, Decl(divideAndConquerIntersections.ts, 24, 60))
->my_chat_member : Symbol(my_chat_member, Decl(divideAndConquerIntersections.ts, 25, 22))
+>my_chat_member : Symbol(Update.my_chat_member, Decl(divideAndConquerIntersections.ts, 32, 42))
+>my_chat_member : Symbol(my_chat_member, Decl(divideAndConquerIntersections.ts, 33, 22))
 
     chat_member?: { chat_member: string };
->chat_member : Symbol(Update.chat_member, Decl(divideAndConquerIntersections.ts, 25, 48))
->chat_member : Symbol(chat_member, Decl(divideAndConquerIntersections.ts, 26, 19))
+>chat_member : Symbol(Update.chat_member, Decl(divideAndConquerIntersections.ts, 33, 48))
+>chat_member : Symbol(chat_member, Decl(divideAndConquerIntersections.ts, 34, 19))
 
     chat_join_request?: { chat_join_request: string };
->chat_join_request : Symbol(Update.chat_join_request, Decl(divideAndConquerIntersections.ts, 26, 42))
->chat_join_request : Symbol(chat_join_request, Decl(divideAndConquerIntersections.ts, 27, 25))
+>chat_join_request : Symbol(Update.chat_join_request, Decl(divideAndConquerIntersections.ts, 34, 42))
+>chat_join_request : Symbol(chat_join_request, Decl(divideAndConquerIntersections.ts, 35, 25))
 
     chat_boost?: { chat_boost: string };
->chat_boost : Symbol(Update.chat_boost, Decl(divideAndConquerIntersections.ts, 27, 54))
->chat_boost : Symbol(chat_boost, Decl(divideAndConquerIntersections.ts, 28, 18))
+>chat_boost : Symbol(Update.chat_boost, Decl(divideAndConquerIntersections.ts, 35, 54))
+>chat_boost : Symbol(chat_boost, Decl(divideAndConquerIntersections.ts, 36, 18))
 
     removed_chat_boost?: { removed_chat_boost: string };
->removed_chat_boost : Symbol(Update.removed_chat_boost, Decl(divideAndConquerIntersections.ts, 28, 40))
->removed_chat_boost : Symbol(removed_chat_boost, Decl(divideAndConquerIntersections.ts, 29, 26))
+>removed_chat_boost : Symbol(Update.removed_chat_boost, Decl(divideAndConquerIntersections.ts, 36, 40))
+>removed_chat_boost : Symbol(removed_chat_boost, Decl(divideAndConquerIntersections.ts, 37, 26))
 }
 
 type FilterFunction<U extends Update, V extends U> = (up: U) => up is V;
->FilterFunction : Symbol(FilterFunction, Decl(divideAndConquerIntersections.ts, 30, 1))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 32, 20))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
->V : Symbol(V, Decl(divideAndConquerIntersections.ts, 32, 37))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 32, 20))
->up : Symbol(up, Decl(divideAndConquerIntersections.ts, 32, 54))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 32, 20))
->up : Symbol(up, Decl(divideAndConquerIntersections.ts, 32, 54))
->V : Symbol(V, Decl(divideAndConquerIntersections.ts, 32, 37))
+>FilterFunction : Symbol(FilterFunction, Decl(divideAndConquerIntersections.ts, 38, 1))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 40, 20))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
+>V : Symbol(V, Decl(divideAndConquerIntersections.ts, 40, 37))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 40, 20))
+>up : Symbol(up, Decl(divideAndConquerIntersections.ts, 40, 54))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 40, 20))
+>up : Symbol(up, Decl(divideAndConquerIntersections.ts, 40, 54))
+>V : Symbol(V, Decl(divideAndConquerIntersections.ts, 40, 37))
 
 export function matchFilter<U extends Update, Q extends FilterQuery>(
->matchFilter : Symbol(matchFilter, Decl(divideAndConquerIntersections.ts, 32, 72))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 34, 28))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 34, 45))
->FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 40, 1))
+>matchFilter : Symbol(matchFilter, Decl(divideAndConquerIntersections.ts, 40, 72))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 42, 28))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 42, 45))
+>FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 48, 1))
 
     filter: Q | Q[],
->filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 34, 69))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 34, 45))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 34, 45))
+>filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 42, 69))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 42, 45))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 42, 45))
 
 ): FilterFunction<U, Filter<U, Q>> {
->FilterFunction : Symbol(FilterFunction, Decl(divideAndConquerIntersections.ts, 30, 1))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 34, 28))
->Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 43, 58))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 34, 28))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 34, 45))
+>FilterFunction : Symbol(FilterFunction, Decl(divideAndConquerIntersections.ts, 38, 1))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 42, 28))
+>Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 51, 58))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 42, 28))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 42, 45))
 
   // ^ errors out
     console.log("Matching", filter);
 >console.log : Symbol(Console.log, Decl(lib.dom.d.ts, --, --))
 >console : Symbol(console, Decl(lib.dom.d.ts, --, --))
 >log : Symbol(Console.log, Decl(lib.dom.d.ts, --, --))
->filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 34, 69))
+>filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 42, 69))
 
     return (up: U): up is Filter<U, Q> => !!up;
->up : Symbol(up, Decl(divideAndConquerIntersections.ts, 39, 12))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 34, 28))
->up : Symbol(up, Decl(divideAndConquerIntersections.ts, 39, 12))
->Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 43, 58))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 34, 28))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 34, 45))
->up : Symbol(up, Decl(divideAndConquerIntersections.ts, 39, 12))
+>up : Symbol(up, Decl(divideAndConquerIntersections.ts, 47, 12))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 42, 28))
+>up : Symbol(up, Decl(divideAndConquerIntersections.ts, 47, 12))
+>Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 51, 58))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 42, 28))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 42, 45))
+>up : Symbol(up, Decl(divideAndConquerIntersections.ts, 47, 12))
 }
 
 /** All valid filter queries (every update key except update_id) */
 export type FilterQuery = keyof Omit<Update, "update_id">;
->FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 40, 1))
+>FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 48, 1))
 >Omit : Symbol(Omit, Decl(lib.es5.d.ts, --, --))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
 
 /** Narrow down an update object based on a filter query */
 export type Filter<U extends Update, Q extends FilterQuery> = PerformQuery<
->Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 43, 58))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 46, 19))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 46, 36))
->FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 40, 1))
->PerformQuery : Symbol(PerformQuery, Decl(divideAndConquerIntersections.ts, 60, 12))
+>Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 51, 58))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 54, 19))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 54, 36))
+>FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 48, 1))
+>PerformQuery : Symbol(PerformQuery, Decl(divideAndConquerIntersections.ts, 68, 12))
 
     U,
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 46, 19))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 54, 19))
 
     RunQuery<Q>
->RunQuery : Symbol(RunQuery, Decl(divideAndConquerIntersections.ts, 49, 2))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 46, 36))
+>RunQuery : Symbol(RunQuery, Decl(divideAndConquerIntersections.ts, 57, 2))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 54, 36))
 
 >;
 
 // generate an object structure that can be intersected with updates to narrow them down
 type RunQuery<Q extends string> = Combine<L1Fragment<Q>, Q>;
->RunQuery : Symbol(RunQuery, Decl(divideAndConquerIntersections.ts, 49, 2))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 52, 14))
->Combine : Symbol(Combine, Decl(divideAndConquerIntersections.ts, 56, 12))
->L1Fragment : Symbol(L1Fragment, Decl(divideAndConquerIntersections.ts, 52, 60))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 52, 14))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 52, 14))
+>RunQuery : Symbol(RunQuery, Decl(divideAndConquerIntersections.ts, 57, 2))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 60, 14))
+>Combine : Symbol(Combine, Decl(divideAndConquerIntersections.ts, 64, 12))
+>L1Fragment : Symbol(L1Fragment, Decl(divideAndConquerIntersections.ts, 60, 60))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 60, 14))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 60, 14))
 
 // maps each part of the filter query to Record<"key", object>
 type L1Fragment<Q extends string> = Q extends unknown ? Record<Q, object>
->L1Fragment : Symbol(L1Fragment, Decl(divideAndConquerIntersections.ts, 52, 60))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 55, 16))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 55, 16))
+>L1Fragment : Symbol(L1Fragment, Decl(divideAndConquerIntersections.ts, 60, 60))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 63, 16))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 63, 16))
 >Record : Symbol(Record, Decl(lib.es5.d.ts, --, --))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 55, 16))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 63, 16))
 
     : never;
 // define all other fields from query as keys with value `undefined`
 type Combine<U, K extends string> = U extends unknown
->Combine : Symbol(Combine, Decl(divideAndConquerIntersections.ts, 56, 12))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 58, 13))
->K : Symbol(K, Decl(divideAndConquerIntersections.ts, 58, 15))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 58, 13))
+>Combine : Symbol(Combine, Decl(divideAndConquerIntersections.ts, 64, 12))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 66, 13))
+>K : Symbol(K, Decl(divideAndConquerIntersections.ts, 66, 15))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 66, 13))
 
     ? U & Partial<Record<Exclude<K, keyof U>, undefined>>
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 58, 13))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 66, 13))
 >Partial : Symbol(Partial, Decl(lib.es5.d.ts, --, --))
 >Record : Symbol(Record, Decl(lib.es5.d.ts, --, --))
 >Exclude : Symbol(Exclude, Decl(lib.es5.d.ts, --, --))
->K : Symbol(K, Decl(divideAndConquerIntersections.ts, 58, 15))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 58, 13))
+>K : Symbol(K, Decl(divideAndConquerIntersections.ts, 66, 15))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 66, 13))
 
     : never;
 
 // apply a query result by intersecting it with update,
 // and then using these values to override the actual update
 type PerformQuery<U extends Update, R extends object> = R extends unknown
->PerformQuery : Symbol(PerformQuery, Decl(divideAndConquerIntersections.ts, 60, 12))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 64, 18))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
->R : Symbol(R, Decl(divideAndConquerIntersections.ts, 64, 35))
->R : Symbol(R, Decl(divideAndConquerIntersections.ts, 64, 35))
+>PerformQuery : Symbol(PerformQuery, Decl(divideAndConquerIntersections.ts, 68, 12))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 72, 18))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
+>R : Symbol(R, Decl(divideAndConquerIntersections.ts, 72, 35))
+>R : Symbol(R, Decl(divideAndConquerIntersections.ts, 72, 35))
 
     ? FilteredEvent<U, Update & R>
->FilteredEvent : Symbol(FilteredEvent, Decl(divideAndConquerIntersections.ts, 66, 12))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 64, 18))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
->R : Symbol(R, Decl(divideAndConquerIntersections.ts, 64, 35))
+>FilteredEvent : Symbol(FilteredEvent, Decl(divideAndConquerIntersections.ts, 74, 12))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 72, 18))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
+>R : Symbol(R, Decl(divideAndConquerIntersections.ts, 72, 35))
 
     : never;
 
 // narrow down an update by intersecting it with a different update
 type FilteredEvent<E extends Update, U extends Update> =
->FilteredEvent : Symbol(FilteredEvent, Decl(divideAndConquerIntersections.ts, 66, 12))
->E : Symbol(E, Decl(divideAndConquerIntersections.ts, 69, 19))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 69, 36))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
+>FilteredEvent : Symbol(FilteredEvent, Decl(divideAndConquerIntersections.ts, 74, 12))
+>E : Symbol(E, Decl(divideAndConquerIntersections.ts, 77, 19))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 77, 36))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
 
     & E
->E : Symbol(E, Decl(divideAndConquerIntersections.ts, 69, 19))
+>E : Symbol(E, Decl(divideAndConquerIntersections.ts, 77, 19))
 
     & Omit<U, "update_id">;
 >Omit : Symbol(Omit, Decl(lib.es5.d.ts, --, --))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 69, 36))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 77, 36))
 
 type Middleware<U extends Update> = (ctx: U) => unknown | Promise<unknown>;
->Middleware : Symbol(Middleware, Decl(divideAndConquerIntersections.ts, 71, 27))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 73, 16))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
->ctx : Symbol(ctx, Decl(divideAndConquerIntersections.ts, 73, 37))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 73, 16))
+>Middleware : Symbol(Middleware, Decl(divideAndConquerIntersections.ts, 79, 27))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 81, 16))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
+>ctx : Symbol(ctx, Decl(divideAndConquerIntersections.ts, 81, 37))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 81, 16))
 >Promise : Symbol(Promise, Decl(lib.es5.d.ts, --, --))
 
 class EventHub<U extends Update> {
->EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 73, 75))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 74, 15))
->Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 10, 20))
+>EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 81, 75))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 82, 15))
+>Update : Symbol(Update, Decl(divideAndConquerIntersections.ts, 16, 20))
 
     use(...middleware: Array<Middleware<U>>): EventHub<U> {
->use : Symbol(EventHub.use, Decl(divideAndConquerIntersections.ts, 74, 34))
->middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 75, 8))
+>use : Symbol(EventHub.use, Decl(divideAndConquerIntersections.ts, 82, 34))
+>middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 83, 8))
 >Array : Symbol(Array, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --))
->Middleware : Symbol(Middleware, Decl(divideAndConquerIntersections.ts, 71, 27))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 74, 15))
->EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 73, 75))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 74, 15))
+>Middleware : Symbol(Middleware, Decl(divideAndConquerIntersections.ts, 79, 27))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 82, 15))
+>EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 81, 75))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 82, 15))
 
         console.log("Adding", middleware.length, "generic handlers");
 >console.log : Symbol(Console.log, Decl(lib.dom.d.ts, --, --))
 >console : Symbol(console, Decl(lib.dom.d.ts, --, --))
 >log : Symbol(Console.log, Decl(lib.dom.d.ts, --, --))
 >middleware.length : Symbol(Array.length, Decl(lib.es5.d.ts, --, --))
->middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 75, 8))
+>middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 83, 8))
 >length : Symbol(Array.length, Decl(lib.es5.d.ts, --, --))
 
         return this;
->this : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 73, 75))
+>this : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 81, 75))
     }
     on<Q extends FilterQuery>(
->on : Symbol(EventHub.on, Decl(divideAndConquerIntersections.ts, 78, 5))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 79, 7))
->FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 40, 1))
+>on : Symbol(EventHub.on, Decl(divideAndConquerIntersections.ts, 86, 5))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 87, 7))
+>FilterQuery : Symbol(FilterQuery, Decl(divideAndConquerIntersections.ts, 48, 1))
 
         filter: Q | Q[],
->filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 79, 30))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 79, 7))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 79, 7))
+>filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 87, 30))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 87, 7))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 87, 7))
 
         ...middleware: Array<Middleware<Filter<U, Q>>>
->middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 80, 24))
+>middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 88, 24))
 >Array : Symbol(Array, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --))
->Middleware : Symbol(Middleware, Decl(divideAndConquerIntersections.ts, 71, 27))
->Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 43, 58))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 74, 15))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 79, 7))
+>Middleware : Symbol(Middleware, Decl(divideAndConquerIntersections.ts, 79, 27))
+>Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 51, 58))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 82, 15))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 87, 7))
 
                            // ^ errors out
     ): EventHub<Filter<U, Q>> {
->EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 73, 75))
->Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 43, 58))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 74, 15))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 79, 7))
+>EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 81, 75))
+>Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 51, 58))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 82, 15))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 87, 7))
 
         console.log("Adding", middleware.length, "handlers for", filter);
 >console.log : Symbol(Console.log, Decl(lib.dom.d.ts, --, --))
 >console : Symbol(console, Decl(lib.dom.d.ts, --, --))
 >log : Symbol(Console.log, Decl(lib.dom.d.ts, --, --))
 >middleware.length : Symbol(Array.length, Decl(lib.es5.d.ts, --, --))
->middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 80, 24))
+>middleware : Symbol(middleware, Decl(divideAndConquerIntersections.ts, 88, 24))
 >length : Symbol(Array.length, Decl(lib.es5.d.ts, --, --))
->filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 79, 30))
+>filter : Symbol(filter, Decl(divideAndConquerIntersections.ts, 87, 30))
 
         return new EventHub<Filter<U, Q>>();
->EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 73, 75))
->Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 43, 58))
->U : Symbol(U, Decl(divideAndConquerIntersections.ts, 74, 15))
->Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 79, 7))
+>EventHub : Symbol(EventHub, Decl(divideAndConquerIntersections.ts, 81, 75))
+>Filter : Symbol(Filter, Decl(divideAndConquerIntersections.ts, 51, 58))
+>U : Symbol(U, Decl(divideAndConquerIntersections.ts, 82, 15))
+>Q : Symbol(Q, Decl(divideAndConquerIntersections.ts, 87, 7))
     }
 }
 
