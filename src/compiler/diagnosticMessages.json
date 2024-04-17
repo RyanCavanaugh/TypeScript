@@ -4192,6 +4192,10 @@
         "category": "Error",
         "code": 4126
     },
+    "Source union has too many constituents for exhaustive analysis; non-exhaustive analysis follows": {
+        "category": "Error",
+        "code": 4127
+    },
 
     "The current host does not support the '{0}' option.": {
         "category": "Error",

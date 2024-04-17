@@ -22796,7 +22796,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                 if (sourceFlags & (TypeFlags.Object | TypeFlags.Intersection) && targetFlags & TypeFlags.Union) {
                     const objectOnlyTarget = extractTypesOfKind(target, TypeFlags.Object | TypeFlags.Intersection | TypeFlags.Substitution);
                     if (objectOnlyTarget.flags & TypeFlags.Union) {
-                        const result = typeRelatedToDiscriminatedType(source, objectOnlyTarget as UnionType);
+                        const result = typeRelatedToDiscriminatedType(source, objectOnlyTarget as UnionType, errorNode);
                         if (result) {
                             return result;
                         }
@@ -22873,7 +22873,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             return Ternary.False;
         }
 
-        function typeRelatedToDiscriminatedType(source: Type, target: UnionType) {
+        function typeRelatedToDiscriminatedType(source: Type, target: UnionType, errorNode?: Node) {
             // 1. Generate the combinations of discriminant properties & types 'source' can satisfy.
             //    a. If the number of combinations is above a set limit, the comparison is too complex.
             // 2. Filter 'target' to the subset of types whose discriminants exist in the matrix.
@@ -22897,6 +22897,9 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             for (const sourceProperty of sourcePropertiesFiltered) {
                 numCombinations *= countTypes(getNonMissingTypeOfSymbol(sourceProperty));
                 if (numCombinations > 25) {
+                    if (errorNode) {
+                        reportError(Diagnostics.Source_union_has_too_many_constituents_for_exhaustive_analysis_non_exhaustive_analysis_follows, numCombinations.toLocaleString("en-US"));
+                    }
                     // We've reached the complexity limit.
                     tracing?.instant(tracing.Phase.CheckTypes, "typeRelatedToDiscriminatedType_DepthLimit", { sourceId: source.id, targetId: target.id, numCombinations });
                     return Ternary.False;

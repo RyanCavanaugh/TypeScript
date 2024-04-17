@@ -18,9 +18,9 @@ namespace Example1 {
 // Dropping constituents of T
 namespace Example2 {
     type S = { a: 0 | 2, b: 4 };
-    type T = { a: 0,     b: 1 | 4 }     // T0
-           | { a: 1,     b: 2 }         // T1
-           | { a: 2,     b: 3 | 4 };    // T2
+    type T = { a: 0, b: 1 | 4 }     // T0
+        | { a: 1, b: 2 }         // T1
+        | { a: 2, b: 3 | 4 };    // T2
     declare let s: S;
     declare let t: T;
 
@@ -32,9 +32,9 @@ namespace Example2 {
 // Unmatched discriminants
 namespace Example3 {
     type S = { a: 0 | 2, b: 4 };
-    type T = { a: 0,     b: 1 | 4 }     // T0
-           | { a: 1,     b: 2 | 4 }     // T1
-           | { a: 2,     b: 3 };        // T2
+    type T = { a: 0, b: 1 | 4 }     // T0
+        | { a: 1, b: 2 | 4 }     // T1
+        | { a: 2, b: 3 };        // T2
     declare let s: S;
     declare let t: T;
 
@@ -47,9 +47,9 @@ namespace Example3 {
 // Unmatched non-discriminants
 namespace Example4 {
     type S = { a: 0 | 2, b: 4 };
-    type T = { a: 0,     b: 1 | 4 }             // T0
-           | { a: 1,     b: 2 }                 // T1
-           | { a: 2,     b: 3 | 4, c: string }; // T2
+    type T = { a: 0, b: 1 | 4 }             // T0
+        | { a: 1, b: 2 }                 // T1
+        | { a: 2, b: 3 | 4, c: string }; // T2
     declare let s: S;
     declare let t: T;
 
@@ -66,14 +66,14 @@ namespace Example5 {
     type N = 0 | 1 | 2;
     type S = { a: N, b: N, c: N };
     type T = { a: 0, b: N, c: N }
-           | { a: 1, b: N, c: N }
-           | { a: 2, b: N, c: N }
-           | { a: N, b: 0, c: N }
-           | { a: N, b: 1, c: N }
-           | { a: N, b: 2, c: N }
-           | { a: N, b: N, c: 0 }
-           | { a: N, b: N, c: 1 }
-           | { a: N, b: N, c: 2 };
+        | { a: 1, b: N, c: N }
+        | { a: 2, b: N, c: N }
+        | { a: N, b: 0, c: N }
+        | { a: N, b: 1, c: N }
+        | { a: N, b: 2, c: N }
+        | { a: N, b: N, c: 0 }
+        | { a: N, b: N, c: 1 }
+        | { a: N, b: N, c: 2 };
     declare let s: S;
     declare let t: T;
 
@@ -172,7 +172,7 @@ namespace GH15907 {
 
     const active = true;
 
-    dispatchAction({ type : (active? 'disactivate' : 'activate') });
+    dispatchAction({ type: (active ? 'disactivate' : 'activate') });
 }
 
 // https://github.com/Microsoft/TypeScript/issues/20889
@@ -198,4 +198,26 @@ namespace GH39357 {
     type B = "a" | "b" | "c";
     declare const b: B;
     const a: A = b === "a" || b === "b" ? [b, 1] : ["c", ""];
+}
+
+// 
+namespace BigUnionExample {
+    type Ones = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    type Tens = 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19;
+    type Twenties = 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29;
+
+    type MakeUnionTarget<T> = T extends unknown ? { arg: T } : never;
+    type Target = MakeUnionTarget<Ones> | MakeUnionTarget<Tens> | MakeUnionTarget<Twenties>;
+
+    type MakeUnion<T> = { arg: T };
+    type Source = MakeUnion<Ones | Tens | Twenties | 30>;
+
+    let x: Source = { arg: 30 } as any;
+    let _: Target = x;
+
+    // Triggers too-large check, but shouldn't issue error
+    let j = f(x);
+
+    declare function f(x: Target): string;
+    declare function f(x: unknown): string | number;
 }

@@ -68,7 +68,7 @@ namespace Example2 {
 >b : 4
 >  : ^
 
-    type T = { a: 0,     b: 1 | 4 }     // T0
+    type T = { a: 0, b: 1 | 4 }     // T0
 >T : T
 >  : ^
 >a : 0
@@ -76,13 +76,13 @@ namespace Example2 {
 >b : 4 | 1
 >  : ^^^^^
 
-           | { a: 1,     b: 2 }         // T1
+        | { a: 1, b: 2 }         // T1
 >a : 1
 >  : ^
 >b : 2
 >  : ^
 
-           | { a: 2,     b: 3 | 4 };    // T2
+        | { a: 2, b: 3 | 4 };    // T2
 >a : 2
 >  : ^
 >b : 4 | 3
@@ -120,7 +120,7 @@ namespace Example3 {
 >b : 4
 >  : ^
 
-    type T = { a: 0,     b: 1 | 4 }     // T0
+    type T = { a: 0, b: 1 | 4 }     // T0
 >T : T
 >  : ^
 >a : 0
@@ -128,13 +128,13 @@ namespace Example3 {
 >b : 4 | 1
 >  : ^^^^^
 
-           | { a: 1,     b: 2 | 4 }     // T1
+        | { a: 1, b: 2 | 4 }     // T1
 >a : 1
 >  : ^
 >b : 2 | 4
 >  : ^^^^^
 
-           | { a: 2,     b: 3 };        // T2
+        | { a: 2, b: 3 };        // T2
 >a : 2
 >  : ^
 >b : 3
@@ -173,7 +173,7 @@ namespace Example4 {
 >b : 4
 >  : ^
 
-    type T = { a: 0,     b: 1 | 4 }             // T0
+    type T = { a: 0, b: 1 | 4 }             // T0
 >T : T
 >  : ^
 >a : 0
@@ -181,13 +181,13 @@ namespace Example4 {
 >b : 4 | 1
 >  : ^^^^^
 
-           | { a: 1,     b: 2 }                 // T1
+        | { a: 1, b: 2 }                 // T1
 >a : 1
 >  : ^
 >b : 2
 >  : ^
 
-           | { a: 2,     b: 3 | 4, c: string }; // T2
+        | { a: 2, b: 3 | 4, c: string }; // T2
 >a : 2
 >  : ^
 >b : 4 | 3
@@ -246,7 +246,7 @@ namespace Example5 {
 >c : N
 >  : ^
 
-           | { a: 1, b: N, c: N }
+        | { a: 1, b: N, c: N }
 >a : 1
 >  : ^
 >b : N
@@ -254,7 +254,7 @@ namespace Example5 {
 >c : N
 >  : ^
 
-           | { a: 2, b: N, c: N }
+        | { a: 2, b: N, c: N }
 >a : 2
 >  : ^
 >b : N
@@ -262,7 +262,7 @@ namespace Example5 {
 >c : N
 >  : ^
 
-           | { a: N, b: 0, c: N }
+        | { a: N, b: 0, c: N }
 >a : N
 >  : ^
 >b : 0
@@ -270,7 +270,7 @@ namespace Example5 {
 >c : N
 >  : ^
 
-           | { a: N, b: 1, c: N }
+        | { a: N, b: 1, c: N }
 >a : N
 >  : ^
 >b : 1
@@ -278,7 +278,7 @@ namespace Example5 {
 >c : N
 >  : ^
 
-           | { a: N, b: 2, c: N }
+        | { a: N, b: 2, c: N }
 >a : N
 >  : ^
 >b : 2
@@ -286,7 +286,7 @@ namespace Example5 {
 >c : N
 >  : ^
 
-           | { a: N, b: N, c: 0 }
+        | { a: N, b: N, c: 0 }
 >a : N
 >  : ^
 >b : N
@@ -294,7 +294,7 @@ namespace Example5 {
 >c : 0
 >  : ^
 
-           | { a: N, b: N, c: 1 }
+        | { a: N, b: N, c: 1 }
 >a : N
 >  : ^
 >b : N
@@ -302,7 +302,7 @@ namespace Example5 {
 >c : 1
 >  : ^
 
-           | { a: N, b: N, c: 2 };
+        | { a: N, b: N, c: 2 };
 >a : N
 >  : ^
 >b : N
@@ -607,19 +607,19 @@ namespace GH15907 {
 >true : true
 >     : ^^^^
 
-    dispatchAction({ type : (active? 'disactivate' : 'activate') });
->dispatchAction({ type : (active? 'disactivate' : 'activate') }) : void
+    dispatchAction({ type: (active ? 'disactivate' : 'activate') });
+>dispatchAction({ type: (active ? 'disactivate' : 'activate') }) : void
 >                                                                : ^^^^
 >dispatchAction : (action: Action) => void
 >               : ^      ^^      ^^^^^^^^^
->{ type : (active? 'disactivate' : 'activate') } : { type: "activate" | "disactivate"; }
+>{ type: (active ? 'disactivate' : 'activate') } : { type: "activate" | "disactivate"; }
 >                                                : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 >type : "activate" | "disactivate"
 >     : ^^^^^^^^^^^^^^^^^^^^^^^^^^
->(active? 'disactivate' : 'activate') : "activate" | "disactivate"
->                                     : ^^^^^^^^^^^^^^^^^^^^^^^^^^
->active? 'disactivate' : 'activate' : "activate" | "disactivate"
->                                   : ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>(active ? 'disactivate' : 'activate') : "activate" | "disactivate"
+>                                      : ^^^^^^^^^^^^^^^^^^^^^^^^^^
+>active ? 'disactivate' : 'activate' : "activate" | "disactivate"
+>                                    : ^^^^^^^^^^^^^^^^^^^^^^^^^^
 >active : true
 >       : ^^^^
 >'disactivate' : "disactivate"
@@ -721,5 +721,84 @@ namespace GH39357 {
 >    : ^^^
 >"" : ""
 >   : ^^
+}
+
+// 
+namespace BigUnionExample {
+>BigUnionExample : typeof BigUnionExample
+>                : ^^^^^^^^^^^^^^^^^^^^^^
+
+    type Ones = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+>Ones : Ones
+>     : ^^^^
+
+    type Tens = 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19;
+>Tens : Tens
+>     : ^^^^
+
+    type Twenties = 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29;
+>Twenties : Twenties
+>         : ^^^^^^^^
+
+    type MakeUnionTarget<T> = T extends unknown ? { arg: T } : never;
+>MakeUnionTarget : MakeUnionTarget<T>
+>                : ^^^^^^^^^^^^^^^^^^
+>arg : T
+>    : ^
+
+    type Target = MakeUnionTarget<Ones> | MakeUnionTarget<Tens> | MakeUnionTarget<Twenties>;
+>Target : Target
+>       : ^^^^^^
+
+    type MakeUnion<T> = { arg: T };
+>MakeUnion : MakeUnion<T>
+>          : ^^^^^^^^^^^^
+>arg : T
+>    : ^
+
+    type Source = MakeUnion<Ones | Tens | Twenties | 30>;
+>Source : Source
+>       : ^^^^^^
+
+    let x: Source = { arg: 30 } as any;
+>x : Source
+>  : ^^^^^^
+>{ arg: 30 } as any : any
+>                   : ^^^
+>{ arg: 30 } : { arg: number; }
+>            : ^^^^^^^^^^^^^^^^
+>arg : number
+>    : ^^^^^^
+>30 : 30
+>   : ^^
+
+    let _: Target = x;
+>_ : Target
+>  : ^^^^^^
+>x : Source
+>  : ^^^^^^
+
+    // Triggers too-large check, but shouldn't issue error
+    let j = f(x);
+>j : string | number
+>  : ^^^^^^^^^^^^^^^
+>f(x) : string | number
+>     : ^^^^^^^^^^^^^^^
+>f : { (x: Target): string; (x: unknown): string | number; }
+>  : ^^^ ^^      ^^^^^^^^^^^^ ^^       ^^^^^^^^^^^^^^^^^^^^^
+>x : Source
+>  : ^^^^^^
+
+    declare function f(x: Target): string;
+>f : { (x: Target): string; (x: unknown): string | number; }
+>  : ^^^ ^^      ^^^      ^^^ ^^       ^^^^^^^^^^^^^^^^^^^^^
+>x : Target
+>  : ^^^^^^
+
+    declare function f(x: unknown): string | number;
+>f : { (x: Target): string; (x: unknown): string | number; }
+>  : ^^^ ^^      ^^^^^^^^^^^^ ^^       ^^^               ^^^
+>x : unknown
+>  : ^^^^^^^
 }
 
