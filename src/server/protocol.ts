@@ -1,4 +1,4 @@
-import type * as ts from "./_namespaces/ts";
+import type * as ts from "./_namespaces/ts.js";
 import type {
     ApplicableRefactorInfo,
     CompilerOptionsValue,
@@ -21,13 +21,13 @@ import type {
     TodoCommentDescriptor,
     TypeAcquisition,
     UserPreferences,
-} from "./_namespaces/ts";
+} from "./_namespaces/ts.js";
 import {
     ClassificationType,
     CompletionTriggerKind,
     OrganizeImportsMode,
     SemicolonPreference,
-} from "./_namespaces/ts";
+} from "./_namespaces/ts.js";
 
 // These types/enums used to be defined in duplicate here and exported. They are re-exported to avoid breaking changes.
 export { ApplicableRefactorInfo, ClassificationType, CompletionsTriggerCharacter, CompletionTriggerKind, OrganizeImportsMode, RefactorTriggerReason, RenameInfoFailure, SemicolonPreference, SignatureHelpTriggerReason, SymbolDisplayPart, UserPreferences };
@@ -161,6 +161,7 @@ export const enum CommandTypes {
     GetApplicableRefactors = "getApplicableRefactors",
     GetEditsForRefactor = "getEditsForRefactor",
     GetMoveToRefactoringFileSuggestions = "getMoveToRefactoringFileSuggestions",
+    GetPasteEdits = "getPasteEdits",
     /** @internal */
     GetEditsForRefactorFull = "getEditsForRefactor-full",
 
@@ -623,6 +624,35 @@ export interface GetMoveToRefactoringFileSuggestions extends Response {
         newFileName: string;
         files: string[];
     };
+}
+
+/**
+ * Request refactorings at a given position post pasting text from some other location.
+ */
+
+export interface GetPasteEditsRequest extends Request {
+    command: CommandTypes.GetPasteEdits;
+    arguments: GetPasteEditsRequestArgs;
+}
+
+export interface GetPasteEditsRequestArgs extends FileRequestArgs {
+    /** The text that gets pasted in a file.  */
+    pastedText: string[];
+    /** Locations of where the `pastedText` gets added in a file. If the length of the `pastedText` and `pastedLocations` are not the same,
+     *  then the `pastedText` is combined into one and added at all the `pastedLocations`.
+     */
+    pasteLocations: TextSpan[];
+    /** The source location of each `pastedText`. If present, the length of `spans` must be equal to the length of `pastedText`. */
+    copiedFrom?: { file: string; spans: TextSpan[]; };
+}
+
+export interface GetPasteEditsResponse extends Response {
+    body: PasteEditsAction;
+}
+
+export interface PasteEditsAction {
+    edits: FileCodeEdits[];
+    fixId?: {};
 }
 
 export interface GetEditsForRefactorRequest extends Request {
