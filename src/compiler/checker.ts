@@ -14891,6 +14891,18 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         return objectFlags & ObjectFlags.Mapped ? getApparentTypeOfMappedType(t as MappedType) :
             objectFlags & ObjectFlags.Reference && t !== type ? getTypeWithThisArgument(t, type) :
             t.flags & TypeFlags.Intersection ? getApparentTypeOfIntersectionType(t as IntersectionType, type) :
+            t.flags & TypeFlags.NonPrimitive ? emptyObjectType :
+            t.flags & TypeFlags.Index ? stringNumberSymbolType :
+            t.flags & TypeFlags.Unknown && !strictNullChecks ? emptyObjectType :
+            t;
+    }
+
+    function getApparentExpressionType(type: Type): Type {
+        const t = type.flags & TypeFlags.Instantiable ? getBaseConstraintOfType(type) || unknownType : type;
+        const objectFlags = getObjectFlags(t);
+        return objectFlags & ObjectFlags.Mapped ? getApparentTypeOfMappedType(t as MappedType) :
+            objectFlags & ObjectFlags.Reference && t !== type ? getTypeWithThisArgument(t, type) :
+            t.flags & TypeFlags.Intersection ? getApparentTypeOfIntersectionType(t as IntersectionType, type) :
             t.flags & TypeFlags.StringLike ? globalStringType :
             t.flags & TypeFlags.NumberLike ? globalNumberType :
             t.flags & TypeFlags.BigIntLike ? getGlobalBigIntType() :
@@ -34179,7 +34191,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     function checkPropertyAccessExpressionOrQualifiedName(node: PropertyAccessExpression | QualifiedName, left: Expression | QualifiedName, leftType: Type, right: Identifier | PrivateIdentifier, checkMode: CheckMode | undefined, writeOnly?: boolean) {
         const parentSymbol = getNodeLinks(left).resolvedSymbol;
         const assignmentKind = getAssignmentTargetKind(node);
-        const apparentType = getApparentType(assignmentKind !== AssignmentKind.None || isMethodAccessForCall(node) ? getWidenedType(leftType) : leftType);
+        const apparentType = getApparentExpressionType(assignmentKind !== AssignmentKind.None || isMethodAccessForCall(node) ? getWidenedType(leftType) : leftType);
         const isAnyLike = isTypeAny(apparentType) || apparentType === silentNeverType;
         let prop: Symbol | undefined;
         if (isPrivateIdentifier(right)) {
