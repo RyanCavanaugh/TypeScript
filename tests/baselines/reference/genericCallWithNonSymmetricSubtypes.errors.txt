@@ -1,0 +1,48 @@
+genericCallWithNonSymmetricSubtypes.ts(30,18): error TS2345: Argument of type '(x: string) => string' is not assignable to parameter of type '(x: Object) => string'.
+  Types of parameters 'x' and 'x' are incompatible.
+    Type 'Object' is not assignable to type 'string'.
+genericCallWithNonSymmetricSubtypes.ts(31,18): error TS2345: Argument of type '(x: Object) => string' is not assignable to parameter of type '(x: string) => string'.
+  Types of parameters 'x' and 'x' are incompatible.
+    Type 'string' is not assignable to type 'Object'.
+
+
+==== genericCallWithNonSymmetricSubtypes.ts (2 errors) ====
+    // generic type argument inference where inference leads to two candidates that are both supertypes of all candidates
+    // we choose the first candidate so the result is dependent on the order of the arguments provided
+    
+    function foo<T>(x: T, y: T) {
+        var r: T;
+        return r;
+    }
+    
+    var a: { x: number; y?: number; };
+    var b: { x: number; z?: number; };
+    
+    var r = foo(a, b); // { x: number; y?: number; };
+    var r2 = foo(b, a); // { x: number; z?: number; };
+    
+    var x: { x: number; };
+    var y: { x?: number; };
+    
+    var r3 = foo(a, x); // { x: number; y?: number; };
+    var r4 = foo(x, a); // { x: number; };
+    
+    var r5 = foo(a, y); // { x?: number; };
+    var r5 = foo(y, a); // { x?: number; };
+    
+    var r6 = foo(x, y); // { x?: number; };
+    var r6 = foo(y, x); // { x?: number; };
+    
+    var s1: (x: Object) => string;
+    var s2: (x: string) => string;
+    
+    var r7 = foo(s1, s2); // (x: Object) => string;
+                     ~~
+!!! error TS2345: Argument of type '(x: string) => string' is not assignable to parameter of type '(x: Object) => string'.
+!!! error TS2345:   Types of parameters 'x' and 'x' are incompatible.
+!!! error TS2345:     Type 'Object' is not assignable to type 'string'.
+    var r8 = foo(s2, s1); // (x: string) => string;
+                     ~~
+!!! error TS2345: Argument of type '(x: Object) => string' is not assignable to parameter of type '(x: string) => string'.
+!!! error TS2345:   Types of parameters 'x' and 'x' are incompatible.
+!!! error TS2345:     Type 'string' is not assignable to type 'Object'.

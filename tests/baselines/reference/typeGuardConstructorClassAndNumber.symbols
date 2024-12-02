@@ -14,9 +14,7 @@ let var1: C1 | number;
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
 if (var1.constructor == C1) {
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1
@@ -33,7 +31,6 @@ else {
 }
 if (var1["constructor"] == C1) {
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1
@@ -49,9 +46,7 @@ else {
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
 }
 if (var1.constructor === C1) {
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1
@@ -68,7 +63,6 @@ else {
 }
 if (var1["constructor"] === C1) {
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1
@@ -85,9 +79,7 @@ else {
 }
 if (C1 == var1.constructor) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
@@ -104,7 +96,6 @@ else {
 if (C1 == var1["constructor"]) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
@@ -120,9 +111,7 @@ else {
 }
 if (C1 === var1.constructor) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
@@ -139,7 +128,6 @@ else {
 if (C1 === var1["constructor"]) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
@@ -155,9 +143,7 @@ else {
 }
 
 if (var1.constructor != C1) {
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1 | number
@@ -172,7 +158,6 @@ else {
 }
 if (var1["constructor"] != C1) {
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1 | number
@@ -186,9 +171,7 @@ else {
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
 }
 if (var1.constructor !== C1) {
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1 | number
@@ -203,7 +186,6 @@ else {
 }
 if (var1["constructor"] !== C1) {
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 
     var1; // C1 | number
@@ -218,9 +200,7 @@ else {
 }
 if (C1 != var1.constructor) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1 | number
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
@@ -235,7 +215,6 @@ else {
 if (C1 != var1["constructor"]) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1 | number
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
@@ -249,9 +228,7 @@ else {
 }
 if (C1 !== var1.constructor) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
->var1.constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->constructor : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1 | number
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
@@ -266,7 +243,6 @@ else {
 if (C1 !== var1["constructor"]) {
 >C1 : Symbol(C1, Decl(typeGuardConstructorClassAndNumber.ts, 0, 0))
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))
->"constructor" : Symbol(Object.constructor, Decl(lib.es5.d.ts, --, --))
 
     var1; // C1 | number
 >var1 : Symbol(var1, Decl(typeGuardConstructorClassAndNumber.ts, 5, 3))

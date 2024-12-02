@@ -1,9 +1,14 @@
 templateLiteralTypes2.ts(23,11): error TS2322: Type 'string' is not assignable to type '`abc${string}`'.
 templateLiteralTypes2.ts(29,11): error TS2322: Type 'string' is not assignable to type '`foo${string}` | `bar${string}`'.
 templateLiteralTypes2.ts(32,11): error TS2322: Type 'string' is not assignable to type '`foo${string}` | `bar${string}` | `baz${string}`'.
+templateLiteralTypes2.ts(67,9): error TS2322: Type '`foo${number}`' is not assignable to type 'String'.
+templateLiteralTypes2.ts(68,9): error TS2322: Type '`foo${number}`' is not assignable to type 'Object'.
+templateLiteralTypes2.ts(69,9): error TS2322: Type '`foo${number}`' is not assignable to type '{}'.
+templateLiteralTypes2.ts(70,9): error TS2322: Type '`foo${number}`' is not assignable to type '{ length: number; }'.
+templateLiteralTypes2.ts(118,4): error TS2345: Argument of type '`rotate(${number}dig)`' is not assignable to parameter of type '(string & {}) | "-moz-initial"'.
 
 
-==== templateLiteralTypes2.ts (3 errors) ====
+==== templateLiteralTypes2.ts (8 errors) ====
     function ft1<T extends string>(s: string, n: number, u: 'foo' | 'bar' | 'baz', t: T) {
         const c1 = `abc${s}`;
         const c2 = `abc${n}`;
@@ -77,9 +82,17 @@ templateLiteralTypes2.ts(32,11): error TS2322: Type 'string' is not assignable t
     function ft14(t: `foo${number}`) {
         let x1: string = t;
         let x2: String = t;
+            ~~
+!!! error TS2322: Type '`foo${number}`' is not assignable to type 'String'.
         let x3: Object = t;
+            ~~
+!!! error TS2322: Type '`foo${number}`' is not assignable to type 'Object'.
         let x4: {} = t;
+            ~~
+!!! error TS2322: Type '`foo${number}`' is not assignable to type '{}'.
         let x6: { length: number } = t;
+            ~~
+!!! error TS2322: Type '`foo${number}`' is not assignable to type '{ length: number; }'.
     }
     
     declare function g1<T>(x: T): T;
@@ -128,4 +141,6 @@ templateLiteralTypes2.ts(32,11): error TS2322: Type 'string' is not assignable t
     const interpolatedStyle = { rotate: 12 };
     function C2(transform: "-moz-initial" | (string & {})) { return 12; }
     C2(`rotate(${interpolatedStyle.rotate}dig)`);
+       ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2345: Argument of type '`rotate(${number}dig)`' is not assignable to parameter of type '(string & {}) | "-moz-initial"'.
     

@@ -1,0 +1,15 @@
+validStringAssignments.ts(4,5): error TS2322: Type 'string' is not assignable to type 'Object'.
+validStringAssignments.ts(6,5): error TS2322: Type 'string' is not assignable to type 'String'.
+
+
+==== validStringAssignments.ts (2 errors) ====
+    var x = '';
+    
+    var a: any = x;
+    var b: Object = x;
+        ~
+!!! error TS2322: Type 'string' is not assignable to type 'Object'.
+    var c: string = x;
+    var d: String = x;
+        ~
+!!! error TS2322: Type 'string' is not assignable to type 'String'.

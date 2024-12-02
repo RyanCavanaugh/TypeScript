@@ -24,9 +24,7 @@ export const yThen = y.map(item => item.length);
 >y : Symbol(y, Decl(two.ts, 0, 13))
 >map : Symbol(Array.map, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --))
 >item : Symbol(item, Decl(two.ts, 1, 27))
->item.length : Symbol(length, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --))
 >item : Symbol(item, Decl(two.ts, 1, 27))
->length : Symbol(length, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --))
 
 === three.ts ===
 // #42504

@@ -10,8 +10,8 @@ function stringify1(anything: { toString(): string } | undefined): string {
 >         : ^^^^^^      
 
     return typeof anything === "string" ? anything.toUpperCase() : "";
->typeof anything === "string" ? anything.toUpperCase() : "" : string
->                                                           : ^^^^^^
+>typeof anything === "string" ? anything.toUpperCase() : "" : any
+>                                                           : ^^^
 >typeof anything === "string" : boolean
 >                             : ^^^^^^^
 >typeof anything : "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"
@@ -20,14 +20,14 @@ function stringify1(anything: { toString(): string } | undefined): string {
 >         : ^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^
 >"string" : "string"
 >         : ^^^^^^^^
->anything.toUpperCase() : string
->                       : ^^^^^^
->anything.toUpperCase : () => string
->                     : ^^^^^^      
->anything : string
->         : ^^^^^^
->toUpperCase : () => string
->            : ^^^^^^      
+>anything.toUpperCase() : any
+>                       : ^^^
+>anything.toUpperCase : any
+>                     : ^^^
+>anything : never
+>         : ^^^^^
+>toUpperCase : any
+>            : ^^^
 >"" : ""
 >   : ^^
 }
@@ -99,8 +99,8 @@ function stringify4(anything: { toString?(): string } | undefined): string {
 >         : ^^^^^^^      ^^^^^^^^^^^^^
 
     return typeof anything === "string" ? anything.toUpperCase() : "";
->typeof anything === "string" ? anything.toUpperCase() : "" : string
->                                                           : ^^^^^^
+>typeof anything === "string" ? anything.toUpperCase() : "" : any
+>                                                           : ^^^
 >typeof anything === "string" : boolean
 >                             : ^^^^^^^
 >typeof anything : "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"
@@ -109,14 +109,14 @@ function stringify4(anything: { toString?(): string } | undefined): string {
 >         : ^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^
 >"string" : "string"
 >         : ^^^^^^^^
->anything.toUpperCase() : string
->                       : ^^^^^^
->anything.toUpperCase : () => string
->                     : ^^^^^^      
->anything : string
->         : ^^^^^^
->toUpperCase : () => string
->            : ^^^^^^      
+>anything.toUpperCase() : any
+>                       : ^^^
+>anything.toUpperCase : any
+>                     : ^^^
+>anything : never
+>         : ^^^^^
+>toUpperCase : any
+>            : ^^^
 >"" : ""
 >   : ^^
 }

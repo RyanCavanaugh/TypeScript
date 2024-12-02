@@ -305,42 +305,6 @@ Info seq  [hh:mm:ss:mss] response:
         "isNewIdentifierLocation": false,
         "entries": [
           {
-            "name": "toExponential",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toFixed",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toLocaleString",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toPrecision",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toString",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "valueOf",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
             "name": "t",
             "kind": "warning",
             "kindModifiers": "",

@@ -795,9 +795,7 @@ function capitalize<T extends string | string[]>(
 >input : Symbol(input, Decl(dependentReturnType1.ts, 285, 49))
 
         return input[0].toUpperCase() + input.slice(1); // Ok
->input[0].toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 >input : Symbol(input, Decl(dependentReturnType1.ts, 285, 49))
->toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 >input.slice : Symbol(String.slice, Decl(lib.es5.d.ts, --, --))
 >input : Symbol(input, Decl(dependentReturnType1.ts, 285, 49))
 >slice : Symbol(String.slice, Decl(lib.es5.d.ts, --, --))
@@ -830,9 +828,7 @@ function badCapitalize<T extends string | string[]>(
 >input : Symbol(input, Decl(dependentReturnType1.ts, 295, 52))
 
         return input[0].toUpperCase() + input.slice(1); // Ok
->input[0].toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 >input : Symbol(input, Decl(dependentReturnType1.ts, 295, 52))
->toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 >input.slice : Symbol(String.slice, Decl(lib.es5.d.ts, --, --))
 >input : Symbol(input, Decl(dependentReturnType1.ts, 295, 52))
 >slice : Symbol(String.slice, Decl(lib.es5.d.ts, --, --))

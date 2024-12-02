@@ -1,14 +1,20 @@
+interfaceExtendingClass2.ts(2,5): error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
+interfaceExtendingClass2.ts(4,9): error TS2411: Property 'Z' of type 'number' is not assignable to 'string' index type 'Object'.
 interfaceExtendingClass2.ts(11,5): error TS2411: Property 'a' of type '{ toString: () => {}; }' is not assignable to 'string' index type 'Object'.
 interfaceExtendingClass2.ts(13,13): error TS1131: Property or signature expected.
 interfaceExtendingClass2.ts(14,9): error TS1128: Declaration or statement expected.
 interfaceExtendingClass2.ts(15,5): error TS1128: Declaration or statement expected.
 
 
-==== interfaceExtendingClass2.ts (4 errors) ====
+==== interfaceExtendingClass2.ts (6 errors) ====
     class Foo {
         x: string;
+        ~
+!!! error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
         y() { }
         get Z() {
+            ~
+!!! error TS2411: Property 'Z' of type 'number' is not assignable to 'string' index type 'Object'.
             return 1;
         }
         [x: string]: Object;

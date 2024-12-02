@@ -2,9 +2,10 @@ compoundAdditionAssignmentLHSCanBeAssigned.ts(32,1): error TS2365: Operator '+='
 compoundAdditionAssignmentLHSCanBeAssigned.ts(33,1): error TS2365: Operator '+=' cannot be applied to types 'number' and 'undefined'.
 compoundAdditionAssignmentLHSCanBeAssigned.ts(39,1): error TS2365: Operator '+=' cannot be applied to types 'E' and 'null'.
 compoundAdditionAssignmentLHSCanBeAssigned.ts(40,1): error TS2365: Operator '+=' cannot be applied to types 'E' and 'undefined'.
+compoundAdditionAssignmentLHSCanBeAssigned.ts(47,1): error TS2322: Type 'string' is not assignable to type '{}'.
 
 
-==== compoundAdditionAssignmentLHSCanBeAssigned.ts (4 errors) ====
+==== compoundAdditionAssignmentLHSCanBeAssigned.ts (5 errors) ====
     enum E { a, b }
     
     var a: any;
@@ -60,6 +61,8 @@ compoundAdditionAssignmentLHSCanBeAssigned.ts(40,1): error TS2365: Operator '+='
     var x6: {};
     x6 += a;
     x6 += '';
+    ~~
+!!! error TS2322: Type 'string' is not assignable to type '{}'.
     
     var x7: void;
     x7 += a;

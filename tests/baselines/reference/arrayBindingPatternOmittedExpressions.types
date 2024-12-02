@@ -62,24 +62,20 @@ function f([, a, , b, , , , s, , , ] = results) {
 >        : ^^^^^^^^
 
     a = s[1];
->a = s[1] : string
->         : ^^^^^^
+>a = s[1] : error
 >a : string
 >  : ^^^^^^
->s[1] : string
->     : ^^^^^^
+>s[1] : error
 >s : string
 >  : ^^^^^^
 >1 : 1
 >  : ^
 
     b = s[2];
->b = s[2] : string
->         : ^^^^^^
+>b = s[2] : error
 >b : string
 >  : ^^^^^^
->s[2] : string
->     : ^^^^^^
+>s[2] : error
 >s : string
 >  : ^^^^^^
 >2 : 2

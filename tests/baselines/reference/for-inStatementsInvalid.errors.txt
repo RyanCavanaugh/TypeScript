@@ -10,7 +10,6 @@ for-inStatementsInvalid.ts(19,15): error TS2407: The right-hand side of a 'for..
 for-inStatementsInvalid.ts(20,15): error TS2873: This kind of expression is always falsy.
 for-inStatementsInvalid.ts(20,15): error TS2407: The right-hand side of a 'for...in' statement must be of type 'any', an object type or a type parameter, but here has type 'string'.
 for-inStatementsInvalid.ts(21,15): error TS2872: This kind of expression is always truthy.
-for-inStatementsInvalid.ts(22,15): error TS2407: The right-hand side of a 'for...in' statement must be of type 'any', an object type or a type parameter, but here has type 'string'.
 for-inStatementsInvalid.ts(29,23): error TS2407: The right-hand side of a 'for...in' statement must be of type 'any', an object type or a type parameter, but here has type 'number'.
 for-inStatementsInvalid.ts(31,18): error TS2403: Subsequent variable declarations must have the same type.  Variable 'x' must be of type 'string', but here has type 'Extract<keyof this, string>'.
 for-inStatementsInvalid.ts(38,23): error TS2407: The right-hand side of a 'for...in' statement must be of type 'any', an object type or a type parameter, but here has type 'number'.
@@ -20,7 +19,7 @@ for-inStatementsInvalid.ts(51,23): error TS2407: The right-hand side of a 'for..
 for-inStatementsInvalid.ts(62,15): error TS2407: The right-hand side of a 'for...in' statement must be of type 'any', an object type or a type parameter, but here has type 'number'.
 
 
-==== for-inStatementsInvalid.ts (20 errors) ====
+==== for-inStatementsInvalid.ts (19 errors) ====
     var aNumber: number;
     for (aNumber in {}) { }
          ~~~~~~~
@@ -67,8 +66,6 @@ for-inStatementsInvalid.ts(62,15): error TS2407: The right-hand side of a 'for..
                   ~~
 !!! error TS2872: This kind of expression is always truthy.
     for (var x in c[23]) { }
-                  ~~~~~
-!!! error TS2407: The right-hand side of a 'for...in' statement must be of type 'any', an object type or a type parameter, but here has type 'string'.
     
     for (var x in (<T>(x: T) => x)) { }
     for (var x in function (x: string, y: number) { return x + y }) { }

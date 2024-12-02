@@ -1,5 +1,5 @@
 superCallParameterContextualTyping2.ts(9,43): error TS2349: This expression is not callable.
-  Type 'Number' has no call signatures.
+  Type 'number' has no call signatures.
 
 
 ==== superCallParameterContextualTyping2.ts (1 errors) ====
@@ -14,5 +14,5 @@ superCallParameterContextualTyping2.ts(9,43): error TS2349: This expression is n
         constructor() { super(value => String(value<string>())); }
                                               ~~~~~
 !!! error TS2349: This expression is not callable.
-!!! error TS2349:   Type 'Number' has no call signatures.
+!!! error TS2349:   Type 'number' has no call signatures.
     }

@@ -9,6 +9,7 @@ var x = true;
 
 var a: any = x;
 >a : any
+>  : ^^^
 >x : true
 >  : ^^^^
 

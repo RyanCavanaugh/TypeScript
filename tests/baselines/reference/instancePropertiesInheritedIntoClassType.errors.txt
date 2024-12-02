@@ -1,7 +1,7 @@
 instancePropertiesInheritedIntoClassType.ts(19,16): error TS6234: This expression is not callable because it is a 'get' accessor. Did you mean to use it without '()'?
-  Type 'Number' has no call signatures.
+  Type 'number' has no call signatures.
 instancePropertiesInheritedIntoClassType.ts(41,16): error TS6234: This expression is not callable because it is a 'get' accessor. Did you mean to use it without '()'?
-  Type 'String' has no call signatures.
+  Type 'string' has no call signatures.
 
 
 ==== instancePropertiesInheritedIntoClassType.ts (2 errors) ====
@@ -26,7 +26,7 @@ instancePropertiesInheritedIntoClassType.ts(41,16): error TS6234: This expressio
         var r6 = d.y(); // error
                    ~
 !!! error TS6234: This expression is not callable because it is a 'get' accessor. Did you mean to use it without '()'?
-!!! error TS6234:   Type 'Number' has no call signatures.
+!!! error TS6234:   Type 'number' has no call signatures.
     
     }
     
@@ -51,5 +51,5 @@ instancePropertiesInheritedIntoClassType.ts(41,16): error TS6234: This expressio
         var r6 = d.y(); // error
                    ~
 !!! error TS6234: This expression is not callable because it is a 'get' accessor. Did you mean to use it without '()'?
-!!! error TS6234:   Type 'String' has no call signatures.
+!!! error TS6234:   Type 'string' has no call signatures.
     }

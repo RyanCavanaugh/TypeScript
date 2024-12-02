@@ -1,0 +1,54 @@
+classWithOnlyPublicMembersEquivalentToInterface2.ts(4,12): error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
+classWithOnlyPublicMembersEquivalentToInterface2.ts(6,16): error TS2411: Property 'z' of type 'number' is not assignable to 'string' index type 'Object'.
+classWithOnlyPublicMembersEquivalentToInterface2.ts(10,5): error TS2411: Property '0' of type 'number' is not assignable to 'number' index type 'Object'.
+classWithOnlyPublicMembersEquivalentToInterface2.ts(10,5): error TS2411: Property '0' of type 'number' is not assignable to 'string' index type 'Object'.
+classWithOnlyPublicMembersEquivalentToInterface2.ts(16,5): error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
+classWithOnlyPublicMembersEquivalentToInterface2.ts(18,5): error TS2411: Property 'z' of type 'number' is not assignable to 'string' index type 'Object'.
+classWithOnlyPublicMembersEquivalentToInterface2.ts(21,5): error TS2411: Property '0' of type 'number' is not assignable to 'number' index type 'Object'.
+classWithOnlyPublicMembersEquivalentToInterface2.ts(21,5): error TS2411: Property '0' of type 'number' is not assignable to 'string' index type 'Object'.
+
+
+==== classWithOnlyPublicMembersEquivalentToInterface2.ts (8 errors) ====
+    // no errors expected
+    
+    class C {
+        public x: string;
+               ~
+!!! error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
+        public y(a: number): number { return null; }
+        public get z() { return 1; }
+                   ~
+!!! error TS2411: Property 'z' of type 'number' is not assignable to 'string' index type 'Object'.
+        public set z(v) { }
+        [x: string]: Object;
+        [x: number]: Object;
+        0: number;
+        ~
+!!! error TS2411: Property '0' of type 'number' is not assignable to 'number' index type 'Object'.
+        ~
+!!! error TS2411: Property '0' of type 'number' is not assignable to 'string' index type 'Object'.
+    
+        public static foo: string; // doesn't effect equivalence
+    }
+    
+    interface I {
+        x: string;
+        ~
+!!! error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
+        y(b: number): number;
+        z: number;
+        ~
+!!! error TS2411: Property 'z' of type 'number' is not assignable to 'string' index type 'Object'.
+        [x: string]: Object;
+        [x: number]: Object;
+        0: number;
+        ~
+!!! error TS2411: Property '0' of type 'number' is not assignable to 'number' index type 'Object'.
+        ~
+!!! error TS2411: Property '0' of type 'number' is not assignable to 'string' index type 'Object'.
+    }
+    
+    var c: C;
+    var i: I;
+    c = i;
+    i = c;

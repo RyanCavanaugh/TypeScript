@@ -1,0 +1,7 @@
+destructuringWithNumberLiteral.ts(1,7): error TS2339: Property 'toExponential' does not exist on type 'number'.
+
+
+==== destructuringWithNumberLiteral.ts (1 errors) ====
+    var { toExponential } = 0;
+          ~~~~~~~~~~~~~
+!!! error TS2339: Property 'toExponential' does not exist on type 'number'.

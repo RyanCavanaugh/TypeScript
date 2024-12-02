@@ -129,14 +129,12 @@ const v4: number = unbox(b4);
 >   : ^^^^^^^^^^^^^^^^^^
 
 const b5 = { value: su?.["length"] };
->b5 : { value: number; }
->   : ^^^^^^^^^^^^^^^^^^
->{ value: su?.["length"] } : { value: number; }
->                          : ^^^^^^^^^^^^^^^^^^
->value : number
->      : ^^^^^^
->su?.["length"] : number
->               : ^^^^^^
+>b5 : { value: any; }
+>   : ^^^^^^^^^^^^^^^
+>{ value: su?.["length"] } : { value: any; }
+>                          : ^^^^^^^^^^^^^^^
+>value : error
+>su?.["length"] : error
 >su : string
 >   : ^^^^^^
 >"length" : "length"
@@ -145,12 +143,11 @@ const b5 = { value: su?.["length"] };
 const v5: number = unbox(b5);
 >v5 : number
 >   : ^^^^^^
->unbox(b5) : number
->          : ^^^^^^
+>unbox(b5) : error
 >unbox : <T>(box: { value: T | undefined; }) => T
 >      : ^ ^^   ^^                         ^^^^^ 
->b5 : { value: number; }
->   : ^^^^^^^^^^^^^^^^^^
+>b5 : { value: any; }
+>   : ^^^^^^^^^^^^^^^
 
 const b6 = { value: osu?.prop.length };
 >b6 : { value: number; }
@@ -181,14 +178,12 @@ const v6: number = unbox(b6);
 >   : ^^^^^^^^^^^^^^^^^^
 
 const b7 = { value: osu?.prop["length"] };
->b7 : { value: number; }
->   : ^^^^^^^^^^^^^^^^^^
->{ value: osu?.prop["length"] } : { value: number; }
->                               : ^^^^^^^^^^^^^^^^^^
->value : number
->      : ^^^^^^
->osu?.prop["length"] : number
->                    : ^^^^^^
+>b7 : { value: any; }
+>   : ^^^^^^^^^^^^^^^
+>{ value: osu?.prop["length"] } : { value: any; }
+>                               : ^^^^^^^^^^^^^^^
+>value : error
+>osu?.prop["length"] : error
 >osu?.prop : string
 >          : ^^^^^^
 >osu : { prop: string; }
@@ -201,12 +196,11 @@ const b7 = { value: osu?.prop["length"] };
 const v7: number = unbox(b7);
 >v7 : number
 >   : ^^^^^^
->unbox(b7) : number
->          : ^^^^^^
+>unbox(b7) : error
 >unbox : <T>(box: { value: T | undefined; }) => T
 >      : ^ ^^   ^^                         ^^^^^ 
->b7 : { value: number; }
->   : ^^^^^^^^^^^^^^^^^^
+>b7 : { value: any; }
+>   : ^^^^^^^^^^^^^^^
 
 const b8 = { value: ofnu?.prop() };
 >b8 : { value: number; }

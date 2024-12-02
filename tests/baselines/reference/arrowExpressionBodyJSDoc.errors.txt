@@ -1,16 +1,19 @@
+mytest.js(6,34): error TS2352: Conversion of type '{}' to type 'string' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 mytest.js(6,44): error TS2322: Type 'string' is not assignable to type 'T'.
   'T' could be instantiated with an arbitrary type which could be unrelated to 'string'.
 mytest.js(13,44): error TS2322: Type 'string' is not assignable to type 'T'.
   'T' could be instantiated with an arbitrary type which could be unrelated to 'string'.
 
 
-==== mytest.js (2 errors) ====
+==== mytest.js (3 errors) ====
     /**
      * @template T
      * @param {T|undefined} value value or not
      * @returns {T} result value
      */
     const foo1 = value => /** @type {string} */({ ...value });
+                                     ~~~~~~
+!!! error TS2352: Conversion of type '{}' to type 'string' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
                                                ~~~~~~~~~~~~~~
 !!! error TS2322: Type 'string' is not assignable to type 'T'.
 !!! error TS2322:   'T' could be instantiated with an arbitrary type which could be unrelated to 'string'.

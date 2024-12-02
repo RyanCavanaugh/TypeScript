@@ -19,10 +19,8 @@ var b = x.hasOwnProperty('charAt');
 var c = x['charAt'](0);
 >c : Symbol(c, Decl(stringPropertyAccess.ts, 4, 3))
 >x : Symbol(x, Decl(stringPropertyAccess.ts, 0, 3))
->'charAt' : Symbol(String.charAt, Decl(lib.es5.d.ts, --, --))
 
 var e = x['hasOwnProperty']('toFixed');
 >e : Symbol(e, Decl(stringPropertyAccess.ts, 5, 3))
 >x : Symbol(x, Decl(stringPropertyAccess.ts, 0, 3))
->'hasOwnProperty' : Symbol(Object.hasOwnProperty, Decl(lib.es5.d.ts, --, --))
 

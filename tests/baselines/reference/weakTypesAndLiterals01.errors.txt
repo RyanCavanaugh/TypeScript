@@ -1,0 +1,57 @@
+weakTypesAndLiterals01.ts(23,9): error TS2367: This comparison appears to be unintentional because the types 'WeakTypes' and 'string' have no overlap.
+weakTypesAndLiterals01.ts(41,9): error TS2367: This comparison appears to be unintentional because the types 'WeakTypes' and 'string' have no overlap.
+
+
+==== weakTypesAndLiterals01.ts (2 errors) ====
+    type WeakTypes =
+        | { optional?: true; }
+        | { toLowerCase?(): string }
+        | { toUpperCase?(): string, otherOptionalProp?: number };
+    
+    type LiteralsOrWeakTypes =
+        | "A"
+        | "B"
+        | WeakTypes;
+    
+    declare let aOrB: "A" | "B";
+    
+    const f = (arg: LiteralsOrWeakTypes) => {
+        if (arg === "A") {
+            return arg;
+        }
+        else {
+            return arg;
+        }
+    }
+    
+    const g = (arg: WeakTypes) => {
+        if (arg === "A") {
+            ~~~~~~~~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'WeakTypes' and 'string' have no overlap.
+            return arg;
+        }
+        else {
+            return arg;
+        }
+    }
+    
+    const h = (arg: LiteralsOrWeakTypes) => {
+        if (arg === aOrB) {
+            return arg;
+        }
+        else {
+            return arg;
+        }
+    }
+    
+    const i = (arg: WeakTypes) => {
+        if (arg === aOrB) {
+            ~~~~~~~~~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'WeakTypes' and 'string' have no overlap.
+            return arg;
+        }
+        else {
+            return arg;
+        }
+    }
+    

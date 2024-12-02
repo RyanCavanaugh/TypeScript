@@ -47,6 +47,7 @@ class Base {
 
     constructor(x) { }
 >x : any
+>  : ^^^
 }
 
 class Derived extends Base {

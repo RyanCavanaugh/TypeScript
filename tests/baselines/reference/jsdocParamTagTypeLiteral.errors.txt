@@ -1,7 +1,8 @@
 0.js(3,20): error TS8024: JSDoc '@param' tag has name 'unrelated', but there is no parameter with that name.
+0.js(8,8): error TS2345: Argument of type 'number' is not assignable to parameter of type 'Object'.
 
 
-==== 0.js (1 errors) ====
+==== 0.js (2 errors) ====
     /**
      * @param {Object} notSpecial
      * @param {string} unrelated - not actually related because it's not notSpecial.unrelated
@@ -12,6 +13,8 @@
         notSpecial; // should just be 'Object'
     }
     normal(12);
+           ~~
+!!! error TS2345: Argument of type 'number' is not assignable to parameter of type 'Object'.
     
     /**
      * @param {Object} opts1 doc1

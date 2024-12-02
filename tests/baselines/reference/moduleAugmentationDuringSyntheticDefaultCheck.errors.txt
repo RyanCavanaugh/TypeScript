@@ -1,0 +1,42 @@
+node_modules/moment/index.d.ts(3,13): error TS2430: Interface 'Moment' incorrectly extends interface 'Object'.
+  The types returned by 'valueOf()' are incompatible between these types.
+    Type 'number' is not assignable to type 'Object'.
+
+
+==== idx.test.ts (0 errors) ====
+    /// <reference path="./idx" />
+    
+    import moment = require("moment-timezone");
+    
+==== node_modules/moment/index.d.ts (1 errors) ====
+    declare function moment(): moment.Moment;
+    declare namespace moment {
+      interface Moment extends Object {
+                ~~~~~~
+!!! error TS2430: Interface 'Moment' incorrectly extends interface 'Object'.
+!!! error TS2430:   The types returned by 'valueOf()' are incompatible between these types.
+!!! error TS2430:     Type 'number' is not assignable to type 'Object'.
+        valueOf(): number;
+      }
+    }
+    export = moment;
+==== node_modules/moment-timezone/index.d.ts (0 errors) ====
+    import * as moment from 'moment';
+    export = moment;
+    declare module "moment" {
+        interface Moment {
+            tz(): string;
+        }
+    }
+==== idx.ts (0 errors) ====
+    import * as _moment from "moment";
+    declare module "moment" {
+        interface Moment {
+            strftime(pattern: string): string;
+        }
+    }
+    declare module "moment-timezone" {
+        interface Moment {
+            strftime(pattern: string): string;
+        }
+    }

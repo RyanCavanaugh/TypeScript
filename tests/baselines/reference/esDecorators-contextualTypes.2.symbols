@@ -95,11 +95,9 @@ function boundMethodLogger<This, Args extends any[], Return>(source: string, bou
 >console : Symbol(console, Decl(lib.dom.d.ts, --, --))
 >log : Symbol(Console.log, Decl(lib.dom.d.ts, --, --))
 >source : Symbol(source, Decl(esDecorators-contextualTypes.2.ts, 12, 61))
->context.name.toString : Symbol(toString, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --))
 >context.name : Symbol(ClassMethodDecoratorContext.name, Decl(lib.decorators.d.ts, --, --))
 >context : Symbol(context, Decl(esDecorators-contextualTypes.2.ts, 14, 54))
 >name : Symbol(ClassMethodDecoratorContext.name, Decl(lib.decorators.d.ts, --, --))
->toString : Symbol(toString, Decl(lib.es5.d.ts, --, --), Decl(lib.es5.d.ts, --, --))
 
             return target.apply(this, args);
 >target.apply : Symbol(Function.apply, Decl(lib.es5.d.ts, --, --))

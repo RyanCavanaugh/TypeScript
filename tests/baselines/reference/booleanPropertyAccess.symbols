@@ -13,5 +13,4 @@ var a = x.toString();
 var b = x['toString']();
 >b : Symbol(b, Decl(booleanPropertyAccess.ts, 3, 3))
 >x : Symbol(x, Decl(booleanPropertyAccess.ts, 0, 3))
->'toString' : Symbol(Object.toString, Decl(lib.es5.d.ts, --, --))
 

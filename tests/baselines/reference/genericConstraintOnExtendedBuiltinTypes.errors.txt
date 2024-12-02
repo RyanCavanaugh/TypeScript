@@ -1,0 +1,32 @@
+genericConstraintOnExtendedBuiltinTypes.ts(21,44): error TS2344: Type 'number' does not satisfy the constraint 'ICloneable'.
+
+
+==== genericConstraintOnExtendedBuiltinTypes.ts (1 errors) ====
+    declare module EndGate {
+        export interface ICloneable {
+            Clone(): any;
+        }
+    }
+    
+    interface Number extends EndGate.ICloneable { }
+    
+    module EndGate.Tweening {
+        export class Tween<T extends ICloneable>{
+            private _from: T;
+    
+    
+            constructor(from: T) {
+                this._from = from.Clone();
+            }
+        }
+    }
+    
+    module EndGate.Tweening {
+        export class NumberTween extends Tween<number>{
+                                               ~~~~~~
+!!! error TS2344: Type 'number' does not satisfy the constraint 'ICloneable'.
+            constructor(from: number) {
+                super(from);
+            }
+        }
+    }

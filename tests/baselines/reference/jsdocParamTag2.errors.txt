@@ -1,5 +1,5 @@
-0.js(68,19): error TS2339: Property 'a' does not exist on type 'String'.
-0.js(68,22): error TS2339: Property 'b' does not exist on type 'String'.
+0.js(68,19): error TS2339: Property 'a' does not exist on type 'string'.
+0.js(68,22): error TS2339: Property 'b' does not exist on type 'string'.
 0.js(70,20): error TS8024: JSDoc '@param' tag has name 'y', but there is no parameter with that name.
 
 
@@ -73,9 +73,9 @@
      */
     function bad1(x, {a, b}) {}
                       ~
-!!! error TS2339: Property 'a' does not exist on type 'String'.
+!!! error TS2339: Property 'a' does not exist on type 'string'.
                          ~
-!!! error TS2339: Property 'b' does not exist on type 'String'.
+!!! error TS2339: Property 'b' does not exist on type 'string'.
     /**
      * @param {string} y - here, y's type gets ignored but obj's is fine
                        ~

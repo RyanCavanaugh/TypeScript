@@ -1,0 +1,21 @@
+mergedInterfacesWithIndexers.ts(4,5): error TS2413: 'number' index type 'string' is not assignable to 'string' index type '{ length: number; }'.
+
+
+==== mergedInterfacesWithIndexers.ts (1 errors) ====
+    // indexers should behave like other members when merging interface declarations
+    
+    interface A {
+        [x: number]: string;
+        ~~~~~~~~~~~~~~~~~~~~
+!!! error TS2413: 'number' index type 'string' is not assignable to 'string' index type '{ length: number; }'.
+    }
+    
+    
+    interface A {
+        [x: string]: { length: number };
+    }
+    
+    var a: A;
+    var r = a[1];
+    var r2 = a['1'];
+    var r3 = a['hi'];

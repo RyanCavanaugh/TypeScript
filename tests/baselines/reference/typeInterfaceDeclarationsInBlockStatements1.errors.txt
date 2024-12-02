@@ -1,10 +1,11 @@
 typeInterfaceDeclarationsInBlockStatements1.ts(4,18): error TS1156: 'type' declarations can only be declared inside a block.
 typeInterfaceDeclarationsInBlockStatements1.ts(12,21): error TS2304: Cannot find name 's'.
 typeInterfaceDeclarationsInBlockStatements1.ts(17,15): error TS1156: 'interface' declarations can only be declared inside a block.
+typeInterfaceDeclarationsInBlockStatements1.ts(20,15): error TS2352: Conversion of type 'string' to type 's' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 typeInterfaceDeclarationsInBlockStatements1.ts(29,21): error TS2304: Cannot find name 's'.
 
 
-==== typeInterfaceDeclarationsInBlockStatements1.ts (4 errors) ====
+==== typeInterfaceDeclarationsInBlockStatements1.ts (5 errors) ====
     // https://github.com/microsoft/TypeScript/issues/60175
     
     function f1() {
@@ -31,6 +32,8 @@ typeInterfaceDeclarationsInBlockStatements1.ts(29,21): error TS2304: Cannot find
           length: number;
         }
       console.log("" as s);
+                  ~~~~~~~
+!!! error TS2352: Conversion of type 'string' to type 's' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
     }
     
     function f4() {

@@ -78,9 +78,9 @@ declare function fx(f: (x: "def") => void): void;
 >  : ^^^^^
 
 const x1 = f1(fo, fs);  // (x: string) => void
->x1 : (x: string) => void
+>x1 : (x: Object) => void
 >   : ^ ^^^^^^^^^^^^^    
->f1(fo, fs) : (x: string) => void
+>f1(fo, fs) : (x: Object) => void
 >           : ^ ^^^^^^^^^^^^^    
 >f1 : <T>(f1: (x: T) => void, f2: (x: T) => void) => (x: T) => void
 >   : ^ ^^  ^^              ^^  ^^              ^^^^^              
@@ -104,10 +104,10 @@ const x2 = f2("abc", fo, fs);  // "abc"
 >   : ^ ^^      ^^^^^    
 
 const x3 = f3("abc", fo, fx);  // "abc" | "def"
->x3 : "def" | "abc"
->   : ^^^^^^^^^^^^^
->f3("abc", fo, fx) : "def" | "abc"
->                  : ^^^^^^^^^^^^^
+>x3 : Object
+>   : ^^^^^^
+>f3("abc", fo, fx) : Object
+>                  : ^^^^^^
 >f3 : <T>(obj: T, f1: (x: T) => void, f2: (f: (x: T) => void) => void) => T
 >   : ^ ^^   ^^ ^^  ^^              ^^  ^^                           ^^^^^ 
 >"abc" : "abc"
@@ -118,9 +118,9 @@ const x3 = f3("abc", fo, fx);  // "abc" | "def"
 >   : ^ ^^                  ^^^^^    
 
 const x4 = f4(fo, fs);  // Func<string>
->x4 : Func<string>
+>x4 : Func<Object>
 >   : ^^^^^^^^^^^^
->f4(fo, fs) : Func<string>
+>f4(fo, fs) : Func<Object>
 >           : ^^^^^^^^^^^^
 >f4 : <T>(f1: Func<T>, f2: Func<T>) => Func<T>
 >   : ^ ^^  ^^       ^^  ^^       ^^^^^       
@@ -134,9 +134,9 @@ declare const never: never;
 >      : ^^^^^
 
 const x10 = f2(never, fo, fs);  // string
->x10 : string
+>x10 : Object
 >    : ^^^^^^
->f2(never, fo, fs) : string
+>f2(never, fo, fs) : Object
 >                  : ^^^^^^
 >f2 : <T>(obj: T, f1: (x: T) => void, f2: (x: T) => void) => T
 >   : ^ ^^   ^^ ^^  ^^              ^^  ^^              ^^^^^ 
@@ -148,10 +148,10 @@ const x10 = f2(never, fo, fs);  // string
 >   : ^ ^^      ^^^^^    
 
 const x11 = f3(never, fo, fx);  // "def"
->x11 : "def"
->    : ^^^^^
->f3(never, fo, fx) : "def"
->                  : ^^^^^
+>x11 : Object
+>    : ^^^^^^
+>f3(never, fo, fx) : Object
+>                  : ^^^^^^
 >f3 : <T>(obj: T, f1: (x: T) => void, f2: (f: (x: T) => void) => void) => T
 >   : ^ ^^   ^^ ^^  ^^              ^^  ^^                           ^^^^^ 
 >never : never

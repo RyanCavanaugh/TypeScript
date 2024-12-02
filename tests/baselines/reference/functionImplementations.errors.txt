@@ -1,8 +1,10 @@
+functionImplementations.ts(62,5): error TS2403: Subsequent variable declarations must have the same type.  Variable 'n' must be of type 'number', but here has type '{}'.
+functionImplementations.ts(64,4): error TS2345: Argument of type 'number' is not assignable to parameter of type '{}'.
 functionImplementations.ts(85,5): error TS2403: Subsequent variable declarations must have the same type.  Variable 'a' must be of type 'any', but here has type 'Base'.
 functionImplementations.ts(90,1): error TS2839: This condition will always return 'false' since JavaScript compares objects by reference, not value.
 
 
-==== functionImplementations.ts (2 errors) ====
+==== functionImplementations.ts (4 errors) ====
     // FunctionExpression with no return type annotation and no return statement returns void
     var v: void = function () { } ();
     
@@ -65,8 +67,13 @@ functionImplementations.ts(90,1): error TS2839: This condition will always retur
     
     // FunctionExpression with no return type annotation and returns a constrained type parameter type
     var n = function <T extends {}>(x: T) {
+        ~
+!!! error TS2403: Subsequent variable declarations must have the same type.  Variable 'n' must be of type 'number', but here has type '{}'.
+!!! related TS6203 functionImplementations.ts:35:5: 'n' was also declared here.
         return x;
     } (4);
+       ~
+!!! error TS2345: Argument of type 'number' is not assignable to parameter of type '{}'.
     
     // FunctionExpression with no return type annotation with multiple return statements with identical types
     var n = function () {

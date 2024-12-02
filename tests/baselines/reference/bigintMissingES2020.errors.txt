@@ -1,0 +1,13 @@
+bigintMissingES2020.ts(4,20): error TS2344: Type 'bigint' does not satisfy the constraint '{ t?: string; }'.
+
+
+==== bigintMissingES2020.ts (1 errors) ====
+    declare function test<A, B extends A>(): void;
+    
+    test<{t?: string}, object>();
+    test<{t?: string}, bigint>();
+                       ~~~~~~
+!!! error TS2344: Type 'bigint' does not satisfy the constraint '{ t?: string; }'.
+    
+    // no error when bigint is used even when ES2020 lib is not present
+    

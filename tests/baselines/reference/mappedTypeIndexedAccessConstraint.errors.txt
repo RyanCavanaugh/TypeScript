@@ -1,11 +1,25 @@
 mappedTypeIndexedAccessConstraint.ts(12,5): error TS18048: 'm1' is possibly 'undefined'.
+mappedTypeIndexedAccessConstraint.ts(12,8): error TS2339: Property 'toString' does not exist on type '1 | 2'.
+  Property 'toString' does not exist on type '1'.
+mappedTypeIndexedAccessConstraint.ts(13,9): error TS2339: Property 'toString' does not exist on type '1 | 2'.
+  Property 'toString' does not exist on type '1'.
 mappedTypeIndexedAccessConstraint.ts(14,5): error TS18048: 'm2' is possibly 'undefined'.
+mappedTypeIndexedAccessConstraint.ts(14,8): error TS2339: Property 'toString' does not exist on type '1 | 2'.
+  Property 'toString' does not exist on type '1'.
+mappedTypeIndexedAccessConstraint.ts(15,9): error TS2339: Property 'toString' does not exist on type '1 | 2'.
+  Property 'toString' does not exist on type '1'.
 mappedTypeIndexedAccessConstraint.ts(16,5): error TS18048: 'm3' is possibly 'undefined'.
+mappedTypeIndexedAccessConstraint.ts(16,8): error TS2339: Property 'toString' does not exist on type '1 | 2'.
+  Property 'toString' does not exist on type '1'.
+mappedTypeIndexedAccessConstraint.ts(17,9): error TS2339: Property 'toString' does not exist on type '1 | 2'.
+  Property 'toString' does not exist on type '1'.
 mappedTypeIndexedAccessConstraint.ts(29,66): error TS2532: Object is possibly 'undefined'.
+mappedTypeIndexedAccessConstraint.ts(29,78): error TS2339: Property 'toString' does not exist on type '1 | 2'.
+  Property 'toString' does not exist on type '1'.
 mappedTypeIndexedAccessConstraint.ts(53,34): error TS2722: Cannot invoke an object which is possibly 'undefined'.
 
 
-==== mappedTypeIndexedAccessConstraint.ts (5 errors) ====
+==== mappedTypeIndexedAccessConstraint.ts (12 errors) ====
     type Identity<T> = { [K in keyof T]: T[K] };
     
     type M0 = { a: 1, b: 2 };
@@ -20,15 +34,33 @@ mappedTypeIndexedAccessConstraint.ts(53,34): error TS2722: Cannot invoke an obje
         m1.toString();  // Error
         ~~
 !!! error TS18048: 'm1' is possibly 'undefined'.
+           ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type '1 | 2'.
+!!! error TS2339:   Property 'toString' does not exist on type '1'.
         m1?.toString();
+            ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type '1 | 2'.
+!!! error TS2339:   Property 'toString' does not exist on type '1'.
         m2.toString();  // Error
         ~~
 !!! error TS18048: 'm2' is possibly 'undefined'.
+           ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type '1 | 2'.
+!!! error TS2339:   Property 'toString' does not exist on type '1'.
         m2?.toString();
+            ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type '1 | 2'.
+!!! error TS2339:   Property 'toString' does not exist on type '1'.
         m3.toString();  // Error
         ~~
 !!! error TS18048: 'm3' is possibly 'undefined'.
+           ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type '1 | 2'.
+!!! error TS2339:   Property 'toString' does not exist on type '1'.
         m3?.toString();
+            ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type '1 | 2'.
+!!! error TS2339:   Property 'toString' does not exist on type '1'.
     }
     
     // Repro from #57487
@@ -43,6 +75,9 @@ mappedTypeIndexedAccessConstraint.ts(53,34): error TS2722: Cannot invoke an obje
     const resolveMapped = <K extends keyof typeof mapped>(key: K) => mapped[key].toString();  // Error
                                                                      ~~~~~~~~~~~
 !!! error TS2532: Object is possibly 'undefined'.
+                                                                                 ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type '1 | 2'.
+!!! error TS2339:   Property 'toString' does not exist on type '1'.
     
     // Additional repro from #57487
     

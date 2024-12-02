@@ -1,7 +1,8 @@
-specialIntersectionsInMappedTypes.ts(14,1): error TS18048: 'a.other' is possibly 'undefined'.
+specialIntersectionsInMappedTypes.ts(10,5): error TS2353: Object literal may only specify known properties, and 'other' does not exist in type 'Alignments'.
+specialIntersectionsInMappedTypes.ts(14,3): error TS2339: Property 'other' does not exist on type 'Alignments'.
 
 
-==== specialIntersectionsInMappedTypes.ts (1 errors) ====
+==== specialIntersectionsInMappedTypes.ts (2 errors) ====
     // Repro from #50683
     
     type Alignment = (string & {}) | "left" | "center" | "right";
@@ -12,10 +13,12 @@ specialIntersectionsInMappedTypes.ts(14,1): error TS18048: 'a.other' is possibly
         center: "align-center",
         right: "align-right",
         other: "align-other",
+        ~~~~~
+!!! error TS2353: Object literal may only specify known properties, and 'other' does not exist in type 'Alignments'.
     };
     
     a.left.length;
     a.other.length;  // Error expected here
-    ~~~~~~~
-!!! error TS18048: 'a.other' is possibly 'undefined'.
+      ~~~~~
+!!! error TS2339: Property 'other' does not exist on type 'Alignments'.
     

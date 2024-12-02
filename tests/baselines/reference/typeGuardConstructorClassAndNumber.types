@@ -18,12 +18,12 @@ let var1: C1 | number;
 if (var1.constructor == C1) {
 >var1.constructor == C1 : boolean
 >                       : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
 
@@ -47,8 +47,8 @@ else {
 if (var1["constructor"] == C1) {
 >var1["constructor"] == C1 : boolean
 >                          : ^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"
@@ -76,12 +76,12 @@ else {
 if (var1.constructor === C1) {
 >var1.constructor === C1 : boolean
 >                        : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
 
@@ -105,8 +105,8 @@ else {
 if (var1["constructor"] === C1) {
 >var1["constructor"] === C1 : boolean
 >                           : ^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"
@@ -136,12 +136,12 @@ if (C1 == var1.constructor) {
 >                       : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 
     var1; // C1
 >var1 : C1
@@ -165,8 +165,8 @@ if (C1 == var1["constructor"]) {
 >                          : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"
@@ -194,12 +194,12 @@ if (C1 === var1.constructor) {
 >                        : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 
     var1; // C1
 >var1 : C1
@@ -223,8 +223,8 @@ if (C1 === var1["constructor"]) {
 >                           : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"
@@ -251,12 +251,12 @@ else {
 if (var1.constructor != C1) {
 >var1.constructor != C1 : boolean
 >                       : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
 
@@ -280,8 +280,8 @@ else {
 if (var1["constructor"] != C1) {
 >var1["constructor"] != C1 : boolean
 >                          : ^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"
@@ -309,12 +309,12 @@ else {
 if (var1.constructor !== C1) {
 >var1.constructor !== C1 : boolean
 >                        : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
 
@@ -338,8 +338,8 @@ else {
 if (var1["constructor"] !== C1) {
 >var1["constructor"] !== C1 : boolean
 >                           : ^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"
@@ -369,12 +369,12 @@ if (C1 != var1.constructor) {
 >                       : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 
     var1; // C1 | number
 >var1 : number | C1
@@ -398,8 +398,8 @@ if (C1 != var1["constructor"]) {
 >                          : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"
@@ -427,12 +427,12 @@ if (C1 !== var1.constructor) {
 >                        : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 
     var1; // C1 | number
 >var1 : number | C1
@@ -456,8 +456,8 @@ if (C1 !== var1["constructor"]) {
 >                           : ^^^^^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
->var1["constructor"] : Function
->                    : ^^^^^^^^
+>var1["constructor"] : any
+>                    : ^^^
 >var1 : number | C1
 >     : ^^^^^^^^^^^
 >"constructor" : "constructor"

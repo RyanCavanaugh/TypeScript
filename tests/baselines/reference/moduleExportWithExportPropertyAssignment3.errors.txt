@@ -1,7 +1,7 @@
 a.js(4,17): error TS2339: Property 'toFixed' does not exist on type 'number | "string"'.
-  Property 'toFixed' does not exist on type '"string"'.
+  Property 'toFixed' does not exist on type 'number'.
 a.js(5,16): error TS2339: Property 'toFixed' does not exist on type 'number | "string"'.
-  Property 'toFixed' does not exist on type '"string"'.
+  Property 'toFixed' does not exist on type 'number'.
 
 
 ==== a.js (2 errors) ====
@@ -11,11 +11,11 @@ a.js(5,16): error TS2339: Property 'toFixed' does not exist on type 'number | "s
     mod1.bothBefore.toFixed() // error, 'toFixed' not on 'string | number'
                     ~~~~~~~
 !!! error TS2339: Property 'toFixed' does not exist on type 'number | "string"'.
-!!! error TS2339:   Property 'toFixed' does not exist on type '"string"'.
+!!! error TS2339:   Property 'toFixed' does not exist on type 'number'.
     mod1.bothAfter.toFixed() // error, 'toFixed' not on 'string | number'
                    ~~~~~~~
 !!! error TS2339: Property 'toFixed' does not exist on type 'number | "string"'.
-!!! error TS2339:   Property 'toFixed' does not exist on type '"string"'.
+!!! error TS2339:   Property 'toFixed' does not exist on type 'number'.
     mod1.justProperty.length
     
 ==== requires.d.ts (0 errors) ====

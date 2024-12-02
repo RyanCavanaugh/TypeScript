@@ -36,12 +36,9 @@ var b = x.hasOwnProperty('charAt');
 >         : ^^^^^^^^
 
 var c = x['charAt'](0);
->c : string
->  : ^^^^^^
->x['charAt'](0) : string
->               : ^^^^^^
->x['charAt'] : (pos: number) => string
->            : ^   ^^      ^^^^^      
+>c : error
+>x['charAt'](0) : error
+>x['charAt'] : error
 >x : string
 >  : ^^^^^^
 >'charAt' : "charAt"
@@ -50,12 +47,9 @@ var c = x['charAt'](0);
 >  : ^
 
 var e = x['hasOwnProperty']('toFixed');
->e : boolean
->  : ^^^^^^^
->x['hasOwnProperty']('toFixed') : boolean
->                               : ^^^^^^^
->x['hasOwnProperty'] : (v: PropertyKey) => boolean
->                    : ^ ^^           ^^^^^       
+>e : error
+>x['hasOwnProperty']('toFixed') : error
+>x['hasOwnProperty'] : error
 >x : string
 >  : ^^^^^^
 >'hasOwnProperty' : "hasOwnProperty"

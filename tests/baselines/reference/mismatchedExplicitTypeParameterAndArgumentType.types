@@ -51,10 +51,10 @@ function map<T, U>(xs: T[], f: (x: T) => U) {
 }
 
 var r0 = map([1, ""], (x) => x.toString());
->r0 : string[]
->   : ^^^^^^^^
->map([1, ""], (x) => x.toString()) : string[]
->                                  : ^^^^^^^^
+>r0 : any[]
+>   : ^^^^^
+>map([1, ""], (x) => x.toString()) : any[]
+>                                  : ^^^^^
 >map : <T, U>(xs: T[], f: (x: T) => U) => U[]
 >    : ^ ^^ ^^  ^^   ^^ ^^           ^^^^^^^^
 >[1, ""] : (string | number)[]
@@ -63,18 +63,18 @@ var r0 = map([1, ""], (x) => x.toString());
 >  : ^
 >"" : ""
 >   : ^^
->(x) => x.toString() : (x: string | number) => string
->                    : ^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>(x) => x.toString() : (x: string | number) => any
+>                    : ^ ^^^^^^^^^^^^^^^^^^^^^^^^^
 >x : string | number
 >  : ^^^^^^^^^^^^^^^
->x.toString() : string
->             : ^^^^^^
->x.toString : (() => string) | ((radix?: number) => string)
->           : ^^^^^^^      ^^^^^^     ^^^      ^^^^^      ^
+>x.toString() : any
+>             : ^^^
+>x.toString : any
+>           : ^^^
 >x : string | number
 >  : ^^^^^^^^^^^^^^^
->toString : (() => string) | ((radix?: number) => string)
->         : ^^^^^^^      ^^^^^^     ^^^      ^^^^^      ^
+>toString : any
+>         : ^^^
 
 var r5 = map<any, any>([1, ""], (x) => x.toString());
 >r5 : any[]

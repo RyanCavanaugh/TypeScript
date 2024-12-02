@@ -44,6 +44,8 @@ const obj: {field: Rule} = {
         normalize: match => match.x,
 >normalize : Symbol(normalize, Decl(contextualOverloadListFromUnionWithPrimitiveNoImplicitAny.ts, 11, 40))
 >match : Symbol(match, Decl(contextualOverloadListFromUnionWithPrimitiveNoImplicitAny.ts, 12, 18))
+>match.x : Symbol(x, Decl(contextualOverloadListFromUnionWithPrimitiveNoImplicitAny.ts, 4, 25))
 >match : Symbol(match, Decl(contextualOverloadListFromUnionWithPrimitiveNoImplicitAny.ts, 12, 18))
+>x : Symbol(x, Decl(contextualOverloadListFromUnionWithPrimitiveNoImplicitAny.ts, 4, 25))
     }
 };

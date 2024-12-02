@@ -1,0 +1,93 @@
+strictFunctionTypes1.ts(13,19): error TS2345: Argument of type '(x: string) => void' is not assignable to parameter of type '(x: Object) => void'.
+  Types of parameters 'x' and 'x' are incompatible.
+    Type 'Object' is not assignable to type 'string'.
+strictFunctionTypes1.ts(14,22): error TS2345: Argument of type '(x: Object) => void' is not assignable to parameter of type '(x: "abc") => void'.
+  Types of parameters 'x' and 'x' are incompatible.
+    Type 'string' is not assignable to type 'Object'.
+strictFunctionTypes1.ts(15,15): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+strictFunctionTypes1.ts(16,19): error TS2345: Argument of type '(x: string) => void' is not assignable to parameter of type 'Func<Object>'.
+  Types of parameters 'x' and 'x' are incompatible.
+    Type 'Object' is not assignable to type 'string'.
+strictFunctionTypes1.ts(20,27): error TS2345: Argument of type '(x: string) => void' is not assignable to parameter of type '(x: Object) => void'.
+  Types of parameters 'x' and 'x' are incompatible.
+    Type 'Object' is not assignable to type 'string'.
+strictFunctionTypes1.ts(21,27): error TS2345: Argument of type '(f: (x: "def") => void) => void' is not assignable to parameter of type '(f: (x: Object) => void) => void'.
+  Types of parameters 'f' and 'f' are incompatible.
+    Types of parameters 'x' and 'x' are incompatible.
+      Type 'string' is not assignable to type 'Object'.
+
+
+==== strictFunctionTypes1.ts (6 errors) ====
+    declare function f1<T>(f1: (x: T) => void, f2: (x: T) => void): (x: T) => void;
+    declare function f2<T>(obj: T, f1: (x: T) => void, f2: (x: T) => void): T;
+    declare function f3<T>(obj: T, f1: (x: T) => void, f2: (f: (x: T) => void) => void): T;
+    
+    interface Func<T> { (x: T): void }
+    
+    declare function f4<T>(f1: Func<T>, f2: Func<T>): Func<T>;
+    
+    declare function fo(x: Object): void;
+    declare function fs(x: string): void;
+    declare function fx(f: (x: "def") => void): void;
+    
+    const x1 = f1(fo, fs);  // (x: string) => void
+                      ~~
+!!! error TS2345: Argument of type '(x: string) => void' is not assignable to parameter of type '(x: Object) => void'.
+!!! error TS2345:   Types of parameters 'x' and 'x' are incompatible.
+!!! error TS2345:     Type 'Object' is not assignable to type 'string'.
+    const x2 = f2("abc", fo, fs);  // "abc"
+                         ~~
+!!! error TS2345: Argument of type '(x: Object) => void' is not assignable to parameter of type '(x: "abc") => void'.
+!!! error TS2345:   Types of parameters 'x' and 'x' are incompatible.
+!!! error TS2345:     Type 'string' is not assignable to type 'Object'.
+    const x3 = f3("abc", fo, fx);  // "abc" | "def"
+                  ~~~~~
+!!! error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+    const x4 = f4(fo, fs);  // Func<string>
+                      ~~
+!!! error TS2345: Argument of type '(x: string) => void' is not assignable to parameter of type 'Func<Object>'.
+!!! error TS2345:   Types of parameters 'x' and 'x' are incompatible.
+!!! error TS2345:     Type 'Object' is not assignable to type 'string'.
+    
+    declare const never: never;
+    
+    const x10 = f2(never, fo, fs);  // string
+                              ~~
+!!! error TS2345: Argument of type '(x: string) => void' is not assignable to parameter of type '(x: Object) => void'.
+!!! error TS2345:   Types of parameters 'x' and 'x' are incompatible.
+!!! error TS2345:     Type 'Object' is not assignable to type 'string'.
+    const x11 = f3(never, fo, fx);  // "def"
+                              ~~
+!!! error TS2345: Argument of type '(f: (x: "def") => void) => void' is not assignable to parameter of type '(f: (x: Object) => void) => void'.
+!!! error TS2345:   Types of parameters 'f' and 'f' are incompatible.
+!!! error TS2345:     Types of parameters 'x' and 'x' are incompatible.
+!!! error TS2345:       Type 'string' is not assignable to type 'Object'.
+    
+    // Repro from #21112
+    
+    declare function foo<T>(a: ReadonlyArray<T>): T;
+    let x = foo([]);  // never
+    
+    // Modified repros from #26127
+    
+    interface A { a: string }
+    interface B extends A { b: string }
+    
+    declare function acceptUnion(x: A | number): void;
+    declare function acceptA(x: A): void;
+    
+    declare let a: A;
+    declare let b: B;
+    
+    declare function coAndContra<T>(value: T, func: (t: T) => void): T;
+    
+    const t1: A = coAndContra(a, acceptUnion);
+    const t2: B = coAndContra(b, acceptA);
+    const t3: A = coAndContra(never, acceptA);
+    
+    declare function coAndContraArray<T>(value: T[], func: (t: T) => void): T[];
+    
+    const t4: A[] = coAndContraArray([a], acceptUnion);
+    const t5: B[] = coAndContraArray([b], acceptA);
+    const t6: A[] = coAndContraArray([], acceptA);
+    

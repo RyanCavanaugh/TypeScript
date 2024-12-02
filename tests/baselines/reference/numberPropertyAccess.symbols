@@ -19,10 +19,8 @@ var b = x.hasOwnProperty('toFixed');
 var c = x['toExponential']();
 >c : Symbol(c, Decl(numberPropertyAccess.ts, 4, 3))
 >x : Symbol(x, Decl(numberPropertyAccess.ts, 0, 3))
->'toExponential' : Symbol(Number.toExponential, Decl(lib.es5.d.ts, --, --))
 
 var d = x['hasOwnProperty']('toFixed');
 >d : Symbol(d, Decl(numberPropertyAccess.ts, 5, 3))
 >x : Symbol(x, Decl(numberPropertyAccess.ts, 0, 3))
->'hasOwnProperty' : Symbol(Object.hasOwnProperty, Decl(lib.es5.d.ts, --, --))
 

@@ -60,12 +60,12 @@ function fill<B extends Colors>(f: B) {
 >      : ^^^
 
     f.toFixed(); // ok
->f.toFixed() : string
->            : ^^^^^^
->f.toFixed : (fractionDigits?: number) => string
->          : ^              ^^^      ^^^^^      
+>f.toFixed() : any
+>            : ^^^
+>f.toFixed : any
+>          : ^^^
 >f : Colors
 >  : ^^^^^^
->toFixed : (fractionDigits?: number) => string
->        : ^              ^^^      ^^^^^      
+>toFixed : any
+>        : ^^^
 }

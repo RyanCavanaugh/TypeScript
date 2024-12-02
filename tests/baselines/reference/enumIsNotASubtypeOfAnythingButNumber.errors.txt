@@ -14,9 +14,11 @@ enumIsNotASubtypeOfAnythingButNumber.ts(95,5): error TS2411: Property 'foo' of t
 enumIsNotASubtypeOfAnythingButNumber.ts(105,5): error TS2411: Property 'foo' of type 'E' is not assignable to 'string' index type 'typeof c'.
 enumIsNotASubtypeOfAnythingButNumber.ts(111,5): error TS2411: Property 'foo' of type 'E' is not assignable to 'string' index type 'T'.
 enumIsNotASubtypeOfAnythingButNumber.ts(117,5): error TS2411: Property 'foo' of type 'E' is not assignable to 'string' index type 'U'.
+enumIsNotASubtypeOfAnythingButNumber.ts(123,5): error TS2411: Property 'foo' of type 'E' is not assignable to 'string' index type 'Object'.
+enumIsNotASubtypeOfAnythingButNumber.ts(129,5): error TS2411: Property 'foo' of type 'E' is not assignable to 'string' index type '{}'.
 
 
-==== enumIsNotASubtypeOfAnythingButNumber.ts (16 errors) ====
+==== enumIsNotASubtypeOfAnythingButNumber.ts (18 errors) ====
     // enums are only subtypes of number, any and no other types
     
     enum E { A }
@@ -172,10 +174,14 @@ enumIsNotASubtypeOfAnythingButNumber.ts(117,5): error TS2411: Property 'foo' of 
     interface I19 {
         [x: string]: Object;
         foo: E; // BUG 831833
+        ~~~
+!!! error TS2411: Property 'foo' of type 'E' is not assignable to 'string' index type 'Object'.
     }
     
     
     interface I20 {
         [x: string]: {};
         foo: E; // BUG 831833
+        ~~~
+!!! error TS2411: Property 'foo' of type 'E' is not assignable to 'string' index type '{}'.
     }

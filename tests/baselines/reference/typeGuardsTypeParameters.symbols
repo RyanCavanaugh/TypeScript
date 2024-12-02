@@ -56,9 +56,7 @@ function f2<T>(x: T) {
 >x : Symbol(x, Decl(typeGuardsTypeParameters.ts, 14, 15))
 
         x.length;
->x.length : Symbol(String.length, Decl(lib.es5.d.ts, --, --))
 >x : Symbol(x, Decl(typeGuardsTypeParameters.ts, 14, 15))
->length : Symbol(String.length, Decl(lib.es5.d.ts, --, --))
     }
 }
 

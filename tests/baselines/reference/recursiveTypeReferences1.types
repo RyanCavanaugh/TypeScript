@@ -994,8 +994,8 @@ function level(h: HTMLHeadingElement): number {
 >         : ^      ^^      ^^^^^       
 >+h.tagName[1] : number
 >              : ^^^^^^
->h.tagName[1] : string
->             : ^^^^^^
+>h.tagName[1] : any
+>             : ^^^
 >h.tagName : string
 >          : ^^^^^^
 >h : HTMLHeadingElement
@@ -1008,8 +1008,8 @@ function level(h: HTMLHeadingElement): number {
   return +h.tagName[1];
 >+h.tagName[1] : number
 >              : ^^^^^^
->h.tagName[1] : string
->             : ^^^^^^
+>h.tagName[1] : any
+>             : ^^^
 >h.tagName : string
 >          : ^^^^^^
 >h : HTMLHeadingElement

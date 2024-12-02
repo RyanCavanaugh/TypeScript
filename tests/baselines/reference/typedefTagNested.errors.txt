@@ -1,0 +1,47 @@
+a.js(36,31): error TS2322: Type 'number' is not assignable to type 'Object'.
+
+
+==== a.js (1 errors) ====
+    /** @typedef {Object} App
+     * @property {string} name
+     * @property {Object} icons
+     * @property {string} icons.image32
+     * @property {string} icons.image64
+     */
+    var ex;
+    
+    /** @type {App} */
+    const app = {
+        name: 'name',
+        icons: {
+            image32: 'x.png',
+            image64: 'y.png',
+        }
+    }
+    
+    /** @typedef {Object} Opp
+     * @property {string} name
+     * @property {Object} oops
+     * @property {string} horrible
+     * @type {string} idea
+     */
+    var intercessor = 1
+    
+    /** @type {Opp} */
+    var mistake;
+    
+    /** @typedef {Object} Upp
+     * @property {string} name
+     * @property {Object} not
+     * @property {string} nested
+     */
+    
+    /** @type {Upp} */
+    var sala = { name: 'uppsala', not: 0, nested: "ok" };
+                                  ~~~
+!!! error TS2322: Type 'number' is not assignable to type 'Object'.
+!!! related TS6500 a.js:31:4: The expected type comes from property 'not' which is declared here on type 'Upp'
+    sala.name
+    sala.not
+    sala.nested
+    

@@ -1,12 +1,14 @@
+assignFromBooleanInterface2.ts(13,1): error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
 assignFromBooleanInterface2.ts(14,1): error TS2322: Type 'NotBoolean' is not assignable to type 'Boolean'.
   The types returned by 'valueOf()' are incompatible between these types.
     Type 'Object' is not assignable to type 'boolean'.
+assignFromBooleanInterface2.ts(17,1): error TS2322: Type 'boolean' is not assignable to type 'NotBoolean'.
 assignFromBooleanInterface2.ts(19,1): error TS2322: Type 'Boolean' is not assignable to type 'boolean'.
   'boolean' is a primitive, but 'Boolean' is a wrapper object. Prefer using 'boolean' when possible.
 assignFromBooleanInterface2.ts(20,1): error TS2322: Type 'NotBoolean' is not assignable to type 'boolean'.
 
 
-==== assignFromBooleanInterface2.ts (3 errors) ====
+==== assignFromBooleanInterface2.ts (5 errors) ====
     interface Boolean {
         doStuff(): string;
     }
@@ -20,6 +22,8 @@ assignFromBooleanInterface2.ts(20,1): error TS2322: Type 'NotBoolean' is not ass
     var b: NotBoolean;
     
     a = x;
+    ~
+!!! error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
     a = b;
     ~
 !!! error TS2322: Type 'NotBoolean' is not assignable to type 'Boolean'.
@@ -28,6 +32,8 @@ assignFromBooleanInterface2.ts(20,1): error TS2322: Type 'NotBoolean' is not ass
     
     b = a;
     b = x;
+    ~
+!!! error TS2322: Type 'boolean' is not assignable to type 'NotBoolean'.
     
     x = a; // expected error
     ~

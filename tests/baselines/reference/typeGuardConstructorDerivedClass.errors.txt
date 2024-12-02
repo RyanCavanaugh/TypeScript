@@ -1,7 +1,23 @@
+typeGuardConstructorDerivedClass.ts(11,10): error TS2339: Property 'constructor' does not exist on type 'string | C2'.
+  Property 'constructor' does not exist on type 'string'.
 typeGuardConstructorDerivedClass.ts(13,10): error TS2339: Property 'property1' does not exist on type 'never'.
+typeGuardConstructorDerivedClass.ts(15,10): error TS2339: Property 'constructor' does not exist on type 'string | C2'.
+  Property 'constructor' does not exist on type 'string'.
+typeGuardConstructorDerivedClass.ts(26,10): error TS2339: Property 'constructor' does not exist on type 'string | C4'.
+  Property 'constructor' does not exist on type 'string'.
+typeGuardConstructorDerivedClass.ts(29,10): error TS2339: Property 'constructor' does not exist on type 'string | C4'.
+  Property 'constructor' does not exist on type 'string'.
+typeGuardConstructorDerivedClass.ts(43,10): error TS2339: Property 'constructor' does not exist on type 'string | C6'.
+  Property 'constructor' does not exist on type 'string'.
+typeGuardConstructorDerivedClass.ts(46,10): error TS2339: Property 'constructor' does not exist on type 'string | C6'.
+  Property 'constructor' does not exist on type 'string'.
+typeGuardConstructorDerivedClass.ts(60,10): error TS2339: Property 'constructor' does not exist on type 'string | C8'.
+  Property 'constructor' does not exist on type 'string'.
+typeGuardConstructorDerivedClass.ts(63,10): error TS2339: Property 'constructor' does not exist on type 'string | C8'.
+  Property 'constructor' does not exist on type 'string'.
 
 
-==== typeGuardConstructorDerivedClass.ts (1 errors) ====
+==== typeGuardConstructorDerivedClass.ts (9 errors) ====
     // Derived class with different structures
     class C1 {
         property1: number;
@@ -13,12 +29,18 @@ typeGuardConstructorDerivedClass.ts(13,10): error TS2339: Property 'property1' d
     
     let var1: C2 | string;
     if (var1.constructor === C1) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C2'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         var1; // never
         var1.property1; // error
              ~~~~~~~~~
 !!! error TS2339: Property 'property1' does not exist on type 'never'.
     }
     if (var1.constructor === C2) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C2'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         var1; // C2
         var1.property1; // number
     }
@@ -30,9 +52,15 @@ typeGuardConstructorDerivedClass.ts(13,10): error TS2339: Property 'property1' d
     
     let var2: C4 | string;
     if (var2.constructor === C3) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C4'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         var2; // never
     }
     if (var2.constructor === C4) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C4'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         var2; // C4
     }
     
@@ -47,9 +75,15 @@ typeGuardConstructorDerivedClass.ts(13,10): error TS2339: Property 'property1' d
     
     let let3: C6 | string;
     if (let3.constructor === C5) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C6'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         let3; // never
     }
     if (let3.constructor === C6) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C6'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         let3; // C6
     }
     
@@ -64,9 +98,15 @@ typeGuardConstructorDerivedClass.ts(13,10): error TS2339: Property 'property1' d
     
     let let4: C8 | string;
     if (let4.constructor === C7) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C8'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         let4; // never
     }
     if (let4.constructor === C8) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'string | C8'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'string'.
         let4; // C8
     }
     

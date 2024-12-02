@@ -309,28 +309,8 @@ Info seq  [hh:mm:ss:mss] getCompletionData: Is inside comment: *
 Info seq  [hh:mm:ss:mss] getCompletionData: Get previous token: *
 Info seq  [hh:mm:ss:mss] getCompletionsAtPosition: isCompletionListBlocker: *
 Info seq  [hh:mm:ss:mss] getCompletionData: Semantic work: *
-Info seq  [hh:mm:ss:mss] getCompletionsAtPosition: getCompletionEntriesFromSymbols: *
 Info seq  [hh:mm:ss:mss] response:
     {
-      "response": {
-        "flags": 0,
-        "isGlobalCompletion": false,
-        "isMemberCompletion": true,
-        "isNewIdentifierLocation": false,
-        "entries": [
-          {
-            "name": "charAt",
-            "kind": "property",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          }
-        ],
-        "defaultCommitCharacters": [
-          ".",
-          ",",
-          ";"
-        ]
-      },
       "responseRequired": true
     }
 After request
@@ -425,28 +405,8 @@ Info seq  [hh:mm:ss:mss] getCompletionData: Is inside comment: *
 Info seq  [hh:mm:ss:mss] getCompletionData: Get previous token: *
 Info seq  [hh:mm:ss:mss] getCompletionsAtPosition: isCompletionListBlocker: *
 Info seq  [hh:mm:ss:mss] getCompletionData: Semantic work: *
-Info seq  [hh:mm:ss:mss] getCompletionsAtPosition: getCompletionEntriesFromSymbols: *
 Info seq  [hh:mm:ss:mss] response:
     {
-      "response": {
-        "flags": 0,
-        "isGlobalCompletion": false,
-        "isMemberCompletion": true,
-        "isNewIdentifierLocation": false,
-        "entries": [
-          {
-            "name": "toExponential",
-            "kind": "property",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          }
-        ],
-        "defaultCommitCharacters": [
-          ".",
-          ",",
-          ";"
-        ]
-      },
       "responseRequired": true,
       "performanceData": {
         "updateGraphDurationMs": *

@@ -69,12 +69,12 @@ var a: Bar, b: string;
 [a, ...b] = new FooIterator;
 >[a, ...b] = new FooIterator : FooIterator
 >                            : ^^^^^^^^^^^
->[a, ...b] : [Bar, ...string[]]
->          : ^^^^^^^^^^^^^^^^^^
+>[a, ...b] : [Bar, ...unknown[]]
+>          : ^^^^^^^^^^^^^^^^^^^
 >a : Bar
 >  : ^^^
->...b : string
->     : ^^^^^^
+>...b : any
+>     : ^^^
 >b : string
 >  : ^^^^^^
 >new FooIterator : FooIterator

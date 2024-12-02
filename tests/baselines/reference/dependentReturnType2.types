@@ -983,8 +983,8 @@ function transform1(value) {
 >                          : ^^^^^^^
 >typeof value : "string" | "number" | "bigint" | "boolean" | "symbol" | "undefined" | "object" | "function"
 >             : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->value : NonNullable<T>
->      : ^^^^^^^^^^^^^^
+>value : never
+>      : ^^^^^
 >'string' : "string"
 >         : ^^^^^^^^
 

@@ -1,0 +1,10 @@
+overloadsWithConstraints.ts(4,11): error TS2344: Type 'string' does not satisfy the constraint 'String'.
+
+
+==== overloadsWithConstraints.ts (1 errors) ====
+    declare function f<T extends Number>(x: T): T;
+    declare function f<T extends String>(x: T): T
+    
+    var v = f<string>("");
+              ~~~~~~
+!!! error TS2344: Type 'string' does not satisfy the constraint 'String'.

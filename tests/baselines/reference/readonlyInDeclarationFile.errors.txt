@@ -1,0 +1,92 @@
+readonlyInDeclarationFile.ts(2,14): error TS2411: Property 'x' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(8,22): error TS2411: Property 'a1' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(9,24): error TS2411: Property 'a2' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(10,21): error TS2411: Property 'a3' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(11,17): error TS2411: Property 'b1' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(12,19): error TS2411: Property 'b2' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(13,16): error TS2411: Property 'b3' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(14,17): error TS2411: Property 'c1' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(16,19): error TS2411: Property 'c2' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(18,16): error TS2411: Property 'c3' of type 'number' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(35,14): error TS2411: Property 'a' of type 'string' is not assignable to 'string' index type 'Object'.
+readonlyInDeclarationFile.ts(49,18): error TS2411: Property 'a' of type 'string' is not assignable to 'string' index type 'Object'.
+
+
+==== readonlyInDeclarationFile.ts (12 errors) ====
+    interface Foo {
+        readonly x: number;
+                 ~
+!!! error TS2411: Property 'x' of type 'number' is not assignable to 'string' index type 'Object'.
+        readonly [x: string]: Object;
+    }
+    
+    class C {
+        readonly [x: string]: Object;
+        private readonly a1: number;
+                         ~~
+!!! error TS2411: Property 'a1' of type 'number' is not assignable to 'string' index type 'Object'.
+        protected readonly a2: number;
+                           ~~
+!!! error TS2411: Property 'a2' of type 'number' is not assignable to 'string' index type 'Object'.
+        public readonly a3: number;
+                        ~~
+!!! error TS2411: Property 'a3' of type 'number' is not assignable to 'string' index type 'Object'.
+        private get b1() { return 1 }
+                    ~~
+!!! error TS2411: Property 'b1' of type 'number' is not assignable to 'string' index type 'Object'.
+        protected get b2() { return 1 }
+                      ~~
+!!! error TS2411: Property 'b2' of type 'number' is not assignable to 'string' index type 'Object'.
+        public get b3() { return 1 }
+                   ~~
+!!! error TS2411: Property 'b3' of type 'number' is not assignable to 'string' index type 'Object'.
+        private get c1() { return 1 }
+                    ~~
+!!! error TS2411: Property 'c1' of type 'number' is not assignable to 'string' index type 'Object'.
+        private set c1(value) { }
+        protected get c2() { return 1 }
+                      ~~
+!!! error TS2411: Property 'c2' of type 'number' is not assignable to 'string' index type 'Object'.
+        protected set c2(value) { }
+        public get c3() { return 1 }
+                   ~~
+!!! error TS2411: Property 'c3' of type 'number' is not assignable to 'string' index type 'Object'.
+        public set c3(value) { }
+        private static readonly s1: number;
+        protected static readonly s2: number;
+        public static readonly s3: number;
+        private static get t1() { return 1 }
+        protected static get t2() { return 1 }
+        public static get t3() { return 1 }
+        private static get u1() { return 1 }
+        private static set u1(value) { }
+        protected static get u2() { return 1 }
+        protected static set u2(value) { }
+        public static get u3() { return 1 }
+        public static set u3(value) { }
+    }
+    
+    var z: {
+        readonly a: string;
+                 ~
+!!! error TS2411: Property 'a' of type 'string' is not assignable to 'string' index type 'Object'.
+        readonly [x: string]: Object;
+    }
+    
+    function f() {
+        return {
+            get x() { return 1; },
+            get y() { return 1; },
+            set y(value) { }
+        }
+    }
+    
+    function g() {
+        var x: {
+            readonly a: string;
+                     ~
+!!! error TS2411: Property 'a' of type 'string' is not assignable to 'string' index type 'Object'.
+            readonly [x: string]: Object;
+        }
+        return x;
+    }

@@ -73,8 +73,8 @@ if (typeof b === "number") {
     let c: number = b;
 >c : number
 >  : ^^^^^^
->b : number
->  : ^^^^^^
+>b : never
+>  : ^^^^^
 }
 if (typeof b === "string") {
 >typeof b === "string" : boolean
@@ -89,8 +89,8 @@ if (typeof b === "string") {
     let c: string = b;
 >c : string
 >  : ^^^^^^
->b : string
->  : ^^^^^^
+>b : never
+>  : ^^^^^
 }
 if (typeof b === "boolean") {
 >typeof b === "boolean" : boolean
@@ -105,7 +105,7 @@ if (typeof b === "boolean") {
     let c: boolean = b;
 >c : boolean
 >  : ^^^^^^^
->b : boolean
->  : ^^^^^^^
+>b : never
+>  : ^^^^^
 }
 

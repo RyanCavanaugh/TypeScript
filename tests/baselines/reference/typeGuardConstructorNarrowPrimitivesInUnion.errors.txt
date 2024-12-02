@@ -1,0 +1,42 @@
+typeGuardConstructorNarrowPrimitivesInUnion.ts(4,10): error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+  Property 'constructor' does not exist on type 'number'.
+typeGuardConstructorNarrowPrimitivesInUnion.ts(8,10): error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+  Property 'constructor' does not exist on type 'number'.
+typeGuardConstructorNarrowPrimitivesInUnion.ts(12,10): error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+  Property 'constructor' does not exist on type 'number'.
+typeGuardConstructorNarrowPrimitivesInUnion.ts(16,10): error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+  Property 'constructor' does not exist on type 'number'.
+
+
+==== typeGuardConstructorNarrowPrimitivesInUnion.ts (4 errors) ====
+    // Union of primitives, number, arrays, and C1
+    let var1: number | "hello" | "world" | true | false | number[] | string[];
+    
+    if (var1.constructor === Number) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'number'.
+        var1; // number
+    }
+    
+    if (var1.constructor === String) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'number'.
+        var1; // "hello" | "world"
+    }
+    
+    if (var1.constructor === Boolean) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'number'.
+        var1; // boolean
+    }
+    
+    if (var1.constructor === Array) {
+             ~~~~~~~~~~~
+!!! error TS2339: Property 'constructor' does not exist on type 'number | boolean | "hello" | "world" | number[] | string[]'.
+!!! error TS2339:   Property 'constructor' does not exist on type 'number'.
+        var1; // number[] | string[]
+    }
+    

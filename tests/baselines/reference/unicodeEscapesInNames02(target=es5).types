@@ -9,8 +9,8 @@ var 𐊧: string;
 var \u{102A7}: string;
 >u : any
 >  : ^^^
->A7 : string
->   : ^^^^^^
+>A7 : any
+>   : ^^^
 
 if (Math.random()) {
 >Math.random() : number
@@ -32,8 +32,8 @@ else {
 >  : ^^^
 >102 : 102
 >    : ^^^
->A7 : string
->   : ^^^^^^
+>A7 : any
+>   : ^^^
 >"hallo" : "hallo"
 >        : ^^^^^^^
 }
@@ -47,8 +47,8 @@ class Foo {
 >  : ^^^
 >102 : 102
 >    : ^^^
->A7 : string
->   : ^^^^^^
+>A7 : any
+>   : ^^^
 >string : any
 >       : ^^^
 
@@ -69,8 +69,8 @@ class Foo {
 >  : ^^^
 >102 : 102
 >    : ^^^
->A7 : string
->   : ^^^^^^
+>A7 : any
+>   : ^^^
 >" world" : " world"
 >         : ^^^^^^^^
     }
@@ -105,8 +105,8 @@ export var _𐊧 = new Foo().\u{102A7} + new Foo().methodA();
 >  : ^^^
 >102 : 102
 >    : ^^^
->A7 : string
->   : ^^^^^^
+>A7 : any
+>   : ^^^
 >+ new Foo().methodA() : number
 >                      : ^^^^^^
 >new Foo().methodA() : any
@@ -127,8 +127,8 @@ _\u{102A7} += "!";
 >  : ^^^
 >102 : 102
 >    : ^^^
->A7 : string
->   : ^^^^^^
+>A7 : any
+>   : ^^^
 >"!" : "!"
 >    : ^^^
 

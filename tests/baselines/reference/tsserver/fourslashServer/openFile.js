@@ -332,61 +332,12 @@ Info seq  [hh:mm:ss:mss] getCompletionData: Is inside comment: *
 Info seq  [hh:mm:ss:mss] getCompletionData: Get previous token: *
 Info seq  [hh:mm:ss:mss] getCompletionsAtPosition: isCompletionListBlocker: *
 Info seq  [hh:mm:ss:mss] getCompletionData: Semantic work: *
-Info seq  [hh:mm:ss:mss] getCompletionsAtPosition: getCompletionEntriesFromSymbols: *
 Info seq  [hh:mm:ss:mss] response:
     {
       "seq": 0,
       "type": "response",
       "command": "completionInfo",
       "request_seq": 4,
-      "success": true,
-      "body": {
-        "flags": 0,
-        "isGlobalCompletion": false,
-        "isMemberCompletion": true,
-        "isNewIdentifierLocation": false,
-        "entries": [
-          {
-            "name": "toExponential",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toFixed",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toLocaleString",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toPrecision",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toString",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "valueOf",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          }
-        ],
-        "defaultCommitCharacters": [
-          ".",
-          ",",
-          ";"
-        ]
-      }
+      "success": false,
+      "message": "No content available."
     }

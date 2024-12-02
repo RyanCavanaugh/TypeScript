@@ -29,12 +29,12 @@ let var1: C2 | string;
 if (var1.constructor === C1) {
 >var1.constructor === C1 : boolean
 >                        : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : string | C2
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C1 : typeof C1
 >   : ^^^^^^^^^
 
@@ -53,12 +53,12 @@ if (var1.constructor === C1) {
 if (var1.constructor === C2) {
 >var1.constructor === C2 : boolean
 >                        : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : string | C2
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C2 : typeof C2
 >   : ^^^^^^^^^
 
@@ -93,12 +93,12 @@ let var2: C4 | string;
 if (var2.constructor === C3) {
 >var2.constructor === C3 : boolean
 >                        : ^^^^^^^
->var2.constructor : Function
->                 : ^^^^^^^^
+>var2.constructor : any
+>                 : ^^^
 >var2 : string | C4
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C3 : typeof C3
 >   : ^^^^^^^^^
 
@@ -109,12 +109,12 @@ if (var2.constructor === C3) {
 if (var2.constructor === C4) {
 >var2.constructor === C4 : boolean
 >                        : ^^^^^^^
->var2.constructor : Function
->                 : ^^^^^^^^
+>var2.constructor : any
+>                 : ^^^
 >var2 : string | C4
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C4 : typeof C4
 >   : ^^^^^^^^^
 
@@ -149,12 +149,12 @@ let let3: C6 | string;
 if (let3.constructor === C5) {
 >let3.constructor === C5 : boolean
 >                        : ^^^^^^^
->let3.constructor : Function
->                 : ^^^^^^^^
+>let3.constructor : any
+>                 : ^^^
 >let3 : string | C6
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C5 : typeof C5
 >   : ^^^^^^^^^
 
@@ -165,12 +165,12 @@ if (let3.constructor === C5) {
 if (let3.constructor === C6) {
 >let3.constructor === C6 : boolean
 >                        : ^^^^^^^
->let3.constructor : Function
->                 : ^^^^^^^^
+>let3.constructor : any
+>                 : ^^^
 >let3 : string | C6
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C6 : typeof C6
 >   : ^^^^^^^^^
 
@@ -205,12 +205,12 @@ let let4: C8 | string;
 if (let4.constructor === C7) {
 >let4.constructor === C7 : boolean
 >                        : ^^^^^^^
->let4.constructor : Function
->                 : ^^^^^^^^
+>let4.constructor : any
+>                 : ^^^
 >let4 : string | C8
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C7 : typeof C7
 >   : ^^^^^^^^^
 
@@ -221,12 +221,12 @@ if (let4.constructor === C7) {
 if (let4.constructor === C8) {
 >let4.constructor === C8 : boolean
 >                        : ^^^^^^^
->let4.constructor : Function
->                 : ^^^^^^^^
+>let4.constructor : any
+>                 : ^^^
 >let4 : string | C8
 >     : ^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >C8 : typeof C8
 >   : ^^^^^^^^^
 

@@ -1,0 +1,43 @@
+typeParameterAsTypeParameterConstraint.ts(7,5): error TS2403: Subsequent variable declarations must have the same type.  Variable 'r' must be of type 'number', but here has type '{}'.
+typeParameterAsTypeParameterConstraint.ts(7,17): error TS2345: Argument of type 'number' is not assignable to parameter of type '{}'.
+typeParameterAsTypeParameterConstraint.ts(22,9): error TS2345: Argument of type 'string' is not assignable to parameter of type '{ length: number; }'.
+typeParameterAsTypeParameterConstraint.ts(23,12): error TS2322: Type 'number' is not assignable to type '{}'.
+
+
+==== typeParameterAsTypeParameterConstraint.ts (4 errors) ====
+    // using a type parameter as a constraint for a type parameter is valid
+    // no errors expected except illegal constraints
+    
+    function foo<T, U extends T>(x: T, y: U): U { return y; }
+    
+    var r = foo(1, 2);
+    var r = foo({}, 1);
+        ~
+!!! error TS2403: Subsequent variable declarations must have the same type.  Variable 'r' must be of type 'number', but here has type '{}'.
+!!! related TS6203 typeParameterAsTypeParameterConstraint.ts:6:5: 'r' was also declared here.
+                    ~
+!!! error TS2345: Argument of type 'number' is not assignable to parameter of type '{}'.
+    
+    interface A {
+        foo: string;
+    }
+    interface B extends A {
+        bar: number;
+    }
+    var a: A;
+    var b: B;
+    
+    var r2 = foo(a, b);
+    var r3 = foo({ x: 1 }, { x: 2, y: 3 });
+    
+    function foo2<T, U extends { length: T }>(x: T, y: U) { return y; }
+    foo2(1, '');
+            ~~
+!!! error TS2345: Argument of type 'string' is not assignable to parameter of type '{ length: number; }'.
+    foo2({}, { length: 2 }); 
+               ~~~~~~
+!!! error TS2322: Type 'number' is not assignable to type '{}'.
+!!! related TS6500 typeParameterAsTypeParameterConstraint.ts:21:30: The expected type comes from property 'length' which is declared here on type '{ length: {}; }'
+    foo2(1, { width: 3, length: 2 }); 
+    foo2(1, []);
+    foo2(1, ['']);

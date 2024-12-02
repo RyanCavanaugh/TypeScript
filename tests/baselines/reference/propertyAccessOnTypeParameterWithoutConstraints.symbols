@@ -56,7 +56,6 @@ var r2b = i.foo['toString']();
 >i.foo : Symbol(I.foo, Decl(propertyAccessOnTypeParameterWithoutConstraints.ts, 10, 16))
 >i : Symbol(i, Decl(propertyAccessOnTypeParameterWithoutConstraints.ts, 13, 3))
 >foo : Symbol(I.foo, Decl(propertyAccessOnTypeParameterWithoutConstraints.ts, 10, 16))
->'toString' : Symbol(Number.toString, Decl(lib.es5.d.ts, --, --))
 
 var a: {
 >a : Symbol(a, Decl(propertyAccessOnTypeParameterWithoutConstraints.ts, 17, 3))

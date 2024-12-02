@@ -1,14 +1,17 @@
+genericDerivedTypeWithSpecializedBase2.ts(5,22): error TS2344: Type 'string' does not satisfy the constraint '{ length: number; }'.
 genericDerivedTypeWithSpecializedBase2.ts(11,1): error TS2322: Type 'B<number>' is not assignable to type 'A<{ length: number; foo: number; }>'.
   Types of property 'x' are incompatible.
     Type 'string' is not assignable to type '{ length: number; foo: number; }'.
 
 
-==== genericDerivedTypeWithSpecializedBase2.ts (1 errors) ====
+==== genericDerivedTypeWithSpecializedBase2.ts (2 errors) ====
     class A<T extends { length: number }> {
         x: T;
     }
     
     class B<U> extends A<string> {
+                         ~~~~~~
+!!! error TS2344: Type 'string' does not satisfy the constraint '{ length: number; }'.
         y: U;
     }
     

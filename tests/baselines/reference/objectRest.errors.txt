@@ -1,3 +1,5 @@
+objectRest.ts(7,12): error TS2339: Property '0' does not exist on type 'string'.
+objectRest.ts(7,20): error TS2339: Property '1' does not exist on type 'string'.
 objectRest.ts(43,8): error TS2537: Type '{ a: number; b: string; }' has no matching index signature for type 'string'.
 objectRest.ts(43,35): error TS2537: Type '{ a: number; b: string; }' has no matching index signature for type 'string'.
 objectRest.ts(43,57): error TS2403: Subsequent variable declarations must have the same type.  Variable 'o' must be of type '{ a: number; b: string; }', but here has type '{}'.
@@ -6,7 +8,7 @@ objectRest.ts(44,32): error TS2537: Type '{ a: number; b: string; }' has no matc
 objectRest.ts(44,53): error TS2739: Type '{}' is missing the following properties from type '{ a: number; b: string; }': a, b
 
 
-==== objectRest.ts (6 errors) ====
+==== objectRest.ts (8 errors) ====
     var o = { a: 1, b: 'no' }
     var { ...clone } = o;
     var { a, ...justB } = o;
@@ -14,6 +16,10 @@ objectRest.ts(44,53): error TS2739: Type '{}' is missing the following propertie
     var { ['b']: renamed, ...justA } = o;
     var { 'b': renamed, ...justA } = o;
     var { b: { '0': n, '1': oooo }, ...justA } = o;
+               ~~~
+!!! error TS2339: Property '0' does not exist on type 'string'.
+                       ~~~
+!!! error TS2339: Property '1' does not exist on type 'string'.
     
     let o2 = { c: 'terrible idea?', d: 'yes' };
     var { d: renamed, ...d } = o2;

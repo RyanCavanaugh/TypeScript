@@ -1,3 +1,4 @@
+typeArgumentInferenceWithConstraints.ts(4,10): error TS2344: Type 'string' does not satisfy the constraint '{}'.
 typeArgumentInferenceWithConstraints.ts(11,17): error TS2344: Type '{}' does not satisfy the constraint 'number'.
 typeArgumentInferenceWithConstraints.ts(16,23): error TS2344: Type 'number' does not satisfy the constraint 'string'.
 typeArgumentInferenceWithConstraints.ts(17,23): error TS2344: Type '{}' does not satisfy the constraint 'number'.
@@ -15,18 +16,20 @@ typeArgumentInferenceWithConstraints.ts(55,41): error TS2345: Argument of type '
     Type 'number' is not assignable to type 'string'.
 typeArgumentInferenceWithConstraints.ts(66,31): error TS2345: Argument of type '<A, B extends string, C>(a: (a: A) => A, b: (b: B) => B, c: (c: C) => C) => void' is not assignable to parameter of type 'string'.
 typeArgumentInferenceWithConstraints.ts(67,1): error TS2349: This expression is not callable.
-  Type 'String' has no call signatures.
+  Type 'string' has no call signatures.
 typeArgumentInferenceWithConstraints.ts(73,29): error TS2345: Argument of type '0' is not assignable to parameter of type '""'.
 typeArgumentInferenceWithConstraints.ts(74,5): error TS2403: Subsequent variable declarations must have the same type.  Variable 'a9a' must be of type 'string', but here has type '{}'.
 typeArgumentInferenceWithConstraints.ts(88,5): error TS2403: Subsequent variable declarations must have the same type.  Variable 'a9e' must be of type '{ x: number; z: Window & typeof globalThis; y?: undefined; } | { x: number; y: string; z?: undefined; }', but here has type '{}'.
 typeArgumentInferenceWithConstraints.ts(89,70): error TS2353: Object literal may only specify known properties, and 'y' does not exist in type 'A92'.
 
 
-==== typeArgumentInferenceWithConstraints.ts (15 errors) ====
+==== typeArgumentInferenceWithConstraints.ts (16 errors) ====
     // Generic call with no parameters
     function noParams<T extends {}>() { }
     noParams();
     noParams<string>();
+             ~~~~~~
+!!! error TS2344: Type 'string' does not satisfy the constraint '{}'.
     noParams<{}>();
     
     // Generic call with parameters but none use type parameter type
@@ -119,7 +122,7 @@ typeArgumentInferenceWithConstraints.ts(89,70): error TS2353: Object literal may
     x<string, string, string>(null, null, null); // Error
     ~
 !!! error TS2349: This expression is not callable.
-!!! error TS2349:   Type 'String' has no call signatures.
+!!! error TS2349:   Type 'string' has no call signatures.
     
     // Generic call with multiple parameters of generic type passed arguments with no best common type
     function someGenerics9<T extends any>(a: T, b: T, c: T): T {

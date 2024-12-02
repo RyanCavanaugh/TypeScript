@@ -1,8 +1,12 @@
 file.tsx(8,2): error TS2604: JSX element type 'Div' does not have any construct or call signatures.
+file.tsx(16,2): error TS2786: 'Fnum' cannot be used as a JSX component.
+  Its return type 'number' is not a valid JSX element.
+file.tsx(29,2): error TS2786: 'Obj2' cannot be used as a JSX component.
+  Its return type 'number' is not a valid JSX element.
 file.tsx(34,2): error TS2604: JSX element type 'Obj3' does not have any construct or call signatures.
 
 
-==== file.tsx (2 errors) ====
+==== file.tsx (4 errors) ====
     declare module JSX {
     	interface Element { }
     	interface IntrinsicElements { }
@@ -21,6 +25,9 @@ file.tsx(34,2): error TS2604: JSX element type 'Obj3' does not have any construc
     // Error
     function Fnum(): number{ return 42; }
     <Fnum />
+     ~~~~
+!!! error TS2786: 'Fnum' cannot be used as a JSX component.
+!!! error TS2786:   Its return type 'number' is not a valid JSX element.
     
     interface Obj1 {
     	new(): {};
@@ -34,6 +41,9 @@ file.tsx(34,2): error TS2604: JSX element type 'Obj3' does not have any construc
     }
     var Obj2: Obj2;
     <Obj2 />; // Error
+     ~~~~
+!!! error TS2786: 'Obj2' cannot be used as a JSX component.
+!!! error TS2786:   Its return type 'number' is not a valid JSX element.
     
     interface Obj3 {
     }

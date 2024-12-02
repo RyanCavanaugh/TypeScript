@@ -56,14 +56,14 @@ a.left.length;
 >       : ^^^^^^
 
 a.other.length;  // Error expected here
->a.other.length : number
->               : ^^^^^^
->a.other : string | undefined
->        : ^^^^^^^^^^^^^^^^^^
+>a.other.length : any
+>               : ^^^
+>a.other : any
+>        : ^^^
 >a : Alignments
 >  : ^^^^^^^^^^
->other : string | undefined
->      : ^^^^^^^^^^^^^^^^^^
->length : number
->       : ^^^^^^
+>other : any
+>      : ^^^
+>length : any
+>       : ^^^
 

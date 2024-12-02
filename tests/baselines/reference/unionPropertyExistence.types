@@ -82,12 +82,12 @@ bFoo.onlyInB;
 >        : ^^^
 
 x.length; // Ok
->x.length : number
->         : ^^^^^^
+>x.length : any
+>         : ^^^
 >x : "foo" | "bar"
 >  : ^^^^^^^^^^^^^
->length : number
->       : ^^^^^^
+>length : any
+>       : ^^^
 
 bFoo.length;
 >bFoo.length : any

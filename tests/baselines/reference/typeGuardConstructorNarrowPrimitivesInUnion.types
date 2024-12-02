@@ -13,63 +13,63 @@ let var1: number | "hello" | "world" | true | false | number[] | string[];
 if (var1.constructor === Number) {
 >var1.constructor === Number : boolean
 >                            : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | boolean | "hello" | "world" | number[] | string[]
 >     : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >Number : NumberConstructor
 >       : ^^^^^^^^^^^^^^^^^
 
     var1; // number
->var1 : number
->     : ^^^^^^
+>var1 : never
+>     : ^^^^^
 }
 
 if (var1.constructor === String) {
 >var1.constructor === String : boolean
 >                            : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | boolean | "hello" | "world" | number[] | string[]
 >     : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >String : StringConstructor
 >       : ^^^^^^^^^^^^^^^^^
 
     var1; // "hello" | "world"
->var1 : "hello" | "world"
->     : ^^^^^^^^^^^^^^^^^
+>var1 : never
+>     : ^^^^^
 }
 
 if (var1.constructor === Boolean) {
 >var1.constructor === Boolean : boolean
 >                             : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | boolean | "hello" | "world" | number[] | string[]
 >     : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >Boolean : BooleanConstructor
 >        : ^^^^^^^^^^^^^^^^^^
 
     var1; // boolean
->var1 : boolean
->     : ^^^^^^^
+>var1 : never
+>     : ^^^^^
 }
 
 if (var1.constructor === Array) {
 >var1.constructor === Array : boolean
 >                           : ^^^^^^^
->var1.constructor : Function
->                 : ^^^^^^^^
+>var1.constructor : any
+>                 : ^^^
 >var1 : number | boolean | "hello" | "world" | number[] | string[]
 >     : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->constructor : Function
->            : ^^^^^^^^
+>constructor : any
+>            : ^^^
 >Array : ArrayConstructor
 >      : ^^^^^^^^^^^^^^^^
 

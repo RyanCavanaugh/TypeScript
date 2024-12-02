@@ -126,8 +126,8 @@ for (var x in 42 ? d[x] : c[x]) { }
 for (var x in c[23]) { }
 >x : string
 >  : ^^^^^^
->c[23] : string
->      : ^^^^^^
+>c[23] : any
+>      : ^^^
 >c : string
 >  : ^^^^^^
 >23 : 23

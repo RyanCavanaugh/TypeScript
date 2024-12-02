@@ -29,8 +29,8 @@ var r = foo(1, 2);
 var r = foo({}, 1);
 >r : number
 >  : ^^^^^^
->foo({}, 1) : 1
->           : ^
+>foo({}, 1) : {}
+>           : ^^
 >foo : <T, U extends T>(x: T, y: U) => U
 >    : ^ ^^ ^^^^^^^^^ ^^ ^^ ^^ ^^ ^^^^^ 
 >{} : {}
@@ -105,8 +105,8 @@ function foo2<T, U extends { length: T }>(x: T, y: U) { return y; }
 >  : ^
 
 foo2(1, '');
->foo2(1, '') : ""
->            : ^^
+>foo2(1, '') : { length: number; }
+>            : ^^^^^^^^^^^^^^^^^^^
 >foo2 : <T, U extends { length: T; }>(x: T, y: U) => U
 >     : ^ ^^ ^^^^^^^^^              ^^ ^^ ^^ ^^ ^^^^^^
 >1 : 1
@@ -115,8 +115,8 @@ foo2(1, '');
 >   : ^^
 
 foo2({}, { length: 2 }); 
->foo2({}, { length: 2 }) : { length: number; }
->                        : ^^^^^^^^^^^^^^^^^^^
+>foo2({}, { length: 2 }) : { length: {}; }
+>                        : ^^^^^^^^^^^^^^^
 >foo2 : <T, U extends { length: T; }>(x: T, y: U) => U
 >     : ^ ^^ ^^^^^^^^^              ^^ ^^ ^^ ^^ ^^^^^^
 >{} : {}

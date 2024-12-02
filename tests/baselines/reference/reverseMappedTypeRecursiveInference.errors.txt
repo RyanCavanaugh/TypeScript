@@ -1,0 +1,28 @@
+reverseMappedTypeRecursiveInference.ts(16,6): error TS2345: Argument of type 'Bar<any>' is not assignable to parameter of type 'Foo<{ [x: string]: any; }>'.
+  'string' index signatures are incompatible.
+    Type 'string | Bar<any>' is not assignable to type 'Foo<{ [x: string]: any; }>'.
+      Type 'string' is not assignable to type 'Foo<{ [x: string]: any; }>'.
+
+
+==== reverseMappedTypeRecursiveInference.ts (1 errors) ====
+    type Foo<V> = {
+        [K in keyof V]: Foo<V[K]>;
+    }
+    
+    type Bar<V> = {
+        [K in keyof V]: V[K] extends object ? Bar<V[K]> : string;
+    }
+    
+    function test<V>(value: Foo<V>): V {
+      console.log(value);
+      return undefined as any;
+    }
+    
+    const bar: Bar<any> = {};
+    
+    test(bar);
+         ~~~
+!!! error TS2345: Argument of type 'Bar<any>' is not assignable to parameter of type 'Foo<{ [x: string]: any; }>'.
+!!! error TS2345:   'string' index signatures are incompatible.
+!!! error TS2345:     Type 'string | Bar<any>' is not assignable to type 'Foo<{ [x: string]: any; }>'.
+!!! error TS2345:       Type 'string' is not assignable to type 'Foo<{ [x: string]: any; }>'.

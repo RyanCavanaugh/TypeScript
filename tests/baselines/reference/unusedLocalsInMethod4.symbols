@@ -403,8 +403,6 @@ function transformClassFields() {
 >ClassAliases : Symbol(ClassPropertySubstitutionFlags.ClassAliases, Decl(unusedLocalsInMethod4.ts, 130, 41))
 
         enabledSubstitutions.toString();
->enabledSubstitutions.toString : Symbol(Number.toString, Decl(lib.es5.d.ts, --, --))
 >enabledSubstitutions : Symbol(enabledSubstitutions, Decl(unusedLocalsInMethod4.ts, 135, 7))
->toString : Symbol(Number.toString, Decl(lib.es5.d.ts, --, --))
     }
 }

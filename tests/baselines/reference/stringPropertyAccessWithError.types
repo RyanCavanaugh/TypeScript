@@ -8,12 +8,9 @@ var x = '';
 >   : ^^
 
 var d = x['charAt']('invalid'); // error
->d : string
->  : ^^^^^^
->x['charAt']('invalid') : string
->                       : ^^^^^^
->x['charAt'] : (pos: number) => string
->            : ^   ^^      ^^^^^      
+>d : error
+>x['charAt']('invalid') : error
+>x['charAt'] : error
 >x : string
 >  : ^^^^^^
 >'charAt' : "charAt"

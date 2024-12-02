@@ -85,16 +85,16 @@ type K00 = keyof any;  // string
 >    : ^^^^^^^^^^^^^^^^^^^^^^^^
 
 type K01 = keyof string;  // "toString" | "charAt" | ...
->K01 : number | "length" | "toString" | "concat" | "slice" | "indexOf" | "lastIndexOf" | "charAt" | "charCodeAt" | "localeCompare" | "match" | "replace" | "search" | "split" | "substring" | "toLowerCase" | "toLocaleLowerCase" | "toUpperCase" | "toLocaleUpperCase" | "trim" | "substr" | "valueOf"
->    : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>K01 : never
+>    : ^^^^^
 
 type K02 = keyof number;  // "toString" | "toFixed" | "toExponential" | ...
->K02 : "toString" | "toLocaleString" | "toFixed" | "toExponential" | "toPrecision" | "valueOf"
->    : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>K02 : never
+>    : ^^^^^
 
 type K03 = keyof boolean;  // "valueOf"
->K03 : "valueOf"
->    : ^^^^^^^^^
+>K03 : never
+>    : ^^^^^
 
 type K04 = keyof void;  // never
 >K04 : never
@@ -137,8 +137,8 @@ type K14 = keyof Object;  // "constructor" | "toString" | ...
 >    : ^^^^^^^^^^^^
 
 type K15 = keyof E;  // "toString" | "toFixed" | "toExponential" | ...
->K15 : "toString" | "toLocaleString" | "toFixed" | "toExponential" | "toPrecision" | "valueOf"
->    : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>K15 : never
+>    : ^^^^^
 
 type K16 = keyof [string, number];  // "0" | "1" | "length" | "toString" | ...
 >K16 : keyof [string, number]

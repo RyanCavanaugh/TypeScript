@@ -20,12 +20,9 @@ var a = x.toString();
 >         : ^^^^^^      
 
 var b = x['toString']();
->b : string
->  : ^^^^^^
->x['toString']() : string
->                : ^^^^^^
->x['toString'] : () => string
->              : ^^^^^^      
+>b : error
+>x['toString']() : error
+>x['toString'] : error
 >x : true
 >  : ^^^^
 >'toString' : "toString"

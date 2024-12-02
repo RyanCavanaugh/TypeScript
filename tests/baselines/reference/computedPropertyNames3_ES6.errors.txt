@@ -6,9 +6,10 @@ computedPropertyNames3_ES6.ts(5,17): error TS2703: The operand of a 'delete' ope
 computedPropertyNames3_ES6.ts(6,9): error TS2464: A computed property name must be of type 'string', 'number', 'symbol', or 'any'.
 computedPropertyNames3_ES6.ts(7,16): error TS2378: A 'get' accessor must return a value.
 computedPropertyNames3_ES6.ts(7,16): error TS2464: A computed property name must be of type 'string', 'number', 'symbol', or 'any'.
+computedPropertyNames3_ES6.ts(7,17): error TS2352: Conversion of type 'string' to type 'String' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
 
 
-==== computedPropertyNames3_ES6.ts (8 errors) ====
+==== computedPropertyNames3_ES6.ts (9 errors) ====
     var id;
     class C {
         [0 + 1]() { }
@@ -32,5 +33,7 @@ computedPropertyNames3_ES6.ts(7,16): error TS2464: A computed property name must
 !!! error TS2378: A 'get' accessor must return a value.
                    ~~~~~~~~~~~~
 !!! error TS2464: A computed property name must be of type 'string', 'number', 'symbol', or 'any'.
+                    ~~~~~~~~~~
+!!! error TS2352: Conversion of type 'string' to type 'String' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
         static set [id.toString()](v) { }
     }

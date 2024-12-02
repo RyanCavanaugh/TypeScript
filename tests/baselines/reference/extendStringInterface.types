@@ -48,10 +48,8 @@ var b: string = x.doOtherStuff('hm');
 var c: string = x['doStuff']();
 >c : string
 >  : ^^^^^^
->x['doStuff']() : string
->               : ^^^^^^
->x['doStuff'] : () => string
->             : ^^^^^^      
+>x['doStuff']() : error
+>x['doStuff'] : error
 >x : string
 >  : ^^^^^^
 >'doStuff' : "doStuff"
@@ -60,10 +58,8 @@ var c: string = x['doStuff']();
 var d: string = x['doOtherStuff']('hm');
 >d : string
 >  : ^^^^^^
->x['doOtherStuff']('hm') : "hm"
->                        : ^^^^
->x['doOtherStuff'] : <T>(x: T) => T
->                  : ^ ^^ ^^ ^^^^^ 
+>x['doOtherStuff']('hm') : error
+>x['doOtherStuff'] : error
 >x : string
 >  : ^^^^^^
 >'doOtherStuff' : "doOtherStuff"

@@ -316,8 +316,8 @@ function f() {
 >  : ^^^^^
 
     n||i;
->n||i : I
->     : ^
+>n||i : number | I
+>     : ^^^^^^^^^^
 >n : number
 >  : ^^^^^^
 >i : I
@@ -364,8 +364,8 @@ function f() {
 >  : ^^^^^
 
     s||i;
->s||i : I
->     : ^
+>s||i : string | I
+>     : ^^^^^^^^^^
 >s : string
 >  : ^^^^^^
 >i : I
@@ -436,24 +436,24 @@ function f() {
 >  : ^
 
     i||n;
->i||n : I
->     : ^
+>i||n : number | I
+>     : ^^^^^^^^^^
 >i : I
 >  : ^
 >n : number
 >  : ^^^^^^
 
     i||s;
->i||s : I
->     : ^
+>i||s : string | I
+>     : ^^^^^^^^^^
 >i : I
 >  : ^
 >s : string
 >  : ^^^^^^
 
     i||b;
->i||b : I
->     : ^
+>i||b : false | I
+>     : ^^^^^^^^^
 >i : I
 >  : ^
 >b : false
@@ -476,8 +476,8 @@ function f() {
 >  : ^
 
     i||e;
->i||e : I
->     : ^
+>i||e : I | E
+>     : ^^^^^
 >i : I
 >  : ^
 >e : E
@@ -516,8 +516,8 @@ function f() {
 >  : ^^^
 
     e||i;
->e||i : I
->     : ^
+>e||i : I | E.Green | E.Blue
+>     : ^^^^^^^^^^^^^^^^^^^^
 >e : E
 >  : ^
 >i : I

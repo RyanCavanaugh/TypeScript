@@ -1,6 +1,6 @@
 methodChainError.ts(10,6): error TS2554: Expected 1 arguments, but got 0.
 methodChainError.ts(16,6): error TS2349: This expression is not callable.
-  Type 'String' has no call signatures.
+  Type 'string' has no call signatures.
 
 
 ==== methodChainError.ts (2 errors) ====
@@ -25,5 +25,5 @@ methodChainError.ts(16,6): error TS2349: This expression is not callable.
         .notMethod()
          ~~~~~~~~~
 !!! error TS2349: This expression is not callable.
-!!! error TS2349:   Type 'String' has no call signatures.
+!!! error TS2349:   Type 'string' has no call signatures.
         .method("a");

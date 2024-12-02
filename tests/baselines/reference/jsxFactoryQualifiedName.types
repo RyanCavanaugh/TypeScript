@@ -96,18 +96,16 @@ function toCamelCase(text: string): string {
     return text[0].toLowerCase() + text.substring(1);
 >text[0].toLowerCase() + text.substring(1) : string
 >                                          : ^^^^^^
->text[0].toLowerCase() : string
->                      : ^^^^^^
->text[0].toLowerCase : () => string
->                    : ^^^^^^      
->text[0] : string
->        : ^^^^^^
+>text[0].toLowerCase() : error
+>text[0].toLowerCase : error
+>text[0] : any
+>        : ^^^
 >text : string
 >     : ^^^^^^
 >0 : 0
 >  : ^
->toLowerCase : () => string
->            : ^^^^^^      
+>toLowerCase : any
+>            : ^^^
 >text.substring(1) : string
 >                  : ^^^^^^
 >text.substring : (start: number, end?: number) => string

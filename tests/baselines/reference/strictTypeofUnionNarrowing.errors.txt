@@ -1,0 +1,25 @@
+strictTypeofUnionNarrowing.ts(2,52): error TS2339: Property 'toUpperCase' does not exist on type 'never'.
+strictTypeofUnionNarrowing.ts(14,52): error TS2339: Property 'toUpperCase' does not exist on type 'never'.
+
+
+==== strictTypeofUnionNarrowing.ts (2 errors) ====
+    function stringify1(anything: { toString(): string } | undefined): string {
+        return typeof anything === "string" ? anything.toUpperCase() : "";
+                                                       ~~~~~~~~~~~
+!!! error TS2339: Property 'toUpperCase' does not exist on type 'never'.
+    }
+    
+    function stringify2(anything: {} | undefined): string {
+        return typeof anything === "string" ? anything.toUpperCase() : "";
+    }
+    
+    function stringify3(anything: unknown | undefined): string { // should simplify to just `unknown` which should narrow fine
+        return typeof anything === "string" ? anything.toUpperCase() : "";
+    }
+    
+    function stringify4(anything: { toString?(): string } | undefined): string {
+        return typeof anything === "string" ? anything.toUpperCase() : "";
+                                                       ~~~~~~~~~~~
+!!! error TS2339: Property 'toUpperCase' does not exist on type 'never'.
+    }
+    

@@ -1,6 +1,6 @@
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(2,32): error TS2550: Property 'includes' does not exist on type 'string[]'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2016' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(5,31): error TS2550: Property 'padStart' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(6,29): error TS2550: Property 'padEnd' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(5,31): error TS2339: Property 'padStart' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(6,29): error TS2339: Property 'padEnd' does not exist on type '""'.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(7,44): error TS2550: Property 'values' does not exist on type 'ObjectConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(8,45): error TS2550: Property 'entries' does not exist on type 'ObjectConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(9,63): error TS2550: Property 'getOwnPropertyDescriptors' does not exist on type 'ObjectConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
@@ -26,17 +26,17 @@ doYouNeedToChangeYourTargetLibraryES2016Plus.ts(24,70): error TS2550: Property '
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(27,26): error TS2550: Property 'flat' does not exist on type 'undefined[]'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(28,29): error TS2550: Property 'flatMap' does not exist on type 'undefined[]'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(29,49): error TS2550: Property 'fromEntries' does not exist on type 'ObjectConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(30,32): error TS2550: Property 'trimStart' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(31,30): error TS2550: Property 'trimEnd' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(32,31): error TS2550: Property 'trimLeft' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(33,32): error TS2550: Property 'trimRight' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(34,45): error TS2550: Property 'description' does not exist on type 'symbol'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(30,32): error TS2339: Property 'trimStart' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(31,30): error TS2339: Property 'trimEnd' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(32,31): error TS2339: Property 'trimLeft' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(33,32): error TS2339: Property 'trimRight' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(34,45): error TS2339: Property 'description' does not exist on type 'symbol'.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(37,39): error TS2550: Property 'allSettled' does not exist on type 'PromiseConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(38,31): error TS2550: Property 'matchAll' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(38,31): error TS2339: Property 'matchAll' does not exist on type '""'.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(39,47): error TS2550: Property 'matchAll' does not exist on type 'SymbolConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(40,20): error TS2583: Cannot find name 'BigInt'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
 doYouNeedToChangeYourTargetLibraryES2016Plus.ts(43,32): error TS2550: Property 'any' does not exist on type 'PromiseConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2021' or later.
-doYouNeedToChangeYourTargetLibraryES2016Plus.ts(44,33): error TS2550: Property 'replaceAll' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2021' or later.
+doYouNeedToChangeYourTargetLibraryES2016Plus.ts(44,33): error TS2339: Property 'replaceAll' does not exist on type '""'.
 
 
 ==== doYouNeedToChangeYourTargetLibraryES2016Plus.ts (39 errors) ====
@@ -48,10 +48,10 @@ doYouNeedToChangeYourTargetLibraryES2016Plus.ts(44,33): error TS2550: Property '
     // es2017
     const testStringPadStart = "".padStart(2);
                                   ~~~~~~~~
-!!! error TS2550: Property 'padStart' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
+!!! error TS2339: Property 'padStart' does not exist on type '""'.
     const testStringPadEnd = "".padEnd(2);
                                 ~~~~~~
-!!! error TS2550: Property 'padEnd' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
+!!! error TS2339: Property 'padEnd' does not exist on type '""'.
     const testObjectConstructorValues = Object.values({});
                                                ~~~~~~
 !!! error TS2550: Property 'values' does not exist on type 'ObjectConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2017' or later.
@@ -127,19 +127,19 @@ doYouNeedToChangeYourTargetLibraryES2016Plus.ts(44,33): error TS2550: Property '
 !!! error TS2550: Property 'fromEntries' does not exist on type 'ObjectConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
     const testStringTrimStart = "".trimStart();
                                    ~~~~~~~~~
-!!! error TS2550: Property 'trimStart' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
+!!! error TS2339: Property 'trimStart' does not exist on type '""'.
     const testStringTrimEnd = "".trimEnd();
                                  ~~~~~~~
-!!! error TS2550: Property 'trimEnd' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
+!!! error TS2339: Property 'trimEnd' does not exist on type '""'.
     const testStringTrimLeft = "".trimLeft();
                                   ~~~~~~~~
-!!! error TS2550: Property 'trimLeft' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
+!!! error TS2339: Property 'trimLeft' does not exist on type '""'.
     const testStringTrimRight = "".trimRight();
                                    ~~~~~~~~~
-!!! error TS2550: Property 'trimRight' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
+!!! error TS2339: Property 'trimRight' does not exist on type '""'.
     const testSymbolDescription = Symbol("foo").description;
                                                 ~~~~~~~~~~~
-!!! error TS2550: Property 'description' does not exist on type 'symbol'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2019' or later.
+!!! error TS2339: Property 'description' does not exist on type 'symbol'.
     
     // es2020
     const testPromiseAllSettled = Promise.allSettled([]);
@@ -147,7 +147,7 @@ doYouNeedToChangeYourTargetLibraryES2016Plus.ts(44,33): error TS2550: Property '
 !!! error TS2550: Property 'allSettled' does not exist on type 'PromiseConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
     const testStringMatchAll = "".matchAll();
                                   ~~~~~~~~
-!!! error TS2550: Property 'matchAll' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
+!!! error TS2339: Property 'matchAll' does not exist on type '""'.
     const testRegExpMatchAll = /matchAll/g[Symbol.matchAll]("matchAll");
                                                   ~~~~~~~~
 !!! error TS2550: Property 'matchAll' does not exist on type 'SymbolConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2020' or later.
@@ -161,7 +161,7 @@ doYouNeedToChangeYourTargetLibraryES2016Plus.ts(44,33): error TS2550: Property '
 !!! error TS2550: Property 'any' does not exist on type 'PromiseConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2021' or later.
     const testStringReplaceAll = "".replaceAll();
                                     ~~~~~~~~~~
-!!! error TS2550: Property 'replaceAll' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2021' or later.
+!!! error TS2339: Property 'replaceAll' does not exist on type '""'.
     
     // esnext
     

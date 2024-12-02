@@ -1,0 +1,22 @@
+hidingIndexSignatures.ts(5,11): error TS2430: Interface 'B' incorrectly extends interface 'A'.
+  'string' index signatures are incompatible.
+    Type 'number' is not assignable to type '{}'.
+
+
+==== hidingIndexSignatures.ts (1 errors) ====
+    interface A {
+        [a: string]: {};
+    }
+    
+    interface B extends A {
+              ~
+!!! error TS2430: Interface 'B' incorrectly extends interface 'A'.
+!!! error TS2430:   'string' index signatures are incompatible.
+!!! error TS2430:     Type 'number' is not assignable to type '{}'.
+        [a: string]: number; // Number is not a subtype of string.  Should error.
+    }
+    
+    var b: B;
+    b[""]; // Should be number
+    var a: A;
+    a[""]; // Should be {}

@@ -38,7 +38,5 @@ function fill<B extends Colors>(f: B) {
 >f : Symbol(f, Decl(enumPropertyAccess.ts, 10, 32))
 
     f.toFixed(); // ok
->f.toFixed : Symbol(Number.toFixed, Decl(lib.es5.d.ts, --, --))
 >f : Symbol(f, Decl(enumPropertyAccess.ts, 10, 32))
->toFixed : Symbol(Number.toFixed, Decl(lib.es5.d.ts, --, --))
 }

@@ -35,6 +35,7 @@ function test<V>(value: Foo<V>): V {
 
   return undefined as any;
 >undefined as any : any
+>                 : ^^^
 >undefined : undefined
 >          : ^^^^^^^^^
 }

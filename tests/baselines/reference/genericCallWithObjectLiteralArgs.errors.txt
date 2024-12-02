@@ -1,7 +1,9 @@
 genericCallWithObjectLiteralArgs.ts(5,23): error TS2322: Type 'string' is not assignable to type 'number'.
+genericCallWithObjectLiteralArgs.ts(8,24): error TS2322: Type 'number' is not assignable to type 'Object'.
+genericCallWithObjectLiteralArgs.ts(8,32): error TS2322: Type 'string' is not assignable to type 'Object'.
 
 
-==== genericCallWithObjectLiteralArgs.ts (1 errors) ====
+==== genericCallWithObjectLiteralArgs.ts (3 errors) ====
     function foo<T>(x: { bar: T; baz: T }) {
         return x;
     }
@@ -13,3 +15,9 @@ genericCallWithObjectLiteralArgs.ts(5,23): error TS2322: Type 'string' is not as
     var r2 = foo({ bar: 1, baz: 1 }); // T = number
     var r3 = foo({ bar: foo, baz: foo }); // T = typeof foo
     var r4 = foo<Object>({ bar: 1, baz: '' }); // T = Object
+                           ~~~
+!!! error TS2322: Type 'number' is not assignable to type 'Object'.
+!!! related TS6500 genericCallWithObjectLiteralArgs.ts:1:22: The expected type comes from property 'bar' which is declared here on type '{ bar: Object; baz: Object; }'
+                                   ~~~
+!!! error TS2322: Type 'string' is not assignable to type 'Object'.
+!!! related TS6500 genericCallWithObjectLiteralArgs.ts:1:30: The expected type comes from property 'baz' which is declared here on type '{ bar: Object; baz: Object; }'

@@ -231,8 +231,11 @@ b6 = (k) => { k.toLowerCase() };
 >(k) => { k.toLowerCase() } : (k: any) => void
 >                           : ^ ^^^^^^^^^^^^^^
 >k : any
+>  : ^^^
 >k.toLowerCase() : any
+>                : ^^^
 >k.toLowerCase : any
+>              : ^^^
 >k : any
 >  : ^^^
 >toLowerCase : any
@@ -246,10 +249,13 @@ b6 = (i) => {
 >(i) => {    i.toExponential();    return i;} : (i: any) => any
 >                                             : ^ ^^^^^^^^^^^^^
 >i : any
+>  : ^^^
 
     i.toExponential();
 >i.toExponential() : any
+>                  : ^^^
 >i.toExponential : any
+>                : ^^^
 >i : any
 >  : ^^^
 >toExponential : any
@@ -257,6 +263,7 @@ b6 = (i) => {
 
     return i;
 >i : any
+>  : ^^^
 
 };                   // Per spec, no contextual signature can be extracted in this case. (Otherwise clause)
 b7 = (j, m) => { };  // Per spec, no contextual signature can be extracted in this case. (Otherwise clause)
@@ -267,7 +274,9 @@ b7 = (j, m) => { };  // Per spec, no contextual signature can be extracted in th
 >(j, m) => { } : (j: any, m: any) => void
 >              : ^ ^^^^^^^ ^^^^^^^^^^^^^^
 >j : any
+>  : ^^^
 >m : any
+>  : ^^^
 
 class C<T, U> {
 >C : C<T, U>
@@ -288,13 +297,17 @@ class C<T, U> {
 >(j, k) => {            return [j, k];        } : (j: any, k: any) => any[]
 >                                               : ^ ^^^^^^^ ^^^^^^^^^^^^^^^
 >j : any
+>  : ^^^
 >k : any
+>  : ^^^
 
             return [j, k];
 >[j, k] : any[]
 >       : ^^^^^
 >j : any
+>  : ^^^
 >k : any
+>  : ^^^
 
         }   // Per spec, no contextual signature can be extracted in this case.
     }

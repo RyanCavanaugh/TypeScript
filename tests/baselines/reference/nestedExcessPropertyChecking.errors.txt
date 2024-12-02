@@ -2,10 +2,10 @@ nestedExcessPropertyChecking.ts(6,7): error TS2322: Type 'C1' is not assignable 
   Types of property 'x' are incompatible.
     Type '{ c: string; }' has no properties in common with type '{ a?: string | undefined; } & { b?: string | undefined; }'.
 nestedExcessPropertyChecking.ts(13,7): error TS2559: Type 'C2' has no properties in common with type 'A2 & B2'.
-nestedExcessPropertyChecking.ts(17,5): error TS2559: Type 'E' has no properties in common with type '{ nope?: any; }'.
-nestedExcessPropertyChecking.ts(18,5): error TS2559: Type '"A"' has no properties in common with type '{ nope?: any; }'.
-nestedExcessPropertyChecking.ts(30,22): error TS2559: Type 'false' has no properties in common with type 'OverridesInput'.
-nestedExcessPropertyChecking.ts(40,9): error TS2559: Type 'false' has no properties in common with type 'OverridesInput'.
+nestedExcessPropertyChecking.ts(17,5): error TS2322: Type 'E' is not assignable to type '{ nope?: any; }'.
+nestedExcessPropertyChecking.ts(18,5): error TS2322: Type 'string' is not assignable to type '{ nope?: any; }'.
+nestedExcessPropertyChecking.ts(30,22): error TS2322: Type 'boolean' is not assignable to type 'OverridesInput'.
+nestedExcessPropertyChecking.ts(40,9): error TS2322: Type 'boolean' is not assignable to type 'OverridesInput'.
 
 
 ==== nestedExcessPropertyChecking.ts (6 errors) ====
@@ -33,10 +33,10 @@ nestedExcessPropertyChecking.ts(40,9): error TS2559: Type 'false' has no propert
     
     let x: { nope?: any } = E.A;  // Error
         ~
-!!! error TS2559: Type 'E' has no properties in common with type '{ nope?: any; }'.
+!!! error TS2322: Type 'E' is not assignable to type '{ nope?: any; }'.
     let y: { nope?: any } = "A";  // Error
         ~
-!!! error TS2559: Type '"A"' has no properties in common with type '{ nope?: any; }'.
+!!! error TS2322: Type 'string' is not assignable to type '{ nope?: any; }'.
     
     // Repros from #51043
     
@@ -50,7 +50,7 @@ nestedExcessPropertyChecking.ts(40,9): error TS2559: Type 'false' has no propert
         overrides?: OverridesInput;
     }>} = { variables: { overrides: false } };  // Error
                          ~~~~~~~~~
-!!! error TS2559: Type 'false' has no properties in common with type 'OverridesInput'.
+!!! error TS2322: Type 'boolean' is not assignable to type 'OverridesInput'.
 !!! related TS6500 nestedExcessPropertyChecking.ts:27:5: The expected type comes from property 'overrides' which is declared here on type '{ overrides?: OverridesInput | undefined; } & Partial<{ overrides?: OverridesInput | undefined; }>'
     
     
@@ -63,7 +63,7 @@ nestedExcessPropertyChecking.ts(40,9): error TS2559: Type 'false' has no propert
         variables: {
             overrides: false  // Error
             ~~~~~~~~~
-!!! error TS2559: Type 'false' has no properties in common with type 'OverridesInput'.
+!!! error TS2322: Type 'boolean' is not assignable to type 'OverridesInput'.
 !!! related TS6500 nestedExcessPropertyChecking.ts:35:24: The expected type comes from property 'overrides' which is declared here on type 'VariablesA & VariablesB'
         }
     };

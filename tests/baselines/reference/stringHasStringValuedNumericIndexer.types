@@ -4,8 +4,7 @@
 var str: string = ""[0];
 >str : string
 >    : ^^^^^^
->""[0] : string
->      : ^^^^^^
+>""[0] : error
 >"" : ""
 >   : ^^
 >0 : 0

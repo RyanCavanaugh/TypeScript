@@ -45,5 +45,6 @@ class Derived2 extends Base {
 
         bar: any;
 >bar : any
+>    : ^^^
     }
 }

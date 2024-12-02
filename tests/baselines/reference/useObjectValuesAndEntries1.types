@@ -65,10 +65,10 @@ var values = Object.values(o);                      // number[]
 >  : ^^^^^^^^^^^^^^^^^^^^^^^^^
 
 var entries1 = Object.entries(1);                   // [string, any][]
->entries1 : [string, any][]
->         : ^^^^^^^^^^^^^^^
->Object.entries(1) : [string, any][]
->                  : ^^^^^^^^^^^^^^^
+>entries1 : [string, unknown][]
+>         : ^^^^^^^^^^^^^^^^^^^
+>Object.entries(1) : [string, unknown][]
+>                  : ^^^^^^^^^^^^^^^^^^^
 >Object.entries : { <T>(o: { [s: string]: T; } | ArrayLike<T>): [string, T][]; (o: {}): [string, any][]; }
 >               : ^^^ ^^ ^^                                  ^^^             ^^^ ^^  ^^^               ^^^
 >Object : ObjectConstructor
@@ -79,10 +79,10 @@ var entries1 = Object.entries(1);                   // [string, any][]
 >  : ^
 
 var values1 = Object.values(1);                     // any[]
->values1 : any[]
->        : ^^^^^
->Object.values(1) : any[]
->                 : ^^^^^
+>values1 : unknown[]
+>        : ^^^^^^^^^
+>Object.values(1) : unknown[]
+>                 : ^^^^^^^^^
 >Object.values : { <T>(o: { [s: string]: T; } | ArrayLike<T>): T[]; (o: {}): any[]; }
 >              : ^^^ ^^ ^^                                  ^^^   ^^^ ^^  ^^^     ^^^
 >Object : ObjectConstructor

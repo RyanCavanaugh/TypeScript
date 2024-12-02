@@ -77,12 +77,12 @@ function f2<T>(x: T) {
 >  : ^^^^^^^^^^
 
         x.length;
->x.length : number
->         : ^^^^^^
+>x.length : any
+>         : ^^^
 >x : T & string
 >  : ^^^^^^^^^^
->length : number
->       : ^^^^^^
+>length : any
+>       : ^^^
     }
 }
 

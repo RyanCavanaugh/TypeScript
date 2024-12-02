@@ -8,9 +8,7 @@ function stringify1(anything: { toString(): string } | undefined): string {
 
     return typeof anything === "string" ? anything.toUpperCase() : "";
 >anything : Symbol(anything, Decl(strictTypeofUnionNarrowing.ts, 0, 20))
->anything.toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 >anything : Symbol(anything, Decl(strictTypeofUnionNarrowing.ts, 0, 20))
->toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 }
 
 function stringify2(anything: {} | undefined): string {
@@ -42,8 +40,6 @@ function stringify4(anything: { toString?(): string } | undefined): string {
 
     return typeof anything === "string" ? anything.toUpperCase() : "";
 >anything : Symbol(anything, Decl(strictTypeofUnionNarrowing.ts, 12, 20))
->anything.toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 >anything : Symbol(anything, Decl(strictTypeofUnionNarrowing.ts, 12, 20))
->toUpperCase : Symbol(String.toUpperCase, Decl(lib.es5.d.ts, --, --))
 }
 

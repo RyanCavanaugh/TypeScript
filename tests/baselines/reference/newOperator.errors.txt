@@ -1,8 +1,8 @@
 newOperator.ts(3,13): error TS2693: 'ifc' only refers to a type, but is being used as a value here.
 newOperator.ts(10,14): error TS2351: This expression is not constructable.
-  Type 'Number' has no construct signatures.
+  Type '53' has no construct signatures.
 newOperator.ts(11,14): error TS2351: This expression is not constructable.
-  Type 'String' has no construct signatures.
+  Type '""' has no construct signatures.
 newOperator.ts(12,5): error TS2693: 'string' only refers to a type, but is being used as a value here.
 newOperator.ts(18,14): error TS2693: 'string' only refers to a type, but is being used as a value here.
 newOperator.ts(18,21): error TS1011: An element access expression should take an argument.
@@ -36,11 +36,11 @@ newOperator.ts(56,24): error TS1011: An element access expression should take an
     var t1 = new 53();
                  ~~
 !!! error TS2351: This expression is not constructable.
-!!! error TS2351:   Type 'Number' has no construct signatures.
+!!! error TS2351:   Type '53' has no construct signatures.
     var t2 = new ''();
                  ~~
 !!! error TS2351: This expression is not constructable.
-!!! error TS2351:   Type 'String' has no construct signatures.
+!!! error TS2351:   Type '""' has no construct signatures.
     new string;
         ~~~~~~
 !!! error TS2693: 'string' only refers to a type, but is being used as a value here.

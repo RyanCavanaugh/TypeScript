@@ -116,8 +116,8 @@ yellow[<any>{}]; // ok
 >   : ^^
 
 s[0]; // error
->s[0] : string
->     : ^^^^^^
+>s[0] : any
+>     : ^^^
 >s : string
 >  : ^^^^^^
 >0 : 0
@@ -132,8 +132,8 @@ s["s"]; // ok
 >    : ^^^
 
 s[<any>{}]; // ok
->s[<any>{}] : string
->           : ^^^^^^
+>s[<any>{}] : any
+>           : ^^^
 >s : string
 >  : ^^^^^^
 ><any>{} : any

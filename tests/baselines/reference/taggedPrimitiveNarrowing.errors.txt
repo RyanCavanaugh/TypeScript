@@ -1,0 +1,25 @@
+taggedPrimitiveNarrowing.ts(7,17): error TS2339: Property 'length' does not exist on type 'Hash'.
+taggedPrimitiveNarrowing.ts(14,17): error TS2339: Property 'length' does not exist on type 'string & T'.
+
+
+==== taggedPrimitiveNarrowing.ts (2 errors) ====
+    type Hash = string & { __hash: true };
+    
+    function getHashLength(hash: Hash): number {
+        if (typeof hash !== "string") {
+            throw new Error("This doesn't look like a hash");
+        }
+        return hash.length;
+                    ~~~~~~
+!!! error TS2339: Property 'length' does not exist on type 'Hash'.
+    }
+    
+    function getHashLength2<T extends { __tag__: unknown}>(hash: string & T): number {
+        if (typeof hash !== "string") {
+            throw new Error("This doesn't look like a hash");
+        }
+        return hash.length;
+                    ~~~~~~
+!!! error TS2339: Property 'length' does not exist on type 'string & T'.
+    }
+    

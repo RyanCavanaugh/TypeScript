@@ -1,0 +1,15 @@
+wrappedAndRecursiveConstraints2.ts(5,15): error TS2345: Argument of type 'number' is not assignable to parameter of type 'C<number>'.
+wrappedAndRecursiveConstraints2.ts(6,21): error TS2345: Argument of type 'string' is not assignable to parameter of type 'C<string>'.
+
+
+==== wrappedAndRecursiveConstraints2.ts (2 errors) ====
+    class C<T extends C<T>> { // error
+        constructor(x: T) { }
+    }
+    
+    var c = new C(1);
+                  ~
+!!! error TS2345: Argument of type 'number' is not assignable to parameter of type 'C<number>'.
+    var c = new C(new C('')); // error
+                        ~~
+!!! error TS2345: Argument of type 'string' is not assignable to parameter of type 'C<string>'.

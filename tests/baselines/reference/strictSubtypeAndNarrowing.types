@@ -554,13 +554,13 @@ function ff2(value: { [index: number]: boolean, length: number } | string) {
 >      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^
 
         value;
->value : string | { [index: number]: boolean; length: number; }
->      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^
+>value : { [index: number]: boolean; length: number; }
+>      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^
 
     } else {
         value;
->value : never
->      : ^^^^^
+>value : string
+>      : ^^^^^^
     }
     value;
 >value : string | { [index: number]: boolean; length: number; }
@@ -590,13 +590,13 @@ function ff3(value: string | string[] | { [index: number]: boolean, length: numb
 >      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
         value;
->value : string | { [index: number]: boolean; length: number; } | [number, boolean] | string[]
->      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>value : { [index: number]: boolean; length: number; } | [number, boolean] | string[]
+>      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
     } else {
         value;
->value : number | { length: string; } | { a: string; } | null | undefined
->      : ^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^
+>value : string | number | { length: string; } | { a: string; } | null | undefined
+>      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^
     }
     value;
 >value : string | number | { [index: number]: boolean; length: number; } | [number, boolean] | { length: string; } | { a: string; } | string[] | null | undefined

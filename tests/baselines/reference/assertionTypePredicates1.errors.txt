@@ -1,3 +1,5 @@
+assertionTypePredicates1.ts(21,11): error TS2339: Property 'toLocaleString' does not exist on type 'number | boolean'.
+  Property 'toLocaleString' does not exist on type 'number'.
 assertionTypePredicates1.ts(43,9): error TS7027: Unreachable code detected.
 assertionTypePredicates1.ts(47,9): error TS7027: Unreachable code detected.
 assertionTypePredicates1.ts(91,9): error TS7027: Unreachable code detected.
@@ -16,7 +18,7 @@ assertionTypePredicates1.ts(174,5): error TS2775: Assertions require every name 
 assertionTypePredicates1.ts(200,5): error TS2775: Assertions require every name in the call target to be declared with an explicit type annotation.
 
 
-==== assertionTypePredicates1.ts (16 errors) ====
+==== assertionTypePredicates1.ts (17 errors) ====
     declare function isString(value: unknown): value is string;
     declare function isArrayOfStrings(value: unknown): value is string[];
     
@@ -38,6 +40,9 @@ assertionTypePredicates1.ts(200,5): error TS2775: Assertions require every name 
         if (!!true) {
             assert(typeof x === "boolean" || typeof x === "number");
             x.toLocaleString;
+              ~~~~~~~~~~~~~~
+!!! error TS2339: Property 'toLocaleString' does not exist on type 'number | boolean'.
+!!! error TS2339:   Property 'toLocaleString' does not exist on type 'number'.
         }
         if (!!true) {
             assert(isArrayOfStrings(x));

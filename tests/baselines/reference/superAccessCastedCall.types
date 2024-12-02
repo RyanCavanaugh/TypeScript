@@ -56,8 +56,11 @@ class Bar extends Foo {
 
         (super.bar as any)();
 >(super.bar as any)() : any
+>                     : ^^^
 >(super.bar as any) : any
+>                   : ^^^
 >super.bar as any : any
+>                 : ^^^
 >super.bar : () => void
 >          : ^^^^^^    
 >super : Foo

@@ -3,9 +3,11 @@ booleanAssignment.ts(3,1): error TS2322: Type 'string' is not assignable to type
 booleanAssignment.ts(4,1): error TS2322: Type '{}' is not assignable to type 'Boolean'.
   The types returned by 'valueOf()' are incompatible between these types.
     Type 'Object' is not assignable to type 'boolean'.
+booleanAssignment.ts(9,1): error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
+booleanAssignment.ts(12,1): error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
 
 
-==== booleanAssignment.ts (3 errors) ====
+==== booleanAssignment.ts (5 errors) ====
     var b = new Boolean();
     b = 1; // Error
     ~
@@ -23,6 +25,10 @@ booleanAssignment.ts(4,1): error TS2322: Type '{}' is not assignable to type 'Bo
     o = b; // OK
     
     b = true; // OK
+    ~
+!!! error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
     
     var b2:boolean;
     b = b2; // OK
+    ~
+!!! error TS2322: Type 'boolean' is not assignable to type 'Boolean'.

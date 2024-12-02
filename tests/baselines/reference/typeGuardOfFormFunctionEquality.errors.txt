@@ -1,0 +1,45 @@
+typeGuardOfFormFunctionEquality.ts(1,56): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'string' is not assignable to type 'Object'.
+typeGuardOfFormFunctionEquality.ts(3,45): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'string' is not assignable to type 'Object'.
+typeGuardOfFormFunctionEquality.ts(5,22): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+typeGuardOfFormFunctionEquality.ts(6,20): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+typeGuardOfFormFunctionEquality.ts(10,22): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+typeGuardOfFormFunctionEquality.ts(10,40): error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+typeGuardOfFormFunctionEquality.ts(12,59): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'string' is not assignable to type 'Object'.
+
+
+==== typeGuardOfFormFunctionEquality.ts (7 errors) ====
+    declare function isString1(a: number, b: Object): b is string;
+                                                           ~~~~~~
+!!! error TS2677: A type predicate's type must be assignable to its parameter's type.
+!!! error TS2677:   Type 'string' is not assignable to type 'Object'.
+    
+    declare function isString2(a: Object): a is string;
+                                                ~~~~~~
+!!! error TS2677: A type predicate's type must be assignable to its parameter's type.
+!!! error TS2677:   Type 'string' is not assignable to type 'Object'.
+    
+    switch (isString1(0, "")) {
+                         ~~
+!!! error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+        case isString2(""):
+                       ~~
+!!! error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+        default:
+    }
+    
+    var x = isString1(0, "") === isString2("");
+                         ~~
+!!! error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+                                           ~~
+!!! error TS2345: Argument of type 'string' is not assignable to parameter of type 'Object'.
+    
+    function isString3(a: number, b: number, c: Object): c is string {
+                                                              ~~~~~~
+!!! error TS2677: A type predicate's type must be assignable to its parameter's type.
+!!! error TS2677:   Type 'string' is not assignable to type 'Object'.
+        return isString1(0, c);
+    }
+    

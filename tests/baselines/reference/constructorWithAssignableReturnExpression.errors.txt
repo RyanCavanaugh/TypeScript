@@ -1,3 +1,5 @@
+constructorWithAssignableReturnExpression.ts(5,9): error TS2322: Type 'number' is not assignable to type 'C'.
+constructorWithAssignableReturnExpression.ts(5,9): error TS2409: Return type of constructor signature must be assignable to the instance type of the class.
 constructorWithAssignableReturnExpression.ts(12,9): error TS2322: Type 'number' is not assignable to type 'D'.
 constructorWithAssignableReturnExpression.ts(12,9): error TS2409: Return type of constructor signature must be assignable to the instance type of the class.
 constructorWithAssignableReturnExpression.ts(26,9): error TS2409: Return type of constructor signature must be assignable to the instance type of the class.
@@ -5,12 +7,16 @@ constructorWithAssignableReturnExpression.ts(26,18): error TS2322: Type 'number'
   'T' could be instantiated with an arbitrary type which could be unrelated to 'number'.
 
 
-==== constructorWithAssignableReturnExpression.ts (4 errors) ====
+==== constructorWithAssignableReturnExpression.ts (6 errors) ====
     // a class constructor may return an expression, it must be assignable to the class instance type to be valid
     
     class C {
         constructor() {
             return 1;
+            ~~~~~~
+!!! error TS2322: Type 'number' is not assignable to type 'C'.
+            ~~~~~~
+!!! error TS2409: Return type of constructor signature must be assignable to the instance type of the class.
         }
     }
     

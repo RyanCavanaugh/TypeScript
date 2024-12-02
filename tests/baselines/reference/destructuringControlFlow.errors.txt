@@ -1,6 +1,6 @@
-destructuringControlFlow.ts(31,8): error TS2339: Property 'x' does not exist on type 'Number'.
-destructuringControlFlow.ts(32,9): error TS2339: Property 'x' does not exist on type 'Number'.
-destructuringControlFlow.ts(33,9): error TS2537: Type 'Number' has no matching index signature for type 'string'.
+destructuringControlFlow.ts(31,8): error TS2339: Property 'x' does not exist on type '0'.
+destructuringControlFlow.ts(32,9): error TS2339: Property 'x' does not exist on type '0'.
+destructuringControlFlow.ts(33,9): error TS2537: Type '0' has no matching index signature for type 'string'.
 destructuringControlFlow.ts(40,1): error TS18048: 'value' is possibly 'undefined'.
 
 
@@ -37,13 +37,13 @@ destructuringControlFlow.ts(40,1): error TS18048: 'value' is possibly 'undefined
         let x: boolean;
         ({ x } = 0);  // Error
            ~
-!!! error TS2339: Property 'x' does not exist on type 'Number'.
+!!! error TS2339: Property 'x' does not exist on type '0'.
         ({ ["x"]: x } = 0);  // Error
             ~~~
-!!! error TS2339: Property 'x' does not exist on type 'Number'.
+!!! error TS2339: Property 'x' does not exist on type '0'.
         ({ ["x" + ""]: x } = 0);  // Errpr
             ~~~~~~~~
-!!! error TS2537: Type 'Number' has no matching index signature for type 'string'.
+!!! error TS2537: Type '0' has no matching index signature for type 'string'.
     }
     
     // Repro from #31770

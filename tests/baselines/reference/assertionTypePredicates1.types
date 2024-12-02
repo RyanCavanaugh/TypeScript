@@ -138,12 +138,12 @@ function f01(x: unknown) {
 >         : ^^^^^^^^
 
         x.toLocaleString;
->x.toLocaleString : ((locales?: string | string[], options?: Intl.NumberFormatOptions) => string) | (() => string)
->                 : ^^       ^^^                 ^^       ^^^                        ^^^^^      ^^^^^^^^^^^      ^
+>x.toLocaleString : any
+>                 : ^^^
 >x : number | boolean
 >  : ^^^^^^^^^^^^^^^^
->toLocaleString : ((locales?: string | string[], options?: Intl.NumberFormatOptions) => string) | (() => string)
->               : ^^       ^^^                 ^^       ^^^                        ^^^^^      ^^^^^^^^^^^      ^
+>toLocaleString : any
+>               : ^^^
     }
     if (!!true) {
 >!!true : true

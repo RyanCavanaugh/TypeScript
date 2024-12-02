@@ -1,3 +1,11 @@
+assignmentCompatBetweenTupleAndArray.ts(12,1): error TS2322: Type '[number, string]' is not assignable to type '{}[]'.
+  Type 'string | number' is not assignable to type '{}'.
+    Type 'string' is not assignable to type '{}'.
+assignmentCompatBetweenTupleAndArray.ts(13,1): error TS2322: Type '[number, number]' is not assignable to type '{}[]'.
+  Type 'number' is not assignable to type '{}'.
+assignmentCompatBetweenTupleAndArray.ts(14,1): error TS2322: Type '[number, {}]' is not assignable to type '{}[]'.
+  Type 'number | {}' is not assignable to type '{}'.
+    Type 'number' is not assignable to type '{}'.
 assignmentCompatBetweenTupleAndArray.ts(17,1): error TS2322: Type '[number, string]' is not assignable to type 'number[]'.
   Type 'string | number' is not assignable to type 'number'.
     Type 'string' is not assignable to type 'number'.
@@ -5,7 +13,7 @@ assignmentCompatBetweenTupleAndArray.ts(18,1): error TS2322: Type '{}[]' is not 
   Target requires 1 element(s) but source may have fewer.
 
 
-==== assignmentCompatBetweenTupleAndArray.ts (2 errors) ====
+==== assignmentCompatBetweenTupleAndArray.ts (5 errors) ====
     var numStrTuple: [number, string];
     var numNumTuple: [number, number];
     var numEmptyObjTuple: [number, {}];
@@ -18,8 +26,19 @@ assignmentCompatBetweenTupleAndArray.ts(18,1): error TS2322: Type '{}[]' is not 
     numArray = numNumTuple;
     emptyObjArray = emptyObjTuple;
     emptyObjArray = numStrTuple;
+    ~~~~~~~~~~~~~
+!!! error TS2322: Type '[number, string]' is not assignable to type '{}[]'.
+!!! error TS2322:   Type 'string | number' is not assignable to type '{}'.
+!!! error TS2322:     Type 'string' is not assignable to type '{}'.
     emptyObjArray = numNumTuple;
+    ~~~~~~~~~~~~~
+!!! error TS2322: Type '[number, number]' is not assignable to type '{}[]'.
+!!! error TS2322:   Type 'number' is not assignable to type '{}'.
     emptyObjArray = numEmptyObjTuple;
+    ~~~~~~~~~~~~~
+!!! error TS2322: Type '[number, {}]' is not assignable to type '{}[]'.
+!!! error TS2322:   Type 'number | {}' is not assignable to type '{}'.
+!!! error TS2322:     Type 'number' is not assignable to type '{}'.
     
     // error
     numArray = numStrTuple;

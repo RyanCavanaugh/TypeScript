@@ -34,12 +34,12 @@ function getHashLength(hash: Hash): number {
 >                                : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     }
     return hash.length;
->hash.length : number
->            : ^^^^^^
+>hash.length : any
+>            : ^^^
 >hash : Hash
 >     : ^^^^
->length : number
->       : ^^^^^^
+>length : any
+>       : ^^^
 }
 
 function getHashLength2<T extends { __tag__: unknown}>(hash: string & T): number {
@@ -69,11 +69,11 @@ function getHashLength2<T extends { __tag__: unknown}>(hash: string & T): number
 >                                : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
     }
     return hash.length;
->hash.length : number
->            : ^^^^^^
+>hash.length : any
+>            : ^^^
 >hash : string & T
 >     : ^^^^^^^^^^
->length : number
->       : ^^^^^^
+>length : any
+>       : ^^^
 }
 

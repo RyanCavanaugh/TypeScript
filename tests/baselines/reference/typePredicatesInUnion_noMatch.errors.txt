@@ -1,0 +1,29 @@
+typePredicatesInUnion_noMatch.ts(2,30): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'boolean' is not assignable to type '{}'.
+typePredicatesInUnion_noMatch.ts(5,30): error TS2677: A type predicate's type must be assignable to its parameter's type.
+  Type 'string' is not assignable to type '{}'.
+
+
+==== typePredicatesInUnion_noMatch.ts (2 errors) ====
+    interface A {
+        pred(x: {}, y: {}): x is boolean;
+                                 ~~~~~~~
+!!! error TS2677: A type predicate's type must be assignable to its parameter's type.
+!!! error TS2677:   Type 'boolean' is not assignable to type '{}'.
+    }
+    interface B {
+        pred(x: {}, y: {}): y is string;
+                                 ~~~~~~
+!!! error TS2677: A type predicate's type must be assignable to its parameter's type.
+!!! error TS2677:   Type 'string' is not assignable to type '{}'.
+    }
+    
+    type Or = A | B;
+    
+    function f(o: Or, x: {}, y: {}) {
+        if (o.pred(x, y)) {
+            x;
+            y;
+        }
+    }
+    

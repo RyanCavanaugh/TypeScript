@@ -45,7 +45,6 @@ var test5 = 3	.toString();
 
 var test6 = 3.['toString']();
 >test6 : Symbol(test6, Decl(numericLiteralsWithTrailingDecimalPoints01.ts, 12, 3))
->'toString' : Symbol(Number.toString, Decl(lib.es5.d.ts, --, --))
 
 var test7 = 3
 >test7 : Symbol(test7, Decl(numericLiteralsWithTrailingDecimalPoints01.ts, 13, 3))

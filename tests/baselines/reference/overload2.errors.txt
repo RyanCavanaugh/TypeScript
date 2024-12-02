@@ -1,0 +1,23 @@
+overload2.ts(12,10): error TS2394: This overload signature is not compatible with its implementation signature.
+
+
+==== overload2.ts (1 errors) ====
+    enum A { }
+    enum B { }
+        
+    function foo(a: A);
+    function foo(b: B);
+    // should be ok
+    function foo(x: number) { 
+    }
+    
+    class C { }
+    function foo1(a: A);
+    function foo1(c: C);
+             ~~~~
+!!! error TS2394: This overload signature is not compatible with its implementation signature.
+!!! related TS2750 overload2.ts:14:10: The implementation signature is declared here.
+    // should be ok
+    function foo1(x: number) { 
+    }
+    

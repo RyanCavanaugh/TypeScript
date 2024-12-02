@@ -36,64 +36,64 @@ function foo<K extends keyof M0>(m1: M1[K], m2: M2[K], m3: M3[K]) {
 >   : ^^^^^
 
     m1.toString();  // Error
->m1.toString() : string
->              : ^^^^^^
->m1.toString : (radix?: number) => string
->            : ^     ^^^      ^^^^^      
+>m1.toString() : any
+>              : ^^^
+>m1.toString : any
+>            : ^^^
 >m1 : 1 | 2 | undefined
 >   : ^^^^^^^^^^^^^^^^^
->toString : (radix?: number) => string
->         : ^     ^^^      ^^^^^      
+>toString : any
+>         : ^^^
 
     m1?.toString();
->m1?.toString() : string | undefined
->               : ^^^^^^^^^^^^^^^^^^
->m1?.toString : ((radix?: number) => string) | undefined
->             : ^^     ^^^      ^^^^^      ^^^^^^^^^^^^^
+>m1?.toString() : any
+>               : ^^^
+>m1?.toString : any
+>             : ^^^
 >m1 : 1 | 2 | undefined
 >   : ^^^^^^^^^^^^^^^^^
->toString : ((radix?: number) => string) | undefined
->         : ^^     ^^^      ^^^^^      ^^^^^^^^^^^^^
+>toString : any
+>         : ^^^
 
     m2.toString();  // Error
->m2.toString() : string
->              : ^^^^^^
->m2.toString : (radix?: number) => string
->            : ^     ^^^      ^^^^^      
+>m2.toString() : any
+>              : ^^^
+>m2.toString : any
+>            : ^^^
 >m2 : 1 | 2 | undefined
 >   : ^^^^^^^^^^^^^^^^^
->toString : (radix?: number) => string
->         : ^     ^^^      ^^^^^      
+>toString : any
+>         : ^^^
 
     m2?.toString();
->m2?.toString() : string | undefined
->               : ^^^^^^^^^^^^^^^^^^
->m2?.toString : ((radix?: number) => string) | undefined
->             : ^^     ^^^      ^^^^^      ^^^^^^^^^^^^^
+>m2?.toString() : any
+>               : ^^^
+>m2?.toString : any
+>             : ^^^
 >m2 : 1 | 2 | undefined
 >   : ^^^^^^^^^^^^^^^^^
->toString : ((radix?: number) => string) | undefined
->         : ^^     ^^^      ^^^^^      ^^^^^^^^^^^^^
+>toString : any
+>         : ^^^
 
     m3.toString();  // Error
->m3.toString() : string
->              : ^^^^^^
->m3.toString : (radix?: number) => string
->            : ^     ^^^      ^^^^^      
+>m3.toString() : any
+>              : ^^^
+>m3.toString : any
+>            : ^^^
 >m3 : 1 | 2 | undefined
 >   : ^^^^^^^^^^^^^^^^^
->toString : (radix?: number) => string
->         : ^     ^^^      ^^^^^      
+>toString : any
+>         : ^^^
 
     m3?.toString();
->m3?.toString() : string | undefined
->               : ^^^^^^^^^^^^^^^^^^
->m3?.toString : ((radix?: number) => string) | undefined
->             : ^^     ^^^      ^^^^^      ^^^^^^^^^^^^^
+>m3?.toString() : any
+>               : ^^^
+>m3?.toString : any
+>             : ^^^
 >m3 : 1 | 2 | undefined
 >   : ^^^^^^^^^^^^^^^^^
->toString : ((radix?: number) => string) | undefined
->         : ^^     ^^^      ^^^^^      ^^^^^^^^^^^^^
+>toString : any
+>         : ^^^
 }
 
 // Repro from #57487
@@ -119,26 +119,26 @@ const mapped: { [K in keyof Partial<Obj>]: Obj[K] } = {};
 >   : ^^
 
 const resolveMapped = <K extends keyof typeof mapped>(key: K) => mapped[key].toString();  // Error
->resolveMapped : <K extends keyof typeof mapped>(key: K) => string
->              : ^ ^^^^^^^^^                   ^^   ^^ ^^^^^^^^^^^
-><K extends keyof typeof mapped>(key: K) => mapped[key].toString() : <K extends keyof typeof mapped>(key: K) => string
->                                                                  : ^ ^^^^^^^^^                   ^^   ^^ ^^^^^^^^^^^
+>resolveMapped : <K extends keyof typeof mapped>(key: K) => any
+>              : ^ ^^^^^^^^^                   ^^   ^^ ^^^^^^^^
+><K extends keyof typeof mapped>(key: K) => mapped[key].toString() : <K extends keyof typeof mapped>(key: K) => any
+>                                                                  : ^ ^^^^^^^^^                   ^^   ^^ ^^^^^^^^
 >mapped : { a?: 1 | undefined; b?: 2 | undefined; }
 >       : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 >key : K
 >    : ^
->mapped[key].toString() : string
->                       : ^^^^^^
->mapped[key].toString : (radix?: number) => string
->                     : ^     ^^^      ^^^^^      
+>mapped[key].toString() : any
+>                       : ^^^
+>mapped[key].toString : any
+>                     : ^^^
 >mapped[key] : 1 | 2 | undefined
 >            : ^^^^^^^^^^^^^^^^^
 >mapped : { a?: 1 | undefined; b?: 2 | undefined; }
 >       : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 >key : K
 >    : ^
->toString : (radix?: number) => string
->         : ^     ^^^      ^^^^^      
+>toString : any
+>         : ^^^
 
 // Additional repro from #57487
 

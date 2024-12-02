@@ -28,9 +28,13 @@ unionSubtypeIfEveryConstituentTypeIsSubtype.ts(121,5): error TS2411: Property 'f
 unionSubtypeIfEveryConstituentTypeIsSubtype.ts(122,5): error TS2411: Property 'foo2' of type 'number' is not assignable to 'string' index type 'typeof c'.
 unionSubtypeIfEveryConstituentTypeIsSubtype.ts(128,5): error TS2411: Property 'foo' of type 'string | number' is not assignable to 'string' index type 'T'.
 unionSubtypeIfEveryConstituentTypeIsSubtype.ts(129,5): error TS2411: Property 'foo2' of type 'number' is not assignable to 'string' index type 'T'.
+unionSubtypeIfEveryConstituentTypeIsSubtype.ts(134,5): error TS2411: Property 'foo' of type 'string | number' is not assignable to 'string' index type 'Object'.
+unionSubtypeIfEveryConstituentTypeIsSubtype.ts(135,5): error TS2411: Property 'foo2' of type 'number' is not assignable to 'string' index type 'Object'.
+unionSubtypeIfEveryConstituentTypeIsSubtype.ts(141,5): error TS2411: Property 'foo' of type 'string | number' is not assignable to 'string' index type '{}'.
+unionSubtypeIfEveryConstituentTypeIsSubtype.ts(142,5): error TS2411: Property 'foo2' of type 'number' is not assignable to 'string' index type '{}'.
 
 
-==== unionSubtypeIfEveryConstituentTypeIsSubtype.ts (30 errors) ====
+==== unionSubtypeIfEveryConstituentTypeIsSubtype.ts (34 errors) ====
     enum e {
         e1,
         e2
@@ -225,12 +229,20 @@ unionSubtypeIfEveryConstituentTypeIsSubtype.ts(129,5): error TS2411: Property 'f
     interface I19 {
         [x: string]: Object;
         foo: string | number;
+        ~~~
+!!! error TS2411: Property 'foo' of type 'string | number' is not assignable to 'string' index type 'Object'.
         foo2: e | number;
+        ~~~~
+!!! error TS2411: Property 'foo2' of type 'number' is not assignable to 'string' index type 'Object'.
     }
     
     
     interface I20 {
         [x: string]: {};
         foo: string | number;
+        ~~~
+!!! error TS2411: Property 'foo' of type 'string | number' is not assignable to 'string' index type '{}'.
         foo2: e | number;
+        ~~~~
+!!! error TS2411: Property 'foo2' of type 'number' is not assignable to 'string' index type '{}'.
     }

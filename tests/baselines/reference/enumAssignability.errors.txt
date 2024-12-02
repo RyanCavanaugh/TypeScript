@@ -6,6 +6,8 @@ enumAssignability.ts(29,9): error TS2322: Type 'E' is not assignable to type 'st
 enumAssignability.ts(30,9): error TS2322: Type 'E' is not assignable to type 'boolean'.
 enumAssignability.ts(31,9): error TS2322: Type 'E' is not assignable to type 'Date'.
 enumAssignability.ts(33,9): error TS2322: Type 'E' is not assignable to type 'void'.
+enumAssignability.ts(34,9): error TS2322: Type 'E' is not assignable to type 'Object'.
+enumAssignability.ts(35,9): error TS2322: Type 'E' is not assignable to type '{}'.
 enumAssignability.ts(36,9): error TS2322: Type 'E' is not assignable to type '() => {}'.
 enumAssignability.ts(37,9): error TS2322: Type 'E' is not assignable to type 'Function'.
 enumAssignability.ts(38,9): error TS2322: Type 'E' is not assignable to type '(x: number) => string'.
@@ -14,6 +16,7 @@ enumAssignability.ts(40,5): error TS2322: Type 'E' is not assignable to type 'I'
 enumAssignability.ts(41,9): error TS2322: Type 'E' is not assignable to type 'number[]'.
 enumAssignability.ts(42,9): error TS2322: Type 'E' is not assignable to type '{ foo: string; }'.
 enumAssignability.ts(43,9): error TS2322: Type 'E' is not assignable to type '<T>(x: T) => T'.
+enumAssignability.ts(44,9): error TS2322: Type 'E' is not assignable to type 'Number'.
 enumAssignability.ts(45,9): error TS2322: Type 'E' is not assignable to type 'String'.
 enumAssignability.ts(48,9): error TS2322: Type 'E' is not assignable to type 'T'.
   'T' could be instantiated with an arbitrary type which could be unrelated to 'E'.
@@ -22,12 +25,12 @@ enumAssignability.ts(49,9): error TS2322: Type 'E' is not assignable to type 'U'
 enumAssignability.ts(50,9): error TS2322: Type 'E' is not assignable to type 'V'.
   'V' could be instantiated with an arbitrary type which could be unrelated to 'E'.
 enumAssignability.ts(51,13): error TS2322: Type 'E' is not assignable to type 'A'.
-  'E' is assignable to the constraint of type 'A', but 'A' could be instantiated with a different subtype of constraint 'Number'.
+  'A' could be instantiated with an arbitrary type which could be unrelated to 'E'.
 enumAssignability.ts(52,13): error TS2322: Type 'E' is not assignable to type 'B'.
   'E' is assignable to the constraint of type 'B', but 'B' could be instantiated with a different subtype of constraint 'E'.
 
 
-==== enumAssignability.ts (22 errors) ====
+==== enumAssignability.ts (25 errors) ====
     // enums assignable to number, any, Object, errors unless otherwise noted
     
     enum E { A }
@@ -78,7 +81,11 @@ enumAssignability.ts(52,13): error TS2322: Type 'E' is not assignable to type 'B
             ~
 !!! error TS2322: Type 'E' is not assignable to type 'void'.
         var h: Object = e;
+            ~
+!!! error TS2322: Type 'E' is not assignable to type 'Object'.
         var i: {} = e;
+            ~
+!!! error TS2322: Type 'E' is not assignable to type '{}'.
         var j: () => {} = e;
             ~
 !!! error TS2322: Type 'E' is not assignable to type '() => {}'.
@@ -104,6 +111,8 @@ enumAssignability.ts(52,13): error TS2322: Type 'E' is not assignable to type 'B
             ~
 !!! error TS2322: Type 'E' is not assignable to type '<T>(x: T) => T'.
         var p: Number = e;
+            ~
+!!! error TS2322: Type 'E' is not assignable to type 'Number'.
         var q: String = e;
             ~
 !!! error TS2322: Type 'E' is not assignable to type 'String'.
@@ -124,7 +133,7 @@ enumAssignability.ts(52,13): error TS2322: Type 'E' is not assignable to type 'B
             var a: A = e;
                 ~
 !!! error TS2322: Type 'E' is not assignable to type 'A'.
-!!! error TS2322:   'E' is assignable to the constraint of type 'A', but 'A' could be instantiated with a different subtype of constraint 'Number'.
+!!! error TS2322:   'A' could be instantiated with an arbitrary type which could be unrelated to 'E'.
             var b: B = e;
                 ~
 !!! error TS2322: Type 'E' is not assignable to type 'B'.

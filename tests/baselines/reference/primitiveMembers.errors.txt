@@ -1,10 +1,14 @@
 primitiveMembers.ts(5,3): error TS2339: Property 'toBAZ' does not exist on type 'number'.
 primitiveMembers.ts(11,1): error TS2322: Type 'Number' is not assignable to type 'number'.
   'number' is a primitive, but 'Number' is a wrapper object. Prefer using 'number' when possible.
+primitiveMembers.ts(12,1): error TS2322: Type 'number' is not assignable to type 'Number'.
+primitiveMembers.ts(17,5): error TS2322: Type 'number' is not assignable to type 'Number'.
+primitiveMembers.ts(18,5): error TS2322: Type 'string' is not assignable to type 'String'.
+primitiveMembers.ts(19,5): error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
 primitiveMembers.ts(21,10): error TS2872: This kind of expression is always truthy.
 
 
-==== primitiveMembers.ts (3 errors) ====
+==== primitiveMembers.ts (7 errors) ====
     var x = 5;
     var r = /yo/;
     r.source;
@@ -22,13 +26,21 @@ primitiveMembers.ts(21,10): error TS2872: This kind of expression is always trut
 !!! error TS2322: Type 'Number' is not assignable to type 'number'.
 !!! error TS2322:   'number' is a primitive, but 'Number' is a wrapper object. Prefer using 'number' when possible.
     N = n; // should work
+    ~
+!!! error TS2322: Type 'number' is not assignable to type 'Number'.
     
     var o: Object = {}
     var f: Function = (x: string) => x.length;
     var r2: RegExp = /./g;
     var n2: Number = 34;
+        ~~
+!!! error TS2322: Type 'number' is not assignable to type 'Number'.
     var s: String = "yo";
+        ~
+!!! error TS2322: Type 'string' is not assignable to type 'String'.
     var b: Boolean = true;
+        ~
+!!! error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
     
     var n3 = 5 || {};
              ~

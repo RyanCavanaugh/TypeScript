@@ -58,25 +58,25 @@ doYouNeedToChangeYourTargetLibraryES2015.ts(64,20): error TS2583: Cannot find na
 doYouNeedToChangeYourTargetLibraryES2015.ts(65,20): error TS2583: Cannot find name 'WeakMap'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
 doYouNeedToChangeYourTargetLibraryES2015.ts(66,21): error TS2583: Cannot find name 'Iterator'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
 doYouNeedToChangeYourTargetLibraryES2015.ts(67,26): error TS2583: Cannot find name 'AsyncIterator'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(68,34): error TS2550: Property 'codePointAt' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(69,31): error TS2550: Property 'includes' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(70,31): error TS2550: Property 'endsWith' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(71,32): error TS2550: Property 'normalize' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(72,29): error TS2550: Property 'repeat' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(73,33): error TS2550: Property 'startsWith' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(74,29): error TS2550: Property 'anchor' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(75,26): error TS2550: Property 'big' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(76,28): error TS2550: Property 'blink' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(77,27): error TS2550: Property 'bold' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(78,28): error TS2550: Property 'fixed' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(79,32): error TS2550: Property 'fontcolor' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(80,31): error TS2550: Property 'fontsize' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(81,30): error TS2550: Property 'italics' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(82,27): error TS2550: Property 'link' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(83,28): error TS2550: Property 'small' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(84,29): error TS2550: Property 'strike' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(85,26): error TS2550: Property 'sub' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
-doYouNeedToChangeYourTargetLibraryES2015.ts(86,26): error TS2550: Property 'sup' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+doYouNeedToChangeYourTargetLibraryES2015.ts(68,34): error TS2339: Property 'codePointAt' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(69,31): error TS2339: Property 'includes' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(70,31): error TS2339: Property 'endsWith' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(71,32): error TS2339: Property 'normalize' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(72,29): error TS2339: Property 'repeat' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(73,33): error TS2339: Property 'startsWith' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(74,29): error TS2339: Property 'anchor' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(75,26): error TS2339: Property 'big' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(76,28): error TS2339: Property 'blink' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(77,27): error TS2339: Property 'bold' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(78,28): error TS2339: Property 'fixed' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(79,32): error TS2339: Property 'fontcolor' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(80,31): error TS2339: Property 'fontsize' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(81,30): error TS2339: Property 'italics' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(82,27): error TS2339: Property 'link' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(83,28): error TS2339: Property 'small' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(84,29): error TS2339: Property 'strike' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(85,26): error TS2339: Property 'sub' does not exist on type '""'.
+doYouNeedToChangeYourTargetLibraryES2015.ts(86,26): error TS2339: Property 'sup' does not exist on type '""'.
 doYouNeedToChangeYourTargetLibraryES2015.ts(87,51): error TS2550: Property 'fromCodePoint' does not exist on type 'StringConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
 doYouNeedToChangeYourTargetLibraryES2015.ts(88,41): error TS2550: Property 'raw' does not exist on type 'StringConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
 doYouNeedToChangeYourTargetLibraryES2015.ts(89,32): error TS2550: Property 'flags' does not exist on type 'RegExp'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
@@ -274,61 +274,61 @@ doYouNeedToChangeYourTargetLibraryES2015.ts(91,34): error TS2550: Property 'unic
 !!! error TS2583: Cannot find name 'AsyncIterator'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
     const testStringCodePointAt = "".codePointAt(0);
                                      ~~~~~~~~~~~
-!!! error TS2550: Property 'codePointAt' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'codePointAt' does not exist on type '""'.
     const testStringIncludes = "".includes("");
                                   ~~~~~~~~
-!!! error TS2550: Property 'includes' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'includes' does not exist on type '""'.
     const testStringEndsWith = "".endsWith("");
                                   ~~~~~~~~
-!!! error TS2550: Property 'endsWith' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'endsWith' does not exist on type '""'.
     const testStringNormalize = "".normalize();
                                    ~~~~~~~~~
-!!! error TS2550: Property 'normalize' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'normalize' does not exist on type '""'.
     const testStringRepeat = "".repeat(0);
                                 ~~~~~~
-!!! error TS2550: Property 'repeat' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'repeat' does not exist on type '""'.
     const testStringStartsWith = "".startsWith("");
                                     ~~~~~~~~~~
-!!! error TS2550: Property 'startsWith' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'startsWith' does not exist on type '""'.
     const testStringAnchor = "".anchor("");
                                 ~~~~~~
-!!! error TS2550: Property 'anchor' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'anchor' does not exist on type '""'.
     const testStringBig = "".big();
                              ~~~
-!!! error TS2550: Property 'big' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'big' does not exist on type '""'.
     const testStringBlink = "".blink();
                                ~~~~~
-!!! error TS2550: Property 'blink' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'blink' does not exist on type '""'.
     const testStringBold = "".bold();
                               ~~~~
-!!! error TS2550: Property 'bold' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'bold' does not exist on type '""'.
     const testStringFixed = "".fixed();
                                ~~~~~
-!!! error TS2550: Property 'fixed' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'fixed' does not exist on type '""'.
     const testStringFontColor = "".fontcolor("blue");
                                    ~~~~~~~~~
-!!! error TS2550: Property 'fontcolor' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'fontcolor' does not exist on type '""'.
     const testStringFontSize = "".fontsize(0);
                                   ~~~~~~~~
-!!! error TS2550: Property 'fontsize' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'fontsize' does not exist on type '""'.
     const testStringItalics = "".italics();
                                  ~~~~~~~
-!!! error TS2550: Property 'italics' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'italics' does not exist on type '""'.
     const testStringLink = "".link("");
                               ~~~~
-!!! error TS2550: Property 'link' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'link' does not exist on type '""'.
     const testStringSmall = "".small();
                                ~~~~~
-!!! error TS2550: Property 'small' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'small' does not exist on type '""'.
     const testStringStrike = "".strike();
                                 ~~~~~~
-!!! error TS2550: Property 'strike' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'strike' does not exist on type '""'.
     const testStringSub = "".sub();
                              ~~~
-!!! error TS2550: Property 'sub' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'sub' does not exist on type '""'.
     const testStringSup = "".sup();
                              ~~~
-!!! error TS2550: Property 'sup' does not exist on type '""'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.
+!!! error TS2339: Property 'sup' does not exist on type '""'.
     const testStringConstructorFromCodePoint = String.fromCodePoint();
                                                       ~~~~~~~~~~~~~
 !!! error TS2550: Property 'fromCodePoint' does not exist on type 'StringConstructor'. Do you need to change your target library? Try changing the 'lib' compiler option to 'es2015' or later.

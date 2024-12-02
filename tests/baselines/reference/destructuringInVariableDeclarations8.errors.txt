@@ -1,0 +1,15 @@
+destructuringInVariableDeclarations8.ts(1,7): error TS2339: Property 'toString' does not exist on type 'number'.
+destructuringInVariableDeclarations8.ts(3,11): error TS2339: Property 'toFixed' does not exist on type 'number'.
+
+
+==== destructuringInVariableDeclarations8.ts (2 errors) ====
+    let { toString } = 1;
+          ~~~~~~~~
+!!! error TS2339: Property 'toString' does not exist on type 'number'.
+    {
+        let { toFixed } = 1;
+              ~~~~~~~
+!!! error TS2339: Property 'toFixed' does not exist on type 'number'.
+    }
+    export {};
+    

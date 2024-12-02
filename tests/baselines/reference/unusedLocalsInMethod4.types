@@ -675,13 +675,13 @@ function transformClassFields() {
 >             : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
         enabledSubstitutions.toString();
->enabledSubstitutions.toString() : string
->                                : ^^^^^^
->enabledSubstitutions.toString : (radix?: number) => string
->                              : ^     ^^^      ^^^^^      
+>enabledSubstitutions.toString() : any
+>                                : ^^^
+>enabledSubstitutions.toString : any
+>                              : ^^^
 >enabledSubstitutions : ClassPropertySubstitutionFlags
 >                     : ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->toString : (radix?: number) => string
->         : ^     ^^^      ^^^^^      
+>toString : any
+>         : ^^^
     }
 }

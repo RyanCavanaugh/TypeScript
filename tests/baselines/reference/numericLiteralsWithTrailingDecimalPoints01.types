@@ -109,12 +109,12 @@ var test5 = 3	.toString();
 >         : ^     ^^^      ^^^^^      
 
 var test6 = 3.['toString']();
->test6 : string
->      : ^^^^^^
->3.['toString']() : string
->                 : ^^^^^^
->3.['toString'] : (radix?: number) => string
->               : ^     ^^^      ^^^^^      
+>test6 : any
+>      : ^^^
+>3.['toString']() : any
+>                 : ^^^
+>3.['toString'] : any
+>               : ^^^
 >3. : 3
 >   : ^
 >'toString' : "toString"

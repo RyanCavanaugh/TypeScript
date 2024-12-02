@@ -18,8 +18,8 @@ function f1<T extends string | undefined>(x: T, y: { a: T }, z: [T]): string {
 >  : ^
 
         x;
->x : NonNullable<T>
->  : ^^^^^^^^^^^^^^
+>x : never
+>  : ^^^^^
 
         x.length;
 >x.length : number
@@ -70,20 +70,20 @@ function f1<T extends string | undefined>(x: T, y: { a: T }, z: [T]): string {
 >  : ^
 
         z[0].length;
->z[0].length : number
->            : ^^^^^^
->z[0] : string
->     : ^^^^^^
+>z[0].length : any
+>            : ^^^
+>z[0] : never
+>     : ^^^^^
 >z : [T]
 >  : ^^^
 >0 : 0
 >  : ^
->length : number
->       : ^^^^^^
+>length : any
+>       : ^^^
 
         return z[0];
->z[0] : string
->     : ^^^^^^
+>z[0] : never
+>     : ^^^^^
 >z : [T]
 >  : ^^^
 >0 : 0

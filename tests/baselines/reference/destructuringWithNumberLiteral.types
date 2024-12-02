@@ -2,8 +2,8 @@
 
 === destructuringWithNumberLiteral.ts ===
 var { toExponential } = 0;
->toExponential : (fractionDigits?: number) => string
->              : ^              ^^^      ^^^^^      
+>toExponential : any
+>              : ^^^
 >0 : 0
 >  : ^
 

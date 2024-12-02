@@ -76,10 +76,10 @@ var r = c.foo({ length: 3, charAt: (x: number) => { '' } });
 >   : ^^
 
 var r2 = r('');
->r2 : string
->   : ^^^^^^
->r('') : ""
->      : ^^
+>r2 : { length: number; charAt: (x: number) => void; }
+>   : ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^      ^^^^^^^^^^^^
+>r('') : { length: number; charAt: (x: number) => void; }
+>      : ^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^      ^^^^^^^^^^^^
 >r : <V extends { length: number; charAt: (x: number) => void; }>(x: V) => V
 >  : ^ ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ ^^      ^^^^^^^^^^^^^^ ^^^^^^^^^
 >'' : ""

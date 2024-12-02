@@ -1,0 +1,28 @@
+interfaceExtendingClass.ts(2,5): error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
+interfaceExtendingClass.ts(4,9): error TS2411: Property 'Z' of type 'number' is not assignable to 'string' index type 'Object'.
+
+
+==== interfaceExtendingClass.ts (2 errors) ====
+    class Foo {
+        x: string;
+        ~
+!!! error TS2411: Property 'x' of type 'string' is not assignable to 'string' index type 'Object'.
+        y() { }
+        get Z() {
+            ~
+!!! error TS2411: Property 'Z' of type 'number' is not assignable to 'string' index type 'Object'.
+            return 1;
+        }
+        [x: string]: Object;
+    }
+    
+    interface I extends Foo {
+    }
+    
+    var i: I;
+    var r1 = i.x;
+    var r2 = i.y();
+    var r3 = i.Z;
+    
+    var f: Foo = i;
+    i = f;

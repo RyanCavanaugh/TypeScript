@@ -70,9 +70,9 @@ var r1ii = foo('', (x) => '', (x) => null); // string => string
 >  : ^^^^^^
 
 var r2 = foo('', (x: string) => '', (x: Object) => ''); // string => string
->r2 : (x: Object) => Object
+>r2 : (x: string) => string
 >   : ^ ^^^^^^^^^^^^^^^^^^^
->foo('', (x: string) => '', (x: Object) => '') : (x: Object) => Object
+>foo('', (x: string) => '', (x: Object) => '') : (x: string) => string
 >                                              : ^ ^^^^^^^^^^^^^^^^^^^
 >foo : <T>(x: T, a: (x: T) => T, b: (x: T) => T) => (x: T) => T
 >    : ^ ^^ ^^ ^^ ^^           ^^ ^^           ^^^^^^ ^^ ^^^^^ 

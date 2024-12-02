@@ -11,24 +11,24 @@ class C<T extends C<T>> { // error
 }
 
 var c = new C(1);
->c : C<number>
->  : ^^^^^^^^^
->new C(1) : C<number>
->         : ^^^^^^^^^
+>c : C<C<number>>
+>  : ^^^^^^^^^^^^
+>new C(1) : C<C<number>>
+>         : ^^^^^^^^^^^^
 >C : typeof C
 >  : ^^^^^^^^
 >1 : 1
 >  : ^
 
 var c = new C(new C('')); // error
->c : C<number>
->  : ^^^^^^^^^
->new C(new C('')) : C<C<string>>
->                 : ^^^^^^^^^^^^
+>c : C<C<number>>
+>  : ^^^^^^^^^^^^
+>new C(new C('')) : C<C<C<string>>>
+>                 : ^^^^^^^^^^^^^^^
 >C : typeof C
 >  : ^^^^^^^^
->new C('') : C<string>
->          : ^^^^^^^^^
+>new C('') : C<C<string>>
+>          : ^^^^^^^^^^^^
 >C : typeof C
 >  : ^^^^^^^^
 >'' : ""

@@ -1,10 +1,17 @@
 expr.ts(87,5): error TS2367: This comparison appears to be unintentional because the types 'number' and 'string' have no overlap.
 expr.ts(88,5): error TS2367: This comparison appears to be unintentional because the types 'number' and 'boolean' have no overlap.
+expr.ts(89,5): error TS2367: This comparison appears to be unintentional because the types 'number' and 'I' have no overlap.
 expr.ts(94,5): error TS2367: This comparison appears to be unintentional because the types 'string' and 'number' have no overlap.
 expr.ts(95,5): error TS2367: This comparison appears to be unintentional because the types 'string' and 'boolean' have no overlap.
+expr.ts(96,5): error TS2367: This comparison appears to be unintentional because the types 'string' and 'I' have no overlap.
 expr.ts(98,5): error TS2367: This comparison appears to be unintentional because the types 'string' and 'E' have no overlap.
+expr.ts(107,5): error TS2367: This comparison appears to be unintentional because the types 'I' and 'number' have no overlap.
+expr.ts(108,5): error TS2367: This comparison appears to be unintentional because the types 'I' and 'string' have no overlap.
+expr.ts(109,5): error TS2367: This comparison appears to be unintentional because the types 'I' and 'boolean' have no overlap.
+expr.ts(112,5): error TS2367: This comparison appears to be unintentional because the types 'I' and 'E' have no overlap.
 expr.ts(115,5): error TS2367: This comparison appears to be unintentional because the types 'E' and 'string' have no overlap.
 expr.ts(116,5): error TS2367: This comparison appears to be unintentional because the types 'E' and 'boolean' have no overlap.
+expr.ts(118,5): error TS2367: This comparison appears to be unintentional because the types 'E' and 'I' have no overlap.
 expr.ts(142,5): error TS2365: Operator '+' cannot be applied to types 'number' and 'boolean'.
 expr.ts(143,5): error TS2365: Operator '+' cannot be applied to types 'number' and 'I'.
 expr.ts(161,5): error TS2365: Operator '+' cannot be applied to types 'I' and 'number'.
@@ -69,7 +76,7 @@ expr.ts(240,7): error TS2363: The right-hand side of an arithmetic operation mus
 expr.ts(242,7): error TS2363: The right-hand side of an arithmetic operation must be of type 'any', 'number', 'bigint' or an enum type.
 
 
-==== expr.ts (69 errors) ====
+==== expr.ts (76 errors) ====
     interface I {
     }
     
@@ -163,6 +170,8 @@ expr.ts(242,7): error TS2363: The right-hand side of an arithmetic operation mus
         ~~~~
 !!! error TS2367: This comparison appears to be unintentional because the types 'number' and 'boolean' have no overlap.
         n==i;
+        ~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'number' and 'I' have no overlap.
         n==n;
         n==e;
     
@@ -174,6 +183,8 @@ expr.ts(242,7): error TS2363: The right-hand side of an arithmetic operation mus
         ~~~~
 !!! error TS2367: This comparison appears to be unintentional because the types 'string' and 'boolean' have no overlap.
         s==i;
+        ~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'string' and 'I' have no overlap.
         s==s;
         s==e;
         ~~~~
@@ -187,11 +198,19 @@ expr.ts(242,7): error TS2363: The right-hand side of an arithmetic operation mus
         a==e;
     
         i==n;
+        ~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'I' and 'number' have no overlap.
         i==s;
+        ~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'I' and 'string' have no overlap.
         i==b;
+        ~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'I' and 'boolean' have no overlap.
         i==a;
         i==i;
         i==e;
+        ~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'I' and 'E' have no overlap.
     
         e==n;
         e==s;
@@ -202,6 +221,8 @@ expr.ts(242,7): error TS2363: The right-hand side of an arithmetic operation mus
 !!! error TS2367: This comparison appears to be unintentional because the types 'E' and 'boolean' have no overlap.
         e==a;
         e==i;
+        ~~~~
+!!! error TS2367: This comparison appears to be unintentional because the types 'E' and 'I' have no overlap.
         e==e;
     
         +i;

@@ -69,6 +69,7 @@ class Derived2 extends Base {
     // ok, not enforcing assignability relation on this
     constructor(x: any) {
 >x : any
+>  : ^^^
 
         super(x);
 >super(x) : void
@@ -76,6 +77,7 @@ class Derived2 extends Base {
 >super : typeof Base
 >      : ^^^^^^^^^^^
 >x : any
+>  : ^^^
 
         return 1;
 >1 : 1

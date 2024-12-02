@@ -40,8 +40,8 @@ const g = (arg: LiteralsAndWeakTypes) => {
 >    : ^^^
 
       arg;
->arg : { toLowerCase?(): string; } | { toUpperCase?(): string; otherOptionalProp?: number; } | "A"
->    : ^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^
+>arg : "A"
+>    : ^^^
 
     } else {
       arg;
@@ -89,8 +89,8 @@ const h = (arg: PrimitivesAndWeakTypes) => {
 >    : ^^^
 
       arg;
->arg : "A" | { toLowerCase?(): string; } | { toUpperCase?(): string; otherOptionalProp?: number; }
->    : ^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^^^      ^^^^^^^^^^^^^^^^^^^^^^      ^^^
+>arg : "A"
+>    : ^^^
 
     } else {
       arg;

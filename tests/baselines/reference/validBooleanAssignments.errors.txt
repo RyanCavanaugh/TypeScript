@@ -1,0 +1,15 @@
+validBooleanAssignments.ts(4,5): error TS2322: Type 'boolean' is not assignable to type 'Object'.
+validBooleanAssignments.ts(5,5): error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
+
+
+==== validBooleanAssignments.ts (2 errors) ====
+    var x = true;
+    
+    var a: any = x;
+    var b: Object = x;
+        ~
+!!! error TS2322: Type 'boolean' is not assignable to type 'Object'.
+    var c: Boolean = x;
+        ~
+!!! error TS2322: Type 'boolean' is not assignable to type 'Boolean'.
+    var d: boolean = x;

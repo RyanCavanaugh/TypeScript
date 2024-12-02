@@ -1,3 +1,4 @@
+controlFlowGenericTypes.ts(12,14): error TS2339: Property 'length' does not exist on type 'never'.
 controlFlowGenericTypes.ts(49,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'Box<T>'.
 controlFlowGenericTypes.ts(55,15): error TS2345: Argument of type 'undefined' is not assignable to parameter of type 'Box<unknown>'.
 controlFlowGenericTypes.ts(81,11): error TS2339: Property 'foo' does not exist on type 'MyUnion'.
@@ -10,7 +11,7 @@ controlFlowGenericTypes.ts(167,9): error TS18048: 'iSpec' is possibly 'undefined
 controlFlowGenericTypes.ts(168,9): error TS18048: 'iSpec' is possibly 'undefined'.
 
 
-==== controlFlowGenericTypes.ts (8 errors) ====
+==== controlFlowGenericTypes.ts (9 errors) ====
     function f1<T extends string | undefined>(x: T, y: { a: T }, z: [T]): string {
         if (x) {
             x;
@@ -23,6 +24,8 @@ controlFlowGenericTypes.ts(168,9): error TS18048: 'iSpec' is possibly 'undefined
         }
         if (z[0]) {
             z[0].length;
+                 ~~~~~~
+!!! error TS2339: Property 'length' does not exist on type 'never'.
             return z[0];
         }
         return "hello";

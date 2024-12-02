@@ -83,12 +83,9 @@ var r2 = i.foo.toString();
 >         : ^     ^^^      ^^^^^      
 
 var r2b = i.foo['toString']();
->r2b : string
->    : ^^^^^^
->i.foo['toString']() : string
->                    : ^^^^^^
->i.foo['toString'] : (radix?: number) => string
->                  : ^     ^^^      ^^^^^      
+>r2b : error
+>i.foo['toString']() : error
+>i.foo['toString'] : error
 >i.foo : number
 >      : ^^^^^^
 >i : I<number>

@@ -182,126 +182,6 @@ Info seq  [hh:mm:ss:mss] response:
         "isNewIdentifierLocation": false,
         "entries": [
           {
-            "name": "charAt",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "charCodeAt",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "concat",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "indexOf",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "lastIndexOf",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "length",
-            "kind": "property",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "localeCompare",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "match",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "replace",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "search",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "slice",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "split",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "substring",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toLocaleLowerCase",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toLocaleUpperCase",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toLowerCase",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toString",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "toUpperCase",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "trim",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
-            "name": "valueOf",
-            "kind": "method",
-            "kindModifiers": "declare",
-            "sortText": "11"
-          },
-          {
             "name": "a",
             "kind": "warning",
             "kindModifiers": "",
@@ -340,12 +220,6 @@ Info seq  [hh:mm:ss:mss] response:
             "sortText": "18",
             "isFromUncheckedFile": true,
             "commitCharacters": []
-          },
-          {
-            "name": "substr",
-            "kind": "method",
-            "kindModifiers": "deprecated,declare",
-            "sortText": "z11"
           }
         ],
         "defaultCommitCharacters": [

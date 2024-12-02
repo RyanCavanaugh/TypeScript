@@ -58,36 +58,36 @@ function f2<T extends string | undefined>(x: T, y: NonNullable<T>) {
 >   : ^ ^^^^^^^^^                  ^^ ^^ ^^ ^^              ^^^^^^^^^
 >x : T
 >  : ^
->y : NonNullable<T>
->  : ^^^^^^^^^^^^^^
+>y : never
+>  : ^^^^^
 
     x = y;
->x = y : NonNullable<T>
->      : ^^^^^^^^^^^^^^
+>x = y : never
+>      : ^^^^^
 >x : T
 >  : ^
->y : NonNullable<T>
->  : ^^^^^^^^^^^^^^
+>y : never
+>  : ^^^^^
 
     y = x;  // Error
->y = x : T
->      : ^
->y : NonNullable<T>
->  : ^^^^^^^^^^^^^^
->x : T
->  : ^
+>y = x : never
+>      : ^^^^^
+>y : never
+>  : ^^^^^
+>x : never
+>  : ^^^^^
 
     let s1: string = x;  // Error
 >s1 : string
 >   : ^^^^^^
->x : string
->  : ^^^^^^
+>x : never
+>  : ^^^^^
 
     let s2: string = y;
 >s2 : string
 >   : ^^^^^^
->y : string
->  : ^^^^^^
+>y : never
+>  : ^^^^^
 }
 
 function f3<T>(x: Partial<T>[keyof T], y: NonNullable<Partial<T>[keyof T]>) {
@@ -122,36 +122,36 @@ function f4<T extends { x: string | undefined }>(x: T["x"], y: NonNullable<T["x"
 >  : ^^^^^^^^^^^^^^^^^^
 >x : T["x"]
 >  : ^^^^^^
->y : NonNullable<T["x"]>
->  : ^^^^^^^^^^^^^^^^^^^
+>y : never
+>  : ^^^^^
 
     x = y;
->x = y : NonNullable<T["x"]>
->      : ^^^^^^^^^^^^^^^^^^^
+>x = y : never
+>      : ^^^^^
 >x : T["x"]
 >  : ^^^^^^
->y : NonNullable<T["x"]>
->  : ^^^^^^^^^^^^^^^^^^^
+>y : never
+>  : ^^^^^
 
     y = x;  // Error
->y = x : T["x"]
->      : ^^^^^^
->y : NonNullable<T["x"]>
->  : ^^^^^^^^^^^^^^^^^^^
->x : T["x"]
->  : ^^^^^^
+>y = x : never
+>      : ^^^^^
+>y : never
+>  : ^^^^^
+>x : never
+>  : ^^^^^
 
     let s1: string = x;  // Error
 >s1 : string
 >   : ^^^^^^
->x : string
->  : ^^^^^^
+>x : never
+>  : ^^^^^
 
     let s2: string = y;
 >s2 : string
 >   : ^^^^^^
->y : string
->  : ^^^^^^
+>y : never
+>  : ^^^^^
 }
 
 type Options = { k: "a", a: number } | { k: "b", b: string } | { k: "c", c: boolean };

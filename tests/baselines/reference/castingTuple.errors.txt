@@ -1,3 +1,6 @@
+castingTuple.ts(12,21): error TS2352: Conversion of type '[number, string]' to type '[{}, {}]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+  Type at position 0 in source is not compatible with type at position 0 in target.
+    Type 'number' is not comparable to type '{}'.
 castingTuple.ts(13,23): error TS2352: Conversion of type '[number, string]' to type '[number, string, boolean]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
   Source has 2 element(s) but target requires 3.
 castingTuple.ts(14,15): error TS2352: Conversion of type '[number, string, boolean]' to type '[number, string]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
@@ -17,7 +20,7 @@ castingTuple.ts(32,5): error TS2403: Subsequent variable declarations must have 
 castingTuple.ts(33,1): error TS2304: Cannot find name 't4'.
 
 
-==== castingTuple.ts (9 errors) ====
+==== castingTuple.ts (10 errors) ====
     interface I { }
     class A { a = 10; }
     class C implements I { c };
@@ -30,6 +33,10 @@ castingTuple.ts(33,1): error TS2304: Cannot find name 't4'.
     // no error
     var numStrTuple: [number, string] = [5, "foo"];
     var emptyObjTuple = <[{}, {}]>numStrTuple;
+                        ~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2352: Conversion of type '[number, string]' to type '[{}, {}]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.
+!!! error TS2352:   Type at position 0 in source is not compatible with type at position 0 in target.
+!!! error TS2352:     Type 'number' is not comparable to type '{}'.
     var numStrBoolTuple = <[number, string, boolean]>numStrTuple;
                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 !!! error TS2352: Conversion of type '[number, string]' to type '[number, string, boolean]' may be a mistake because neither type sufficiently overlaps with the other. If this was intentional, convert the expression to 'unknown' first.

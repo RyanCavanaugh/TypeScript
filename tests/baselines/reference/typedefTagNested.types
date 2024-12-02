@@ -9,6 +9,7 @@
  */
 var ex;
 >ex : any
+>   : ^^^
 
 /** @type {App} */
 const app = {

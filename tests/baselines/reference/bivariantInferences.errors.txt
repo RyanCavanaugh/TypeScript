@@ -1,0 +1,21 @@
+bivariantInferences.ts(10,9): error TS2684: The 'this' context of type '(string | number)[] | null[] | undefined[] | {}[]' is not assignable to method's 'this' of type 'readonly (string | number | null | undefined)[]'.
+  Type '{}[]' is not assignable to type 'readonly (string | number | null | undefined)[]'.
+    Type '{}' is not assignable to type 'string | number | null | undefined'.
+
+
+==== bivariantInferences.ts (1 errors) ====
+    // Repro from #27337
+    
+    interface Array<T> {
+        equalsShallow<T>(this: ReadonlyArray<T>, other: ReadonlyArray<T>): boolean;
+    }
+    
+    declare const a: (string | number)[] | null[] | undefined[] | {}[];
+    declare const b: (string | number)[] | null[] | undefined[] | {}[];
+    
+    let x = a.equalsShallow(b);
+            ~
+!!! error TS2684: The 'this' context of type '(string | number)[] | null[] | undefined[] | {}[]' is not assignable to method's 'this' of type 'readonly (string | number | null | undefined)[]'.
+!!! error TS2684:   Type '{}[]' is not assignable to type 'readonly (string | number | null | undefined)[]'.
+!!! error TS2684:     Type '{}' is not assignable to type 'string | number | null | undefined'.
+    

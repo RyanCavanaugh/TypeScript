@@ -11,9 +11,13 @@ recursiveTypeReferences1.ts(116,24): error TS2304: Cannot find name 'concat'.
 recursiveTypeReferences1.ts(117,11): error TS2304: Cannot find name 'concat'.
 recursiveTypeReferences1.ts(122,11): error TS2304: Cannot find name 'concat'.
 recursiveTypeReferences1.ts(127,3): error TS2304: Cannot find name 'assert'.
+recursiveTypeReferences1.ts(127,20): error TS7053: Element implicitly has an 'any' type because expression of type '1' can't be used to index type 'string'.
+  Property '1' does not exist on type 'string'.
+recursiveTypeReferences1.ts(128,11): error TS7053: Element implicitly has an 'any' type because expression of type '1' can't be used to index type 'string'.
+  Property '1' does not exist on type 'string'.
 
 
-==== recursiveTypeReferences1.ts (13 errors) ====
+==== recursiveTypeReferences1.ts (15 errors) ====
     type ValueOrArray<T> = T | Array<ValueOrArray<T>>;
     
     const a0: ValueOrArray<number> = 1;
@@ -167,6 +171,12 @@ recursiveTypeReferences1.ts(127,3): error TS2304: Cannot find name 'assert'.
       assert(isFinite(+h.tagName[1]));
       ~~~~~~
 !!! error TS2304: Cannot find name 'assert'.
+                       ~~~~~~~~~~~~
+!!! error TS7053: Element implicitly has an 'any' type because expression of type '1' can't be used to index type 'string'.
+!!! error TS7053:   Property '1' does not exist on type 'string'.
       return +h.tagName[1];
+              ~~~~~~~~~~~~
+!!! error TS7053: Element implicitly has an 'any' type because expression of type '1' can't be used to index type 'string'.
+!!! error TS7053:   Property '1' does not exist on type 'string'.
     }
     

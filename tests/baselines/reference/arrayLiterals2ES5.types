@@ -288,6 +288,7 @@ var d5 = [...temp3];
 >[...temp3] : any[]
 >           : ^^^^^
 >...temp3 : any
+>         : ^^^
 >temp3 : any[]
 >      : ^^^^^
 
@@ -297,6 +298,7 @@ var d6 = [...temp4];
 >[...temp4] : any[]
 >           : ^^^^^
 >...temp4 : any
+>         : ^^^
 >temp4 : any[]
 >      : ^^^^^
 

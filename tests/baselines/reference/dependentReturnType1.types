@@ -689,8 +689,8 @@ class Unnamed {
 >     : ^^^^^^
 
         return name; // Error
->name : T & {}
->     : ^^^^^^
+>name : never
+>     : ^^^^^
     }
 }
 
@@ -1128,18 +1128,18 @@ function capitalize<T extends string | string[]>(
         return input[0].toUpperCase() + input.slice(1); // Ok
 >input[0].toUpperCase() + input.slice(1) : string
 >                                        : ^^^^^^
->input[0].toUpperCase() : string
->                       : ^^^^^^
->input[0].toUpperCase : () => string
->                     : ^^^^^^      
->input[0] : string
->         : ^^^^^^
+>input[0].toUpperCase() : any
+>                       : ^^^
+>input[0].toUpperCase : any
+>                     : ^^^
+>input[0] : any
+>         : ^^^
 >input : string
 >      : ^^^^^^
 >0 : 0
 >  : ^
->toUpperCase : () => string
->            : ^^^^^^      
+>toUpperCase : any
+>            : ^^^
 >input.slice(1) : string
 >               : ^^^^^^
 >input.slice : (start?: number, end?: number) => string
@@ -1194,18 +1194,18 @@ function badCapitalize<T extends string | string[]>(
         return input[0].toUpperCase() + input.slice(1); // Ok
 >input[0].toUpperCase() + input.slice(1) : string
 >                                        : ^^^^^^
->input[0].toUpperCase() : string
->                       : ^^^^^^
->input[0].toUpperCase : () => string
->                     : ^^^^^^      
->input[0] : string
->         : ^^^^^^
+>input[0].toUpperCase() : any
+>                       : ^^^
+>input[0].toUpperCase : any
+>                     : ^^^
+>input[0] : any
+>         : ^^^
 >input : string
 >      : ^^^^^^
 >0 : 0
 >  : ^
->toUpperCase : () => string
->            : ^^^^^^      
+>toUpperCase : any
+>            : ^^^
 >input.slice(1) : string
 >               : ^^^^^^
 >input.slice : (start?: number, end?: number) => string
