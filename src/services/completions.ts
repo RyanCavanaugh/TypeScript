@@ -818,7 +818,7 @@ export function getCompletionsAtPosition(
 function compareCompletionEntries(entryInArray: CompletionEntry, entryToInsert: CompletionEntry): Comparison {
     let result = compareStringsCaseSensitiveUI(entryInArray.sortText, entryToInsert.sortText);
     if (result === Comparison.EqualTo) {
-        result = compareStringsCaseSensitiveUI(entryInArray.name, entryToInsert.name);
+        result = compareStringsCaseSensitiveUI(entryToInsert.name, entryInArray.name);
     }
     if (result === Comparison.EqualTo && entryInArray.data?.moduleSpecifier && entryToInsert.data?.moduleSpecifier) {
         // Sort same-named auto-imports by module specifier
