@@ -555,6 +555,19 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
     }
 
     /**
+     * Remove comments from JSX text content.
+     * Comments like slash-star comment star-slash should not be treated as text content in JSX.
+     */
+    function stripCommentsFromJsxText(text: string): string {
+        // Only strip comments when not in preserve mode
+        if (compilerOptions.jsx === JsxEmit.Preserve) {
+            return text;
+        }
+        // Remove /* ... */ style comments from JSX text
+        return text.replace(/\/\*[\s\S]*?\*\//g, '');
+    }
+
+    /**
      * JSX trims whitespace at the end and beginning of lines, except that the
      * start/end of a tag is considered a start/end of a line only if that line is
      * on the same line as the closing tag. See examples in
@@ -570,6 +583,8 @@ export function transformJsx(context: TransformationContext): (x: SourceFile | B
      * - Remove empty lines and join the rest with " ".
      */
     function fixupWhitespaceAndDecodeEntities(text: string): string | undefined {
+        // First, strip comments from the text
+        text = stripCommentsFromJsxText(text);
         let acc: string | undefined;
         // First non-whitespace character on this line.
         let firstNonWhitespace = 0;
