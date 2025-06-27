@@ -2,3 +2,4 @@ Questions I have that I think the developers of this project can help me with:
  * How does control flow analysis represent a circular graph? I checked the documentation server for "cfa" and "control flow"
  * How do I tell if a symbol is in the global scope? I checked the documentation server for topics referencing "symbol" and "global"
  * What is an `EscapedName`, exactly?
+ * How do I access the md-fragments MCP server mentioned in the copilot instructions? I searched for MCP server tools and list-topics endpoint but couldn't find the expected md-fragments server
