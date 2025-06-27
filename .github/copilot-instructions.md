@@ -1,226 +1,31 @@
-# Guide for Copilot
+## Documentation MCP server
 
-This document provides a concise guide for writing TypeScript fourslash tests and compiler tests, along with build instructions.
+The repo is large and the project is complex.
+This document contains information you'll need no matter what the task is, but we have a separate library of content that you'll need to consult depending on the issue.
 
-## Build Instructions Summary
+You have been given the `md-fragments` MCP server.
+Before doing anything, query its `list-topics` endpoint and remember all the topics you saw.
+Consult these topics often, as they contain important information relevant to the work.
 
-### Setup
-1. Install Node.js (current or LTS)
-2. Clone the repository: `git clone --depth=1 https://github.com/microsoft/TypeScript`
-3. Install dependencies: `npm ci`
+Before you end a session, read the `How to Finish a Session` topic.
 
-### Common Build Tasks
+## Asking Questions
+
+We want to make you smarter over time.
+If you encounter a situation where you think a developer on this project would be able to provide a useful answer *and* it's not something offered by the Documentation MCP server, add a question to the file `.github/copilot-questions.md`
+Explain what you searched for so that we can put the right search terms in the documentation library.
+
+## Common Commands
+
+You'll need to run these commands often. Always use `npx` to run `hereby` commands.
+
 ```bash
 npx hereby local             # Build the compiler into built/local
-npx hereby clean             # Delete the built compiler  
-npx hereby tests             # Build the test infrastructure
-npx hereby runtests          # Run all tests
-npx hereby runtests-parallel # Run tests in parallel (recommended)
-npx hereby runtests --runner=fourslash # Run only fourslash tests
-npx hereby runtests --runner=compiler # Run only compiler tests
-npx hereby runtests --tests=<testPath> # Run specific test
+npx hereby runtests-parallel # Run all tests; this will take 10-15 minutes
+npx hereby runtests -t <grep> # Run testcases matching a specific pattern
 npx hereby baseline-accept   # Accept new test baselines
-npx hereby lint              # Run eslint
-npx hereby format            # Run code formatting
-```
-
-## Fourslash Test Syntax Guide
-
-Fourslash tests are interactive TypeScript language service tests. They validate IDE features like completions, quick info, navigation, and refactoring.
-
-### Basic Structure
-```typescript
-/// <reference path='fourslash.ts'/>
-
-////code goes here with /*markers*/
-
-// Test assertions go here
-```
-
-### Key Syntax Elements
-
-#### 1. Source Code Definition
-Use `////` to define source code lines:
-```typescript
-////function foo(x: number) {
-////    return x + 1;
-////}
-////let result = foo(/*marker*/42);
-```
-
-#### 2. Markers for Positioning
-Use `/**/` for anonymous markers or `/*name*/` for named markers:
-```typescript
-////let x = /*1*/someValue;
-////let y = /*cursor*/anotherValue;
-```
-
-#### 3. Multi-file Tests
-Use `// @Filename:` to define multiple files:
-```typescript
-// @Filename: /a.ts
-////export const value = 42;
-
-// @Filename: /b.ts  
-////import { value } from './a';
-////console.log(/*marker*/value);
-```
-
-#### 4. Ranges
-Use `[|text|]` to define text ranges:
-```typescript
-////function test() {
-////    [|return 42;|]
-////}
-```
-
-### Common API Patterns
-
-#### Navigation & Positioning
-```typescript
-goTo.marker("markerName");         // Navigate to marker
-goTo.marker();                     // Navigate to anonymous marker /**/
-```
-
-#### Verification (Prefer these over baselines)
-```typescript
-verify.currentLineContentIs("expected content");
-verify.completions({ includes: "itemName" });
-verify.completions({ excludes: "itemName" });
-verify.quickInfoIs("expected info");
-verify.codeFix({
-    description: "Fix description",
-    newFileContent: "expected content after fix"
-});
-```
-
-#### Completions Testing
-```typescript
-verify.completions({ 
-    marker: "1",
-    includes: { name: "foo", source: "/a", hasAction: true },
-    isNewIdentifierLocation: true,
-    preferences: { includeCompletionsForModuleExports: true }
-});
-```
-
-#### Code Fixes Testing
-```typescript
-verify.codeFix({
-    description: "Add missing property",
-    index: 0,
-    newFileContent: `class C {
-    property: string;
-    method() { this.property = "value"; }
-}`
-});
-```
-
-#### Formatting
-```typescript
-format.document();
-verify.currentLineContentIs("formatted content");
-```
-
-### Simple Example
-```typescript
-/// <reference path='fourslash.ts'/>
-
-////interface User {
-////    name: string;
-////}
-////
-////const user: User = {
-////    /*completion*/
-////};
-
-verify.completions({
-    marker: "completion",
-    includes: { name: "name", sortText: "0" }
-});
-```
-
-## Compiler Test Syntax Guide
-
-Compiler tests validate TypeScript compilation behavior, type checking, and error reporting.
-
-### Basic Structure
-- Simple `.ts` files in `tests/cases/compiler/`
-- Use comments to indicate expected behavior
-- No special test harness - just TypeScript code
-
-### Compiler Directives
-Use `// @directive: value` for compiler options:
-```typescript
-// @strict: true
-// @target: ES2015
-// @lib: ES2015,DOM
-
-let x: string = 42; // Error expected
-```
-
-### Common Directives
-```typescript
-// @strict: true/false
-// @noImplicitAny: true/false  
-// @target: ES5/ES2015/ES2020/ESNext
-// @module: commonjs/amd/es6/esnext
-// @lib: ES5,DOM/ES2015/ES2020
-// @declaration: true/false
-// @skipLibCheck: true/false
-```
-
-### Multi-file Tests
-```typescript
-// @Filename: helper.ts
-export function helper(x: number): string {
-    return x.toString();
-}
-
-// @Filename: main.ts  
-import { helper } from "./helper";
-const result = helper(42);
-```
-
-### Error Expectations
-Use comments to document expected behavior:
-```typescript
-abstract class Base {
-    abstract method(): void;
-}
-
-class Derived extends Base {
-    // Missing implementation - should error
-}
-
-new Base(); // Should error - cannot instantiate abstract class
-```
-
-### Type Testing Patterns
-```typescript
-// Test type inference
-let inferred = [1, 2, 3]; // Should infer number[]
-
-// Test type compatibility  
-type A = { x: number };
-type B = { x: number; y: string };
-let a: A = { x: 1 };
-let b: B = { x: 1, y: "hello" };
-a = b; // Should work - B is assignable to A
-b = a; // Should error - A missing property y
-```
-
-### Simple Example
-```typescript
-// Test that optional properties work correctly
-interface Config {
-    required: string;
-    optional?: number;
-}
-
-const config1: Config = { required: "test" }; // Should work
-const config2: Config = { required: "test", optional: 42 }; // Should work  
-const config3: Config = { optional: 42 }; // Should error - missing required
+npx hereby lint              # Run lint. Always do this before submitting
+npx hereby format            # Run code formatting. Always do this before submitting
 ```
 
 ## Test Writing Best Practices
@@ -243,60 +48,10 @@ const config3: Config = { optional: 42 }; // Should error - missing required
 3. **Start simple** - Begin with the most basic case of a feature
 4. **Test edge cases** - Include boundary conditions and error scenarios
 
-## Running Specific Tests
-
-```bash
-# Run a specific fourslash test
-npx hereby runtests --tests=tests/cases/fourslash/completionForObjectProperty.ts
-
-# Run a specific compiler test  
-npx hereby runtests --tests=tests/cases/compiler/abstractClassUnionInstantiation.ts
-
-# Run tests matching a pattern
-npx hereby runtests --tests=tests/cases/fourslash/completion*.ts
-```
-
-## Important Guidelines
-
-### Keeping Things Tidy
-
-- Once you think you're done, run `npx hereby lint` and fix any issues
-- Then always run `npx hereby format` as your last step
-
-### Test Locations
-
-- Only add testcases in `tests/cases/compiler` or `tests/cases/fourslash`
-- Filenames in `tests/cases/compiler` must always end with `.ts`, not `.d.ts`
-- Do not write direct unit tests as they are almost never the correct test format for our repo
-
-### Performance Expectations
-
-- Running a set of tests may take up to 4 minutes
-- A full test run may take up to 15 minutes
-
-### Working with Issues
+## Understanding the Assigned Task
 
 - Maintainer comments in the issue should generally take priority over OP's comments
 - Maintainers might give you hints on where to start. They are not always right, but a good place to start
-
-### Debugging Tips
-
-printf debugging is going to be very useful as you are figuring things out.
-To do this, use `console.log`, but you'll need to `ts-ignore` it.
-Write something like this:
-```ts,diff
-function checkSomething(n: Node) {
-    doSomething(n);
-+   // @ts-ignore DEBUG CODE ONLY, REMOVE ME WHEN DONE
-+   console.log(`Got node with pos = ${n.pos}`);
-    doSomethingElse(n);
-}
-```
-We have a lot of enums so you might want to print back their symbolic name, to do this, index back into the name of the enum
-```ts
-   // @ts-ignore DEBUG CODE ONLY, REMOVE ME WHEN DONE
-   console.log(`Got node with kind = ${SyntaxKind[n.kind]}`);
-```
 
 ## Recommended Workflow
 
@@ -321,7 +76,3 @@ When fixing bugs or implementing features, follow this workflow:
    - Run `npx hereby runtests-parallel` and wait for it to finish (10-15 minutes is normal!)
    - Some collateral baseline changes are normal, but review for correctness
    - Put these diffs in another commit
-
-6. **Always format and lint**
-   - Don't forget to run `npx hereby lint` and `npx hereby format` before you're done
-   - Double-check your line endings. Source files in this repo typically use CRLF line endings. Fix all line endings to be consistent before you wrap up
