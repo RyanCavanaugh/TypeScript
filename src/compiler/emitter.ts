@@ -3897,7 +3897,10 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     }
 
     function emitJsxText(node: JsxText) {
-        writer.writeLiteral(node.text);
+        // Strip comments from JSX text content to prevent duplication
+        // Comments like /* comment */ should not be treated as text content in JSX
+        const textWithoutComments = node.text.replace(/\/\*[\s\S]*?\*\//g, '');
+        writer.writeLiteral(textWithoutComments);
     }
 
     function emitJsxClosingElementOrFragment(node: JsxClosingElement | JsxClosingFragment) {
