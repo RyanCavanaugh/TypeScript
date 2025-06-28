@@ -6,6 +6,9 @@ This document contains information you'll need no matter what the task is, but w
 You have been given the `md-fragments` MCP server.
 Before doing anything, query its `list-topics` endpoint and remember all the topics you saw.
 Consult these topics often, as they contain important information relevant to the work.
+MOST OPERATIONS (adding tests, running them, etc) HAVE RELEVANT DOCUMENTATION.
+
+YOU MUST FOLLOW DIRECTIONS FROM THE "HOW TO FINISH A SESSION" TOPIC BEFORE FINISHING A PULL REQUEST
 
 Before you end a session, read the `How to Finish a Session` topic.
 
@@ -14,6 +17,8 @@ Before you end a session, read the `How to Finish a Session` topic.
 We want to make you smarter over time.
 If you encounter a situation where you think a developer on this project would be able to provide a useful answer *and* it's not something offered by the Documentation MCP server, add a question to the file `.github/copilot-questions.md`
 Explain what you searched for so that we can put the right search terms in the documentation library.
+
+IT'S A BAD FORM IF YOU DON'T ASK AT LEAST ONE QUESTION, IT SHOWS YOU ARE NOT LEVERAGING THE INSTRUCTIONS.
 
 ## Common Commands
 
