@@ -4774,7 +4774,23 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
                     if (shouldEmitInterveningComments && format & ListFormat.DelimitersMask && !positionIsSynthesized(child.pos)) {
                         const commentRange = getCommentRange(child);
-                        emitTrailingCommentsOfPosition(commentRange.pos, /*prefixSpace*/ !!(format & ListFormat.SpaceBetweenSiblings), /*forceNoNewline*/ true);
+                        
+                        // Check if this is a variable declaration with JSX content that would duplicate comments
+                        let shouldEmitComments = true;
+                        if (child.kind === SyntaxKind.VariableDeclaration && (child as any as VariableDeclaration).initializer) {
+                            const initializer = (child as any as VariableDeclaration).initializer!;
+                            if (initializer.kind === SyntaxKind.JsxElement || 
+                                initializer.kind === SyntaxKind.JsxSelfClosingElement || 
+                                initializer.kind === SyntaxKind.JsxFragment) {
+                                // @ts-ignore
+                                console.log(`DEBUG: Skipping DelimitersMask comment emission for JSX variable declaration`);
+                                shouldEmitComments = false;
+                            }
+                        }
+                        
+                        if (shouldEmitComments) {
+                            emitTrailingCommentsOfPosition(commentRange.pos, /*prefixSpace*/ !!(format & ListFormat.SpaceBetweenSiblings), /*forceNoNewline*/ true);
+                        }
                     }
 
                     writeLine(separatingLineTerminatorCount);
@@ -4788,7 +4804,26 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             // Emit this child.
             if (shouldEmitInterveningComments) {
                 const commentRange = getCommentRange(child);
-                emitTrailingCommentsOfPosition(commentRange.pos);
+                
+                // Check if this is a variable declaration with JSX content that would duplicate comments
+                let shouldEmitComments = true;
+                if (child.kind === SyntaxKind.VariableDeclaration && (child as any as VariableDeclaration).initializer) {
+                    const initializer = (child as any as VariableDeclaration).initializer!;
+                    // @ts-ignore
+                    console.log(`DEBUG: VariableDeclaration initializer kind: ${initializer.kind}, SyntaxKind.JsxElement: ${SyntaxKind.JsxElement}`);
+                    // If the initializer is a JSX element, the JSX emitter will handle its own comments
+                    if (initializer.kind === SyntaxKind.JsxElement || 
+                        initializer.kind === SyntaxKind.JsxSelfClosingElement || 
+                        initializer.kind === SyntaxKind.JsxFragment) {
+                        // @ts-ignore
+                        console.log(`DEBUG: Skipping comment emission for JSX variable declaration`);
+                        shouldEmitComments = false;
+                    }
+                }
+                
+                if (shouldEmitComments) {
+                    emitTrailingCommentsOfPosition(commentRange.pos);
+                }
             }
             else {
                 shouldEmitInterveningComments = mayEmitInterveningComments;
