@@ -3862,11 +3862,11 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     function emitJsxElement(node: JsxElement) {
         const savedJsxElement = currentJsxElement;
         currentJsxElement = node;
-        
+
         emit(node.openingElement);
         emitList(node, node.children, ListFormat.JsxElementOrFragmentChildren);
         emit(node.closingElement);
-        
+
         currentJsxElement = savedJsxElement;
     }
 
@@ -6110,21 +6110,22 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function forEachTrailingCommentToEmit(end: number, cb: (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean) => void) {
         // Emit the trailing comments only if the container's end doesn't match because the container should take care of emitting these comments
-        
+
         // Check if this position is within a JSX element that contains comment-only text children
         // If so, skip emission as the JSX processor will handle these comments
         if (currentJsxElement && end >= currentJsxElement.pos && end <= currentJsxElement.end) {
             // Check if any of the JSX children are comment-only text nodes
-            const hasCommentOnlyText = currentJsxElement.children.some(child => 
-                child.kind === SyntaxKind.JsxText && 
-                (child as JsxText).text.trim().startsWith('/*') && 
-                (child as JsxText).text.trim().endsWith('*/')
-            );
+            const hasCommentOnlyText = currentJsxElement.children.some(child => {
+                if (child.kind === SyntaxKind.JsxText) {
+                    return child.text.trim().startsWith("/*") && child.text.trim().endsWith("*/");
+                }
+                return false;
+            });
             if (hasCommentOnlyText) {
                 return; // Skip comment emission - will be handled by JSX processing
             }
         }
-        
+
         if (currentSourceFile && (containerEnd === -1 || (end !== containerEnd && end !== declarationListContainerEnd))) {
             forEachTrailingCommentRange(currentSourceFile.text, end, cb);
         }

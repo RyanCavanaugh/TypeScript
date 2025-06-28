@@ -1,0 +1,17 @@
+//// [tests/cases/compiler/jsxCommentDuplicationDebug.tsx] ////
+
+=== jsxCommentDuplicationDebug.tsx ===
+function App() {}
+>App : () => void
+>    : ^^^^^^^^^^
+
+const jsx = <App>/* before */{/* 1 */ 123 /* 2 */}/* after */</App>;
+>jsx : error
+><App>/* before */{/* 1 */ 123 /* 2 */}/* after */</App> : error
+>App : () => void
+>    : ^^^^^^^^^^
+>123 : 123
+>    : ^^^
+>App : () => void
+>    : ^^^^^^^^^^
+
