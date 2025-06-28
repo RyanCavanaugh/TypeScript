@@ -1253,6 +1253,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     var detachedCommentsInfo: { nodePos: number; detachedCommentEndPos: number; }[] | undefined;
     var hasWrittenComment = false;
     var commentsDisabled = !!printerOptions.removeComments;
+    var jsxTextPositionCache: Map<number, boolean> | undefined;
     var lastSubstitution: Node | undefined;
     var currentParenthesizerRule: ParenthesizerRule<any> | undefined;
     var { enter: enterComment, exit: exitComment } = performance.createTimerIf(extendedDiagnostics, "commentTime", "beforeComment", "afterComment");
@@ -1387,6 +1388,8 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         currentSourceFile = sourceFile;
         currentLineMap = undefined;
         detachedCommentsInfo = undefined;
+        jsxTextPositionCache = undefined; // Clear cache for new source file
+
         if (sourceFile) {
             setSourceMapSource(sourceFile);
         }
@@ -1400,6 +1403,40 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         writer = _writer!; // TODO: GH#18217
         sourceMapGenerator = _sourceMapGenerator;
         sourceMapsDisabled = !writer || !sourceMapGenerator;
+    }
+
+    function isPositionInJsxText(pos: number): boolean {
+        if (!currentSourceFile) return false;
+
+        // Use cache if available
+        if (!jsxTextPositionCache) {
+            jsxTextPositionCache = new Map();
+        }
+
+        if (jsxTextPositionCache.has(pos)) {
+            return jsxTextPositionCache.get(pos)!;
+        }
+
+        // Walk the AST to find if this position is within a JSX text node
+        let found = false;
+
+        function visitNode(node: Node): void {
+            if (found) return;
+
+            if (node.kind === SyntaxKind.JsxText && pos >= node.pos && pos < node.end) {
+                found = true;
+                return;
+            }
+
+            // Only continue traversing if this node might contain the position
+            if (pos >= node.pos && pos < node.end) {
+                forEachChild(node, visitNode);
+            }
+        }
+
+        visitNode(currentSourceFile);
+        jsxTextPositionCache.set(pos, found);
+        return found;
     }
 
     function reset() {
@@ -6096,7 +6133,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                 forEachLeadingCommentWithoutDetachedComments(cb);
             }
             else {
-                forEachLeadingCommentRange(currentSourceFile.text, pos, cb, /*state*/ pos);
+                forEachLeadingCommentRange(currentSourceFile.text, pos, (commentPos, commentEnd, kind, hasTrailingNewLine, rangePos) => {
+                    // Skip comments that are within JSX text nodes
+                    if (!isPositionInJsxText(commentPos)) {
+                        cb(commentPos, commentEnd, kind, hasTrailingNewLine, rangePos);
+                    }
+                }, /*state*/ pos);
             }
         }
     }
@@ -6104,7 +6146,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     function forEachTrailingCommentToEmit(end: number, cb: (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean) => void) {
         // Emit the trailing comments only if the container's end doesn't match because the container should take care of emitting these comments
         if (currentSourceFile && (containerEnd === -1 || (end !== containerEnd && end !== declarationListContainerEnd))) {
-            forEachTrailingCommentRange(currentSourceFile.text, end, cb);
+            forEachTrailingCommentRange(currentSourceFile.text, end, (commentPos, commentEnd, kind, hasTrailingNewLine) => {
+                // Skip comments that are within JSX text nodes
+                if (!isPositionInJsxText(commentPos)) {
+                    cb(commentPos, commentEnd, kind, hasTrailingNewLine);
+                }
+            });
         }
     }
 
@@ -6123,7 +6170,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             detachedCommentsInfo = undefined;
         }
 
-        forEachLeadingCommentRange(currentSourceFile.text, pos, cb, /*state*/ pos);
+        forEachLeadingCommentRange(currentSourceFile.text, pos, (commentPos, commentEnd, kind, hasTrailingNewLine, rangePos) => {
+            // Skip comments that are within JSX text nodes
+            if (!isPositionInJsxText(commentPos)) {
+                cb(commentPos, commentEnd, kind, hasTrailingNewLine, rangePos);
+            }
+        }, /*state*/ pos);
     }
 
     function emitDetachedCommentsAndUpdateCommentsInfo(range: TextRange) {

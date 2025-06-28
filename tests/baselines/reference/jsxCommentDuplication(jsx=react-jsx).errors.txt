@@ -1,0 +1,8 @@
+jsxCommentDuplication.tsx(2,13): error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
+
+
+==== jsxCommentDuplication.tsx (1 errors) ====
+    function App() {}
+    const jsx = <App>/* no */{/* 1 */ 123 /* 2 */}/* no */</App>;
+                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+!!! error TS2875: This JSX tag requires the module path 'react/jsx-runtime' to exist, but none could be found. Make sure you have types for the appropriate package installed.
