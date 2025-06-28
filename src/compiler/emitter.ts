@@ -1249,12 +1249,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     var containerPos = -1;
     var containerEnd = -1;
     var declarationListContainerEnd = -1;
-    // Track JSX elements to prevent duplicate comment emission
-    var currentJsxElement: JsxElement | undefined;
     var currentLineMap: readonly number[] | undefined;
     var detachedCommentsInfo: { nodePos: number; detachedCommentEndPos: number; }[] | undefined;
     var hasWrittenComment = false;
     var commentsDisabled = !!printerOptions.removeComments;
+    // Track JSX text ranges to prevent them from being treated as comments
+    var jsxTextRanges: { start: number; end: number; }[] = [];
     var lastSubstitution: Node | undefined;
     var currentParenthesizerRule: ParenthesizerRule<any> | undefined;
     var { enter: enterComment, exit: exitComment } = performance.createTimerIf(extendedDiagnostics, "commentTime", "beforeComment", "afterComment");
@@ -1389,9 +1389,20 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
         currentSourceFile = sourceFile;
         currentLineMap = undefined;
         detachedCommentsInfo = undefined;
+        jsxTextRanges = []; // Clear JSX text ranges for new source file
+
+        // Pre-collect all JSX text ranges before emission starts
         if (sourceFile) {
+            collectJsxTextRanges(sourceFile);
             setSourceMapSource(sourceFile);
         }
+    }
+
+    function collectJsxTextRanges(node: Node) {
+        if (node.kind === SyntaxKind.JsxText) {
+            jsxTextRanges.push({ start: node.pos, end: node.end });
+        }
+        forEachChild(node, collectJsxTextRanges);
     }
 
     function setWriter(_writer: EmitTextWriter | undefined, _sourceMapGenerator: SourceMapGenerator | undefined) {
@@ -3860,14 +3871,9 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     //
 
     function emitJsxElement(node: JsxElement) {
-        const savedJsxElement = currentJsxElement;
-        currentJsxElement = node;
-
         emit(node.openingElement);
         emitList(node, node.children, ListFormat.JsxElementOrFragmentChildren);
         emit(node.closingElement);
-
-        currentJsxElement = savedJsxElement;
     }
 
     function emitJsxSelfClosingElement(node: JsxSelfClosingElement) {
@@ -6103,31 +6109,27 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                 forEachLeadingCommentWithoutDetachedComments(cb);
             }
             else {
-                forEachLeadingCommentRange(currentSourceFile.text, pos, cb, /*state*/ pos);
+                forEachLeadingCommentRange(currentSourceFile.text, pos, (commentPos, commentEnd, kind, hasTrailingNewLine, rangePos) => {
+                    // Check if this comment position falls within any JSX text range
+                    const isWithinJsxText = jsxTextRanges.some(range => commentPos >= range.start && commentEnd <= range.end);
+                    if (!isWithinJsxText) {
+                        cb(commentPos, commentEnd, kind, hasTrailingNewLine, rangePos);
+                    }
+                }, /*state*/ pos);
             }
         }
     }
 
     function forEachTrailingCommentToEmit(end: number, cb: (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean) => void) {
         // Emit the trailing comments only if the container's end doesn't match because the container should take care of emitting these comments
-
-        // Check if this position is within a JSX element that contains comment-only text children
-        // If so, skip emission as the JSX processor will handle these comments
-        if (currentJsxElement && end >= currentJsxElement.pos && end <= currentJsxElement.end) {
-            // Check if any of the JSX children are comment-only text nodes
-            const hasCommentOnlyText = currentJsxElement.children.some(child => {
-                if (child.kind === SyntaxKind.JsxText) {
-                    return child.text.trim().startsWith("/*") && child.text.trim().endsWith("*/");
-                }
-                return false;
-            });
-            if (hasCommentOnlyText) {
-                return; // Skip comment emission - will be handled by JSX processing
-            }
-        }
-
         if (currentSourceFile && (containerEnd === -1 || (end !== containerEnd && end !== declarationListContainerEnd))) {
-            forEachTrailingCommentRange(currentSourceFile.text, end, cb);
+            forEachTrailingCommentRange(currentSourceFile.text, end, (commentPos, commentEnd, kind, hasTrailingNewLine) => {
+                // Check if this comment position falls within any JSX text range
+                const isWithinJsxText = jsxTextRanges.some(range => commentPos >= range.start && commentEnd <= range.end);
+                if (!isWithinJsxText) {
+                    cb(commentPos, commentEnd, kind, hasTrailingNewLine);
+                }
+            });
         }
     }
 
@@ -6146,7 +6148,13 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             detachedCommentsInfo = undefined;
         }
 
-        forEachLeadingCommentRange(currentSourceFile.text, pos, cb, /*state*/ pos);
+        forEachLeadingCommentRange(currentSourceFile.text, pos, (commentPos, commentEnd, kind, hasTrailingNewLine, rangePos) => {
+            // Check if this comment position falls within any JSX text range
+            const isWithinJsxText = jsxTextRanges.some(range => commentPos >= range.start && commentEnd <= range.end);
+            if (!isWithinJsxText) {
+                cb(commentPos, commentEnd, kind, hasTrailingNewLine, rangePos);
+            }
+        }, /*state*/ pos);
     }
 
     function emitDetachedCommentsAndUpdateCommentsInfo(range: TextRange) {
