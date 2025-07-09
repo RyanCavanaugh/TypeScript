@@ -1,3 +1,15 @@
+## Due Diligence
+
+As part of your summary, you will need to provide an extensive root cause analysis of why the bug has occurred.
+You should investigate the provided repro thoroughly, and provide "adjacent" testcases that *don't* demonstrate the bug to prove your theory of what the root cause of the bug is.
+
+In particular, pay attention to which phase the bug occurs in. For example:
+ * If the bug is in the parser, you should be able to demonstrate that the syntax tree is wrong
+ * If the bug is in the checker, you should be able to explain why the logic is wrong with constrasting examples
+ * If the bug is in the emitter, you should be able to demonstrate that the syntax tree is correct, but that the emit logic is wrong and why
+
+Always read maintainer comments that ask you for demonstrated reasoning about particular aspects of the bug.
+
 ## Documentation MCP server
 
 The repo is large and the project is complex.
