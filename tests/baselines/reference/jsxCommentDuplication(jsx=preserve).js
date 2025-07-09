@@ -8,4 +8,4 @@ const jsx = <div>/*pre*/{x}/*post*/</div>;
 //// [jsxCommentDuplication.jsx]
 // Simple test case to reproduce JSX comment duplication
 var x = 42;
-var jsx = <div> /*pre*//*pre*/{x} /*post*//*post*/</div>;
+var jsx = <div>/*pre*/{x}/*post*/</div>;
