@@ -4851,11 +4851,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             // Emit this child.
             if (shouldEmitInterveningComments) {
                 const commentRange = getCommentRange(child);
-                // Skip emitting trailing comments for JSX expressions when emitting JSX children
-                // because they will be emitted by the JSX expression emission logic
-                if (!(isEmittingJsxChildren && child.kind === SyntaxKind.JsxExpression)) {
-                    emitTrailingCommentsOfPosition(commentRange.pos);
-                }
+                emitTrailingCommentsOfPosition(commentRange.pos);
             }
             else {
                 shouldEmitInterveningComments = mayEmitInterveningComments;
