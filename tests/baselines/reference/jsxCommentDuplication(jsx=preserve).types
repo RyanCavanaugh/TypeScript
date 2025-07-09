@@ -1,0 +1,20 @@
+//// [tests/cases/compiler/jsxCommentDuplication.tsx] ////
+
+=== jsxCommentDuplication.tsx ===
+// Simple test case to reproduce JSX comment duplication
+const x = 42;
+>x : 42
+>  : ^^
+>42 : 42
+>   : ^^
+
+const jsx = <div>/*pre*/{x}/*post*/</div>;
+>jsx : error
+><div>/*pre*/{x}/*post*/</div> : error
+>div : any
+>    : ^^^
+>x : 42
+>  : ^^
+>div : any
+>    : ^^^
+

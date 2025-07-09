@@ -1,0 +1,11 @@
+//// [tests/cases/compiler/jsxCommentDuplication.tsx] ////
+
+=== jsxCommentDuplication.tsx ===
+// Simple test case to reproduce JSX comment duplication
+const x = 42;
+>x : Symbol(x, Decl(jsxCommentDuplication.tsx, 1, 5))
+
+const jsx = <div>/*pre*/{x}/*post*/</div>;
+>jsx : Symbol(jsx, Decl(jsxCommentDuplication.tsx, 2, 5))
+>x : Symbol(x, Decl(jsxCommentDuplication.tsx, 1, 5))
+
