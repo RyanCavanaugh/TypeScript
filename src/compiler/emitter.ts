@@ -6112,14 +6112,14 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                 }
                 cb(commentPos, commentEnd, kind, hasTrailingNewLine);
             };
-            
+
             forEachTrailingCommentRange(currentSourceFile.text, end, filteredCb);
         }
     }
-    
+
     function isCommentWithinJsxText(commentPos: number, commentEnd: number): boolean {
         if (!currentSourceFile) return false;
-        
+
         // Find JSX text nodes that might contain this comment
         function checkNode(node: Node): boolean {
             if (node.kind === SyntaxKind.JsxText) {
@@ -6129,11 +6129,11 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
                     return true;
                 }
             }
-            
+
             // Recursively check children
             return !!forEachChild(node, checkNode);
         }
-        
+
         return checkNode(currentSourceFile);
     }
 
