@@ -1255,6 +1255,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     var commentsDisabled = !!printerOptions.removeComments;
     var lastSubstitution: Node | undefined;
     var currentParenthesizerRule: ParenthesizerRule<any> | undefined;
+    var isEmittingJsxChildren = false;
     var { enter: enterComment, exit: exitComment } = performance.createTimerIf(extendedDiagnostics, "commentTime", "beforeComment", "afterComment");
     var parenthesizer = factory.parenthesizer;
     var typeArgumentParenthesizerRuleSelector: OrdinalParentheizerRuleSelector<TypeNode> = {
@@ -3859,7 +3860,10 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function emitJsxElement(node: JsxElement) {
         emit(node.openingElement);
+        const wasEmittingJsxChildren = isEmittingJsxChildren;
+        isEmittingJsxChildren = true;
         emitList(node, node.children, ListFormat.JsxElementOrFragmentChildren);
+        isEmittingJsxChildren = wasEmittingJsxChildren;
         emit(node.closingElement);
     }
 
@@ -3874,7 +3878,10 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function emitJsxFragment(node: JsxFragment) {
         emit(node.openingFragment);
+        const wasEmittingJsxChildren = isEmittingJsxChildren;
+        isEmittingJsxChildren = true;
         emitList(node, node.children, ListFormat.JsxElementOrFragmentChildren);
+        isEmittingJsxChildren = wasEmittingJsxChildren;
         emit(node.closingFragment);
     }
 
@@ -4788,7 +4795,11 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             // Emit this child.
             if (shouldEmitInterveningComments) {
                 const commentRange = getCommentRange(child);
-                emitTrailingCommentsOfPosition(commentRange.pos);
+                // Skip emitting trailing comments for JSX expressions when emitting JSX children
+                // because they will be emitted by the JSX expression emission logic
+                if (!(isEmittingJsxChildren && child.kind === SyntaxKind.JsxExpression)) {
+                    emitTrailingCommentsOfPosition(commentRange.pos);
+                }
             }
             else {
                 shouldEmitInterveningComments = mayEmitInterveningComments;
