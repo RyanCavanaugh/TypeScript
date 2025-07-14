@@ -12,6 +12,8 @@ YOU MUST FOLLOW DIRECTIONS FROM THE "HOW TO FINISH A SESSION" TOPIC BEFORE FINIS
 
 ## Mandatory Workflow
 
+When you clone this repo, ALL THE TESTS ARE PASSING. There are no "unrelated" test failures here; if a test is failing, it's because of your change, and you need to address that one way or another.
+
 This repo uses test-driven development. When fixing bugs or implementing features, you must follow this workflow:
 
 1. **Make a testcase that demonstrates the behavior**
