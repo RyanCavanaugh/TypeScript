@@ -1,3 +1,41 @@
+## Documentation MCP server
+
+The repo is large and the project is complex.
+This document contains information you'll need no matter what the task is, but we have a separate library of content that you'll need to consult depending on the issue.
+
+You have been given the `md-fragments` MCP server.
+Before doing anything, query its `list-topics` endpoint and remember all the topics you saw.
+Consult these topics often, as they contain important information relevant to the work.
+MOST OPERATIONS (adding tests, running them, etc) HAVE RELEVANT DOCUMENTATION.
+
+YOU MUST FOLLOW DIRECTIONS FROM THE "HOW TO FINISH A SESSION" TOPIC BEFORE FINISHING A PULL REQUEST.
+
+## Mandatory Workflow
+
+This repo uses test-driven development. When fixing bugs or implementing features, you must follow this workflow:
+
+1. **Make a testcase that demonstrates the behavior**
+   - Run it (by itself) and review the baselines it generates to ensure it demonstrates the bug
+   - Add the test and its baselines in one commit
+   - You may need to debug in order to figure out how to write a testcase; this is normal
+   - DO NOT TRY TO FIX A BUG UNTIL YOU HAVE A TESTCASE THAT CORRECTLY DEMONSTRATES THE PROBLEM
+
+2. **Fix the bug by changing code as appropriate**
+   - Put this fix in another commit
+
+3. **Run the test you wrote again**
+   - Ensure the baselines change in a way that demonstrates that the bug is fixed
+   - Put this baseline diff in its own commit
+
+4. **Add more testing**
+   - Once you've got the basics figured out, enhance your test to cover edge cases and other variations
+   - Run the test again and commit the baseline diff along with the test edit
+
+5. **Run all other tests to ensure you didn't break anything**
+   - Run `npx hereby runtests-parallel` and wait for it to finish (10-15 minutes is normal!)
+   - Some collateral baseline changes are normal, but review for correctness
+   - Put these diffs in another commit
+
 ## Due Diligence
 
 As part of your summary, you will need to provide an extensive root cause analysis of why the bug has occurred.
@@ -10,19 +48,9 @@ In particular, pay attention to which phase the bug occurs in. For example:
 
 Always read maintainer comments that ask you for demonstrated reasoning about particular aspects of the bug.
 
-## Documentation MCP server
+## Time Constraints
 
-The repo is large and the project is complex.
-This document contains information you'll need no matter what the task is, but we have a separate library of content that you'll need to consult depending on the issue.
-
-You have been given the `md-fragments` MCP server.
-Before doing anything, query its `list-topics` endpoint and remember all the topics you saw.
-Consult these topics often, as they contain important information relevant to the work.
-MOST OPERATIONS (adding tests, running them, etc) HAVE RELEVANT DOCUMENTATION.
-
-YOU MUST FOLLOW DIRECTIONS FROM THE "HOW TO FINISH A SESSION" TOPIC BEFORE FINISHING A PULL REQUEST
-
-Before you end a session, read the `How to Finish a Session` topic.
+If you're running out of time, consult the "How to give up" documentation topic.
 
 ## Asking Questions
 
@@ -45,51 +73,7 @@ npx hereby lint              # Run lint. Always do this before submitting
 npx hereby format            # Run code formatting. Always do this before submitting
 ```
 
-## Test Writing Best Practices
-
-### For Fourslash Tests
-1. **Prefer validation over baselines** - Use `verify.currentLineContentIs()` instead of `verify.baseline*()`
-2. **Use simple, focused examples** - Test one feature at a time
-3. **Name markers clearly** - Use descriptive marker names like `/*completion*/`
-4. **Test the simplest form first** - Start with basic cases before complex scenarios
-
-### For Compiler Tests  
-1. **Use clear file names** - Name tests after the feature being tested
-2. **Add explanatory comments** - Document expected behavior with comments
-3. **Test error cases** - Include both valid and invalid code examples
-4. **Keep tests focused** - One primary feature per test file
-
-### General Guidelines
-1. **Make tests deterministic** - Avoid random or environment-dependent behavior
-2. **Use realistic examples** - Test scenarios developers actually encounter  
-3. **Start simple** - Begin with the most basic case of a feature
-4. **Test edge cases** - Include boundary conditions and error scenarios
-
 ## Understanding the Assigned Task
 
 - Maintainer comments in the issue should generally take priority over OP's comments
 - Maintainers might give you hints on where to start. They are not always right, but a good place to start
-
-## Recommended Workflow
-
-When fixing bugs or implementing features, follow this workflow:
-
-1. **Make a testcase that demonstrates the behavior**
-   - Run it (by itself) and review the baselines it generates to ensure it demonstrates the bug
-   - Add the test and its baselines in one commit
-
-2. **Fix the bug by changing code as appropriate**
-   - Put this fix in another commit
-
-3. **Run the test you wrote again**
-   - Ensure the baselines change in a way that demonstrates that the bug is fixed
-   - Put this baseline diff in its own commit
-
-4. **Add more testing**
-   - Once you've got the basics figured out, enhance your test to cover edge cases and other variations
-   - Run the test again and commit the baseline diff along with the test edit
-
-5. **Run all other tests to ensure you didn't break anything**
-   - Run `npx hereby runtests-parallel` and wait for it to finish (10-15 minutes is normal!)
-   - Some collateral baseline changes are normal, but review for correctness
-   - Put these diffs in another commit
