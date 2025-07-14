@@ -29,6 +29,7 @@ import {
     getTextOfConstantValue,
     getTextOfIdentifierOrLiteral,
     getTextOfNode,
+    getJSDocCommentsAndTags,
     hasSyntacticModifier,
     idText,
     ImportEqualsDeclaration,
@@ -50,6 +51,8 @@ import {
     isFunctionLike,
     isIdentifier,
     isInExpressionContext,
+    isJSDoc,
+    isJSDocDeprecatedTag,
     isJsxOpeningLikeElement,
     isLet,
     isModuleWithStringLiteralName,
@@ -618,6 +621,74 @@ function getSymbolDisplayPartsDocumentationAndSymbolKindWorker(
                 else {
                     documentationFromAlias = resolvedSymbol.getContextualDocumentationComment(resolvedNode, typeChecker);
                     tagsFromAlias = resolvedSymbol.getJsDocTags(typeChecker);
+                }
+                
+                // For default imports, also try to get JSDoc from the corresponding export assignment
+                if (symbol.name === "default") {
+                    const sourceFile = getSourceFileOfNode(resolvedNode);
+                    console.log(`DEBUG: Looking for export assignment in ${sourceFile.fileName}, statements: ${sourceFile.statements.length}`);
+                    // Find export assignment that exports the resolved symbol as default
+                    for (const statement of sourceFile.statements) {
+                        console.log(`DEBUG: Statement kind: ${statement.kind}, SyntaxKind.ExportAssignment: ${SyntaxKind.ExportAssignment}`);
+                        if (statement.kind === SyntaxKind.ExportAssignment && !(statement as ExportAssignment).isExportEquals) {
+                            const exportAssignment = statement as ExportAssignment;
+                            console.log(`DEBUG: Found export assignment`);
+                            if (isIdentifier(exportAssignment.expression)) {
+                                const exportedSymbol = typeChecker.getSymbolAtLocation(exportAssignment.expression);
+                                console.log(`DEBUG: exportedSymbol === resolvedSymbol: ${exportedSymbol === resolvedSymbol}`);
+                                if (exportedSymbol === resolvedSymbol) {
+                                    console.log(`DEBUG: Found matching export assignment`);
+                                    // Found the export assignment, get its JSDoc directly from the node
+                                    const jsDocCommentsAndTags = getJSDocCommentsAndTags(exportAssignment);
+                                    console.log(`DEBUG: JSDoc comments and tags: ${jsDocCommentsAndTags.length}`);
+                                    if (jsDocCommentsAndTags.length > 0) {
+                                        const exportDoc: SymbolDisplayPart[] = [];
+                                        const exportTags: JSDocTagInfo[] = [];
+                                        
+                                        for (const jsDocOrTag of jsDocCommentsAndTags) {
+                                            if (isJSDoc(jsDocOrTag)) {
+                                                // Extract documentation from JSDoc comment
+                                                if (jsDocOrTag.comment) {
+                                                    const commentText = typeof jsDocOrTag.comment === "string" 
+                                                        ? jsDocOrTag.comment 
+                                                        : jsDocOrTag.comment.map(c => c.text || "").join("");
+                                                    if (commentText) {
+                                                        exportDoc.push({ text: commentText, kind: "text" });
+                                                    }
+                                                }
+                                                
+                                                // Extract tags from JSDoc
+                                                if (jsDocOrTag.tags) {
+                                                    for (const tag of jsDocOrTag.tags) {
+                                                        if (isJSDocDeprecatedTag(tag)) {
+                                                            const tagText = tag.comment 
+                                                                ? (typeof tag.comment === "string" 
+                                                                    ? tag.comment 
+                                                                    : tag.comment.map(c => c.text || "").join(""))
+                                                                : undefined;
+                                                            exportTags.push({
+                                                                name: "deprecated",
+                                                                text: tagText ? [{ text: tagText, kind: "text" }] : undefined
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        
+                                        // Use export assignment JSDoc if it exists
+                                        if (exportDoc.length > 0) {
+                                            documentationFromAlias = exportDoc;
+                                        }
+                                        if (exportTags.length > 0) {
+                                            tagsFromAlias = exportTags;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
