@@ -1,8 +1,32 @@
+# How to Give Up
+
+> Running out of time? Here's what to do
+
+If you're being told to wrap up because you're out of time, we'd like you to still submit the testcase you wrote even if it's failing.
+Also discuss what determinations you've made so far, e.g. what your experiments demonstrated and what you think the next steps are.
+Write these in a format that we can put in the issue to help you on a future iteration.
+For example, write down why initial theories you had turned out to be incorrect, or other useful notes.
+
+# Common Commands
+
+> Command listing for how to build, run, format, lint, etc
+
+```
+npx hereby local             # Build the compiler into built/local
+npx hereby runtests-parallel # Run all tests; this may take 15 minutes or longer
+npx hereby runtests -t <grep> # Run testcases matching a specific pattern
+npx hereby baseline-accept   # Accept new test baselines
+npx hereby lint              # Run lint. Always do this before submitting
+npx hereby format            # Run code formatting. Always do this before submitting
+```
+
 # How to Finish a Session
 
 > Information about mandatory tasks to do at the end of a session
 
 When you think you're done, there are some mandatory things you need to do before finishing your task and completing your fix.
+
+If you have a fix, explain in 1-4 paragraphs your understanding of the origin of the bug and why your fix is the correct one.
 
 If you haven't already, run `hereby runtests-parallel` and ensure there are zero errors. Read the sections on Baseline Tests if you don't know how to manage the output of baseline diffs.
 
