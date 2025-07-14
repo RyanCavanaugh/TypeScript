@@ -1,0 +1,98 @@
+//// [tests/cases/compiler/symbolsDocumentationTest.ts] ////
+
+=== symbolsDocumentationTest.ts ===
+// Test case for symbols documentation - demonstrates name resolution behavior
+
+type x = number;           // Type symbol in global scope
+>x : Symbol(x, Decl(symbolsDocumentationTest.ts, 0, 0))
+
+const globalVar = 42;      // Value symbol in global scope  
+>globalVar : Symbol(globalVar, Decl(symbolsDocumentationTest.ts, 3, 5))
+
+function fn(x: string, globalVar: boolean) {  // Parameters shadow global symbols
+>fn : Symbol(fn, Decl(symbolsDocumentationTest.ts, 3, 21))
+>x : Symbol(x, Decl(symbolsDocumentationTest.ts, 5, 12))
+>globalVar : Symbol(globalVar, Decl(symbolsDocumentationTest.ts, 5, 22))
+
+  let y: x = x;            // Type 'x' resolves to global type alias, value 'x' resolves to parameter
+>y : Symbol(y, Decl(symbolsDocumentationTest.ts, 6, 5))
+>x : Symbol(x, Decl(symbolsDocumentationTest.ts, 0, 0))
+>x : Symbol(x, Decl(symbolsDocumentationTest.ts, 5, 12))
+
+  let z = globalVar;       // Resolves to parameter, not global variable
+>z : Symbol(z, Decl(symbolsDocumentationTest.ts, 7, 5))
+>globalVar : Symbol(globalVar, Decl(symbolsDocumentationTest.ts, 5, 22))
+  
+  function nested() {
+>nested : Symbol(nested, Decl(symbolsDocumentationTest.ts, 7, 20))
+
+    let x = "nested";      // Block-scoped variable shadows parameter
+>x : Symbol(x, Decl(symbolsDocumentationTest.ts, 10, 7))
+
+    return x.length;       // Resolves to local variable
+>x.length : Symbol(String.length, Decl(lib.es5.d.ts, --, --))
+>x : Symbol(x, Decl(symbolsDocumentationTest.ts, 10, 7))
+>length : Symbol(String.length, Decl(lib.es5.d.ts, --, --))
+  }
+  
+  return nested();
+>nested : Symbol(nested, Decl(symbolsDocumentationTest.ts, 7, 20))
+}
+
+interface I {              // Interface symbol
+>I : Symbol(I, Decl(symbolsDocumentationTest.ts, 15, 1), Decl(symbolsDocumentationTest.ts, 19, 1))
+
+  method(): void;
+>method : Symbol(I.method, Decl(symbolsDocumentationTest.ts, 17, 13))
+}
+
+interface I {              // Interface merging - adds to same symbol
+>I : Symbol(I, Decl(symbolsDocumentationTest.ts, 15, 1), Decl(symbolsDocumentationTest.ts, 19, 1))
+
+  prop: string;
+>prop : Symbol(I.prop, Decl(symbolsDocumentationTest.ts, 21, 13))
+}
+
+class C implements I {     // Class symbol, can merge with interface
+>C : Symbol(C, Decl(symbolsDocumentationTest.ts, 23, 1))
+>I : Symbol(I, Decl(symbolsDocumentationTest.ts, 15, 1), Decl(symbolsDocumentationTest.ts, 19, 1))
+
+  prop = "test";
+>prop : Symbol(C.prop, Decl(symbolsDocumentationTest.ts, 25, 22))
+
+  method() {}
+>method : Symbol(C.method, Decl(symbolsDocumentationTest.ts, 26, 16))
+}
+
+namespace N {              // Namespace symbol
+>N : Symbol(N, Decl(symbolsDocumentationTest.ts, 28, 1), Decl(symbolsDocumentationTest.ts, 32, 1))
+
+  export const value = 1;
+>value : Symbol(value, Decl(symbolsDocumentationTest.ts, 31, 14))
+}
+
+namespace N {              // Namespace merging
+>N : Symbol(N, Decl(symbolsDocumentationTest.ts, 28, 1), Decl(symbolsDocumentationTest.ts, 32, 1))
+
+  export function func() {}
+>func : Symbol(func, Decl(symbolsDocumentationTest.ts, 34, 13))
+}
+
+// Test various contexts where name resolution differs
+const test1: I = new C();  // 'I' resolves to merged interface, 'C' resolves to class
+>test1 : Symbol(test1, Decl(symbolsDocumentationTest.ts, 39, 5))
+>I : Symbol(I, Decl(symbolsDocumentationTest.ts, 15, 1), Decl(symbolsDocumentationTest.ts, 19, 1))
+>C : Symbol(C, Decl(symbolsDocumentationTest.ts, 23, 1))
+
+const test2 = N.value;     // 'N' resolves to merged namespace
+>test2 : Symbol(test2, Decl(symbolsDocumentationTest.ts, 40, 5))
+>N.value : Symbol(N.value, Decl(symbolsDocumentationTest.ts, 31, 14))
+>N : Symbol(N, Decl(symbolsDocumentationTest.ts, 28, 1), Decl(symbolsDocumentationTest.ts, 32, 1))
+>value : Symbol(N.value, Decl(symbolsDocumentationTest.ts, 31, 14))
+
+const test3 = N.func();    // Same namespace, different export
+>test3 : Symbol(test3, Decl(symbolsDocumentationTest.ts, 41, 5))
+>N.func : Symbol(N.func, Decl(symbolsDocumentationTest.ts, 34, 13))
+>N : Symbol(N, Decl(symbolsDocumentationTest.ts, 28, 1), Decl(symbolsDocumentationTest.ts, 32, 1))
+>func : Symbol(N.func, Decl(symbolsDocumentationTest.ts, 34, 13))
+

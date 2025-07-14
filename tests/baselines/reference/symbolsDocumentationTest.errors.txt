@@ -1,0 +1,48 @@
+symbolsDocumentationTest.ts(7,7): error TS2322: Type 'string' is not assignable to type 'number'.
+
+
+==== symbolsDocumentationTest.ts (1 errors) ====
+    // Test case for symbols documentation - demonstrates name resolution behavior
+    
+    type x = number;           // Type symbol in global scope
+    const globalVar = 42;      // Value symbol in global scope  
+    
+    function fn(x: string, globalVar: boolean) {  // Parameters shadow global symbols
+      let y: x = x;            // Type 'x' resolves to global type alias, value 'x' resolves to parameter
+          ~
+!!! error TS2322: Type 'string' is not assignable to type 'number'.
+      let z = globalVar;       // Resolves to parameter, not global variable
+      
+      function nested() {
+        let x = "nested";      // Block-scoped variable shadows parameter
+        return x.length;       // Resolves to local variable
+      }
+      
+      return nested();
+    }
+    
+    interface I {              // Interface symbol
+      method(): void;
+    }
+    
+    interface I {              // Interface merging - adds to same symbol
+      prop: string;
+    }
+    
+    class C implements I {     // Class symbol, can merge with interface
+      prop = "test";
+      method() {}
+    }
+    
+    namespace N {              // Namespace symbol
+      export const value = 1;
+    }
+    
+    namespace N {              // Namespace merging
+      export function func() {}
+    }
+    
+    // Test various contexts where name resolution differs
+    const test1: I = new C();  // 'I' resolves to merged interface, 'C' resolves to class
+    const test2 = N.value;     // 'N' resolves to merged namespace
+    const test3 = N.func();    // Same namespace, different export

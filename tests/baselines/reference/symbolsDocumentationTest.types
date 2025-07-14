@@ -1,0 +1,139 @@
+//// [tests/cases/compiler/symbolsDocumentationTest.ts] ////
+
+=== symbolsDocumentationTest.ts ===
+// Test case for symbols documentation - demonstrates name resolution behavior
+
+type x = number;           // Type symbol in global scope
+>x : number
+>  : ^^^^^^
+
+const globalVar = 42;      // Value symbol in global scope  
+>globalVar : 42
+>          : ^^
+>42 : 42
+>   : ^^
+
+function fn(x: string, globalVar: boolean) {  // Parameters shadow global symbols
+>fn : (x: string, globalVar: boolean) => number
+>   : ^ ^^      ^^         ^^       ^^^^^^^^^^^
+>x : string
+>  : ^^^^^^
+>globalVar : boolean
+>          : ^^^^^^^
+
+  let y: x = x;            // Type 'x' resolves to global type alias, value 'x' resolves to parameter
+>y : number
+>  : ^^^^^^
+>x : string
+>  : ^^^^^^
+
+  let z = globalVar;       // Resolves to parameter, not global variable
+>z : boolean
+>  : ^^^^^^^
+>globalVar : boolean
+>          : ^^^^^^^
+  
+  function nested() {
+>nested : () => number
+>       : ^^^^^^^^^^^^
+
+    let x = "nested";      // Block-scoped variable shadows parameter
+>x : string
+>  : ^^^^^^
+>"nested" : "nested"
+>         : ^^^^^^^^
+
+    return x.length;       // Resolves to local variable
+>x.length : number
+>         : ^^^^^^
+>x : string
+>  : ^^^^^^
+>length : number
+>       : ^^^^^^
+  }
+  
+  return nested();
+>nested() : number
+>         : ^^^^^^
+>nested : () => number
+>       : ^^^^^^^^^^^^
+}
+
+interface I {              // Interface symbol
+  method(): void;
+>method : () => void
+>       : ^^^^^^    
+}
+
+interface I {              // Interface merging - adds to same symbol
+  prop: string;
+>prop : string
+>     : ^^^^^^
+}
+
+class C implements I {     // Class symbol, can merge with interface
+>C : C
+>  : ^
+
+  prop = "test";
+>prop : string
+>     : ^^^^^^
+>"test" : "test"
+>       : ^^^^^^
+
+  method() {}
+>method : () => void
+>       : ^^^^^^^^^^
+}
+
+namespace N {              // Namespace symbol
+>N : typeof N
+>  : ^^^^^^^^
+
+  export const value = 1;
+>value : 1
+>      : ^
+>1 : 1
+>  : ^
+}
+
+namespace N {              // Namespace merging
+>N : typeof N
+>  : ^^^^^^^^
+
+  export function func() {}
+>func : () => void
+>     : ^^^^^^^^^^
+}
+
+// Test various contexts where name resolution differs
+const test1: I = new C();  // 'I' resolves to merged interface, 'C' resolves to class
+>test1 : I
+>      : ^
+>new C() : C
+>        : ^
+>C : typeof C
+>  : ^^^^^^^^
+
+const test2 = N.value;     // 'N' resolves to merged namespace
+>test2 : 1
+>      : ^
+>N.value : 1
+>        : ^
+>N : typeof N
+>  : ^^^^^^^^
+>value : 1
+>      : ^
+
+const test3 = N.func();    // Same namespace, different export
+>test3 : void
+>      : ^^^^
+>N.func() : void
+>         : ^^^^
+>N.func : () => void
+>       : ^^^^^^^^^^
+>N : typeof N
+>  : ^^^^^^^^
+>func : () => void
+>     : ^^^^^^^^^^
+

@@ -91,6 +91,202 @@ new Base(); // Should error - cannot instantiate abstract class
 ```
 
 
+# TypeScript Binder and Symbols System
+
+> Technical overview of how symbols in TypeScript work
+
+TypeScript's binder creates symbols that represent declarations in your code, and the checker uses these symbols for type checking and name resolution. Understanding this system is crucial for debugging complex issues and understanding how TypeScript resolves names and types.
+
+## What are Symbols?
+
+Symbols are TypeScript's internal representation of declarations. Each symbol has:
+
+- **flags**: A bitmask from `SymbolFlags` enum that describes what kind of declaration it represents
+- **escapedName**: The internal string representation of the symbol's name  
+- **declarations**: Array of AST nodes that declare this symbol
+- **members**: SymbolTable for nested symbols (class members, interface properties, etc.)
+- **exports**: SymbolTable for module exports
+- Internal tracking fields for type checking and resolution
+
+```ts
+// From types.ts
+export interface Symbol {
+    flags: SymbolFlags;                     // Symbol flags
+    escapedName: __String;                  // Name of symbol
+    declarations?: Declaration[];           // Declarations associated with this symbol
+    valueDeclaration?: Declaration;         // First value declaration of the symbol
+    members?: SymbolTable;                  // Class, interface or object literal instance members
+    exports?: SymbolTable;                  // Module exports
+    // ... additional internal fields
+}
+```
+
+## SymbolFlags
+
+SymbolFlags is a bitmask enum that categorizes what kinds of declarations a symbol represents:
+
+```ts
+export const enum SymbolFlags {
+    FunctionScopedVariable  = 1 << 0,   // var or parameter
+    BlockScopedVariable     = 1 << 1,   // let or const
+    Property                = 1 << 2,   // Property or enum member
+    Function                = 1 << 4,   // Function
+    Class                   = 1 << 5,   // Class
+    Interface               = 1 << 6,   // Interface
+    TypeAlias               = 1 << 19,  // Type alias
+    // ... many more
+    
+    // Composite flags for common combinations
+    Variable = FunctionScopedVariable | BlockScopedVariable,
+    Value = Variable | Property | Function | Class | /* ... */,
+    Type = Class | Interface | TypeAlias | /* ... */,
+}
+```
+
+Key composite flags:
+- **Value**: Symbols that exist at runtime (variables, functions, classes, etc.)
+- **Type**: Symbols that exist only at compile time (interfaces, type aliases, etc.)
+- **Namespace**: Symbols that can contain other symbols (modules, enums, etc.)
+
+## SymbolTable
+
+A SymbolTable is simply a `Map<__String, Symbol>` that stores symbols by their escaped names:
+
+```ts
+export type SymbolTable = Map<__String, Symbol>;
+
+export function createSymbolTable(symbols?: readonly Symbol[]): SymbolTable {
+    const result = new Map<__String, Symbol>();
+    if (symbols) {
+        for (const symbol of symbols) {
+            result.set(symbol.escapedName, symbol);
+        }
+    }
+    return result;
+}
+```
+
+## How the Binder Works
+
+The binder (binder.ts) traverses the AST and creates symbols for declarations. Key functions:
+
+### createSymbol
+Creates a new symbol with specified flags and name:
+```ts
+function createSymbol(flags: SymbolFlags, name: __String): Symbol {
+    symbolCount++;
+    return new Symbol(flags, name);
+}
+```
+
+### declareSymbol
+Adds symbols to symbol tables, handling conflicts and merging:
+```ts
+function declareSymbol(
+    symbolTable: SymbolTable, 
+    parent: Symbol | undefined, 
+    node: Declaration, 
+    includes: SymbolFlags, 
+    excludes: SymbolFlags
+): Symbol
+```
+
+The `excludes` parameter defines what kinds of symbols cannot coexist. For example:
+- `BlockScopedVariable` excludes all `Value` symbols (no redeclaration)
+- `FunctionScopedVariable` excludes `Value & ~FunctionScopedVariable` (can merge with other vars)
+- `Interface` excludes `Type & ~(Interface | Class)` (can merge with other interfaces and classes)
+
+### Symbol Resolution Process
+
+During binding, each declaration gets processed:
+1. Determine the symbol flags based on declaration type
+2. Get or create symbol in appropriate symbol table
+3. Check for conflicts using excludes flags
+4. Add declaration to symbol's declarations array
+5. Set up members/exports SymbolTables if needed
+
+## How Name Resolution Works
+
+The `resolveName` function (created by `createNameResolver` in utilities.ts) implements lexical scoping by walking up the scope chain:
+
+```ts
+function resolveNameHelper(
+    location: Node | undefined,
+    name: __String,
+    meaning: SymbolFlags,  // What kind of symbol we're looking for
+    // ...
+): Symbol | undefined
+```
+
+### Resolution Algorithm
+
+1. **Local Scope Check**: If current node can have locals, check its symbol table
+2. **Scope-Specific Rules**: Apply visibility rules based on context:
+   - Function parameters only visible in function body
+   - Type parameters visible in parameter list and return type
+   - Block-scoped variables respect block boundaries
+3. **Parent Scope**: Move up to parent node and repeat
+4. **Module Exports**: Check module exports if in module context
+5. **Global Scope**: Finally check global symbols
+
+### Context-Sensitive Resolution
+
+The `meaning` parameter filters which symbols are considered:
+```ts
+// Looking for a type
+resolveName(location, "x", SymbolFlags.Type, ...)
+// Looking for a value  
+resolveName(location, "x", SymbolFlags.Value, ...)
+```
+
+## The Classic Example Explained
+
+```ts
+type x = number;       // Creates symbol: flags=TypeAlias, name="x"
+function fn(x: string) { // Creates symbol: flags=FunctionScopedVariable, name="x"
+  let y: x = x;        // Two different lookups happen here
+}
+```
+
+When the checker processes `let y: x = x;`:
+
+1. **Type position `x`**: 
+   - Calls `resolveName(location, "x", SymbolFlags.Type, ...)`
+   - Walks up scopes looking for Type symbols
+   - Finds the type alias `x = number` in global scope
+   - Returns that symbol
+
+2. **Value position `x`**:
+   - Calls `resolveName(location, "x", SymbolFlags.Value, ...)`  
+   - Checks function locals first
+   - Finds parameter `x: string` 
+   - Returns that symbol
+
+This demonstrates how:
+- The same name can resolve to different symbols
+- Context (Type vs Value) affects resolution
+- Scope hierarchy determines which symbol is found
+- The binder creates appropriate symbol tables for different scopes
+
+## Symbol Merging
+
+Some declarations can merge their symbols:
+- Multiple `var` declarations with same name
+- `interface` declarations merge their members
+- `namespace` and `enum` can merge with compatible declarations
+- Classes and interfaces can merge (declaration merging)
+
+The binder handles this by checking `excludes` flags and either merging with existing symbols or creating conflicts.
+
+## Debugging Tips
+
+When debugging symbol-related issues:
+1. Check what SymbolFlags a symbol has using `symbol.flags & SymbolFlags.SomeFlag`
+2. Print symbol names with `symbolToString()` or `symbol.escapedName`
+3. Examine symbol.declarations to see all AST nodes for that symbol
+4. Use checker's `getSymbolAtLocation()` to see what symbol a node resolves to
+5. Check if you're looking for the right meaning (Type vs Value vs Namespace)
+
 # Fourslash Testing
 
 > Fourslash is our testing system for language service functionality
