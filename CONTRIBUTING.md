@@ -110,6 +110,51 @@ You might need to run `git config --global core.longpaths true` before cloning T
 
 Run `hereby` to build a version of the compiler/language service that reflects changes you've made. You can then run `node <repo-root>/built/local/tsc.js` in place of `tsc` in your project. For example, to run `tsc --watch` from within the root of the repository on a file called `test.ts`, you can run `node ./built/local/tsc.js --watch test.ts`.
 
+## Spelling Guidelines
+
+The TypeScript project uses American English spelling conventions consistently throughout the codebase, documentation, and comments. When contributing code, tests, or documentation, please use American spelling to maintain consistency.
+
+### Common British vs American Spelling Differences
+
+Here are the most frequently encountered spelling differences in programming contexts:
+
+| British | American | Examples in Context |
+|---------|----------|-------------------|
+| colour | color | `backgroundColor`, `colorScheme` |
+| behaviour | behavior | `defaultBehavior`, `behaviorSubject` |
+| centre | center | `textAlign: center`, `centerElement` |
+| licence | license | `softwareLicense`, `licenseKey` |
+| analyse | analyze | `analyzeCode`, `dataAnalysis` |
+| realise | realize | `realizePromise`, `realizeGoal` |
+| organise | organize | `organizeImports`, `organizeCode` |
+| initialise | initialize | `initializeComponent`, `initializeState` |
+| serialise | serialize | `serializeData`, `serializeObject` |
+| finalise | finalize | `finalizeSetup`, `finalizeTransaction` |
+| optimise | optimize | `optimizePerformance`, `optimizeBundle` |
+| synchronise | synchronize | `synchronizeData`, `synchronizeState` |
+| recognise | recognize | `recognizePattern`, `recognizeInput` |
+| grey | gray | `grayScale`, `grayColor` |
+
+### Examples in TypeScript Code
+
+```typescript
+// ✅ Correct (American spelling)
+interface ComponentBehavior {
+    initialize(): void;
+    analyze(data: unknown): void;
+    synchronizeState(): void;
+}
+
+// ❌ Incorrect (British spelling)
+interface ComponentBehaviour {
+    initialise(): void;
+    analyse(data: unknown): void;
+    synchroniseState(): void;
+}
+```
+
+When in doubt, check the existing codebase for similar terms to maintain consistency with established patterns.
+
 ## Contributing bug fixes
 
 TypeScript is currently accepting contributions in the form of bug fixes. A bug must have an issue tracking it in the issue tracker that has been approved (labelled ["help wanted"](https://github.com/Microsoft/TypeScript/issues?q=is%3Aopen+is%3Aissue+label%3A%22help+wanted%22) or in the "Backlog milestone") by the TypeScript team. Your pull request should include a link to the bug that you are fixing. If you've submitted a PR for a bug, please post a comment in the bug to avoid duplication of effort.
