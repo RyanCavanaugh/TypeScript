@@ -1,0 +1,19 @@
+//// [tests/cases/compiler/awaitNonNullAssertion.ts] ////
+
+=== awaitNonNullAssertion.ts ===
+// Test for await expression followed by non-null assertion
+async function test() {
+>test : Symbol(test, Decl(awaitNonNullAssertion.ts, 0, 0))
+
+    const result1 = (await null as any)!;
+>result1 : Symbol(result1, Decl(awaitNonNullAssertion.ts, 2, 9))
+
+    const result2 = (await Promise.resolve(42))!;
+>result2 : Symbol(result2, Decl(awaitNonNullAssertion.ts, 3, 9))
+>Promise.resolve : Symbol(PromiseConstructor.resolve, Decl(lib.es2015.promise.d.ts, --, --), Decl(lib.es2015.promise.d.ts, --, --), Decl(lib.es2015.promise.d.ts, --, --))
+>Promise : Symbol(Promise, Decl(lib.es5.d.ts, --, --), Decl(lib.es2015.iterable.d.ts, --, --), Decl(lib.es2015.promise.d.ts, --, --), Decl(lib.es2015.symbol.wellknown.d.ts, --, --))
+>resolve : Symbol(PromiseConstructor.resolve, Decl(lib.es2015.promise.d.ts, --, --), Decl(lib.es2015.promise.d.ts, --, --), Decl(lib.es2015.promise.d.ts, --, --))
+
+    const result3 = (await null)!;
+>result3 : Symbol(result3, Decl(awaitNonNullAssertion.ts, 4, 9))
+}
