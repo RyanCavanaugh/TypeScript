@@ -10,6 +10,14 @@ MOST OPERATIONS (adding tests, running them, etc) HAVE RELEVANT DOCUMENTATION.
 
 YOU MUST FOLLOW DIRECTIONS FROM THE "HOW TO FINISH A SESSION" TOPIC BEFORE FINISHING A PULL REQUEST.
 
+## Information About This Repo
+
+Facts you should know and remember:
+ * All tests can run and pass in this environment. There are no "unrelated" test failures!
+ * Test "failures" due to baseline changes are normal as a result of your changes, but they MUST BE ADDRESSED. Read the "Dealing with Baselines" topic to learn more.
+ * Maintainer comments in the issue should generally take priority over OP's comments
+ * Maintainers might give you hints on where to start. They are not always right, but a good place to start
+
 ## Mandatory Workflow
 
 When you clone this repo, ALL THE TESTS ARE PASSING. There are no "unrelated" test failures here; if a test is failing, it's because of your change, and you need to address that one way or another.
@@ -48,8 +56,6 @@ In particular, pay attention to which phase the bug occurs in. For example:
  * If the bug is in the checker, you should be able to explain why the logic is wrong with constrasting examples
  * If the bug is in the emitter, you should be able to demonstrate that the syntax tree is correct, but that the emit logic is wrong and why
 
-Always read maintainer comments that ask you for demonstrated reasoning about particular aspects of the bug.
-
 ## Time Constraints
 
 If you're running out of time, consult the "How to give up" documentation topic.
@@ -59,8 +65,6 @@ If you're running out of time, consult the "How to give up" documentation topic.
 We want to make you smarter over time.
 If you encounter a situation where you think a developer on this project would be able to provide a useful answer *and* it's not something offered by the Documentation MCP server, add a question to the file `.github/copilot-questions.md`
 Explain what you searched for so that we can put the right search terms in the documentation library.
-
-IT'S A BAD FORM IF YOU DON'T ASK AT LEAST ONE QUESTION, IT SHOWS YOU ARE NOT LEVERAGING THE INSTRUCTIONS.
 
 ## Common Commands
 
@@ -74,8 +78,3 @@ npx hereby baseline-accept   # Accept new test baselines
 npx hereby lint              # Run lint. Always do this before submitting
 npx hereby format            # Run code formatting. Always do this before submitting
 ```
-
-## Understanding the Assigned Task
-
-- Maintainer comments in the issue should generally take priority over OP's comments
-- Maintainers might give you hints on where to start. They are not always right, but a good place to start
