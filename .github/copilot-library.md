@@ -28,7 +28,10 @@ When you think you're done, there are some mandatory things you need to do befor
 
 If you have a fix, explain in 1-4 paragraphs your understanding of the origin of the bug and why your fix is the correct one.
 
-If you haven't already, run `hereby runtests-parallel` and ensure there are zero errors. Read the sections on Baseline Tests if you don't know how to manage the output of baseline diffs.
+If you haven't already, run `hereby runtests-parallel` and ensure there are zero errors.
+You should expect a full test run to take up to 20 minutes to finish.
+Read the sections on Baseline Tests if you don't know how to manage the output of baseline diffs.
+Remember, there is no such thing as an "unrelated" failure in this repo!
 
 Next, run `hereby lint`. Fix any errors reported here. Lint errors will generally never cause new test failures to appear.
 
@@ -60,13 +63,29 @@ If you run a specific test using `hereby runtests -t testName`, you will see the
 
 # Compiler Tests
 
+> How to write, run, and manage tests related to core tsc functionality (scan, parse, bind, check, and emit)
+
+In general, all testcases you add related to core checker behavior should be in the form of baseline tests.
+These tests validate TypeScript behavior, type checking, symbol resolution, and error reporting.
+You should read the "Dealing with Baselines" topic once you've written a test.
+
+## Dealing with Baselines
+
 > How to work with baseline-based tests like those in `tests/cases/compiler`
 
-In general, all testcases you add related to core checker behavior should be in the form of baseline tests. These tests validate TypeScript behavior, type checking, symbol resolution, and error reporting. When these tests run, they either pass (because the output matches the reference copy in `tests/baselines/reference`), or fail and create a new file in `tests/baselines/local`.
+When compiler tests run, they create baseline files.
+If these baseline files match what's already in the repo, the test passes.
+Otherwise, the test fails, and a new file appears in `tests/baselines/local`.
 
-The failure when you create a new test is expected; for new content, example the baseline output to see that it matches what you expect, and run `hereby baseline-accept` to copy the new file to `tests/baselines/reference`
+The failure when you create a new test is expected; for new content, example the baseline output to see that it matches what you expect, and run `hereby baseline-accept`.
 
-When this failure occurs in other situations, compare the new file to the old file and make sure it's expected, and run `hereby baseline-accept`. This will generate a diff you should commit as part of your changes.
+Often, a correct bufix will still cause baseline differences.
+You need to analyze the difference between the new baseline in `tests/baselines/local` and the checked-in version at `tests/baselines/reference`, and determine for yourself if the change is desirable or not.
+
+If the change isn't desirable, adjust your bugfix and run the tests again. Iterate as needed.
+
+If the change is desirable, run `hereby baseline-accept`, which will copy the new file to `tests/baselines/reference`.
+This will be a diff that you should submit as part of your PR.
 
 ## Creating
 
@@ -87,6 +106,10 @@ The file format looks like this
 let x: string = 42; // Error expected
 ```
 You can set any TypeScript compiler option using the `// @flag: value` syntax.
+If it's useful to test multiple flag values at once, you can use commas:
+```ts
+// @target: ES2015,ES2022
+```
 
 The default file extension for the interior file is `.ts`, but you can change that (or create multiple files) with filename directives:
 ```ts
@@ -114,6 +137,11 @@ class Derived extends Base {
 new Base(); // Should error - cannot instantiate abstract class
 ```
 
+You can run a test by name by running
+```
+npx hereby runtests -t filenameOfThatTest
+```
+where filename is just any substring, e.g. if you write `tests/cases/compiler/foo.ts`, run `hereby runtests -t foo`
 
 # Fourslash Testing
 
