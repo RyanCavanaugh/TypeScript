@@ -261,7 +261,9 @@ import {
     isBinaryExpression,
     isBindingElement,
     isBindingPattern,
+    isBlock,
     isCallExpression,
+    isCaseClause,
     isClassDeclaration,
     isClassElement,
     isClassExpression,
@@ -274,6 +276,7 @@ import {
     isDeclaration,
     isDeclarationFileName,
     isDecorator,
+    isDefaultClause,
     isElementAccessExpression,
     isEnumDeclaration,
     isEnumMember,
@@ -332,6 +335,7 @@ import {
     isMethodDeclaration,
     isMethodOrAccessor,
     isModifierLike,
+    isModuleBlock,
     isModuleDeclaration,
     isModuleOrEnumDeclaration,
     isNamedDeclaration,
@@ -1279,16 +1283,6 @@ export function getNonDecoratorTokenPosOfNode(node: Node, sourceFile?: SourceFil
 }
 
 /** @internal */
-export function getNonModifierTokenPosOfNode(node: Node, sourceFile?: SourceFileLike): number {
-    const lastModifier = !nodeIsMissing(node) && canHaveModifiers(node) && node.modifiers ? last(node.modifiers) : undefined;
-    if (!lastModifier) {
-        return getTokenPosOfNode(node, sourceFile);
-    }
-
-    return skipTrivia((sourceFile || getSourceFileOfNode(node)).text, lastModifier.end);
-}
-
-/** @internal */
 export function getSourceTextOfNodeFromSourceFile(sourceFile: SourceFile, node: Node, includeTrivia = false): string {
     return getTextOfNodeFromSourceText(sourceFile.text, node, includeTrivia);
 }
@@ -1783,6 +1777,12 @@ export const getScriptTargetFeatures: () => ScriptTargetFeatures = /* @__PURE__ 
                 "toSpliced",
                 "with",
             ],
+            esnext: [
+                "toBase64",
+                "setFromBase64",
+                "toHex",
+                "setFromHex",
+            ],
         })),
         Uint8ClampedArray: new Map(Object.entries({
             es2022: [
@@ -1909,6 +1909,12 @@ export const getScriptTargetFeatures: () => ScriptTargetFeatures = /* @__PURE__ 
         Error: new Map(Object.entries({
             es2022: [
                 "cause",
+            ],
+        })),
+        Uint8ArrayConstructor: new Map(Object.entries({
+            esnext: [
+                "fromBase64",
+                "fromHex",
             ],
         })),
     }))
@@ -2864,19 +2870,24 @@ export function forEachReturnStatement<T>(body: Block | Statement, visitor: (stm
     }
 }
 
+// Warning: This has the same semantics as the forEach family of functions,
+//          in that traversal terminates in the event that 'visitor' supplies a truthy value.
 /** @internal */
-export function forEachYieldExpression(body: Block, visitor: (expr: YieldExpression) => void): void {
+export function forEachYieldExpression<T>(body: Block, visitor: (expr: YieldExpression) => T): T | undefined {
     return traverse(body);
 
-    function traverse(node: Node): void {
+    function traverse(node: Node): T | undefined {
         switch (node.kind) {
             case SyntaxKind.YieldExpression:
-                visitor(node as YieldExpression);
-                const operand = (node as YieldExpression).expression;
-                if (operand) {
-                    traverse(operand);
+                const value = visitor(node as YieldExpression);
+                if (value) {
+                    return value;
                 }
-                return;
+                const operand = (node as YieldExpression).expression;
+                if (!operand) {
+                    return;
+                }
+                return traverse(operand);
             case SyntaxKind.EnumDeclaration:
             case SyntaxKind.InterfaceDeclaration:
             case SyntaxKind.ModuleDeclaration:
@@ -2889,14 +2900,13 @@ export function forEachYieldExpression(body: Block, visitor: (expr: YieldExpress
                     if (node.name && node.name.kind === SyntaxKind.ComputedPropertyName) {
                         // Note that we will not include methods/accessors of a class because they would require
                         // first descending into the class. This is by design.
-                        traverse(node.name.expression);
-                        return;
+                        return traverse(node.name.expression);
                     }
                 }
                 else if (!isPartOfTypeNode(node)) {
                     // This is the general case, which should include mostly expressions and statements.
                     // Also includes NodeArrays.
-                    forEachChild(node, traverse);
+                    return forEachChild(node, traverse);
                 }
         }
     }
@@ -3822,6 +3832,20 @@ export function isVariableDeclarationInitializedToBareOrAccessedRequire(node: No
 /** @internal */
 export function isBindingElementOfBareOrAccessedRequire(node: Node): node is BindingElementOfBareOrAccessedRequire {
     return isBindingElement(node) && isVariableDeclarationInitializedToBareOrAccessedRequire(node.parent.parent);
+}
+
+/** @internal */
+export function getModuleSpecifierOfBareOrAccessedRequire(node: VariableDeclarationInitializedTo<RequireOrImportCall | AccessExpression>): StringLiteralLike | undefined {
+    if (isVariableDeclarationInitializedToRequire(node)) {
+        return node.initializer.arguments[0];
+    }
+    if (isVariableDeclarationInitializedToBareOrAccessedRequire(node)) {
+        const leftmost = getLeftmostAccessExpression(node.initializer);
+        if (isRequireCall(leftmost, /*requireStringLiteralLikeArgument*/ true)) {
+            return leftmost.arguments[0];
+        }
+    }
+    return undefined;
 }
 
 function isVariableDeclarationInitializedWithRequireHelper(node: Node, allowAccessedRequire: boolean) {
@@ -4762,7 +4786,7 @@ export function getTypeParameterFromJsDoc(node: TypeParameterDeclaration & { par
     return typeParameters && find(typeParameters, p => p.name.escapedText === name);
 }
 
-/** @internal @knipignore */
+/** @internal */
 export function hasTypeArguments(node: Node): node is HasTypeArguments {
     return !!(node as HasTypeArguments).typeArguments;
 }
@@ -5675,17 +5699,17 @@ export const enum OperatorPrecedence {
     //     CoalesceExpression
     Conditional,
 
+    // LogicalORExpression:
+    //     LogicalANDExpression
+    //     LogicalORExpression `||` LogicalANDExpression
+    LogicalOR,
+
     // CoalesceExpression:
     //     CoalesceExpressionHead `??` BitwiseORExpression
     // CoalesceExpressionHead:
     //     CoalesceExpression
     //     BitwiseORExpression
-    Coalesce = Conditional, // NOTE: This is wrong
-
-    // LogicalORExpression:
-    //     LogicalANDExpression
-    //     LogicalORExpression `||` LogicalANDExpression
-    LogicalOR,
+    Coalesce = LogicalOR,
 
     // LogicalANDExpression:
     //     BitwiseORExpression
@@ -8989,29 +9013,23 @@ const _computedOptions = createComputedCompilerOptions({
     moduleResolution: {
         dependencies: ["module", "target"],
         computeValue: (compilerOptions): ModuleResolutionKind => {
-            let moduleResolution = compilerOptions.moduleResolution;
-            if (moduleResolution === undefined) {
-                switch (_computedOptions.module.computeValue(compilerOptions)) {
-                    case ModuleKind.CommonJS:
-                        moduleResolution = ModuleResolutionKind.Node10;
-                        break;
-                    case ModuleKind.Node16:
-                    case ModuleKind.Node18:
-                    case ModuleKind.Node20:
-                        moduleResolution = ModuleResolutionKind.Node16;
-                        break;
-                    case ModuleKind.NodeNext:
-                        moduleResolution = ModuleResolutionKind.NodeNext;
-                        break;
-                    case ModuleKind.Preserve:
-                        moduleResolution = ModuleResolutionKind.Bundler;
-                        break;
-                    default:
-                        moduleResolution = ModuleResolutionKind.Classic;
-                        break;
-                }
+            if (compilerOptions.moduleResolution !== undefined) {
+                return compilerOptions.moduleResolution;
             }
-            return moduleResolution;
+            const moduleKind = _computedOptions.module.computeValue(compilerOptions);
+            switch (moduleKind) {
+                case ModuleKind.None:
+                case ModuleKind.AMD:
+                case ModuleKind.UMD:
+                case ModuleKind.System:
+                    return ModuleResolutionKind.Classic;
+                case ModuleKind.NodeNext:
+                    return ModuleResolutionKind.NodeNext;
+            }
+            if (ModuleKind.Node16 <= moduleKind && moduleKind < ModuleKind.NodeNext) {
+                return ModuleResolutionKind.Node16;
+            }
+            return ModuleResolutionKind.Bundler;
         },
     },
     moduleDetection: {
@@ -9033,35 +9051,25 @@ const _computedOptions = createComputedCompilerOptions({
         },
     },
     esModuleInterop: {
-        dependencies: ["module", "target"],
+        dependencies: [],
         computeValue: (compilerOptions): boolean => {
             if (compilerOptions.esModuleInterop !== undefined) {
                 return compilerOptions.esModuleInterop;
             }
-            switch (_computedOptions.module.computeValue(compilerOptions)) {
-                case ModuleKind.Node16:
-                case ModuleKind.Node18:
-                case ModuleKind.Node20:
-                case ModuleKind.NodeNext:
-                case ModuleKind.Preserve:
-                    return true;
-            }
-            return false;
+            return true;
         },
     },
     allowSyntheticDefaultImports: {
-        dependencies: ["module", "target", "moduleResolution"],
+        dependencies: [],
         computeValue: (compilerOptions): boolean => {
             if (compilerOptions.allowSyntheticDefaultImports !== undefined) {
                 return compilerOptions.allowSyntheticDefaultImports;
             }
-            return _computedOptions.esModuleInterop.computeValue(compilerOptions)
-                || _computedOptions.module.computeValue(compilerOptions) === ModuleKind.System
-                || _computedOptions.moduleResolution.computeValue(compilerOptions) === ModuleResolutionKind.Bundler;
+            return true;
         },
     },
     resolvePackageJsonExports: {
-        dependencies: ["moduleResolution"],
+        dependencies: ["moduleResolution", "module", "target"],
         computeValue: (compilerOptions): boolean => {
             const moduleResolution = _computedOptions.moduleResolution.computeValue(compilerOptions);
             if (!moduleResolutionSupportsPackageJsonExportsAndImports(moduleResolution)) {
@@ -9080,7 +9088,7 @@ const _computedOptions = createComputedCompilerOptions({
         },
     },
     resolvePackageJsonImports: {
-        dependencies: ["moduleResolution", "resolvePackageJsonExports"],
+        dependencies: ["moduleResolution", "resolvePackageJsonExports", "module", "target"],
         computeValue: (compilerOptions): boolean => {
             const moduleResolution = _computedOptions.moduleResolution.computeValue(compilerOptions);
             if (!moduleResolutionSupportsPackageJsonExportsAndImports(moduleResolution)) {
@@ -9261,16 +9269,6 @@ export function hasJsonModuleEmitEnabled(options: CompilerOptions): boolean {
             return false;
     }
     return true;
-}
-
-/** @internal */
-export function unreachableCodeIsError(options: CompilerOptions): boolean {
-    return options.allowUnreachableCode === false;
-}
-
-/** @internal */
-export function unusedLabelIsError(options: CompilerOptions): boolean {
-    return options.allowUnusedLabels === false;
 }
 
 /** @internal */
@@ -9542,7 +9540,7 @@ const wildcardCharCodes = [CharacterCodes.asterisk, CharacterCodes.question];
 
 const commonPackageFolders: readonly string[] = ["node_modules", "bower_components", "jspm_packages"];
 
-const implicitExcludePathRegexPattern = `(?!(${commonPackageFolders.join("|")})(/|$))`;
+const implicitExcludePathRegexPattern = `(?!(?:${commonPackageFolders.join("|")})(?:/|$))`;
 
 /** @internal */
 export interface WildcardMatcher {
@@ -9558,12 +9556,12 @@ const filesMatcher: WildcardMatcher = {
      *  [^./]                   # matches everything up to the first . character (excluding directory separators)
      *  (\\.(?!min\\.js$))?     # matches . characters but not if they are part of the .min.js file extension
      */
-    singleAsteriskRegexFragment: "([^./]|(\\.(?!min\\.js$))?)*",
+    singleAsteriskRegexFragment: "(?:[^./]|(?:\\.(?!min\\.js$))?)*",
     /**
      * Regex for the ** wildcard. Matches any number of subdirectories. When used for including
      * files or directories, does not match subdirectories that start with a . character
      */
-    doubleAsteriskRegexFragment: `(/${implicitExcludePathRegexPattern}[^/.][^/]*)*?`,
+    doubleAsteriskRegexFragment: `(?:/${implicitExcludePathRegexPattern}[^/.][^/]*)*?`,
     replaceWildcardCharacter: match => replaceWildcardCharacter(match, filesMatcher.singleAsteriskRegexFragment),
 };
 
@@ -9573,13 +9571,13 @@ const directoriesMatcher: WildcardMatcher = {
      * Regex for the ** wildcard. Matches any number of subdirectories. When used for including
      * files or directories, does not match subdirectories that start with a . character
      */
-    doubleAsteriskRegexFragment: `(/${implicitExcludePathRegexPattern}[^/.][^/]*)*?`,
+    doubleAsteriskRegexFragment: `(?:/${implicitExcludePathRegexPattern}[^/.][^/]*)*?`,
     replaceWildcardCharacter: match => replaceWildcardCharacter(match, directoriesMatcher.singleAsteriskRegexFragment),
 };
 
 const excludeMatcher: WildcardMatcher = {
     singleAsteriskRegexFragment: "[^/]*",
-    doubleAsteriskRegexFragment: "(/.+?)?",
+    doubleAsteriskRegexFragment: "(?:/.+?)?",
     replaceWildcardCharacter: match => replaceWildcardCharacter(match, excludeMatcher.singleAsteriskRegexFragment),
 };
 
@@ -9596,10 +9594,10 @@ export function getRegularExpressionForWildcard(specs: readonly string[] | undef
         return undefined;
     }
 
-    const pattern = patterns.map(pattern => `(${pattern})`).join("|");
+    const pattern = patterns.map(pattern => `(?:${pattern})`).join("|");
     // If excluding, match "foo/bar/baz...", but if including, only allow "foo".
-    const terminator = usage === "exclude" ? "($|/)" : "$";
-    return `^(${pattern})${terminator}`;
+    const terminator = usage === "exclude" ? "(?:$|/)" : "$";
+    return `^(?:${pattern})${terminator}`;
 }
 
 /** @internal */
@@ -9624,7 +9622,7 @@ export function isImplicitGlob(lastPathComponent: string): boolean {
 /** @internal */
 export function getPatternFromSpec(spec: string, basePath: string, usage: "files" | "directories" | "exclude"): string | undefined {
     const pattern = spec && getSubPatternFromSpec(spec, basePath, usage, wildcardMatchers[usage]);
-    return pattern && `^(${pattern})${usage === "exclude" ? "($|/)" : "$"}`;
+    return pattern && `^(?:${pattern})${usage === "exclude" ? "(?:$|/)" : "$"}`;
 }
 
 /** @internal */
@@ -9657,7 +9655,7 @@ export function getSubPatternFromSpec(
         }
         else {
             if (usage === "directories") {
-                subpattern += "(";
+                subpattern += "(?:";
                 optionalCount++;
             }
 
@@ -9671,7 +9669,7 @@ export function getSubPatternFromSpec(
                 // appear first in a component. Dotted directories and files can be included explicitly
                 // like so: **/.*/.*
                 if (component.charCodeAt(0) === CharacterCodes.asterisk) {
-                    componentPattern += "([^./]" + singleAsteriskRegexFragment + ")?";
+                    componentPattern += "(?:[^./]" + singleAsteriskRegexFragment + ")?";
                     component = component.substr(1);
                 }
                 else if (component.charCodeAt(0) === CharacterCodes.question) {
@@ -10327,6 +10325,7 @@ export function rangeOfTypeParameters(sourceFile: SourceFile, typeParameters: No
 /** @internal */
 export interface HostWithIsSourceOfProjectReferenceRedirect {
     isSourceOfProjectReferenceRedirect(fileName: string): boolean;
+    isSourceFileDefaultLibrary(file: SourceFile): boolean;
 }
 /** @internal */
 export function skipTypeChecking(
@@ -10353,10 +10352,9 @@ function skipTypeCheckingWorker(
     ignoreNoCheck: boolean,
 ) {
     // If skipLibCheck is enabled, skip reporting errors if file is a declaration file.
-    // If skipDefaultLibCheck is enabled, skip reporting errors if file contains a
-    // '/// <reference no-default-lib="true"/>' directive.
+    // If skipDefaultLibCheck is enabled, skip reporting errors if file is a lib.
     return (options.skipLibCheck && sourceFile.isDeclarationFile ||
-        options.skipDefaultLibCheck && sourceFile.hasNoDefaultLib) ||
+        options.skipDefaultLibCheck && host.isSourceFileDefaultLibrary(sourceFile)) ||
         (!ignoreNoCheck && options.noCheck) ||
         host.isSourceOfProjectReferenceRedirect(sourceFile.fileName) ||
         !canIncludeBindAndCheckDiagnostics(sourceFile, options);
@@ -10825,7 +10823,7 @@ export function hasContextSensitiveParameters(node: FunctionLikeDeclaration): bo
             // an implicit 'this' parameter which is subject to contextual typing.
             const parameter = firstOrUndefined(node.parameters);
             if (!(parameter && parameterIsThisKeyword(parameter))) {
-                return true;
+                return !!(node.flags & NodeFlags.ContainsThis);
             }
         }
     }
@@ -12026,7 +12024,7 @@ export function isSideEffectImport(node: Node): boolean {
     return !!ancestor && !ancestor.importClause;
 }
 
-// require('module').builtinModules.filter(x => !x.startsWith('_'))
+// require('module').builtinModules.filter(x => !x.match(/^(?:_|node:)/))
 const unprefixedNodeCoreModulesList = [
     "assert",
     "assert/strict",
@@ -12069,7 +12067,6 @@ const unprefixedNodeCoreModulesList = [
     "stream/web",
     "string_decoder",
     "sys",
-    "test/mock_loader",
     "timers",
     "timers/promises",
     "tls",
@@ -12088,11 +12085,10 @@ const unprefixedNodeCoreModulesList = [
 /** @internal */
 export const unprefixedNodeCoreModules: Set<string> = new Set(unprefixedNodeCoreModulesList);
 
-// await fetch('https://nodejs.org/docs/latest/api/all.json').then(r => r.text()).then(t =>
-//   new Set(t.match(/(?<=')node:.+?(?=')/g))
-//     .difference(new Set(require('module').builtinModules.map(x => `node:${x}`))))
+// require('module').builtinModules.filter(x => x.startsWith('node:'))
 /** @internal */
 export const exclusivelyPrefixedNodeCoreModules: Set<string> = new Set([
+    "node:quic",
     "node:sea",
     "node:sqlite",
     "node:test",
@@ -12363,4 +12359,23 @@ function addEmitFlagsRecursively(node: Node, flag: EmitFlags, getChild: (n: Node
 
 function getFirstChild(node: Node): Node | undefined {
     return forEachChild(node, child => child);
+}
+
+/** @internal */
+export function canHaveStatements(node: Node): node is Block | ModuleBlock | SourceFile | CaseClause | DefaultClause {
+    return isBlock(node) || isModuleBlock(node) || isSourceFile(node) || isCaseClause(node) || isDefaultClause(node);
+}
+
+/** @internal */
+export function isPotentiallyExecutableNode(node: Node): boolean {
+    if (SyntaxKind.FirstStatement <= node.kind && node.kind <= SyntaxKind.LastStatement) {
+        if (isVariableStatement(node)) {
+            if (getCombinedNodeFlags(node.declarationList) & NodeFlags.BlockScoped) {
+                return true;
+            }
+            return some(node.declarationList.declarations, d => d.initializer !== undefined);
+        }
+        return true;
+    }
+    return isClassDeclaration(node) || isEnumDeclaration(node) || isModuleDeclaration(node);
 }
