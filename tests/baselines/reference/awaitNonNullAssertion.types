@@ -1,0 +1,45 @@
+//// [tests/cases/compiler/awaitNonNullAssertion.ts] ////
+
+=== awaitNonNullAssertion.ts ===
+// Test for await expression followed by non-null assertion
+async function test() {
+>test : () => Promise<void>
+>     : ^^^^^^^^^^^^^^^^^^^
+
+    const result1 = (await null as any)!;
+>result1 : any
+>(await null as any)! : any
+>(await null as any) : any
+>await null as any : any
+>await null : null
+>           : ^^^^
+
+    const result2 = (await Promise.resolve(42))!;
+>result2 : number
+>        : ^^^^^^
+>(await Promise.resolve(42))! : number
+>                             : ^^^^^^
+>(await Promise.resolve(42)) : number
+>                            : ^^^^^^
+>await Promise.resolve(42) : number
+>                          : ^^^^^^
+>Promise.resolve(42) : Promise<number>
+>                    : ^^^^^^^^^^^^^^^
+>Promise.resolve : { (): Promise<void>; <T>(value: T): Promise<Awaited<T>>; <T>(value: T | PromiseLike<T>): Promise<Awaited<T>>; }
+>                : ^^^^^^             ^^^ ^^     ^^ ^^^                   ^^^ ^^     ^^                  ^^^                   ^^^
+>Promise : PromiseConstructor
+>        : ^^^^^^^^^^^^^^^^^^
+>resolve : { (): Promise<void>; <T>(value: T): Promise<Awaited<T>>; <T>(value: T | PromiseLike<T>): Promise<Awaited<T>>; }
+>        : ^^^^^^             ^^^ ^^     ^^ ^^^                   ^^^ ^^     ^^                  ^^^                   ^^^
+>42 : 42
+>   : ^^
+
+    const result3 = (await null)!;
+>result3 : any
+>(await null)! : null
+>              : ^^^^
+>(await null) : null
+>             : ^^^^
+>await null : null
+>           : ^^^^
+}

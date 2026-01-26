@@ -1722,7 +1722,7 @@ export function transformTypeScript(context: TransformationContext): Transformer
     }
 
     function visitNonNullExpression(node: NonNullExpression): Expression {
-        const expression = visitNode(node.expression, visitor, isLeftHandSideExpression);
+        const expression = visitNode(node.expression, visitor, isExpression);
         Debug.assert(expression);
         return factory.createPartiallyEmittedExpression(expression, node);
     }
