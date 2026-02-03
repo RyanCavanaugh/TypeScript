@@ -6117,8 +6117,37 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     function forEachTrailingCommentToEmit(end: number, cb: (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean) => void) {
         // Emit the trailing comments only if the container's end doesn't match because the container should take care of emitting these comments
         if (currentSourceFile && (containerEnd === -1 || (end !== containerEnd && end !== declarationListContainerEnd))) {
-            forEachTrailingCommentRange(currentSourceFile.text, end, cb);
+            // Create a wrapper callback that filters out comments that are part of JSX text content
+            const filteredCb = (commentPos: number, commentEnd: number, kind: SyntaxKind, hasTrailingNewLine: boolean) => {
+                // Check if this comment is actually JSX text content
+                if (isCommentWithinJsxText(commentPos, commentEnd)) {
+                    return; // Skip this comment emission
+                }
+                cb(commentPos, commentEnd, kind, hasTrailingNewLine);
+            };
+
+            forEachTrailingCommentRange(currentSourceFile.text, end, filteredCb);
         }
+    }
+
+    function isCommentWithinJsxText(commentPos: number, commentEnd: number): boolean {
+        if (!currentSourceFile) return false;
+
+        // Find JSX text nodes that might contain this comment
+        function checkNode(node: Node): boolean {
+            if (node.kind === SyntaxKind.JsxText) {
+                const jsxText = node as JsxText;
+                // Check if the comment range is within the JSX text node range
+                if (commentPos >= jsxText.pos && commentEnd <= jsxText.end) {
+                    return true;
+                }
+            }
+
+            // Recursively check children
+            return !!forEachChild(node, checkNode);
+        }
+
+        return checkNode(currentSourceFile);
     }
 
     function hasDetachedComments(pos: number) {
