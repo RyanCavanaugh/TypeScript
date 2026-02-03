@@ -214,8 +214,11 @@ import {
     isJSDocLikeText,
     isJsonSourceFile,
     isJsxClosingElement,
+    isJsxElement,
+    isJsxFragment,
     isJsxNamespacedName,
     isJsxOpeningElement,
+    isJsxText,
     isKeyword,
     isLet,
     isLiteralExpression,
@@ -1272,6 +1275,7 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
     var commentsDisabled = !!printerOptions.removeComments;
     var lastSubstitution: Node | undefined;
     var currentParenthesizerRule: ParenthesizerRule<any> | undefined;
+    var isEmittingJsxChildren = false;
     var { enter: enterComment, exit: exitComment } = performance.createTimerIf(extendedDiagnostics, "commentTime", "beforeComment", "afterComment");
     var parenthesizer = factory.parenthesizer;
     var typeArgumentParenthesizerRuleSelector: OrdinalParentheizerRuleSelector<TypeNode> = {
@@ -3192,7 +3196,12 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
             if (needsIndent) {
                 increaseIndent();
             }
-            emitLeadingCommentsOfPosition(startPos);
+            const isJsxExprContext = contextNode.kind === SyntaxKind.JsxExpression;
+            // Skip emitting leading comments for JSX expressions when emitting JSX children
+            // to prevent duplication with JSX text content
+            if (!(isJsxExprContext && isEmittingJsxChildren)) {
+                emitLeadingCommentsOfPosition(startPos);
+            }
             if (needsIndent) {
                 decreaseIndent();
             }
@@ -3211,13 +3220,61 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
         if (isSimilarNode && contextNode.end !== pos) {
             const isJsxExprContext = contextNode.kind === SyntaxKind.JsxExpression;
-            emitTrailingCommentsOfPosition(pos, /*prefixSpace*/ !isJsxExprContext, /*forceNoNewline*/ isJsxExprContext);
+            // Skip emitting trailing comments for JSX expressions when emitting JSX children
+            // to prevent duplication with JSX text content
+            if (!(isJsxExprContext && isEmittingJsxChildren)) {
+                emitTrailingCommentsOfPosition(pos, /*prefixSpace*/ !isJsxExprContext, /*forceNoNewline*/ isJsxExprContext);
+            }
         }
         return pos;
     }
 
     function commentWillEmitNewLine(node: CommentRange) {
         return node.kind === SyntaxKind.SingleLineCommentTrivia || !!node.hasTrailingNewLine;
+    }
+
+    function jsxExpressionCommentsOverlapWithJsxText(jsxExpr: JsxExpression): boolean {
+        if (!isEmittingJsxChildren || !currentSourceFile) return false;
+        
+        // Check if this JSX expression is a child of a JSX element
+        const parent = jsxExpr.parent;
+        if (!parent || (!isJsxElement(parent) && !isJsxFragment(parent))) {
+            return false;
+        }
+        
+        const children = parent.children;
+        const exprIndex = children.indexOf(jsxExpr);
+        if (exprIndex === -1) return false;
+        
+        // Check trailing comments that might overlap with next JSX text
+        const trailingComments = getTrailingCommentRanges(currentSourceFile.text, jsxExpr.end);
+        if (trailingComments && exprIndex + 1 < children.length) {
+            const nextChild = children[exprIndex + 1];
+            if (isJsxText(nextChild)) {
+                // Check if any trailing comment overlaps with the next JSX text node
+                for (const comment of trailingComments) {
+                    if (comment.pos >= nextChild.pos && comment.end <= nextChild.end) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        // Check leading comments that might overlap with previous JSX text
+        const leadingComments = getLeadingCommentRanges(currentSourceFile.text, jsxExpr.pos);
+        if (leadingComments && exprIndex > 0) {
+            const prevChild = children[exprIndex - 1];
+            if (isJsxText(prevChild)) {
+                // Check if any leading comment overlaps with the previous JSX text node
+                for (const comment of leadingComments) {
+                    if (comment.pos >= prevChild.pos && comment.end <= prevChild.end) {
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
     }
 
     function willEmitLeadingNewLine(node: Expression): boolean {
@@ -3876,7 +3933,10 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function emitJsxElement(node: JsxElement) {
         emit(node.openingElement);
+        const wasEmittingJsxChildren = isEmittingJsxChildren;
+        isEmittingJsxChildren = true;
         emitList(node, node.children, ListFormat.JsxElementOrFragmentChildren);
+        isEmittingJsxChildren = wasEmittingJsxChildren;
         emit(node.closingElement);
     }
 
@@ -3891,7 +3951,10 @@ export function createPrinter(printerOptions: PrinterOptions = {}, handlers: Pri
 
     function emitJsxFragment(node: JsxFragment) {
         emit(node.openingFragment);
+        const wasEmittingJsxChildren = isEmittingJsxChildren;
+        isEmittingJsxChildren = true;
         emitList(node, node.children, ListFormat.JsxElementOrFragmentChildren);
+        isEmittingJsxChildren = wasEmittingJsxChildren;
         emit(node.closingFragment);
     }
 
