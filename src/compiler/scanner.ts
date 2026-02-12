@@ -3720,6 +3720,9 @@ export function createScanner(
         // These initial values are special because the first line is:
         // firstNonWhitespace = 0 to indicate that we want leading whitespace,
 
+        // Build the text content excluding comments
+        let textContent = "";
+
         while (pos < end) {
             char = charCodeUnchecked(pos);
             if (char === CharacterCodes.openBrace) {
@@ -3739,6 +3742,21 @@ export function createScanner(
                 error(Diagnostics.Unexpected_token_Did_you_mean_or_rbrace, pos, 1);
             }
 
+            // Handle comments - skip /* ... */ style comments
+            if (char === CharacterCodes.slash && charCodeUnchecked(pos + 1) === CharacterCodes.asterisk) {
+                pos += 2; // Skip /*
+                // Find the end of the comment
+                while (pos < end) {
+                    if (charCodeUnchecked(pos) === CharacterCodes.asterisk && charCodeUnchecked(pos + 1) === CharacterCodes.slash) {
+                        pos += 2; // Skip */
+                        break;
+                    }
+                    pos++;
+                }
+                // Continue without adding comment content to textContent
+                continue;
+            }
+
             // FirstNonWhitespace is 0, then we only see whitespaces so far. If we see a linebreak, we want to ignore that whitespaces.
             // i.e (- : whitespace)
             //      <div>----
@@ -3754,13 +3772,16 @@ export function createScanner(
                 break;
             }
             else if (!isWhiteSpaceLike(char)) {
-                firstNonWhitespace = pos;
+                if (firstNonWhitespace === 0) {
+                    firstNonWhitespace = textContent.length;
+                }
             }
 
+            textContent += String.fromCharCode(char);
             pos++;
         }
 
-        tokenValue = text.substring(fullStartPos, pos);
+        tokenValue = textContent;
 
         return firstNonWhitespace === -1 ? SyntaxKind.JsxTextAllWhiteSpaces : SyntaxKind.JsxText;
     }
