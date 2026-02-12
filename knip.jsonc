@@ -28,7 +28,7 @@
     "ignore": [
         "scripts/failed-tests.d.cts"
     ],
-    "ignoreDependencies": ["c8", "eslint-formatter-autolinkable-stylish", "mocha-fivemat-progress-reporter", "monocart-coverage-reports"],
+    "ignoreDependencies": ["c8", "eslint-formatter-autolinkable-stylish", "mocha-fivemat-progress-reporter", "monocart-coverage-reports", "@ryancavanaugh/mcp-server-md-fragments"],
     "ignoreExportsUsedInFile": {
         "enum": true,
         "interface": true,
