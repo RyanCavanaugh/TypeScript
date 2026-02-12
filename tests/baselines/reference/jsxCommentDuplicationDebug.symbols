@@ -1,0 +1,11 @@
+//// [tests/cases/compiler/jsxCommentDuplicationDebug.tsx] ////
+
+=== jsxCommentDuplicationDebug.tsx ===
+function App() {}
+>App : Symbol(App, Decl(jsxCommentDuplicationDebug.tsx, 0, 0))
+
+const jsx = <App>/* before */{/* 1 */ 123 /* 2 */}/* after */</App>;
+>jsx : Symbol(jsx, Decl(jsxCommentDuplicationDebug.tsx, 1, 5))
+>App : Symbol(App, Decl(jsxCommentDuplicationDebug.tsx, 0, 0))
+>App : Symbol(App, Decl(jsxCommentDuplicationDebug.tsx, 0, 0))
+

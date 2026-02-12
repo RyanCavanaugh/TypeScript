@@ -1,0 +1,8 @@
+jsxCommentDuplication.tsx(2,14): error TS2874: This JSX tag requires 'React' to be in scope, but it could not be found.
+
+
+==== jsxCommentDuplication.tsx (1 errors) ====
+    function App() {}
+    const jsx = <App>/* no */{/* 1 */ 123 /* 2 */}/* no */</App>;
+                 ~~~
+!!! error TS2874: This JSX tag requires 'React' to be in scope, but it could not be found.
