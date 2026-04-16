@@ -25247,21 +25247,26 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
             const identity = getRecursionIdentity(type);
             let count = 0;
             let lastTypeId = 0;
+            let allDistinct = true;
+            let seenTypeArgIdentities: Set<object> | undefined;
             for (let i = 0; i < depth; i++) {
                 const t = stack[i];
                 if (hasMatchingRecursionIdentity(t, identity)) {
                     // We only count occurrences with a higher type id than the previous occurrence, since higher
                     // type ids are an indicator of newer instantiations caused by recursion.
                     if (t.id >= lastTypeId) {
-                        // If both types are type references with type arguments, verify that at least one
-                        // pair of type arguments shares a recursion identity. When all type argument identities
-                        // differ, the types are distinct instantiations of the same generic container (e.g.
-                        // Array<A> vs Array<B> where A and B are unrelated) rather than genuine recursion.
-                        if (!haveDistinctTypeArguments(type, t)) {
-                            count++;
-                            if (count >= maxDepth) {
-                                return true;
-                            }
+                        // Track type argument recursion identities across matching entries. If all entries
+                        // are type references and every type argument identity seen so far is unique, the
+                        // entries represent distinct instantiations of the same generic container (e.g.
+                        // Array<A>, Array<B>, Array<C> where A, B, C are unrelated) rather than genuine
+                        // recursion. When a duplicate is found, we know there's a recursive pattern.
+                        if (allDistinct) {
+                            seenTypeArgIdentities ??= new Set();
+                            allDistinct = addTypeArgumentIdentities(t, seenTypeArgIdentities);
+                        }
+                        count++;
+                        if (count >= maxDepth && !allDistinct) {
+                            return true;
                         }
                     }
                     lastTypeId = t.id;
@@ -25271,18 +25276,20 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
         return false;
     }
 
-    // Returns true if both types are type references and every pair of corresponding type arguments
-    // has a different recursion identity, indicating the types are unrelated instantiations of the
-    // same generic container rather than a genuinely recursive type pattern.
-    function haveDistinctTypeArguments(type: Type, other: Type): boolean {
-        if (getObjectFlags(type) & getObjectFlags(other) & ObjectFlags.Reference) {
-            const typeArgs = getTypeArguments(type as TypeReference);
-            const otherArgs = getTypeArguments(other as TypeReference);
-            if (typeArgs.length > 0 && typeArgs.length === otherArgs.length) {
-                for (let i = 0; i < typeArgs.length; i++) {
-                    if (getRecursionIdentity(typeArgs[i]) === getRecursionIdentity(otherArgs[i])) {
+    // Adds the recursion identities of the type's type arguments to the given set and returns true
+    // if all added identities were new (no duplicates found). Returns false if the type is not a
+    // type reference, has no type arguments, or a duplicate identity was found, indicating a
+    // potentially recursive type pattern.
+    function addTypeArgumentIdentities(type: Type, seen: Set<object>): boolean {
+        if (getObjectFlags(type) & ObjectFlags.Reference) {
+            const args = getTypeArguments(type as TypeReference);
+            if (args.length > 0) {
+                for (const arg of args) {
+                    const id = getRecursionIdentity(arg);
+                    if (seen.has(id)) {
                         return false;
                     }
+                    seen.add(id);
                 }
                 return true;
             }
