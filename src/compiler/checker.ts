@@ -25253,13 +25253,38 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                     // We only count occurrences with a higher type id than the previous occurrence, since higher
                     // type ids are an indicator of newer instantiations caused by recursion.
                     if (t.id >= lastTypeId) {
-                        count++;
-                        if (count >= maxDepth) {
-                            return true;
+                        // If both types are type references with type arguments, verify that at least one
+                        // pair of type arguments shares a recursion identity. When all type argument identities
+                        // differ, the types are distinct instantiations of the same generic container (e.g.
+                        // Array<A> vs Array<B> where A and B are unrelated) rather than genuine recursion.
+                        if (!haveDistinctTypeArguments(type, t)) {
+                            count++;
+                            if (count >= maxDepth) {
+                                return true;
+                            }
                         }
                     }
                     lastTypeId = t.id;
                 }
+            }
+        }
+        return false;
+    }
+
+    // Returns true if both types are type references and every pair of corresponding type arguments
+    // has a different recursion identity, indicating the types are unrelated instantiations of the
+    // same generic container rather than a genuinely recursive type pattern.
+    function haveDistinctTypeArguments(type: Type, other: Type): boolean {
+        if (getObjectFlags(type) & getObjectFlags(other) & ObjectFlags.Reference) {
+            const typeArgs = getTypeArguments(type as TypeReference);
+            const otherArgs = getTypeArguments(other as TypeReference);
+            if (typeArgs.length > 0 && typeArgs.length === otherArgs.length) {
+                for (let i = 0; i < typeArgs.length; i++) {
+                    if (getRecursionIdentity(typeArgs[i]) === getRecursionIdentity(otherArgs[i])) {
+                        return false;
+                    }
+                }
+                return true;
             }
         }
         return false;
