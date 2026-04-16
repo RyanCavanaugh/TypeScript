@@ -1,7 +1,9 @@
 //// [tests/cases/compiler/deeplyNestedArrayAssignabilityRegression.ts] ////
 
 === deeplyNestedArrayAssignabilityRegression.ts ===
-// Repro from #52912
+// Keep modern emit in baseline to focus this test on type-checking behavior.
+
+// Repro from https://github.com/microsoft/TypeScript/issues/52912
 type Source1 = { array: Source2[] };
 >Source1 : Source1
 >        : ^^^^^^^
@@ -48,6 +50,7 @@ type Target4 = { someNewProperty: string };
 >someNewProperty : string
 >                : ^^^^^^
 
+// All assignments below should fail because Source4 lacks Target4.someNewProperty.
 declare const source1: Source1;
 >source1 : Source1
 >        : ^^^^^^^
@@ -88,7 +91,7 @@ const target4: Target4 = source4;
 >source4 : Source4
 >        : ^^^^^^^
 
-// Reordered checks should also fail.
+// Reordered checks should also fail to verify relation-cache order does not affect correctness.
 const reorderedTarget2: Target2 = source2;
 >reorderedTarget2 : Target2
 >                 : ^^^^^^^

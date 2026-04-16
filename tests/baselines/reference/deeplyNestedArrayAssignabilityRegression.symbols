@@ -1,88 +1,91 @@
 //// [tests/cases/compiler/deeplyNestedArrayAssignabilityRegression.ts] ////
 
 === deeplyNestedArrayAssignabilityRegression.ts ===
-// Repro from #52912
+// Keep modern emit in baseline to focus this test on type-checking behavior.
+
+// Repro from https://github.com/microsoft/TypeScript/issues/52912
 type Source1 = { array: Source2[] };
 >Source1 : Symbol(Source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 0, 0))
->array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 1, 16))
->Source2 : Symbol(Source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 1, 36))
+>array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 16))
+>Source2 : Symbol(Source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 36))
 
 type Source2 = { array: Source3[] };
->Source2 : Symbol(Source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 1, 36))
->array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 2, 16))
->Source3 : Symbol(Source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 2, 36))
+>Source2 : Symbol(Source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 36))
+>array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 4, 16))
+>Source3 : Symbol(Source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 4, 36))
 
 type Source3 = { array: Source4[] };
->Source3 : Symbol(Source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 2, 36))
->array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 16))
->Source4 : Symbol(Source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 36))
+>Source3 : Symbol(Source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 4, 36))
+>array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 5, 16))
+>Source4 : Symbol(Source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 5, 36))
 
 type Source4 = {};
->Source4 : Symbol(Source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 36))
+>Source4 : Symbol(Source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 5, 36))
 
 type Target1 = { array: Target2[] };
->Target1 : Symbol(Target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 4, 18))
->array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 16))
->Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 36))
+>Target1 : Symbol(Target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 18))
+>array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 16))
+>Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 36))
 
 type Target2 = { array: Target3[] };
->Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 36))
->array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 7, 16))
->Target3 : Symbol(Target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 7, 36))
+>Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 36))
+>array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 9, 16))
+>Target3 : Symbol(Target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 9, 36))
 
 type Target3 = { array: Target4[] };
->Target3 : Symbol(Target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 7, 36))
->array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 16))
->Target4 : Symbol(Target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 36))
+>Target3 : Symbol(Target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 9, 36))
+>array : Symbol(array, Decl(deeplyNestedArrayAssignabilityRegression.ts, 10, 16))
+>Target4 : Symbol(Target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 10, 36))
 
 type Target4 = { someNewProperty: string };
->Target4 : Symbol(Target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 36))
->someNewProperty : Symbol(someNewProperty, Decl(deeplyNestedArrayAssignabilityRegression.ts, 9, 16))
+>Target4 : Symbol(Target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 10, 36))
+>someNewProperty : Symbol(someNewProperty, Decl(deeplyNestedArrayAssignabilityRegression.ts, 11, 16))
 
+// All assignments below should fail because Source4 lacks Target4.someNewProperty.
 declare const source1: Source1;
->source1 : Symbol(source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 11, 13))
+>source1 : Symbol(source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 14, 13))
 >Source1 : Symbol(Source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 0, 0))
 
 declare const source2: Source2;
->source2 : Symbol(source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 12, 13))
->Source2 : Symbol(Source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 1, 36))
+>source2 : Symbol(source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 15, 13))
+>Source2 : Symbol(Source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 36))
 
 declare const source3: Source3;
->source3 : Symbol(source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 13, 13))
->Source3 : Symbol(Source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 2, 36))
+>source3 : Symbol(source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 16, 13))
+>Source3 : Symbol(Source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 4, 36))
 
 declare const source4: Source4;
->source4 : Symbol(source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 14, 13))
->Source4 : Symbol(Source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 3, 36))
+>source4 : Symbol(source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 17, 13))
+>Source4 : Symbol(Source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 5, 36))
 
 const target1: Target1 = source1;
->target1 : Symbol(target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 16, 5))
->Target1 : Symbol(Target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 4, 18))
->source1 : Symbol(source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 11, 13))
+>target1 : Symbol(target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 19, 5))
+>Target1 : Symbol(Target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 18))
+>source1 : Symbol(source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 14, 13))
 
 const target2: Target2 = source2;
->target2 : Symbol(target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 17, 5))
->Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 36))
->source2 : Symbol(source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 12, 13))
+>target2 : Symbol(target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 20, 5))
+>Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 36))
+>source2 : Symbol(source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 15, 13))
 
 const target3: Target3 = source3;
->target3 : Symbol(target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 18, 5))
->Target3 : Symbol(Target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 7, 36))
->source3 : Symbol(source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 13, 13))
+>target3 : Symbol(target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 21, 5))
+>Target3 : Symbol(Target3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 9, 36))
+>source3 : Symbol(source3, Decl(deeplyNestedArrayAssignabilityRegression.ts, 16, 13))
 
 const target4: Target4 = source4;
->target4 : Symbol(target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 19, 5))
->Target4 : Symbol(Target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 36))
->source4 : Symbol(source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 14, 13))
+>target4 : Symbol(target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 22, 5))
+>Target4 : Symbol(Target4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 10, 36))
+>source4 : Symbol(source4, Decl(deeplyNestedArrayAssignabilityRegression.ts, 17, 13))
 
-// Reordered checks should also fail.
+// Reordered checks should also fail to verify relation-cache order does not affect correctness.
 const reorderedTarget2: Target2 = source2;
->reorderedTarget2 : Symbol(reorderedTarget2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 22, 5))
->Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 36))
->source2 : Symbol(source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 12, 13))
+>reorderedTarget2 : Symbol(reorderedTarget2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 25, 5))
+>Target2 : Symbol(Target2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 8, 36))
+>source2 : Symbol(source2, Decl(deeplyNestedArrayAssignabilityRegression.ts, 15, 13))
 
 const reorderedTarget1: Target1 = source1;
->reorderedTarget1 : Symbol(reorderedTarget1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 23, 5))
->Target1 : Symbol(Target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 4, 18))
->source1 : Symbol(source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 11, 13))
+>reorderedTarget1 : Symbol(reorderedTarget1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 26, 5))
+>Target1 : Symbol(Target1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 6, 18))
+>source1 : Symbol(source1, Decl(deeplyNestedArrayAssignabilityRegression.ts, 14, 13))
 
