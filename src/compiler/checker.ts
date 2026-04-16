@@ -25236,7 +25236,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     // It is possible, though highly unlikely, for the deeply nested check to be true in a situation where a chain of
     // instantiations is not infinitely expanding. Effectively, we will generate a false positive when two types are
     // structurally equal to at least maxDepth levels, but unequal at some level beyond that.
-    function isDeeplyNestedType(type: Type, stack: Type[], depth: number, maxDepth = 4): boolean {
+    function isDeeplyNestedType(type: Type, stack: Type[], depth: number, maxDepth = 3): boolean {
         if (depth >= maxDepth) {
             if ((getObjectFlags(type) & ObjectFlags.InstantiatedMapped) === ObjectFlags.InstantiatedMapped) {
                 type = getMappedTargetWithSymbol(type);
@@ -25307,6 +25307,12 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
                 return (type as TypeReference).node!;
             }
             if (type.symbol && !(getObjectFlags(type) & ObjectFlags.Anonymous && type.symbol.flags & SymbolFlags.Class)) {
+                if (isArrayType(type)) {
+                    // Array and ReadonlyArray instantiations can occur repeatedly in finite, acyclic object graphs
+                    // (for example, nested array properties). Tracking each instantiation separately avoids
+                    // incorrectly treating those shapes as recursively expanding.
+                    return type;
+                }
                 // We track object types that have a symbol by that symbol (representing the origin of the type), but
                 // exclude the static side of a class since it shares its symbol with the instance side.
                 return type.symbol;
