@@ -25236,7 +25236,7 @@ export function createTypeChecker(host: TypeCheckerHost): TypeChecker {
     // It is possible, though highly unlikely, for the deeply nested check to be true in a situation where a chain of
     // instantiations is not infinitely expanding. Effectively, we will generate a false positive when two types are
     // structurally equal to at least maxDepth levels, but unequal at some level beyond that.
-    function isDeeplyNestedType(type: Type, stack: Type[], depth: number, maxDepth = 3): boolean {
+    function isDeeplyNestedType(type: Type, stack: Type[], depth: number, maxDepth = 4): boolean {
         if (depth >= maxDepth) {
             if ((getObjectFlags(type) & ObjectFlags.InstantiatedMapped) === ObjectFlags.InstantiatedMapped) {
                 type = getMappedTargetWithSymbol(type);
