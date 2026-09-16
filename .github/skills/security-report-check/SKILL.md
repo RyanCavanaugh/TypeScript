@@ -14,7 +14,16 @@ The TypeScript compiler (`tsc`) is a **build tool**, not a sandbox.
 It transforms TypeScript source files into JavaScript output files and reports potential errors.
 This document describes what `tsc` guarantees and does not guarantee when invoked on untrusted input.
 
-## Security Guarantees
+## What is a Security Issue?
+
+A security issue generally requires an **escalation of privilege**: something that allows the attacker [to do something they *can't already do*](https://devblogs.microsoft.com/oldnewthing/20060508-22/?p=31283).
+
+For example, let's say `tsc` had a bug where `tsconfig.json` would treat `{ strict: "yes" }` the same as `{ strict: true }`.
+This would be a *bug*, but it's not a *security issue*: An attacker able to write `{ strict: "yes" }` to a config file is equally able to write `{ strict: true }` to a config file.
+
+A security report should be able to clearly identify what privilege the attacker *started* with and what privilege the attacker *gained* through using TypeScript.
+
+## Security Boundaries
 
 ### No arbitrary code execution
 
@@ -26,15 +35,15 @@ This is the core security property of `tsc`.
 *Exception*: If content mappers are enabled, this *does* enable execution of third-party code.
 Only pass the `--runExternalCode` flag if you have validated which content mappers are available and that you are OK with running them.
 
-**Limited default side effects.**
+*Exception*: In 6.0 and earlier, certain environment flags like `NODE_ENV` can cause tsc to load debugging packages, which would be "external". Similarly, because tsc is a JS process, the `NODE_OPTIONS` environment variable can influence its behavior and potentially load external code, e.g. through `--require` or other Node.js options.
 
+**Limited default side effects.**
 Outside of explicitly enabled external code, compiler invocations interact with the system through file-system operations and process I/O. Depending on the options, `tsc` may write compiler, build-info, trace, or profile files, update output timestamps, or delete build outputs (for example, with `--build --clean`).
 
 The compiler does not make HTTP requests or spawn child processes except through content mappers.
 
-
 **Safe exit.**
-Certain adversarial inputs may cause crashes, but these crashes will unwind the process normally, and will not be a source of buffer overrun or other memory safety exploit vectors.
+Certain adversarial inputs may cause crashes, but these crashes will exit the process normally, and will not be a source of buffer overrun or other memory safety exploit vectors.
 
 ## Non-Guarantees
 
@@ -83,6 +92,18 @@ If this file is modified, it can cause `tsc` to e.g. fail to build a file becaus
 
 The TypeScript Language Service (LS) only executes in the context of a [trusted workspace (VS Code)](https://code.visualstudio.com/docs/editing/workspaces/workspace-trust) or [trusted folder (VS)](https://learn.microsoft.com/en-us/visualstudio/ide/trust-settings?view=visualstudio).
 Similar to tsc, there are no guaranteed resource caps in the LS, and "hangs" may occur in the presence of adversarial inputs.
+
+## Boundaries Owned by Someone Else
+
+Not all boundaries are enforced by TypeScript.
+
+**Workspace trust**: The language service runs only in a [trusted workspace (VS Code)](https://code.visualstudio.com/docs/editing/workspaces/workspace-trust) or [trusted folder (VS)](https://learn.microsoft.com/en-us/visualstudio/ide/trust-settings?view=visualstudio).
+Loading `tsconfig.json` plugins, resolving them from workspace `node_modules`, and `host.require()` through `extends` are intended behavior in a trusted project — granting trust *is* the privilege grant, so exercising it escalates nothing.
+Execution in a *still-untrusted* workspace with no user gesture would be a real bypass.
+
+**Local IPC boundaries**: Pipes and sockets between the compiler, the language service, and its client carry no authentication, as the operating system provides this boundary.
+For example, reports that assume anyone can connect to the language service stdio connection are premised on the attacker having already violated the operating system's security boundary on this connection, so are not a TypeScript security issue.
+Conversely, a legitimate security issue could be present if the relevant connections were not set up securely in some situations.
 
 ## Examples
 
