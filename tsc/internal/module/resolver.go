@@ -2274,8 +2274,7 @@ func (r *resolutionState) loadEntrypointsFromExportMap(
 					if !ok {
 						continue
 					}
-					resolvedSubpath := strings.Replace(subpath, "*", matchedStar, 1)
-					moduleSpecifier := tspath.ResolvePath(packageName, resolvedSubpath)
+					moduleSpecifier := tspath.ResolvePath(packageName, strings.Replace(subpath, "*", matchedStar, 1))
 					entrypoints = append(entrypoints, r.resolver.createResolvedEntrypointHandlingSymlink(
 						file,
 						moduleSpecifier,
