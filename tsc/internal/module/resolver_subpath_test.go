@@ -1,32 +1,58 @@
-package module
+package module_test
 
 import (
-	"strings"
 	"testing"
+
+	"github.com/microsoft/TypeScript/tsc/internal/core"
+	"github.com/microsoft/TypeScript/tsc/internal/module"
+	"github.com/microsoft/TypeScript/tsc/internal/packagejson"
+	"github.com/microsoft/TypeScript/tsc/internal/vfs/vfstest"
 )
 
-func TestPackageSubpathQuotes(t *testing.T) {
+func TestGetEntrypointsFromPackageJsonInfoSkipsQuotedSubpaths(t *testing.T) {
 	t.Parallel()
 
-	tests := []struct {
-		subpath string
-		skip    bool
-	}{
-		{subpath: ".", skip: false},
-		{subpath: "./x", skip: false},
-		{subpath: "./x/y", skip: false},
-		{subpath: "./*", skip: false},
-		{subpath: "./x/*", skip: false},
-		{subpath: `./x\").Foo} */;console.log('SYNTHETIC_PACKAGE_MARKER');/(`, skip: true},
-		{subpath: `./x"`, skip: true},
-		{subpath: "./x'", skip: true},
+	const packageJSON = `{
+		"exports": {
+			"./x\\\").Foo} */;console.log('SYNTHETIC_PACKAGE_MARKER');/(": "./index.d.ts",
+			"./x": "./index.d.ts"
+		}
+	}`
+	contents, err := packagejson.Parse([]byte(packageJSON))
+	if err != nil {
+		t.Fatal(err)
 	}
 
-	for _, tt := range tests {
-		t.Run(tt.subpath, func(t *testing.T) {
-			if got := strings.ContainsAny(tt.subpath, `"'`); got != tt.skip {
-				t.Errorf("strings.ContainsAny(%q, quotes) = %t, want %t", tt.subpath, got, tt.skip)
-			}
-		})
+	fs := vfstest.FromMap(map[string]string{
+		"/repo/node_modules/pkg/index.d.ts": "export declare const Foo: string;",
+	}, true)
+	host := &resolutionHostStub{fs: fs, cwd: "/repo"}
+	resolver := module.NewResolver(
+		host,
+		&core.CompilerOptions{
+			ModuleResolution: core.ModuleResolutionKindBundler,
+			Module:           core.ModuleKindESNext,
+			Target:           core.ScriptTargetESNext,
+		},
+		"",
+		"",
+		nil,
+	)
+
+	entrypoints := resolver.GetEntrypointsFromPackageJsonInfo(
+		&packagejson.InfoCacheEntry{
+			PackageDirectory: "/repo/node_modules/pkg",
+			DirectoryExists:  true,
+			Contents:         &packagejson.PackageJson{Fields: contents},
+		},
+		"pkg",
+		false,
+	)
+
+	if len(entrypoints) != 1 {
+		t.Fatalf("got %d entrypoints, want 1", len(entrypoints))
+	}
+	if got := entrypoints[0].ModuleSpecifier; got != "pkg/x" {
+		t.Fatalf("got module specifier %q, want %q", got, "pkg/x")
 	}
 }
