@@ -3,6 +3,7 @@ package module
 import (
 	"fmt"
 	"maps"
+	"regexp"
 	"slices"
 	"strings"
 
@@ -154,6 +155,23 @@ type Resolver struct {
 	projectName     string
 	extraExtensions []string
 	// reportDiagnostic: DiagnosticReporter
+}
+
+var legalPackageSubpath = regexp.MustCompile(`^\./[A-Za-z0-9@_+~.*-]+(?:/[A-Za-z0-9@_+~.*-]+)*$`)
+
+func isLegalPackageSubpath(subpath string) bool {
+	if subpath == "." {
+		return true
+	}
+	if !legalPackageSubpath.MatchString(subpath) {
+		return false
+	}
+	for _, part := range strings.Split(subpath[2:], "/") {
+		if part == "." || part == ".." || part == "node_modules" {
+			return false
+		}
+	}
+	return true
 }
 
 type ResolverOptions struct {
@@ -2274,7 +2292,11 @@ func (r *resolutionState) loadEntrypointsFromExportMap(
 					if !ok {
 						continue
 					}
-					moduleSpecifier := tspath.ResolvePath(packageName, strings.Replace(subpath, "*", matchedStar, 1))
+					resolvedSubpath := strings.Replace(subpath, "*", matchedStar, 1)
+					if !isLegalPackageSubpath(resolvedSubpath) {
+						continue
+					}
+					moduleSpecifier := tspath.ResolvePath(packageName, resolvedSubpath)
 					entrypoints = append(entrypoints, r.resolver.createResolvedEntrypointHandlingSymlink(
 						file,
 						moduleSpecifier,
@@ -2284,6 +2306,9 @@ func (r *resolutionState) loadEntrypointsFromExportMap(
 					))
 				}
 			} else {
+				if !isLegalPackageSubpath(subpath) {
+					return
+				}
 				partsAfterFirst := tspath.GetPathComponents(exports.AsString(), "")[2:]
 				if slices.Contains(partsAfterFirst, "..") || slices.Contains(partsAfterFirst, ".") || slices.Contains(partsAfterFirst, "node_modules") {
 					return
